@@ -1,7 +1,7 @@
 import { UserRole } from '@prisma/client';
 
 export interface IPublicUserData {
-    uuid: string;
+    id: string;
     email: string;
     name: string;
     secondName: string;

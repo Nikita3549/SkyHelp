@@ -114,7 +114,7 @@ export class AuthController {
         const userData = await this.userService.saveUser(registerData);
 
         const jwt = this.tokenService.generateJWT({
-            uuid: userData.uuid,
+            id: userData.id,
             email: userData.email,
             name: userData.name,
             secondName: userData.secondName,
@@ -175,7 +175,7 @@ export class AuthController {
             secondName: user.secondName,
             role: user.role,
             email: user.email,
-            uuid: user.uuid,
+            id: user.id,
             isActive: user.isActive,
             lastSign: user.lastSign,
             createdAt: user.lastSign,

@@ -16,13 +16,13 @@ export class UserService {
             },
         });
     }
-    async getUserById(uuid: string): Promise<IPublicUserData | null> {
+    async getUserById(id: string): Promise<IPublicUserData | null> {
         return this.prisma.user.findFirst({
             where: {
-                uuid,
+                id,
             },
             select: {
-                uuid: true,
+                id: true,
                 email: true,
                 name: true,
                 secondName: true,
@@ -36,7 +36,7 @@ export class UserService {
     async getPublicUsers(): Promise<IPublicUserData[]> {
         return this.prisma.user.findMany({
             select: {
-                uuid: true,
+                id: true,
                 email: true,
                 name: true,
                 secondName: true,
@@ -49,16 +49,16 @@ export class UserService {
     }
 
     async updateUser(
-        userUuid: string,
+        userId: string,
         updateData: IUpdateData,
     ): Promise<IPublicUserData> {
         return this.prisma.user.update({
             data: updateData,
             where: {
-                uuid: userUuid,
+                id: userId,
             },
             select: {
-                uuid: true,
+                id: true,
                 email: true,
                 name: true,
                 secondName: true,
@@ -92,23 +92,23 @@ export class UserService {
             },
         });
     }
-    async updateRole(newRole: UserRole, userUuid: string): Promise<User> {
+    async updateRole(newRole: UserRole, userId: string): Promise<User> {
         return this.prisma.user.update({
             data: {
                 role: newRole,
             },
             where: {
-                uuid: userUuid,
+                id: userId,
             },
         });
     }
-    async updateStatus(newStatus: boolean, userUuid: string): Promise<User> {
+    async updateStatus(newStatus: boolean, userId: string): Promise<User> {
         return this.prisma.user.update({
             data: {
                 isActive: newStatus,
             },
             where: {
-                uuid: userUuid,
+                id: userId,
             },
         });
     }

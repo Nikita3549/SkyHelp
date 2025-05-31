@@ -10,6 +10,9 @@ import { TokenModule } from './modules/token/token.module';
 import { PrismaModule } from './modules/prisma/prisma.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
 import { RedisModule } from './modules/redis/redis.module';
+import { ClaimsModule } from './modules/claims/claims.module';
+import { DocusignModule } from './integrations/docusign/docusign.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
     imports: [
@@ -22,6 +25,9 @@ import { RedisModule } from './modules/redis/redis.module';
         PrismaModule,
         NotificationsModule,
         RedisModule,
+        ClaimsModule,
+        DocusignModule,
+        ScheduleModule.forRoot(),
     ],
     controllers: [AppController, AuthController, UserController],
     providers: [AppService],
