@@ -8,12 +8,12 @@ async function bootstrap() {
     const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
     const configService = app.get(ConfigService);
-    const port = configService.getOrThrow<number>('PORT');
+    const port = configService.getOrThrow<number>('API_PORT');
 
     app.setGlobalPrefix('v1');
     app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
 
-    await app.listen(process.env.PORT ?? 3000);
+    await app.listen(port);
     console.log(`App is running on port ${port}`);
 }
 bootstrap();

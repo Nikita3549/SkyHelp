@@ -13,6 +13,8 @@ import { RedisModule } from './modules/redis/redis.module';
 import { ClaimsModule } from './modules/claims/claims.module';
 import { DocusignModule } from './integrations/docusign/docusign.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { AirportsModule } from './modules/airports/airports.module';
+import { CacheModule } from './modules/cache/cache.module';
 
 @Module({
     imports: [
@@ -28,6 +30,8 @@ import { ScheduleModule } from '@nestjs/schedule';
         ClaimsModule,
         DocusignModule,
         ScheduleModule.forRoot(),
+        AirportsModule,
+        CacheModule,
     ],
     controllers: [AppController, AuthController, UserController],
     providers: [AppService],

@@ -14,6 +14,7 @@ import { ClaimsService } from './claims.service';
 import { CLAIM_NOT_FOUND, SAVE_DOCUMENTS_SUCCESS } from './constants';
 import { JwtAuthGuard } from '../../guards/jwtAuth.guard';
 import { AuthRequest } from '../../interfaces/AuthRequest.interface';
+import { Claim } from '@prisma/client';
 
 @Controller('claims')
 @UseGuards(JwtAuthGuard)
@@ -29,8 +30,6 @@ export class ClaimsController {
             throw new NotFoundException(CLAIM_NOT_FOUND);
         }
 
-        console.log(files);
-
         await this.claimsService.saveDocuments(
             files.map((doc) => {
                 return {
@@ -45,7 +44,10 @@ export class ClaimsController {
     }
 
     @Post()
-    async create(@Body() dto: CreateClaimDto, @Req() req: AuthRequest) {
+    async create(
+        @Body() dto: CreateClaimDto,
+        @Req() req: AuthRequest,
+    ): Promise<Claim> {
         return await this.claimsService.createClaim(dto, req.user.id);
     }
 }
