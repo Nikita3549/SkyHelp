@@ -53,18 +53,27 @@ model Claim {
 
 model ClaimDetails {
   id                    String               @id @default(cuid()) @map("id")
-  arrivalAirport        String               @map("arrival_airport")
-  departureAirport      String               @map("departure_airport")
-  connectionAirports    String[]             @map("connection_airports")
-  flightNumber          String               @map("flight_number")
   date                  DateTime             @map("date")
   airline               String               @map("airline")
   bookingRef            String?              @map("booking_ref")
+  flightNumber          String               @map("flight_number")
   assignmentAgreementId String?              @map("assignment_agreement_id")
   assignmentAgreement   AssignmentAgreement? @relation(fields: [assignmentAgreementId], references: [id])
   Claim                 Claim[]
+  routes                Route[]
 
   @@map("claim_details")
+}
+
+model Route {
+  id               String       @id @default(cuid()) @map("id")
+  arrivalAirport   String       @map("arrival_airport")
+  departureAirport String       @map("departure_airport")
+  troubled         Boolean      @default(false)
+  detailsId        String       @map("details_id")
+  detail           ClaimDetails @relation(fields: [detailsId], references: [id])
+
+  @@map("routes")
 }
 
 model AssignmentAgreement {
@@ -81,8 +90,8 @@ model AssignmentAgreement {
 model ClaimState {
   id        String      @id @default(cuid()) @map("id")
   status    ClaimStatus @map("status")
-  amount    Int         @map("amount")
-  updatedAt DateTime    @map("updated_at")
+  amount    Int?        @map("amount")
+  updatedAt DateTime    @updatedAt @map("updated_at")
   progress  Progress[]
   Claim     Claim[]
 
@@ -93,7 +102,7 @@ model Progress {
   id           String         @id @default(cuid()) @map("id")
   title        String         @map("title")
   description  String         @map("description")
-  endAt        DateTime       @map("end_at")
+  endAt        DateTime?      @map("end_at")
   status       ProgressStatus @map("status")
   claimStateId String         @map("claim_state_id")
   claimState   ClaimState     @relation(fields: [claimStateId], references: [id])

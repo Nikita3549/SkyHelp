@@ -15,6 +15,7 @@ import { DocusignModule } from './integrations/docusign/docusign.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { AirportsModule } from './modules/airports/airports.module';
 import { CacheModule } from './modules/cache/cache.module';
+import { FlightsModule } from './modules/flights/flights.module';
 
 @Module({
     imports: [
@@ -32,6 +33,7 @@ import { CacheModule } from './modules/cache/cache.module';
         ScheduleModule.forRoot(),
         AirportsModule,
         CacheModule,
+        FlightsModule,
     ],
     controllers: [AppController, AuthController, UserController],
     providers: [AppService],

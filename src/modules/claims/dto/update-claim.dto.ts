@@ -21,22 +21,6 @@ import {
     PaymentMethod,
 } from '@prisma/client';
 
-// --- Nested DTOs ---
-
-// class AssignmentAgreementDto {
-//     @IsString()
-//     envelopeId: string;
-//
-//     @IsString()
-//     documentUrl: string;
-//
-//     @IsString()
-//     certificateUrl: string;
-//
-//     @IsString()
-//     storagePath: string;
-// }
-
 class RouteDto {
     @IsString()
     arrivalAirport: string;
@@ -68,35 +52,11 @@ class DetailsDto {
     @ValidateNested({ each: true })
     @Type(() => RouteDto)
     routes: RouteDto[];
-
-    // @IsOptional()
-    // @IsString()
-    // assignmentAgreementId?: string;
 }
-
-// class ProgressStepDto {
-//     @IsString()
-//     title: string;
-//
-//     @IsString()
-//     description: string;
-//
-//     @IsDate()
-//     @Type(() => Date)
-//     endAt: Date;
-//
-//     @IsEnum(ProgressStatus)
-//     status: ProgressStatus;
-// }
 
 class StateDto {
     @IsEnum(ClaimStatus)
     status: ClaimStatus;
-
-    // @IsArray()
-    // @ValidateNested({ each: true })
-    // @Type(() => ProgressStepDto)
-    // progress: ProgressStepDto[];
 
     @IsNumber()
     amount: number;
@@ -169,14 +129,6 @@ class IssueDto {
     additionalInfo: string;
 }
 
-class DocumentDto {
-    @IsString()
-    name: string;
-
-    @IsString()
-    path: string;
-}
-
 class PaymentDto {
     @IsOptional()
     @IsEmail()
@@ -215,7 +167,7 @@ class PaymentDto {
     paypalEmail?: string;
 }
 
-export class CreateClaimDto {
+export class UpdateClaimDto {
     @ValidateNested()
     @Type(() => DetailsDto)
     details: DetailsDto;
