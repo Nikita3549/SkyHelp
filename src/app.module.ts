@@ -16,6 +16,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { AirportsModule } from './modules/airports/airports.module';
 import { CacheModule } from './modules/cache/cache.module';
 import { FlightsModule } from './modules/flights/flights.module';
+import { ChatModule } from './modules/chat/chat.module';
 
 @Module({
     imports: [
@@ -34,6 +35,7 @@ import { FlightsModule } from './modules/flights/flights.module';
         AirportsModule,
         CacheModule,
         FlightsModule,
+        ChatModule,
     ],
     controllers: [AppController, AuthController, UserController],
     providers: [AppService],

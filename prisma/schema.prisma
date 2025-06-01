@@ -19,7 +19,9 @@ model User {
   createdAt      DateTime @default(now()) @map("created_at")
   updatedAt      DateTime @updatedAt @map("updated_at")
 
-  claims Claim[]
+  claims     Claim[]
+  messages   Message[]
+  membership ChatMember[]
 
   @@map("users")
 }
@@ -221,4 +223,53 @@ enum PaymentMethod {
   bank_transfer
   paypal
   wise
+}
+
+model Chat {
+  id        String   @id @default(uuid())
+  type      ChatType @default(DIRECT)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  messages Message[]
+  members  ChatMember[]
+
+  @@map("chats")
+}
+
+model Message {
+  id        String        @id @default(uuid())
+  chatId    String        @map("chat_id")
+  senderId  String        @map("sender_id")
+  content   String
+  createdAt DateTime      @default(now()) @map("created_at")
+  status    MessageStatus @default(UNREAD)
+
+  chat   Chat @relation(fields: [chatId], references: [id])
+  sender User @relation(fields: [senderId], references: [id])
+
+  @@map("messages")
+}
+
+enum MessageStatus {
+  READ
+  UNREAD
+}
+
+model ChatMember {
+  chatId  String
+  userId  String
+  isAdmin Boolean @default(false) @map("is_admin")
+
+  chat Chat @relation(fields: [chatId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+
+  @@id([chatId, userId])
+  @@map("chat_members")
+}
+
+enum ChatType {
+  DIRECT
+  GROUP
+
+  @@map("chat_types")
 }
