@@ -10,6 +10,8 @@ import {
     Put,
     UseGuards,
     NotFoundException,
+    Get,
+    Req,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
@@ -42,6 +44,7 @@ import { JwtAuthGuard } from '../../guards/jwtAuth.guard';
 import { UserRole } from '@prisma/client';
 import { IsModeratorGuard } from '../../guards/isModerator.guard';
 import { UpdateStatusDto } from './dto/update-status.dto';
+import { AuthRequest } from '../../interfaces/AuthRequest.interface';
 
 @Controller('auth')
 export class AuthController {
@@ -271,5 +274,11 @@ export class AuthController {
         }
 
         await this.userService.updateStatus(isActive, userUuid);
+    }
+
+    @Get('/me')
+    @UseGuards(JwtAuthGuard)
+    async decodeToken(@Req() req: AuthRequest) {
+        return req.user;
     }
 }
