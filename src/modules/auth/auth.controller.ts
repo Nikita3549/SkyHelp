@@ -237,6 +237,8 @@ export class AuthController {
 
         await this.authService.deleteForgotPasswordCode(email);
 
+        await this.notificationService.sendPasswordChanged(email);
+
         return PASSWORD_WAS_CHANGED_SUCCESS;
     }
 

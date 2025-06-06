@@ -11,12 +11,13 @@ import { PrismaModule } from './modules/prisma/prisma.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
 import { RedisModule } from './modules/redis/redis.module';
 import { ClaimsModule } from './modules/claims/claims.module';
-import { DocusignModule } from './integrations/docusign/docusign.module';
+import { DocusignModule } from './modules/docusign/docusign.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { AirportsModule } from './modules/airports/airports.module';
 import { CacheModule } from './modules/cache/cache.module';
 import { FlightsModule } from './modules/flights/flights.module';
 import { ChatModule } from './modules/chat/chat.module';
+import { GmailModule } from './modules/gmail/gmail.module';
 
 @Module({
     imports: [
@@ -36,6 +37,7 @@ import { ChatModule } from './modules/chat/chat.module';
         CacheModule,
         FlightsModule,
         ChatModule,
+        GmailModule,
     ],
     controllers: [AppController, AuthController, UserController],
     providers: [AppService],

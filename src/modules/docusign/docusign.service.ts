@@ -3,7 +3,6 @@ import { ConfigService } from '@nestjs/config';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import axios, { AxiosResponse } from 'axios';
 import * as jwt from 'jsonwebtoken';
-import { response } from 'express';
 
 @Injectable()
 export class DocusignService {
@@ -57,10 +56,10 @@ export class DocusignService {
         this.accessToken = response.data.access_token;
     }
 
-    @Cron(CronExpression.EVERY_30_MINUTES)
-    handleCron() {
-        this.exchangeToken();
-    }
+    // @Cron(CronExpression.EVERY_30_MINUTES)
+    // handleCron() {
+    //     this.exchangeToken();
+    // }
 
     get accessToken(): string {
         return this._accessToken;
