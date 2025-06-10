@@ -16,7 +16,15 @@ async function bootstrap() {
     });
 
     app.setGlobalPrefix('v1');
-    app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+    app.useGlobalPipes(
+        new ValidationPipe({
+            whitelist: true,
+            transform: true,
+            transformOptions: {
+                enableImplicitConversion: true,
+            },
+        }),
+    );
 
     await app.listen(port);
     console.log(`App is running on port ${port}`);

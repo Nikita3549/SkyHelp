@@ -34,8 +34,9 @@ enum UserRole {
 
 model Claim {
   id         String        @id @default(cuid()) @map("id")
-  userId     String        @map("user_id")
-  user       User          @relation(fields: [userId], references: [id])
+  step       Int           @default(5)
+  userId     String?       @map("user_id")
+  user       User?         @relation(fields: [userId], references: [id])
   detailsId  String        @map("details_id")
   details    ClaimDetails  @relation(fields: [detailsId], references: [id])
   stateId    String        @map("state_id")
@@ -54,15 +55,13 @@ model Claim {
 }
 
 model ClaimDetails {
-  id                    String               @id @default(cuid()) @map("id")
-  date                  DateTime             @map("date")
-  airline               String               @map("airline")
-  bookingRef            String?              @map("booking_ref")
-  flightNumber          String               @map("flight_number")
-  assignmentAgreementId String?              @map("assignment_agreement_id")
-  assignmentAgreement   AssignmentAgreement? @relation(fields: [assignmentAgreementId], references: [id])
-  Claim                 Claim[]
-  routes                Route[]
+  id           String   @id @default(cuid()) @map("id")
+  date         DateTime @map("date")
+  airline      String   @map("airline")
+  bookingRef   String?  @map("booking_ref")
+  flightNumber String   @map("flight_number")
+  Claim        Claim[]
+  routes       Route[]
 
   @@map("claim_details")
 }
@@ -78,20 +77,9 @@ model Route {
   @@map("routes")
 }
 
-model AssignmentAgreement {
-  id             String         @id @default(cuid()) @map("id")
-  envelopeId     String         @map("envelope_id")
-  documentUrl    String         @map("document_url")
-  certificateUrl String         @map("certificate_url")
-  storagePath    String         @map("storage_path")
-  ClaimDetails   ClaimDetails[]
-
-  @@map("assignment_agreements")
-}
-
 model ClaimState {
   id        String      @id @default(cuid()) @map("id")
-  status    ClaimStatus @map("status")
+  status    ClaimStatus @default(PENDING) @map("status")
   amount    Int?        @map("amount")
   updatedAt DateTime    @updatedAt @map("updated_at")
   progress  Progress[]
@@ -113,17 +101,17 @@ model Progress {
 }
 
 enum ClaimStatus {
-  completed
-  pending
-  in_progress
-  escalated
-  rejected
-  not_eligible
+  COMPLETED
+  PENDING
+  IN_PROGRESS
+  ESCALATED
+  REJECTED
+  NOT_ELIGBLE
 }
 
 enum ProgressStatus {
-  completed
-  in_process
+  COMPLETED
+  IN_PROCESS
 }
 
 model ClaimCustomer {

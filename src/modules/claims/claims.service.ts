@@ -29,22 +29,25 @@ export class ClaimsService {
         claimId: string,
     ) {
         return this.prisma.document.createMany({
-            data: documents.map((doc) => {
-                return {
-                    name: doc.name,
-                    path: doc.path,
-                    claimId,
-                };
-            }),
+            data: documents.map((doc) => ({
+                name: doc.name,
+                path: doc.path,
+                claimId,
+            })),
         });
     }
 
-    async createClaim(claim: CreateClaimDto, userId: string): Promise<Claim> {
+    async createClaim(
+        claim: CreateClaimDto,
+        userId: string | null,
+    ): Promise<Claim> {
         return this.prisma.claim.create({
             data: {
-                user: {
-                    connect: { id: userId },
-                },
+                user: userId
+                    ? {
+                          connect: { id: userId },
+                      }
+                    : undefined,
                 details: {
                     create: {
                         flightNumber: claim.details.flightNumber,
@@ -78,7 +81,6 @@ export class ClaimsService {
                 },
                 state: {
                     create: {
-                        status: claim.state.status,
                         amount: claim.state.amount,
                         progress: {
                             create: defaultProgress,
@@ -115,24 +117,10 @@ export class ClaimsService {
                         additionalInfo: claim.issue.additionalInfo,
                     },
                 },
-                payment: {
-                    create: {
-                        email: claim.payment.email,
-                        termsAgreed: claim.payment.termsAgreed,
-                        paymentMethod: claim.payment.paymentMethod,
-                        bankName: claim.payment.bankName,
-                        accountName: claim.payment.accountName,
-                        accountNumber: claim.payment.accountNumber,
-                        routingNumber: claim.payment.routingNumber,
-                        iban: claim.payment.iban,
-                        paypalEmail: claim.payment.paypalEmail,
-                    },
-                },
             },
             include: {
                 details: {
                     include: {
-                        assignmentAgreement: true,
                         routes: true,
                     },
                 },
@@ -157,7 +145,9 @@ export class ClaimsService {
                         flightNumber: newClaim.details.flightNumber,
                         date: newClaim.details.date,
                         airline: newClaim.details.airline,
-                        bookingRef: newClaim.details.bookingRef,
+                        bookingRef: newClaim.details.bookingRef
+                            ? newClaim.details.bookingRef
+                            : null,
                         routes: {
                             create: newClaim.details.routes.map((r) => ({
                                 arrivalAirport: r.arrivalAirport,
@@ -204,18 +194,36 @@ export class ClaimsService {
                     },
                 },
                 payment: {
-                    create: {
-                        email: newClaim.payment.email,
-                        termsAgreed: newClaim.payment.termsAgreed,
-                        paymentMethod: newClaim.payment.paymentMethod,
-                        bankName: newClaim.payment.bankName,
-                        accountName: newClaim.payment.accountName,
-                        accountNumber: newClaim.payment.accountNumber,
-                        routingNumber: newClaim.payment.routingNumber,
-                        iban: newClaim.payment.iban,
-                        paypalEmail: newClaim.payment.paypalEmail,
+                    create: newClaim.payment
+                        ? {
+                              email: newClaim.payment.email,
+                              termsAgreed: newClaim.payment.termsAgreed,
+                              paymentMethod: newClaim.payment.paymentMethod,
+                              bankName: newClaim.payment.bankName,
+                              accountName: newClaim.payment.accountName,
+                              accountNumber: newClaim.payment.accountNumber,
+                              routingNumber: newClaim.payment.routingNumber,
+                              iban: newClaim.payment.iban,
+                              paypalEmail: newClaim.payment.paypalEmail,
+                          }
+                        : undefined,
+                },
+            },
+            include: {
+                details: {
+                    include: {
+                        routes: true,
                     },
                 },
+                state: {
+                    include: {
+                        progress: true,
+                    },
+                },
+                customer: true,
+                issue: true,
+                payment: true,
+                documents: true,
             },
             where: {
                 id: claimId,
@@ -315,10 +323,21 @@ export class ClaimsService {
             },
         });
     }
-    getUserClaims(userId?: string): Promise<Claim[]> {
+    async getUserClaims(userId?: string): Promise<Claim[]> {
         return this.prisma.claim.findMany({
             where: {
                 userId,
+            },
+        });
+    }
+
+    async updateStep(claimId: string, step: number): Promise<Claim> {
+        return this.prisma.claim.update({
+            data: {
+                step,
+            },
+            where: {
+                id: claimId,
             },
         });
     }

@@ -5,7 +5,6 @@ import {
     Get,
     NotFoundException,
     Param,
-    ParseUUIDPipe,
     Post,
     Put,
     Query,
@@ -21,6 +20,7 @@ import {
     CLAIM_NOT_FOUND,
     INVALID_CLAIM_ID,
     INVALID_FLIGHT_ID,
+    INVALID_JWT,
     SAVE_DOCUMENTS_SUCCESS,
 } from './constants';
 import { JwtAuthGuard } from '../../guards/jwtAuth.guard';
@@ -31,6 +31,12 @@ import { FlightsService } from '../flights/flights.service';
 import { UpdateProgressDto } from './dto/update-progress.dto';
 import { IsModeratorGuard } from '../../guards/isModerator.guard';
 import { UpdateClaimDto } from './dto/update-claim.dto';
+import { isAuthRequest } from '../auth/typeGuards/isAuthRequest.function';
+import { Request } from 'express';
+import { TokenService } from '../token/token.service';
+import { IClaimWithJwt } from './interfaces/claimWithJwt.interface';
+import { IClaimJwt } from './interfaces/claim-jwt.interface';
+import { JwtQueryDto } from './dto/jwt-query.dto';
 
 @Controller('claims')
 @UseGuards(JwtAuthGuard)
@@ -49,6 +55,9 @@ export class ClaimsController {
             throw new NotFoundException(CLAIM_NOT_FOUND);
         }
 
+        console.log(files);
+        await this.claimsService.updateStep(claimId, 8);
+
         await this.claimsService.saveDocuments(
             files.map((doc) => {
                 return {
@@ -60,14 +69,6 @@ export class ClaimsController {
         );
 
         return SAVE_DOCUMENTS_SUCCESS;
-    }
-
-    @Post()
-    async create(
-        @Body() dto: CreateClaimDto,
-        @Req() req: AuthRequest,
-    ): Promise<Claim> {
-        return await this.claimsService.createClaim(dto, req.user.id);
     }
 
     @Post('/:flightId/compensation')
@@ -108,7 +109,7 @@ export class ClaimsController {
     }
 
     @UseGuards(IsModeratorGuard)
-    @Put('/:claimId')
+    @Put('/admin/:claimId')
     async updateClaim(
         @Body() dto: UpdateClaimDto,
         @Param('claimId') claimId: string,
@@ -153,5 +154,56 @@ export class ClaimsController {
     @Get('admin')
     async getAdminClaims(@Query('userId') userId?: string) {
         return this.claimsService.getUserClaims(userId);
+    }
+}
+
+@Controller('claims')
+export class PublicClaimsController {
+    constructor(
+        private readonly claimsService: ClaimsService,
+        private readonly tokenService: TokenService,
+    ) {}
+
+    @Post()
+    async create(
+        @Body() dto: CreateClaimDto,
+        @Req() req: AuthRequest | Request,
+    ): Promise<IClaimWithJwt> {
+        const claim = await this.claimsService.createClaim(
+            dto,
+            isAuthRequest(req) ? req.user.id : null,
+        );
+
+        const jwt = this.tokenService.generateJWT<IClaimJwt>(
+            {
+                claimId: claim.id,
+            },
+            { expiresIn: '2days' },
+        );
+
+        return {
+            claimData: claim,
+            jwt,
+        };
+    }
+
+    @Put('/:claimId/')
+    async updateClaim(
+        @Body() dto: UpdateClaimDto,
+        @Param('claimId') claimId: string,
+        @Query() query: JwtQueryDto,
+    ) {
+        const { jwt, step } = query;
+
+        const { claimId: jwtClaimId } =
+            this.tokenService.verifyJWT<IClaimJwt>(jwt);
+
+        if (claimId != jwtClaimId) {
+            throw new UnauthorizedException(INVALID_JWT);
+        }
+
+        await this.claimsService.updateStep(claimId, step);
+
+        return await this.claimsService.updateClaim(dto, claimId);
     }
 }

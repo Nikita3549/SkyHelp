@@ -1,4 +1,3 @@
-// claim.dto.ts
 import {
     IsString,
     IsEmail,

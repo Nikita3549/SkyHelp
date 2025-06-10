@@ -23,6 +23,7 @@ import { MessageReadDto } from './dto/message-read.dto';
 import { CreateChatDto } from './dto/create-chat.dto';
 import { ValidationFilter } from './filters/validation.filter';
 import { FollowStatusDto } from './dto/follow-status.dto';
+import { JwtPayload } from 'jsonwebtoken';
 
 @WebSocketGateway({
     namespace: '/chat',
@@ -49,7 +50,8 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
                 throw new Error();
             }
 
-            const { id: userId } = this.tokenService.verifyJWT(token);
+            const { id: userId } =
+                this.tokenService.verifyJWT<JwtPayload>(token);
 
             (client as AuthSocket).data.userId = userId;
 

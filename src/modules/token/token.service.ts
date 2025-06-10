@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { IJwtPayload } from './interfaces/jwtPayload';
 import * as jwt from 'jsonwebtoken';
 import { ConfigService } from '@nestjs/config';
+import { JwtPayload, SignOptions } from 'jsonwebtoken';
 
 @Injectable()
 export class TokenService {
@@ -11,11 +11,14 @@ export class TokenService {
         this.JWT_SECRET = this.config.getOrThrow<string>('JWT_SECRET');
     }
 
-    generateJWT(payload: IJwtPayload): string {
-        return jwt.sign(payload, this.JWT_SECRET);
+    generateJWT<T extends JwtPayload | string>(
+        payload: T,
+        options?: SignOptions,
+    ): string {
+        return jwt.sign(payload, this.JWT_SECRET, options);
     }
 
-    verifyJWT(JWT: string): IJwtPayload {
-        return jwt.verify(JWT, this.JWT_SECRET) as IJwtPayload;
+    verifyJWT<T extends JwtPayload | string>(JWT: string): T {
+        return jwt.verify(JWT, this.JWT_SECRET) as T;
     }
 }

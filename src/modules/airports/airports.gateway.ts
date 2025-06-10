@@ -8,6 +8,7 @@ import { AuthSocket } from '../auth/interfaces/authSocket.interface';
 import { LookupAirportDto } from './dto/lookup-airport.dto';
 import { AirportsService } from './airports.service';
 import { CacheService } from '../cache/cache.service';
+import { JwtPayload } from 'jsonwebtoken';
 
 @WebSocketGateway({ namespace: '/ws/airports' })
 @UseFilters(new ValidationFilter())
@@ -28,7 +29,8 @@ export class AirportsGateway {
                 throw new Error();
             }
 
-            const { id: userId } = this.tokenService.verifyJWT(token);
+            const { id: userId } =
+                this.tokenService.verifyJWT<JwtPayload>(token);
 
             (client as AuthSocket).data.userId = userId;
         } catch (e: unknown) {

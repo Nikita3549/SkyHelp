@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common';
-import { ClaimsController } from './claims.controller';
+import { ClaimsController, PublicClaimsController } from './claims.controller';
 import { ClaimsService } from './claims.service';
 import { FlightsModule } from '../flights/flights.module';
+import { TokenModule } from '../token/token.module';
 
 @Module({
-    imports: [FlightsModule],
-    controllers: [ClaimsController],
+    imports: [FlightsModule, TokenModule],
+    controllers: [ClaimsController, PublicClaimsController],
     providers: [ClaimsService],
 })
 export class ClaimsModule {}

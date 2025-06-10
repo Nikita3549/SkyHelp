@@ -1,4 +1,3 @@
-// claim.dto.ts
 import {
     IsString,
     IsEmail,
@@ -90,14 +89,6 @@ class DetailsDto {
 // }
 
 class StateDto {
-    @IsEnum(ClaimStatus)
-    status: ClaimStatus;
-
-    // @IsArray()
-    // @ValidateNested({ each: true })
-    // @Type(() => ProgressStepDto)
-    // progress: ProgressStepDto[];
-
     @IsNumber()
     amount: number;
 }
@@ -169,51 +160,51 @@ class IssueDto {
     additionalInfo: string;
 }
 
-class DocumentDto {
-    @IsString()
-    name: string;
+// class DocumentDto {
+//     @IsString()
+//     name: string;
+//
+//     @IsString()
+//     path: string;
+// }
 
-    @IsString()
-    path: string;
-}
-
-class PaymentDto {
-    @IsOptional()
-    @IsEmail()
-    email?: string;
-
-    @IsOptional()
-    @IsBoolean()
-    termsAgreed?: boolean;
-
-    @IsOptional()
-    @IsEnum(PaymentMethod)
-    paymentMethod?: PaymentMethod;
-
-    @IsOptional()
-    @IsString()
-    bankName?: string;
-
-    @IsOptional()
-    @IsString()
-    accountName?: string;
-
-    @IsOptional()
-    @IsString()
-    accountNumber?: string;
-
-    @IsOptional()
-    @IsString()
-    routingNumber?: string;
-
-    @IsOptional()
-    @IsString()
-    iban?: string;
-
-    @IsOptional()
-    @IsEmail()
-    paypalEmail?: string;
-}
+// class PaymentDto {
+//     @IsOptional()
+//     @IsEmail()
+//     email?: string;
+//
+//     @IsOptional()
+//     @IsBoolean()
+//     termsAgreed?: boolean;
+//
+//     @IsOptional()
+//     @IsEnum(PaymentMethod)
+//     paymentMethod?: PaymentMethod;
+//
+//     @IsOptional()
+//     @IsString()
+//     bankName?: string;
+//
+//     @IsOptional()
+//     @IsString()
+//     accountName?: string;
+//
+//     @IsOptional()
+//     @IsString()
+//     accountNumber?: string;
+//
+//     @IsOptional()
+//     @IsString()
+//     routingNumber?: string;
+//
+//     @IsOptional()
+//     @IsString()
+//     iban?: string;
+//
+//     @IsOptional()
+//     @IsEmail()
+//     paypalEmail?: string;
+// }
 
 export class CreateClaimDto {
     @ValidateNested()
@@ -232,7 +223,7 @@ export class CreateClaimDto {
     @Type(() => IssueDto)
     issue: IssueDto;
 
-    @ValidateNested()
-    @Type(() => PaymentDto)
-    payment: PaymentDto;
+    // @ValidateNested()
+    // @Type(() => PaymentDto)
+    // payment: PaymentDto;
 }
