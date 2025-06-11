@@ -19,28 +19,28 @@ export class AirportsGateway {
         private readonly airportsService: AirportsService,
         private readonly cacheService: CacheService,
     ) {}
-    async handleConnection(client: Socket) {
-        try {
-            const token: string | undefined =
-                client.handshake.auth?.token ||
-                client.handshake.headers.authorization?.split(' ')[1];
-
-            if (!token) {
-                throw new Error();
-            }
-
-            const { id: userId } =
-                this.tokenService.verifyJWT<JwtPayload>(token);
-
-            (client as AuthSocket).data.userId = userId;
-        } catch (e: unknown) {
-            client.emit('exception', INVALID_TOKEN);
-            client.disconnect();
-        }
-    }
+    // async handleConnection(client: Socket) {
+    //     try {
+    //         const token: string | undefined =
+    //             client.handshake.auth?.token ||
+    //             client.handshake.headers.authorization?.split(' ')[1];
+    //
+    //         if (!token) {
+    //             throw new Error();
+    //         }
+    //
+    //         const { id: userId } =
+    //             this.tokenService.verifyJWT<JwtPayload>(token);
+    //
+    //         (client as AuthSocket).data.userId = userId;
+    //     } catch (e: unknown) {
+    //         client.emit('exception', INVALID_TOKEN);
+    //         client.disconnect();
+    //     }
+    // }
 
     @SubscribeMessage('lookupAirportCode')
-    async handleLookupAirportCode(_client: AuthSocket, dto: LookupAirportDto) {
+    async handleLookupAirportCode(_client: Socket, dto: LookupAirportDto) {
         const { name: airportName } = dto;
         const formatedAirportName = airportName.toLowerCase();
         const cache = await this.cacheService.getCache(formatedAirportName);

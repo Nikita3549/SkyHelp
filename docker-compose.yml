@@ -42,7 +42,6 @@ services:
 
 networks:
   mainNetwork:
-    driver: bridge
 
 volumes:
   db_data:
