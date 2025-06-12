@@ -18,6 +18,7 @@ import { CacheModule } from './modules/cache/cache.module';
 import { FlightsModule } from './modules/flights/flights.module';
 import { ChatModule } from './modules/chat/chat.module';
 import { GmailModule } from './modules/gmail/gmail.module';
+import { AirlinesModule } from './modules/airlines/airlines.module';
 
 @Module({
     imports: [
@@ -38,6 +39,7 @@ import { GmailModule } from './modules/gmail/gmail.module';
         FlightsModule,
         ChatModule,
         GmailModule,
+        AirlinesModule,
     ],
     controllers: [AppController, AuthController, UserController],
     providers: [AppService],

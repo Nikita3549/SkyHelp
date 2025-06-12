@@ -25,7 +25,8 @@ export class GmailService implements OnModuleInit {
             refresh_token: this.configService.getOrThrow('GMAIL_REFRESH_TOKEN'),
         });
 
-        await this.updateAccessToken();
+        // await this.updateAccessToken();
+        // console.log();
 
         this.gmail = google.gmail({ version: 'v1', auth: this.oauth2Client });
     }

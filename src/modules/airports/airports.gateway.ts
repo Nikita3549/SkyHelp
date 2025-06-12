@@ -1,7 +1,12 @@
 import { SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
 import { TokenService } from '../token/token.service';
-import { UseFilters, UsePipes, ValidationPipe } from '@nestjs/common';
+import {
+    InternalServerErrorException,
+    UseFilters,
+    UsePipes,
+    ValidationPipe,
+} from '@nestjs/common';
 import { ValidationFilter } from './filters/validation.filter';
 import { INVALID_TOKEN } from './constants';
 import { AuthSocket } from '../auth/interfaces/authSocket.interface';
@@ -15,7 +20,6 @@ import { JwtPayload } from 'jsonwebtoken';
 @UsePipes(new ValidationPipe({ transform: true }))
 export class AirportsGateway {
     constructor(
-        private readonly tokenService: TokenService,
         private readonly airportsService: AirportsService,
         private readonly cacheService: CacheService,
     ) {}
@@ -43,17 +47,23 @@ export class AirportsGateway {
     async handleLookupAirportCode(_client: Socket, dto: LookupAirportDto) {
         const { name: airportName } = dto;
         const formatedAirportName = airportName.toLowerCase();
-        const cache = await this.cacheService.getCache(formatedAirportName);
+        const cache = await this.cacheService.getCache(
+            `airports-${formatedAirportName}`,
+        );
 
         if (cache) {
             return JSON.parse(cache);
         }
 
-        const airports =
-            await this.airportsService.getAirportsByName(formatedAirportName);
+        const airports = await this.airportsService
+            .getAirportsByName(formatedAirportName)
+            .catch((e: unknown) => {
+                console.error(e);
+                throw new InternalServerErrorException();
+            });
 
         this.cacheService.setCache(
-            formatedAirportName,
+            `airports-${formatedAirportName}`,
             JSON.stringify(airports),
         );
 

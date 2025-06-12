@@ -36,16 +36,39 @@ import {
 //     storagePath: string;
 // }
 
-class RouteDto {
+class AirportDto {
     @IsString()
-    arrivalAirport: string;
+    icao: string;
 
     @IsString()
-    departureAirport: string;
+    city: string;
+
+    @IsString()
+    name: string;
+
+    @IsString()
+    country: string;
+}
+
+class RouteDto {
+    @ValidateNested()
+    @Type(() => AirportDto)
+    arrivalAirport: AirportDto;
+
+    @ValidateNested()
+    @Type(() => AirportDto)
+    departureAirport: AirportDto;
 
     @IsOptional()
     @IsBoolean()
     troubled?: boolean = false;
+}
+class AirlineDto {
+    @IsString()
+    icao: string;
+
+    @IsString()
+    name: string;
 }
 
 class DetailsDto {
@@ -53,8 +76,9 @@ class DetailsDto {
     @Type(() => Date)
     date: Date;
 
-    @IsString()
-    airline: string;
+    @ValidateNested()
+    @Type(() => AirportDto)
+    airline: AirlineDto;
 
     @IsOptional()
     @IsString()
@@ -67,10 +91,6 @@ class DetailsDto {
     @ValidateNested({ each: true })
     @Type(() => RouteDto)
     routes: RouteDto[];
-
-    // @IsOptional()
-    // @IsString()
-    // assignmentAgreementId?: string;
 }
 
 // class ProgressStepDto {

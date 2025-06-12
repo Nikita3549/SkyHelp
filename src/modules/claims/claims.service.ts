@@ -52,12 +52,21 @@ export class ClaimsService {
                     create: {
                         flightNumber: claim.details.flightNumber,
                         date: claim.details.date,
-                        airline: claim.details.airline,
+                        airlines: {
+                            create: {
+                                icao: claim.details.airline.icao,
+                                name: claim.details.airline.name,
+                            },
+                        },
                         bookingRef: claim.details.bookingRef,
                         routes: {
                             create: claim.details.routes.map((r) => ({
-                                arrivalAirport: r.arrivalAirport,
-                                departureAirport: r.departureAirport,
+                                ArrivalAirport: {
+                                    create: r.arrivalAirport,
+                                },
+                                DepartureAirport: {
+                                    create: r.departureAirport,
+                                },
                                 troubled: r.troubled,
                             })),
                         },
@@ -121,7 +130,13 @@ export class ClaimsService {
             include: {
                 details: {
                     include: {
-                        routes: true,
+                        airlines: true,
+                        routes: {
+                            include: {
+                                ArrivalAirport: true,
+                                DepartureAirport: true,
+                            },
+                        },
                     },
                 },
                 state: {
@@ -144,14 +159,23 @@ export class ClaimsService {
                     create: {
                         flightNumber: newClaim.details.flightNumber,
                         date: newClaim.details.date,
-                        airline: newClaim.details.airline,
+                        airlines: {
+                            create: {
+                                icao: newClaim.details.airline.icao,
+                                name: newClaim.details.airline.name,
+                            },
+                        },
                         bookingRef: newClaim.details.bookingRef
                             ? newClaim.details.bookingRef
                             : null,
                         routes: {
                             create: newClaim.details.routes.map((r) => ({
-                                arrivalAirport: r.arrivalAirport,
-                                departureAirport: r.departureAirport,
+                                ArrivalAirport: {
+                                    create: r.arrivalAirport,
+                                },
+                                DepartureAirport: {
+                                    create: r.departureAirport,
+                                },
                                 troubled: r.troubled,
                             })),
                         },
@@ -212,7 +236,13 @@ export class ClaimsService {
             include: {
                 details: {
                     include: {
-                        routes: true,
+                        airlines: true,
+                        routes: {
+                            include: {
+                                ArrivalAirport: true,
+                                DepartureAirport: true,
+                            },
+                        },
                     },
                 },
                 state: {

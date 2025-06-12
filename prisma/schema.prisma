@@ -63,18 +63,55 @@ model ClaimDetails {
   Claim        Claim[]
   routes       Route[]
 
+  airlines Airline @relation(fields: [airline], references: [id])
+
   @@map("claim_details")
+}
+
+model Airline {
+  id   String @id @default(cuid()) @map("id")
+  icao String
+  name String
+
+  Details ClaimDetails[]
+
+  @@map("airlines")
 }
 
 model Route {
   id               String       @id @default(cuid()) @map("id")
-  arrivalAirport   String       @map("arrival_airport")
-  departureAirport String       @map("departure_airport")
+  arrivalAirport   String       @unique @map("arrival_airport")
+  departureAirport String       @unique @map("departure_airport")
   troubled         Boolean      @default(false)
   detailsId        String       @map("details_id")
   detail           ClaimDetails @relation(fields: [detailsId], references: [id])
 
+  ArrivalAirport   ArrivalAirport   @relation(fields: [arrivalAirport], references: [id])
+  DepartureAirport DepartureAirport @relation(fields: [departureAirport], references: [id])
+
   @@map("routes")
+}
+
+model ArrivalAirport {
+  id      String @id @default(cuid()) @map("id")
+  icao    String
+  city    String
+  name    String
+  country String
+  Route   Route?
+
+  @@map("arrival_airports")
+}
+
+model DepartureAirport {
+  id      String @id @default(cuid()) @map("id")
+  icao    String
+  city    String
+  name    String
+  country String
+  Route   Route?
+
+  @@map("departure_airports")
 }
 
 model ClaimState {

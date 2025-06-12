@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { IAirport } from './interfaces/airport.interface';
-import axios, { AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosResponse } from 'axios';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()

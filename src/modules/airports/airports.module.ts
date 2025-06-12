@@ -5,7 +5,7 @@ import { TokenModule } from '../token/token.module';
 import { CacheModule } from '../cache/cache.module';
 
 @Module({
-    imports: [TokenModule, CacheModule],
+    imports: [CacheModule],
     providers: [AirportsService, AirportsGateway],
 })
 export class AirportsModule {}

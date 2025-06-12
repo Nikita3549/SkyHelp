@@ -55,7 +55,6 @@ export class ClaimsController {
             throw new NotFoundException(CLAIM_NOT_FOUND);
         }
 
-        console.log(files);
         await this.claimsService.updateStep(claimId, 8);
 
         await this.claimsService.saveDocuments(

@@ -19,17 +19,40 @@ import {
     IssueReason,
     PaymentMethod,
 } from '@prisma/client';
+class AirportDto {
+    @IsString()
+    icao: string;
+
+    @IsString()
+    city: string;
+
+    @IsString()
+    name: string;
+
+    @IsString()
+    country: string;
+}
 
 class RouteDto {
-    @IsString()
-    arrivalAirport: string;
+    @ValidateNested()
+    @Type(() => AirportDto)
+    arrivalAirport: AirportDto;
 
-    @IsString()
-    departureAirport: string;
+    @ValidateNested()
+    @Type(() => AirportDto)
+    departureAirport: AirportDto;
 
     @IsOptional()
     @IsBoolean()
     troubled?: boolean = false;
+}
+
+class AirlineDto {
+    @IsString()
+    icao: string;
+
+    @IsString()
+    name: string;
 }
 
 class DetailsDto {
@@ -37,8 +60,9 @@ class DetailsDto {
     @Type(() => Date)
     date: Date;
 
-    @IsString()
-    airline: string;
+    @ValidateNested()
+    @Type(() => AirportDto)
+    airline: AirlineDto;
 
     @IsOptional()
     @IsString()
