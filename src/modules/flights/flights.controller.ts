@@ -4,7 +4,6 @@ import { GetFlightsDto } from './dto/get-flights.dto';
 import { JwtAuthGuard } from '../../guards/jwtAuth.guard';
 
 @Controller('flights')
-@UseGuards(JwtAuthGuard)
 export class FlightsController {
     constructor(private readonly flightService: FlightsService) {}
 

@@ -23,7 +23,7 @@ export class DocusignService {
         );
         this.DOCUSIGN_USER_ID = configService.getOrThrow('DOCUSIGN_USER_ID');
 
-        // this.exchangeToken();
+        this.exchangeToken();
     }
 
     async exchangeToken() {
@@ -38,34 +38,46 @@ export class DocusignService {
             algorithm: 'RS256',
             expiresIn: '10m',
         });
-
-        const response: AxiosResponse<{ access_token: string }> =
-            await axios.post(
-                `https://${this.DOCUSIGN_AUTH_SERVER}/oauth/token`,
-                new URLSearchParams({
-                    grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer',
-                    assertion: token,
-                }),
-                {
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
+        try {
+            const response: AxiosResponse<{ access_token: string }> =
+                await axios.post(
+                    `https://${this.DOCUSIGN_AUTH_SERVER}/oauth/token`,
+                    new URLSearchParams({
+                        grant_type:
+                            'urn:ietf:params:oauth:grant-type:jwt-bearer',
+                        assertion: token,
+                        scope: 'signature impersonation',
+                    }),
+                    {
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
                     },
-                },
-            );
+                );
 
-        this.accessToken = response.data.access_token;
+            this.accessToken = response.data.access_token;
+        } catch (err: any) {
+            console.error('DocuSign Error:', err.response?.data || err.message);
+            console.debug('Payload:', {
+                token,
+                integrationKey: this.DOCUSIGN_INTEGRATION_KEY,
+                userId: this.DOCUSIGN_USER_ID,
+                authServer: this.DOCUSIGN_AUTH_SERVER,
+            });
+        }
     }
 
-    // @Cron(CronExpression.EVERY_30_MINUTES)
-    // handleCron() {
-    //     this.exchangeToken();
-    // }
+    @Cron(CronExpression.EVERY_30_MINUTES)
+    handleCron() {
+        this.exchangeToken();
+    }
 
     get accessToken(): string {
         return this._accessToken;
     }
 
     private set accessToken(value: string) {
+        console.log(value);
         this._accessToken = value;
     }
 }

@@ -18,19 +18,14 @@ import {
     DisruptionType,
     IssueReason,
     PaymentMethod,
+    ProgressStatus,
 } from '@prisma/client';
 class AirportDto {
     @IsString()
     icao: string;
 
     @IsString()
-    city: string;
-
-    @IsString()
     name: string;
-
-    @IsString()
-    country: string;
 }
 
 class RouteDto {
@@ -77,14 +72,34 @@ class DetailsDto {
     routes: RouteDto[];
 }
 
-class StateDto {
-    @IsEnum(ClaimStatus)
-    status: ClaimStatus;
+class ProgressStepDto {
+    @IsString()
+    title: string;
 
-    @IsNumber()
-    amount: number;
+    @IsString()
+    description: string;
+
+    @IsOptional()
+    @IsDate()
+    @Type(() => Date)
+    endAt: Date;
+
+    @IsEnum(ProgressStatus)
+    status: ProgressStatus;
 }
 
+class StateDto {
+    @IsNumber()
+    amount: number;
+
+    @IsArray()
+    @ValidateNested({ each: true })
+    @Type(() => ProgressStepDto)
+    progress: ProgressStepDto[];
+
+    @IsEnum(ClaimStatus)
+    status: ClaimStatus;
+}
 class CustomerDto {
     @IsString()
     firstName: string;
@@ -123,12 +138,14 @@ class CustomerDto {
 }
 
 class IssueDto {
-    @IsEnum(IssueReason)
-    reason: IssueReason;
+    // @IsEnum(IssueReason)
+    // reason: IssueReason;
 
+    @IsOptional()
     @IsEnum(DelayCategory)
     delay: DelayCategory;
 
+    @IsOptional()
     @IsEnum(CancellationNotice)
     cancellationNoticeDays: CancellationNotice;
 
@@ -136,18 +153,18 @@ class IssueDto {
     disruptionType: DisruptionType;
 
     @IsOptional()
-    @IsEnum(AirlineReason, {
-        message: 'Invalid airline reason',
-    })
+    @IsEnum(AirlineReason)
     airlineReason: AirlineReason | null;
 
+    @IsOptional()
     @IsBoolean()
-    wasAlternativeFlightOffered: boolean;
+    wasAlternativeFlightOffered: boolean | null;
 
     @IsOptional()
     @IsNumber()
     arrivalTimeDelayOfAlternativeHours: number | null;
 
+    @IsOptional()
     @IsString()
     additionalInfo: string;
 }
@@ -176,10 +193,6 @@ class PaymentDto {
     @IsOptional()
     @IsString()
     accountNumber?: string;
-
-    @IsOptional()
-    @IsString()
-    routingNumber?: string;
 
     @IsOptional()
     @IsString()

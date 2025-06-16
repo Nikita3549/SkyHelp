@@ -113,18 +113,21 @@ export class ClaimsService {
                 },
                 issue: {
                     create: {
-                        reason: claim.issue.reason,
                         delay: claim.issue.delay,
                         cancellationNoticeDays:
                             claim.issue.cancellationNoticeDays,
                         disruptionType: claim.issue.disruptionType,
                         airlineReason: claim.issue.airlineReason,
                         wasAlternativeFlightOffered:
-                            claim.issue.wasAlternativeFlightOffered,
+                            claim.issue.wasAlternativeFlightOffered ||
+                            undefined,
                         arrivalTimeDelayOfAlternativeHours:
                             claim.issue.arrivalTimeDelayOfAlternativeHours,
                         additionalInfo: claim.issue.additionalInfo,
                     },
+                },
+                payment: {
+                    create: {},
                 },
             },
             include: {
@@ -156,11 +159,11 @@ export class ClaimsService {
         return this.prisma.claim.update({
             data: {
                 details: {
-                    create: {
+                    update: {
                         flightNumber: newClaim.details.flightNumber,
                         date: newClaim.details.date,
                         airlines: {
-                            create: {
+                            update: {
                                 icao: newClaim.details.airline.icao,
                                 name: newClaim.details.airline.name,
                             },
@@ -169,10 +172,9 @@ export class ClaimsService {
                             ? newClaim.details.bookingRef
                             : null,
                         routes: {
+                            deleteMany: {},
                             create: newClaim.details.routes.map((r) => ({
-                                ArrivalAirport: {
-                                    create: r.arrivalAirport,
-                                },
+                                ArrivalAirport: { create: r.arrivalAirport },
                                 DepartureAirport: {
                                     create: r.departureAirport,
                                 },
@@ -182,13 +184,17 @@ export class ClaimsService {
                     },
                 },
                 state: {
-                    create: {
+                    update: {
                         status: newClaim.state.status,
                         amount: newClaim.state.amount,
+                        progress: {
+                            deleteMany: {},
+                            create: newClaim.state.progress,
+                        },
                     },
                 },
                 customer: {
-                    create: {
+                    update: {
                         firstName: newClaim.customer.firstName,
                         lastName: newClaim.customer.lastName,
                         email: newClaim.customer.email,
@@ -203,22 +209,22 @@ export class ClaimsService {
                     },
                 },
                 issue: {
-                    create: {
-                        reason: newClaim.issue.reason,
+                    update: {
                         delay: newClaim.issue.delay,
                         cancellationNoticeDays:
                             newClaim.issue.cancellationNoticeDays,
                         disruptionType: newClaim.issue.disruptionType,
                         airlineReason: newClaim.issue.airlineReason,
                         wasAlternativeFlightOffered:
-                            newClaim.issue.wasAlternativeFlightOffered,
+                            newClaim.issue.wasAlternativeFlightOffered ||
+                            undefined,
                         arrivalTimeDelayOfAlternativeHours:
                             newClaim.issue.arrivalTimeDelayOfAlternativeHours,
                         additionalInfo: newClaim.issue.additionalInfo,
                     },
                 },
                 payment: {
-                    create: newClaim.payment
+                    update: newClaim.payment
                         ? {
                               email: newClaim.payment.email,
                               termsAgreed: newClaim.payment.termsAgreed,
@@ -226,7 +232,6 @@ export class ClaimsService {
                               bankName: newClaim.payment.bankName,
                               accountName: newClaim.payment.accountName,
                               accountNumber: newClaim.payment.accountNumber,
-                              routingNumber: newClaim.payment.routingNumber,
                               iban: newClaim.payment.iban,
                               paypalEmail: newClaim.payment.paypalEmail,
                           }
@@ -260,6 +265,7 @@ export class ClaimsService {
             },
         });
     }
+
     calculateCompensation(compensation: IGetCompensation): number {
         const {
             flightDistanceKm,

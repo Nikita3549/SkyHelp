@@ -93,23 +93,19 @@ model Route {
 }
 
 model ArrivalAirport {
-  id      String @id @default(cuid()) @map("id")
-  icao    String
-  city    String
-  name    String
-  country String
-  Route   Route?
+  id    String @id @default(cuid()) @map("id")
+  icao  String
+  name String
+  Route Route?
 
   @@map("arrival_airports")
 }
 
 model DepartureAirport {
-  id      String @id @default(cuid()) @map("id")
-  icao    String
-  city    String
-  name    String
-  country String
-  Route   Route?
+  id    String @id @default(cuid()) @map("id")
+  icao  String
+  name String
+  Route Route?
 
   @@map("departure_airports")
 }
@@ -143,7 +139,7 @@ enum ClaimStatus {
   IN_PROGRESS
   ESCALATED
   REJECTED
-  NOT_ELIGBLE
+  NOT_ELIGIBLE
 }
 
 enum ProgressStatus {
@@ -170,15 +166,14 @@ model ClaimCustomer {
 }
 
 model ClaimIssue {
-  id                                 String             @id @default(cuid()) @map("id")
-  reason                             IssueReason        @map("reason")
-  delay                              DelayCategory      @map("delay")
-  cancellationNoticeDays             CancellationNotice @map("cancellation_notice_days")
-  disruptionType                     DisruptionType     @map("disruption_type")
-  airlineReason                      AirlineReason?     @map("airline_reason")
-  wasAlternativeFlightOffered        Boolean            @map("was_alternative_flight_offered")
-  arrivalTimeDelayOfAlternativeHours Int?               @map("arrival_time_delay_of_alternative_hours")
-  additionalInfo                     String             @map("additional_info")
+  id                                 String              @id @default(cuid()) @map("id")
+  delay                              DelayCategory?      @map("delay")
+  cancellationNoticeDays             CancellationNotice? @map("cancellation_notice_days")
+  disruptionType                     DisruptionType      @map("disruption_type")
+  airlineReason                      AirlineReason?      @map("airline_reason")
+  wasAlternativeFlightOffered        Boolean             @default(false) @map("was_alternative_flight_offered")
+  arrivalTimeDelayOfAlternativeHours Int?                @map("arrival_time_delay_of_alternative_hours")
+  additionalInfo                     String?             @map("additional_info")
   Claim                              Claim[]
 
   @@map("claim_issues")
@@ -236,7 +231,6 @@ model ClaimPayment {
   bankName      String?        @map("bank_name")
   accountName   String?        @map("account_name")
   accountNumber String?        @map("account_number")
-  routingNumber String?        @map("routing_number")
   iban          String?        @map("iban")
   paypalEmail   String?        @map("paypal_email")
   Claim         Claim[]

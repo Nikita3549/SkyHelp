@@ -4,8 +4,8 @@ export interface IGetCompensation {
     // departureAirport: string;
     // arrivalAirport: string;
     flightDistanceKm: number;
-    delayHours: DelayCategory;
-    cancellationNoticeDays: CancellationNotice;
+    delayHours: DelayCategory | null;
+    cancellationNoticeDays: CancellationNotice | null;
     wasDeniedBoarding: boolean;
     wasAlternativeFlightOffered: boolean;
     arrivalTimeDelayOfAlternative: number;

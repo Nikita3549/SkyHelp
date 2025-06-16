@@ -1,4 +1,10 @@
-import { IsBoolean, IsEnum, IsNumber, IsString } from 'class-validator';
+import {
+    IsBoolean,
+    IsEnum,
+    IsNumber,
+    IsOptional,
+    IsString,
+} from 'class-validator';
 import { CancellationNotice, DelayCategory } from '@prisma/client';
 
 export class GetCompensationDto {
@@ -8,11 +14,13 @@ export class GetCompensationDto {
     // @IsString()
     // arrivalAirport: string;
 
+    @IsOptional()
     @IsEnum(DelayCategory)
-    delayHours: DelayCategory;
+    delayHours: DelayCategory | null;
 
+    @IsOptional()
     @IsEnum(CancellationNotice)
-    cancellationNoticeDays: CancellationNotice;
+    cancellationNoticeDays: CancellationNotice | null;
 
     @IsBoolean()
     wasDeniedBoarding: boolean;

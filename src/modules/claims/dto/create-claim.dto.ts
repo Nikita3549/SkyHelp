@@ -18,6 +18,7 @@ import {
     DisruptionType,
     IssueReason,
     PaymentMethod,
+    ProgressStatus,
 } from '@prisma/client';
 
 // --- Nested DTOs ---
@@ -41,13 +42,7 @@ class AirportDto {
     icao: string;
 
     @IsString()
-    city: string;
-
-    @IsString()
     name: string;
-
-    @IsString()
-    country: string;
 }
 
 class RouteDto {
@@ -151,12 +146,14 @@ class CustomerDto {
 }
 
 class IssueDto {
-    @IsEnum(IssueReason)
-    reason: IssueReason;
+    // @IsEnum(IssueReason)
+    // reason: IssueReason;
 
+    @IsOptional()
     @IsEnum(DelayCategory)
     delay: DelayCategory;
 
+    @IsOptional()
     @IsEnum(CancellationNotice)
     cancellationNoticeDays: CancellationNotice;
 
@@ -164,18 +161,18 @@ class IssueDto {
     disruptionType: DisruptionType;
 
     @IsOptional()
-    @IsEnum(AirlineReason, {
-        message: 'Invalid airline reason',
-    })
+    @IsEnum(AirlineReason)
     airlineReason: AirlineReason | null;
 
+    @IsOptional()
     @IsBoolean()
-    wasAlternativeFlightOffered: boolean;
+    wasAlternativeFlightOffered: boolean | null;
 
     @IsOptional()
     @IsNumber()
     arrivalTimeDelayOfAlternativeHours: number | null;
 
+    @IsOptional()
     @IsString()
     additionalInfo: string;
 }

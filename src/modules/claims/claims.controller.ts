@@ -36,60 +36,13 @@ import { Request } from 'express';
 import { TokenService } from '../token/token.service';
 import { IClaimWithJwt } from './interfaces/claimWithJwt.interface';
 import { IClaimJwt } from './interfaces/claim-jwt.interface';
+import { JwtStepQueryDto } from './dto/jwt-step-query.dto';
 import { JwtQueryDto } from './dto/jwt-query.dto';
 
 @Controller('claims')
 @UseGuards(JwtAuthGuard)
 export class ClaimsController {
-    constructor(
-        private readonly claimsService: ClaimsService,
-        private readonly flightService: FlightsService,
-    ) {}
-    @Post('/:claimId/documents')
-    @DocumentsUploadInterceptor()
-    async uploadDocuments(
-        @UploadedFiles() files: Express.Multer.File[],
-        @Param('claimId') claimId: string,
-    ) {
-        if (!(await this.claimsService.getClaim(claimId))) {
-            throw new NotFoundException(CLAIM_NOT_FOUND);
-        }
-
-        await this.claimsService.updateStep(claimId, 8);
-
-        await this.claimsService.saveDocuments(
-            files.map((doc) => {
-                return {
-                    name: doc.originalname,
-                    path: doc.path,
-                };
-            }),
-            claimId,
-        );
-
-        return SAVE_DOCUMENTS_SUCCESS;
-    }
-
-    @Post('/:flightId/compensation')
-    async getCompensation(
-        @Body() dto: GetCompensationDto,
-        @Param('flightId') flightId: string,
-    ) {
-        const flight = await this.flightService
-            .getFlightById(flightId)
-            .catch((_e) => {
-                throw new BadRequestException(INVALID_FLIGHT_ID);
-            });
-
-        const compensation = this.claimsService.calculateCompensation(
-            Object.assign(dto, { flightDistanceKm: flight.actual_distance }),
-        );
-
-        return {
-            compensation,
-        };
-    }
-
+    constructor(private readonly claimsService: ClaimsService) {}
     @UseGuards(IsModeratorGuard)
     @Put('/progress/:progressId/')
     async updateProgress(
@@ -161,6 +114,7 @@ export class PublicClaimsController {
     constructor(
         private readonly claimsService: ClaimsService,
         private readonly tokenService: TokenService,
+        private readonly flightService: FlightsService,
     ) {}
 
     @Post()
@@ -190,7 +144,7 @@ export class PublicClaimsController {
     async updateClaim(
         @Body() dto: UpdateClaimDto,
         @Param('claimId') claimId: string,
-        @Query() query: JwtQueryDto,
+        @Query() query: JwtStepQueryDto,
     ) {
         const { jwt, step } = query;
 
@@ -204,5 +158,60 @@ export class PublicClaimsController {
         await this.claimsService.updateStep(claimId, step);
 
         return await this.claimsService.updateClaim(dto, claimId);
+    }
+
+    @Post('/:flightId/compensation')
+    async getCompensation(
+        @Body() dto: GetCompensationDto,
+        @Param('flightId') flightId: string,
+    ) {
+        const flight = await this.flightService
+            .getFlightById(flightId)
+            .catch((_e) => {
+                throw new BadRequestException(INVALID_FLIGHT_ID);
+            });
+
+        const compensation = this.claimsService.calculateCompensation(
+            Object.assign(dto, { flightDistanceKm: flight.actual_distance }),
+        );
+
+        return {
+            compensation,
+        };
+    }
+
+    @Post('/:claimId/documents')
+    @DocumentsUploadInterceptor()
+    async uploadDocuments(
+        @UploadedFiles() files: Express.Multer.File[],
+        @Param('claimId') claimId: string,
+        @Query() query: JwtQueryDto,
+    ) {
+        const { jwt } = query;
+
+        const { claimId: jwtClaimId } =
+            this.tokenService.verifyJWT<IClaimJwt>(jwt);
+
+        if (claimId != jwtClaimId) {
+            throw new UnauthorizedException(INVALID_JWT);
+        }
+
+        if (!(await this.claimsService.getClaim(claimId))) {
+            throw new NotFoundException(CLAIM_NOT_FOUND);
+        }
+
+        await this.claimsService.updateStep(claimId, 8);
+
+        await this.claimsService.saveDocuments(
+            files.map((doc) => {
+                return {
+                    name: doc.originalname,
+                    path: doc.path,
+                };
+            }),
+            claimId,
+        );
+
+        return SAVE_DOCUMENTS_SUCCESS;
     }
 }
