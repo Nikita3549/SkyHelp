@@ -46,6 +46,9 @@ export class AirportsGateway {
     @SubscribeMessage('lookupAirportCode')
     async handleLookupAirportCode(_client: Socket, dto: LookupAirportDto) {
         const { name: airportName } = dto;
+        if (airportName.length <= 1) {
+            return [];
+        }
         const formatedAirportName = airportName.toLowerCase();
         const cache = await this.cacheService.getCache(
             `airports-${formatedAirportName}`,
@@ -62,11 +65,19 @@ export class AirportsGateway {
                 throw new InternalServerErrorException();
             });
 
+        const mappedAirports = airports.data.map((a) => ({
+            icao: a.icao_code,
+            iata: a.iata_code,
+            country: a.country_iso2,
+            city: a.city_iata_code,
+            name: a.airport_name,
+        }));
+
         this.cacheService.setCache(
             `airports-${formatedAirportName}`,
-            JSON.stringify(airports),
+            JSON.stringify(mappedAirports),
         );
 
-        return airports;
+        return mappedAirports;
     }
 }
