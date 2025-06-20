@@ -31,13 +31,14 @@ import { FlightsService } from '../flights/flights.service';
 import { UpdateProgressDto } from './dto/update-progress.dto';
 import { IsModeratorGuard } from '../../guards/isModerator.guard';
 import { UpdateClaimDto } from './dto/update-claim.dto';
-import { isAuthRequest } from '../auth/typeGuards/isAuthRequest.function';
+import { getAuthJwt } from '../auth/typeGuards/getAuthJwt.function';
 import { Request } from 'express';
 import { TokenService } from '../token/token.service';
 import { IClaimWithJwt } from './interfaces/claimWithJwt.interface';
 import { IClaimJwt } from './interfaces/claim-jwt.interface';
 import { JwtStepQueryDto } from './dto/jwt-step-query.dto';
 import { JwtQueryDto } from './dto/jwt-query.dto';
+import { IJwtPayload } from '../token/interfaces/jwtPayload';
 
 @Controller('claims')
 @UseGuards(JwtAuthGuard)
@@ -146,12 +147,15 @@ export class PublicClaimsController {
     @Post()
     async create(
         @Body() dto: CreateClaimDto,
-        @Req() req: AuthRequest | Request,
+        @Req() req: Request,
     ): Promise<IClaimWithJwt> {
-        const claim = await this.claimsService.createClaim(
-            dto,
-            isAuthRequest(req) ? req.user.id : null,
-        );
+        let user = getAuthJwt(req);
+
+        if (user) {
+            user = this.tokenService.verifyJWT<IJwtPayload>(user).id;
+        }
+
+        const claim = await this.claimsService.createClaim(dto, user);
 
         const jwt = this.tokenService.generateJWT<IClaimJwt>(
             {
