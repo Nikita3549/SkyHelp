@@ -5,6 +5,7 @@ import {
     Claim,
     DelayCategory,
     Document,
+    Prisma,
     Progress,
 } from '@prisma/client';
 import { CreateClaimDto } from './dto/create-claim.dto';
@@ -16,11 +17,12 @@ import { UpdateClaimDto } from './dto/update-claim.dto';
 @Injectable()
 export class ClaimsService {
     constructor(private readonly prisma: PrismaService) {}
-    async getClaim(claimId: string): Promise<Claim | null> {
+    async getClaim(claimId: string) {
         return this.prisma.claim.findFirst({
             where: {
                 id: claimId,
             },
+            include: this.fullClaimInclude(),
         });
     }
 
@@ -41,118 +43,99 @@ export class ClaimsService {
         claim: CreateClaimDto,
         userId: string | null,
     ): Promise<Claim> {
-        return this.prisma.claim.create({
-            data: {
-                user: userId
-                    ? {
-                          connect: { id: userId },
-                      }
-                    : undefined,
-                details: {
-                    create: {
-                        flightNumber: claim.details.flightNumber,
-                        date: claim.details.date,
-                        airlines: {
+        const maxAttempts = 5;
+        for (let attempt = 0; attempt < maxAttempts; attempt++) {
+            const numericId = this.generateNumericId();
+
+            try {
+                return await this.prisma.claim.create({
+                    data: {
+                        id: numericId,
+                        user: userId ? { connect: { id: userId } } : undefined,
+                        details: {
                             create: {
-                                icao: claim.details.airline.icao,
-                                name: claim.details.airline.name,
+                                flightNumber: claim.details.flightNumber,
+                                date: claim.details.date,
+                                airlines: {
+                                    create: {
+                                        icao: claim.details.airline.icao,
+                                        name: claim.details.airline.name,
+                                    },
+                                },
+                                bookingRef: claim.details.bookingRef,
+                                routes: {
+                                    create: claim.details.routes.map((r) => ({
+                                        ArrivalAirport: {
+                                            create: r.arrivalAirport,
+                                        },
+                                        DepartureAirport: {
+                                            create: r.departureAirport,
+                                        },
+                                        troubled: r.troubled,
+                                    })),
+                                },
                             },
                         },
-                        bookingRef: claim.details.bookingRef,
-                        routes: {
-                            create: claim.details.routes.map((r) => ({
-                                ArrivalAirport: {
-                                    create: r.arrivalAirport,
+                        state: {
+                            create: {
+                                amount: claim.state.amount,
+                                progress: {
+                                    create: defaultProgress,
                                 },
-                                DepartureAirport: {
-                                    create: r.departureAirport,
-                                },
-                                troubled: r.troubled,
-                            })),
-                        },
-                        // assignmentAgreement: {
-                        //     create: {
-                        //         envelopeId:
-                        //             claim.details.assignmentAgreement
-                        //                 .envelopeId,
-                        //         documentUrl:
-                        //             claim.details.assignmentAgreement
-                        //                 .documentUrl,
-                        //         certificateUrl:
-                        //             claim.details.assignmentAgreement
-                        //                 .certificateUrl,
-                        //         storagePath:
-                        //             claim.details.assignmentAgreement
-                        //                 .storagePath,
-                        //     },
-                        // },
-                    },
-                },
-                state: {
-                    create: {
-                        amount: claim.state.amount,
-                        progress: {
-                            create: defaultProgress,
-                        },
-                    },
-                },
-                customer: {
-                    create: {
-                        firstName: claim.customer.firstName,
-                        lastName: claim.customer.lastName,
-                        email: claim.customer.email,
-                        phone: claim.customer.phone,
-                        address: claim.customer.address,
-                        secondAddress: claim.customer.secondAddress,
-                        city: claim.customer.city,
-                        postalCode: claim.customer.postalCode,
-                        state: claim.customer.state,
-                        country: claim.customer.country,
-                        whatsapp: claim.customer.whatsapp,
-                    },
-                },
-                issue: {
-                    create: {
-                        delay: claim.issue.delay,
-                        cancellationNoticeDays:
-                            claim.issue.cancellationNoticeDays,
-                        disruptionType: claim.issue.disruptionType,
-                        airlineReason: claim.issue.airlineReason,
-                        wasAlternativeFlightOffered:
-                            claim.issue.wasAlternativeFlightOffered ||
-                            undefined,
-                        arrivalTimeDelayOfAlternativeHours:
-                            claim.issue.arrivalTimeDelayOfAlternativeHours,
-                        additionalInfo: claim.issue.additionalInfo,
-                    },
-                },
-                payment: {
-                    create: {},
-                },
-            },
-            include: {
-                details: {
-                    include: {
-                        airlines: true,
-                        routes: {
-                            include: {
-                                ArrivalAirport: true,
-                                DepartureAirport: true,
                             },
                         },
+                        customer: {
+                            create: {
+                                firstName: claim.customer.firstName,
+                                lastName: claim.customer.lastName,
+                                email: claim.customer.email,
+                                phone: claim.customer.phone,
+                                address: claim.customer.address,
+                                secondAddress: claim.customer.secondAddress,
+                                city: claim.customer.city,
+                                postalCode: claim.customer.postalCode,
+                                state: claim.customer.state,
+                                country: claim.customer.country,
+                                whatsapp: claim.customer.whatsapp,
+                            },
+                        },
+                        issue: {
+                            create: {
+                                delay: claim.issue.delay,
+                                cancellationNoticeDays:
+                                    claim.issue.cancellationNoticeDays,
+                                disruptionType: claim.issue.disruptionType,
+                                airlineReason: claim.issue.airlineReason,
+                                wasAlternativeFlightOffered:
+                                    claim.issue.wasAlternativeFlightOffered ||
+                                    undefined,
+                                arrivalTimeDelayOfAlternativeHours:
+                                    claim.issue
+                                        .arrivalTimeDelayOfAlternativeHours,
+                                additionalInfo: claim.issue.additionalInfo,
+                            },
+                        },
+                        payment: {
+                            create: {},
+                        },
                     },
-                },
-                state: {
-                    include: {
-                        progress: true,
-                    },
-                },
-                customer: true,
-                issue: true,
-                payment: true,
-                documents: true,
-            },
-        });
+                    include: this.fullClaimInclude(),
+                });
+            } catch (error) {
+                if (
+                    error instanceof Prisma.PrismaClientKnownRequestError &&
+                    error.code === 'P2002'
+                ) {
+                    continue;
+                }
+
+                throw error;
+            }
+        }
+
+        throw new Error(
+            'Failed to generate unique numericId after multiple attempts.',
+        );
     }
 
     async updateClaim(newClaim: UpdateClaimDto, claimId: string) {
@@ -238,28 +221,7 @@ export class ClaimsService {
                         : undefined,
                 },
             },
-            include: {
-                details: {
-                    include: {
-                        airlines: true,
-                        routes: {
-                            include: {
-                                ArrivalAirport: true,
-                                DepartureAirport: true,
-                            },
-                        },
-                    },
-                },
-                state: {
-                    include: {
-                        progress: true,
-                    },
-                },
-                customer: true,
-                issue: true,
-                payment: true,
-                documents: true,
-            },
+            include: this.fullClaimInclude(),
             where: {
                 id: claimId,
             },
@@ -364,6 +326,7 @@ export class ClaimsService {
             where: {
                 userId,
             },
+            include: this.fullClaimInclude(),
         });
     }
 
@@ -375,6 +338,71 @@ export class ClaimsService {
             where: {
                 id: claimId,
             },
+            include: this.fullClaimInclude(),
         });
+    }
+
+    async updateEnvelopeId(
+        claimId: string,
+        envelopeId: string,
+    ): Promise<Claim> {
+        return this.prisma.claim.update({
+            data: {
+                envelopeId,
+            },
+            where: {
+                id: claimId,
+            },
+            include: this.fullClaimInclude(),
+        });
+    }
+
+    async getClaimByEnvelopeId(envelopeId: string) {
+        return this.prisma.claim.findFirst({
+            where: {
+                envelopeId,
+            },
+            include: this.fullClaimInclude(),
+        });
+    }
+
+    async doesAssignmentAgreementExist(claimId: string) {
+        return this.prisma.document.count({
+            where: {
+                claimId,
+                name: 'assignment_agreement.pdf',
+            },
+        });
+    }
+
+    private fullClaimInclude() {
+        return {
+            details: {
+                include: {
+                    airlines: true,
+                    routes: {
+                        include: {
+                            ArrivalAirport: true,
+                            DepartureAirport: true,
+                        },
+                    },
+                },
+            },
+            state: {
+                include: {
+                    progress: true,
+                },
+            },
+            customer: true,
+            issue: true,
+            payment: true,
+            documents: true,
+        };
+    }
+
+    generateNumericId(length = 6): string {
+        const min = Math.pow(10, length - 1);
+        const max = Math.pow(10, length) - 1;
+        return Math.floor(Math.random() * (max - min + 1) + min).toString();
     }
 }

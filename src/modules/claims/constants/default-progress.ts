@@ -5,7 +5,7 @@ export const defaultProgress = [
         title: 'Claim Received',
         description: 'Claim has been submitted and received',
         endAt: null,
-        status: ProgressStatus.IN_PROCESS,
+        status: ProgressStatus.COMPLETED,
     },
     {
         title: 'Documents Verified',

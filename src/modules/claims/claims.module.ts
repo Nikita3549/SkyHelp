@@ -8,5 +8,6 @@ import { TokenModule } from '../token/token.module';
     imports: [FlightsModule, TokenModule],
     controllers: [ClaimsController, PublicClaimsController],
     providers: [ClaimsService],
+    exports: [ClaimsService],
 })
 export class ClaimsModule {}

@@ -107,6 +107,32 @@ export class ClaimsController {
     async getAdminClaims(@Query('userId') userId?: string) {
         return this.claimsService.getUserClaims(userId);
     }
+
+    @Post('/:claimId/upload')
+    @DocumentsUploadInterceptor()
+    async uploadDocuments(
+        @UploadedFiles() files: Express.Multer.File[],
+        @Param('claimId') claimId: string,
+        @Req() req: AuthRequest,
+    ) {
+        const claim = await this.claimsService.getClaim(claimId);
+
+        if (!claim || claim.userId != req.user.id) {
+            throw new NotFoundException(CLAIM_NOT_FOUND);
+        }
+
+        await this.claimsService.saveDocuments(
+            files.map((doc) => {
+                return {
+                    name: doc.originalname,
+                    path: doc.path,
+                };
+            }),
+            claimId,
+        );
+
+        return SAVE_DOCUMENTS_SUCCESS;
+    }
 }
 
 @Controller('claims')
