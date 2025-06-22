@@ -9,6 +9,7 @@ import {
     Put,
     Query,
     Req,
+    Res,
     UnauthorizedException,
     UploadedFiles,
     UseGuards,
@@ -18,14 +19,15 @@ import { DocumentsUploadInterceptor } from '../../interceptors/documents/documen
 import { ClaimsService } from './claims.service';
 import {
     CLAIM_NOT_FOUND,
+    FILE_DOESNT_ON_DISK,
     INVALID_CLAIM_ID,
+    INVALID_DOCUMENT_ID,
     INVALID_FLIGHT_ID,
     INVALID_JWT,
     SAVE_DOCUMENTS_SUCCESS,
 } from './constants';
 import { JwtAuthGuard } from '../../guards/jwtAuth.guard';
 import { AuthRequest } from '../../interfaces/AuthRequest.interface';
-import { Claim } from '@prisma/client';
 import { GetCompensationDto } from './dto/get-compensation.dto';
 import { FlightsService } from '../flights/flights.service';
 import { UpdateProgressDto } from './dto/update-progress.dto';
@@ -39,6 +41,17 @@ import { IClaimJwt } from './interfaces/claim-jwt.interface';
 import { JwtStepQueryDto } from './dto/jwt-step-query.dto';
 import { JwtQueryDto } from './dto/jwt-query.dto';
 import { IJwtPayload } from '../token/interfaces/jwtPayload';
+import { GetAdminClaimsQuery } from './dto/get-admin-claims.query';
+import { GetDocumentAdminDto } from './dto/get-document-admin.dto';
+import * as fs from 'fs';
+import * as path from 'path';
+import { Response } from 'express';
+import { lookup as mimeLookup } from 'mime-types';
+import { CustomerDto } from './dto/update-parts/customer.dto';
+import { FlightDto } from './dto/update-parts/flight.dto';
+import { IssueDto } from './dto/update-parts/issue.dto';
+import { PaymentDto } from './dto/update-parts/payment.dto';
+import { StateDto } from './dto/update-parts/state.dto';
 
 @Controller('claims')
 @UseGuards(JwtAuthGuard)
@@ -61,19 +74,6 @@ export class ClaimsController {
         );
     }
 
-    @UseGuards(IsModeratorGuard)
-    @Put('/admin/:claimId')
-    async updateClaim(
-        @Body() dto: UpdateClaimDto,
-        @Param('claimId') claimId: string,
-    ) {
-        if (await this.claimsService.getClaim(claimId)) {
-            throw new BadRequestException(INVALID_CLAIM_ID);
-        }
-
-        return await this.claimsService.updateClaim(dto, claimId);
-    }
-
     @Get('/:claimId')
     async getClaim(@Param('claimId') claimId: string, @Req() req: AuthRequest) {
         const claim = await this.claimsService.getClaim(claimId);
@@ -92,8 +92,22 @@ export class ClaimsController {
     async getClaims(@Req() req: AuthRequest) {
         return this.claimsService.getUserClaims(req.user.id);
     }
+    @Get('/admin/all')
+    @UseGuards(IsModeratorGuard)
+    async getAdminClaims(@Query() query: GetAdminClaimsQuery) {
+        const { userId, page } = query;
+
+        return this.claimsService.getUserClaims(userId, +page);
+    }
+
+    @Get('/admin/stats')
+    @UseGuards(IsModeratorGuard)
+    async getAdminClaimsStats(@Query('userId') userId?: string) {
+        return this.claimsService.getUserClaimsStats(userId);
+    }
 
     @Get('/admin/:claimId')
+    @UseGuards(IsModeratorGuard)
     async getAdminClaim(@Param('claimId') claimId: string) {
         const claim = await this.claimsService.getClaim(claimId);
 
@@ -104,9 +118,59 @@ export class ClaimsController {
         return claim;
     }
 
-    @Get('admin')
-    async getAdminClaims(@Query('userId') userId?: string) {
-        return this.claimsService.getUserClaims(userId);
+    @Post('/admin/:claimId/upload')
+    @UseGuards(IsModeratorGuard)
+    @DocumentsUploadInterceptor()
+    async uploadAdminDocuments(
+        @UploadedFiles() files: Express.Multer.File[],
+        @Param('claimId') claimId: string,
+    ) {
+        const claim = await this.claimsService.getClaim(claimId);
+
+        if (!claim) {
+            throw new NotFoundException(CLAIM_NOT_FOUND);
+        }
+
+        await this.claimsService.saveDocuments(
+            files.map((doc) => {
+                return {
+                    name: doc.originalname,
+                    path: doc.path,
+                };
+            }),
+            claimId,
+        );
+
+        return SAVE_DOCUMENTS_SUCCESS;
+    }
+
+    @Get('/documents/admin/')
+    async getDocumentAdmin(
+        @Query() query: GetDocumentAdminDto,
+        @Res() res: Response,
+    ) {
+        const { documentId } = query;
+
+        const document = await this.claimsService.getDocument(documentId);
+
+        if (!document) {
+            throw new NotFoundException(INVALID_DOCUMENT_ID);
+        }
+
+        const filePath = path.resolve(document.path);
+        if (!fs.existsSync(filePath)) {
+            throw new NotFoundException(FILE_DOESNT_ON_DISK);
+        }
+        const fileName = path.basename(filePath);
+        const mimeType = mimeLookup(filePath) || 'application/octet-stream';
+
+        res.setHeader('Content-Type', mimeType);
+        res.setHeader(
+            'Content-Disposition',
+            `attachment; filename="${encodeURIComponent(fileName)}"`,
+        );
+
+        return res.download(filePath);
     }
 
     @Post('/:claimId/upload')
@@ -133,6 +197,80 @@ export class ClaimsController {
         );
 
         return SAVE_DOCUMENTS_SUCCESS;
+    }
+
+    @UseGuards(IsModeratorGuard)
+    @Put('/admin/:claimId')
+    async updateClaim(
+        @Body() dto: UpdateClaimDto,
+        @Param('claimId') claimId: string,
+    ) {
+        if (!(await this.claimsService.getClaim(claimId))) {
+            throw new BadRequestException(INVALID_CLAIM_ID);
+        }
+
+        return await this.claimsService.updateClaim(dto, claimId);
+    }
+
+    @UseGuards(IsModeratorGuard)
+    @Put('/customer/admin/:claimId')
+    async updateCustomer(
+        @Body() dto: CustomerDto,
+        @Param('claimId') claimId: string,
+    ) {
+        if (!(await this.claimsService.getClaim(claimId))) {
+            throw new BadRequestException(INVALID_CLAIM_ID);
+        }
+
+        return await this.claimsService.updateCustomer(dto, claimId);
+    }
+    @UseGuards(IsModeratorGuard)
+    @Put('/details/admin/:claimId')
+    async updateFlight(
+        @Body() dto: FlightDto,
+        @Param('claimId') claimId: string,
+    ) {
+        if (!(await this.claimsService.getClaim(claimId))) {
+            throw new BadRequestException(INVALID_CLAIM_ID);
+        }
+
+        return await this.claimsService.updateFlight(dto, claimId);
+    }
+    @UseGuards(IsModeratorGuard)
+    @Put('/issue/admin/:claimId')
+    async updateIssue(
+        @Body() dto: IssueDto,
+        @Param('claimId') claimId: string,
+    ) {
+        if (!(await this.claimsService.getClaim(claimId))) {
+            throw new BadRequestException(INVALID_CLAIM_ID);
+        }
+
+        return await this.claimsService.updateIssue(dto, claimId);
+    }
+    @UseGuards(IsModeratorGuard)
+    @Put('/payment/admin/:claimId')
+    async updatePayment(
+        @Body() dto: PaymentDto,
+        @Param('claimId') claimId: string,
+    ) {
+        if (!(await this.claimsService.getClaim(claimId))) {
+            throw new BadRequestException(INVALID_CLAIM_ID);
+        }
+
+        return await this.claimsService.updatePayment(dto, claimId);
+    }
+    @UseGuards(IsModeratorGuard)
+    @Put('/state/admin/:claimId')
+    async updateState(
+        @Body() dto: StateDto,
+        @Param('claimId') claimId: string,
+    ) {
+        if (!(await this.claimsService.getClaim(claimId))) {
+            throw new BadRequestException(INVALID_CLAIM_ID);
+        }
+
+        return await this.claimsService.updateState(dto, claimId);
     }
 }
 

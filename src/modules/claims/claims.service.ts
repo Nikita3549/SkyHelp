@@ -3,6 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import {
     CancellationNotice,
     Claim,
+    ClaimStatus,
     DelayCategory,
     Document,
     Prisma,
@@ -13,6 +14,11 @@ import { IGetCompensation } from './interfaces/compensation.interface';
 import { defaultProgress } from './constants/default-progress';
 import { IProgress } from './interfaces/progress.interface';
 import { UpdateClaimDto } from './dto/update-claim.dto';
+import { CustomerDto } from './dto/update-parts/customer.dto';
+import { FlightDto } from './dto/update-parts/flight.dto';
+import { IssueDto } from './dto/update-parts/issue.dto';
+import { PaymentDto } from './dto/update-parts/payment.dto';
+import { StateDto } from './dto/update-parts/state.dto';
 
 @Injectable()
 export class ClaimsService {
@@ -23,6 +29,14 @@ export class ClaimsService {
                 id: claimId,
             },
             include: this.fullClaimInclude(),
+        });
+    }
+
+    async getDocument(documentId: string): Promise<Document | null> {
+        return this.prisma.document.findFirst({
+            where: {
+                id: documentId,
+            },
         });
     }
 
@@ -321,13 +335,107 @@ export class ClaimsService {
             },
         });
     }
-    async getUserClaims(userId?: string): Promise<Claim[]> {
+    async getUserClaims(
+        userId?: string,
+        page: number = 1,
+        pageSize: number = 20,
+    ): Promise<Claim[]> {
+        const skip = (page - 1) * pageSize;
+
         return this.prisma.claim.findMany({
             where: {
                 userId,
             },
             include: this.fullClaimInclude(),
+            skip,
+            take: pageSize,
         });
+    }
+
+    async getUserClaimsStats(
+        userId?: string,
+        page = 1,
+        pageSize = 20,
+    ): Promise<{
+        total: number;
+        successful: number;
+        active: number;
+        completedAmount: number;
+        successByMonth: { month: string; success: string }[];
+    }> {
+        // const skip = (page - 1) * pageSize;
+
+        const [total, successful, active, completedAmountAgg] =
+            await this.prisma.$transaction([
+                // page data
+                // this.prisma.claim.findMany({
+                //     where: { userId },
+                //     include: this.fullClaimInclude(),
+                //     skip,
+                //     take: pageSize,
+                // }),
+                // total claims
+                this.prisma.claim.count({ where: { userId } }),
+
+                // successful claims
+                this.prisma.claim.count({
+                    where: {
+                        userId,
+                        state: {
+                            status: ClaimStatus.COMPLETED,
+                        },
+                    },
+                }),
+
+                // active claims
+                this.prisma.claim.count({
+                    where: {
+                        userId,
+                        state: {
+                            status: {
+                                in: [
+                                    ClaimStatus.PENDING,
+                                    ClaimStatus.IN_PROGRESS,
+                                ],
+                            },
+                        },
+                    },
+                }),
+                // sum of ClaimState.amount where state.status = COMPLETED
+                this.prisma.claimState.aggregate({
+                    where: {
+                        status: ClaimStatus.COMPLETED,
+                        Claim: { some: { userId } },
+                    },
+                    _sum: { amount: true },
+                }),
+            ]);
+
+        const successByMonth = await this.prisma.$queryRaw<
+            { month: string; success: number }[]
+        >`
+            SELECT
+                TO_CHAR(c."created_at", 'Mon') AS month,
+    COUNT(*) AS success
+            FROM "claims" c
+                INNER JOIN "claim_states" s ON c."state_id" = s."id"
+            WHERE s."status" = 'COMPLETED'
+                ${userId ? Prisma.sql`AND c."user_id" = ${userId}` : Prisma.empty}
+            GROUP BY month, date_trunc('month', c."created_at")
+            ORDER BY date_trunc('month', c."created_at") DESC
+        `;
+
+        const completedAmount = completedAmountAgg._sum.amount ?? 0;
+        return {
+            total,
+            successful,
+            active,
+            completedAmount,
+            successByMonth: successByMonth.map(({ month, success }) => ({
+                month,
+                success: success.toString(),
+            })),
+        };
     }
 
     async updateStep(claimId: string, step: number): Promise<Claim> {
@@ -389,8 +497,16 @@ export class ClaimsService {
                 },
             },
             state: {
-                include: {
-                    progress: true,
+                select: {
+                    id: true,
+                    status: true,
+                    amount: true,
+                    updatedAt: true,
+                    progress: {
+                        orderBy: {
+                            order: 'asc' as const,
+                        },
+                    },
                 },
             },
             customer: true,
@@ -404,5 +520,118 @@ export class ClaimsService {
         const min = Math.pow(10, length - 1);
         const max = Math.pow(10, length) - 1;
         return Math.floor(Math.random() * (max - min + 1) + min).toString();
+    }
+
+    async updateCustomer(dto: CustomerDto, claimId: string) {
+        return this.prisma.claimCustomer.update({
+            where: {
+                id: (
+                    await this.prisma.claim.findUniqueOrThrow({
+                        where: { id: claimId },
+                        select: { customerId: true },
+                    })
+                ).customerId,
+            },
+            data: {
+                firstName: dto.firstName,
+                lastName: dto.lastName,
+                email: dto.email,
+                phone: dto.phone,
+                address: dto.address,
+            },
+        });
+    }
+    async updateFlight(dto: FlightDto, claimId: string) {
+        return this.prisma.claimDetails.update({
+            where: {
+                id: (
+                    await this.prisma.claim.findUniqueOrThrow({
+                        where: { id: claimId },
+                        select: { detailsId: true },
+                    })
+                ).detailsId,
+            },
+            data: {
+                flightNumber: dto.flightNumber,
+                date: new Date(dto.date),
+                airlines: {
+                    update: {
+                        name: dto.airline,
+                    },
+                },
+                routes: {
+                    deleteMany: {},
+                    create: dto.routes.map((r) => ({
+                        ArrivalAirport: {
+                            create: {
+                                name: r.arrivalAirport,
+                                icao: r.arrivalIcao,
+                            },
+                        },
+                        DepartureAirport: {
+                            create: {
+                                name: r.departureAirport,
+                                icao: r.departureIcao,
+                            },
+                        },
+                        troubled: r.troubled,
+                    })),
+                },
+            },
+        });
+    }
+    async updateIssue(dto: IssueDto, claimId: string) {
+        return this.prisma.claimIssue.update({
+            where: {
+                id: (
+                    await this.prisma.claim.findUniqueOrThrow({
+                        where: { id: claimId },
+                        select: { issueId: true },
+                    })
+                ).issueId,
+            },
+            data: {
+                disruptionType: dto.flightIssue,
+                airlineReason: dto.reasonGivenByAirline,
+                additionalInfo: dto.additionalInformation,
+            },
+        });
+    }
+    async updatePayment(dto: PaymentDto, claimId: string) {
+        return this.prisma.claimPayment.update({
+            where: {
+                id: (
+                    await this.prisma.claim.findUniqueOrThrow({
+                        where: { id: claimId },
+                        select: { paymentId: true },
+                    })
+                ).paymentId as string,
+            },
+            data: {
+                paymentMethod: dto.paymentMethod,
+                accountName: dto.accountName,
+                accountNumber: dto.accountNumber,
+                email: dto.email,
+                iban: dto.iban,
+                paypalEmail: dto.paypalEmail,
+                bankName: dto.bankName,
+            },
+        });
+    }
+    async updateState(dto: StateDto, claimId: string) {
+        return this.prisma.claimState.update({
+            where: {
+                id: (
+                    await this.prisma.claim.findUniqueOrThrow({
+                        where: { id: claimId },
+                        select: { stateId: true },
+                    })
+                ).stateId,
+            },
+            data: {
+                amount: dto.amount,
+                status: dto.status,
+            },
+        });
     }
 }

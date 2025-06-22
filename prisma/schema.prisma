@@ -127,6 +127,7 @@ model Progress {
   title        String         @map("title")
   description  String         @map("description")
   endAt        DateTime?      @map("end_at")
+  order        Int            @default(1)
   status       ProgressStatus @map("status")
   claimStateId String         @map("claim_state_id")
   claimState   ClaimState     @relation(fields: [claimStateId], references: [id], onDelete: Cascade)

@@ -108,8 +108,9 @@ export class DocusignController {
             return;
         }
 
-        if (body.data.envelopeSummary.status != 'completed') {
-            console.warn('status not competed');
+        if (body.data.envelopeSummary?.status != 'completed') {
+            console.warn('status not completed');
+            console.log(body);
             return;
         }
 

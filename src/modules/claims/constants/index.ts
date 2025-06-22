@@ -7,3 +7,7 @@ export const INVALID_FLIGHT_ID = 'Flight id is invalid';
 export const INVALID_CLAIM_ID = 'Claim id is invalid';
 
 export const INVALID_JWT = 'Invalid jwt';
+
+export const INVALID_DOCUMENT_ID = 'Invalid document id';
+
+export const FILE_DOESNT_ON_DISK = 'File does not exist on disk';
