@@ -25,8 +25,8 @@ export class GmailService implements OnModuleInit {
             refresh_token: this.configService.getOrThrow('GMAIL_REFRESH_TOKEN'),
         });
 
-        // await this.updateAccessToken();
-        // console.log();
+        await this.updateAccessToken();
+        console.log();
 
         this.gmail = google.gmail({ version: 'v1', auth: this.oauth2Client });
     }
@@ -83,13 +83,17 @@ export class GmailService implements OnModuleInit {
 
     @Interval(FIFTY_FIVE_MINUTES)
     async updateAccessToken() {
-        const { token } = await this.oauth2Client.getAccessToken();
+        try {
+            const tokens = await this.oauth2Client.refreshAccessToken();
+            const accessToken = tokens.credentials.access_token;
 
-        if (!token) {
-            throw new Error(UPDATE_ACCESS_TOKEN_ERROR);
+            if (!accessToken) throw new Error();
+
+            this.accessToken = accessToken;
+            console.log('Access token refreshed');
+        } catch (err) {
+            console.error('Failed to refresh access token', err);
         }
-
-        this.accessToken = token;
     }
 
     private get accessToken() {
