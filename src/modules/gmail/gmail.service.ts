@@ -100,7 +100,7 @@ export class GmailService implements OnModuleInit {
         return this._accessToken;
     }
     private set accessToken(accessToken: string) {
-        this.oauth2Client.setCredentials({ access_token: accessToken });
+        // this.oauth2Client.setCredentials({ access_token: accessToken });
         this._accessToken = accessToken;
     }
 }
