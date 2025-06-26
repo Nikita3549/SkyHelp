@@ -24,6 +24,8 @@ services:
       - ./init-db:/docker-entrypoint-initdb.d
     ports:
       - 5433:5432
+    networks:
+      - main
   redis:
     image: redis
     container_name: redis
@@ -50,6 +52,7 @@ services:
     depends_on:
       - db
       - redis
+      - db-static
     command: sh -c "cd /opt/api/ && npx prisma db push && npm run start:prod"
 
 networks:
