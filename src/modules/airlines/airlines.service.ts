@@ -12,12 +12,11 @@ export class AirlinesService implements OnModuleInit {
 
     async onModuleInit() {
         this.pool = new Pool({
-            user: this.configService.getOrThrow('DATABASE_AIRPORTS_USER'),
-            database: this.configService.getOrThrow('DATABASE_AIRPORTS_DBNAME'),
-            port: this.configService.getOrThrow('DATABASE_AIRPORTS_PORT'),
-            password: this.configService.getOrThrow(
-                'DATABASE_AIRPORTS_PASSWORD',
-            ),
+            user: this.configService.getOrThrow('DATABASE_STATIC_USER'),
+            database: this.configService.getOrThrow('DATABASE_STATIC_DBNAME'),
+            port: this.configService.getOrThrow('DATABASE_STATIC_PORT'),
+            password: this.configService.getOrThrow('DATABASE_STATIC_PASSWORD'),
+            host: this.configService.getOrThrow('DATABASE_STATIC_HOST'),
         });
     }
 
