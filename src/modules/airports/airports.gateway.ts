@@ -65,19 +65,11 @@ export class AirportsGateway {
                 throw new InternalServerErrorException();
             });
 
-        const mappedAirports = airports.data.map((a) => ({
-            icao: a.icao_code,
-            iata: a.iata_code,
-            country: a.country_iso2,
-            city: a.city_iata_code,
-            name: a.airport_name,
-        }));
-
         this.cacheService.setCache(
             `airports-${formatedAirportName}`,
-            JSON.stringify(mappedAirports),
+            JSON.stringify(airports),
         );
 
-        return mappedAirports;
+        return airports;
     }
 }

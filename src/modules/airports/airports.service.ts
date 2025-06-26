@@ -1,47 +1,74 @@
-import { Injectable } from '@nestjs/common';
-import { IAirports } from './interfaces/airport.interface';
+import { Injectable, OnModuleInit } from '@nestjs/common';
+import { IAirport } from './interfaces/airport.interface';
 import axios, { AxiosResponse } from 'axios';
 import { ConfigService } from '@nestjs/config';
+import { Pool } from 'pg';
+import { IDbAirport } from './interfaces/db-airport.interface';
 
 @Injectable()
-export class AirportsService {
+export class AirportsService implements OnModuleInit {
+    private pool: Pool;
     constructor(private readonly configService: ConfigService) {}
 
-    public async getAirportsByName(name: string): Promise<IAirports> {
-        const response: AxiosResponse<IAirports> = await axios.get(
-            `${this.configService.getOrThrow('AVIATION_STACK_BASE_URL')}/airports?access_key=${this.configService.getOrThrow('AVIATION_STACK_API_KEY')}&search=${name}`,
-        );
-
-        return {
-            data: this.sortAirports(response.data.data, name),
-        };
+    async onModuleInit() {
+        this.pool = new Pool({
+            user: this.configService.getOrThrow('DATABASE_AIRPORTS_USER'),
+            database: this.configService.getOrThrow('DATABASE_AIRPORTS_DBNAME'),
+            port: this.configService.getOrThrow('DATABASE_AIRPORTS_PORT'),
+            password: this.configService.getOrThrow(
+                'DATABASE_AIRPORTS_PASSWORD',
+            ),
+        });
     }
-    private sortAirports(list: IAirports['data'], query: string) {
-        const q = query.trim().toLowerCase();
 
-        return (
-            list
-                // attach scoring + original index for stable sorting
-                .map((a, idx) => ({
-                    airport: a,
-                    score: a.airport_name.toLowerCase().indexOf(q), // -1 if no hit
-                    idx,
-                }))
-                .sort((a, b) => {
-                    const aHas = a.score !== -1;
-                    const bHas = b.score !== -1;
+    public async getAirportsByName(name: string): Promise<IAirport[]> {
+        const dbAirports = (
+            await this.pool.query<IDbAirport>(
+                'SELECT\n' +
+                    '  id,\n' +
+                    '  name,\n' +
+                    '  city,\n' +
+                    '  country,\n' +
+                    '  iata_code,\n' +
+                    '  icao_code,\n' +
+                    '  latitude,\n' +
+                    '  longitude,\n' +
+                    '  altitude,\n' +
+                    '  timezone_offset,\n' +
+                    '  dst,\n' +
+                    '  tz,\n' +
+                    '  type,\n' +
+                    '  source,\n' +
+                    '  CASE\n' +
+                    '    WHEN iata_code ILIKE $1 THEN 1 \n' +
+                    '    WHEN icao_code ILIKE $1 THEN 2 \n' +
+                    '    WHEN city ILIKE $1 THEN 3      \n' +
+                    '    WHEN country ILIKE $1 THEN 4   \n' +
+                    '    WHEN name ILIKE $1 THEN 5      \n' +
+                    "    WHEN city ILIKE '%' || $1 || '%' THEN 6\n" +
+                    "    WHEN country ILIKE '%' || $1 || '%' THEN 7\n" +
+                    "    WHEN name ILIKE '%' || $1 || '%' THEN 8\n" +
+                    '    ELSE 9\n' +
+                    '  END AS relevance\n' +
+                    'FROM airports\n' +
+                    'WHERE\n' +
+                    "  iata_code   ILIKE '%' || $1 || '%'\n" +
+                    "  OR icao_code ILIKE '%' || $1 || '%'\n" +
+                    "  OR city       ILIKE '%' || $1 || '%'\n" +
+                    "  OR country    ILIKE '%' || $1 || '%'\n" +
+                    "  OR name       ILIKE '%' || $1 || '%'\n" +
+                    'ORDER BY relevance, name\n' +
+                    'LIMIT 10;\n',
+                [name],
+            )
+        ).rows;
 
-                    if (aHas && bHas) {
-                        // both matched: closer to start wins, otherwise keep original order
-                        return a.score === b.score
-                            ? a.idx - b.idx
-                            : a.score - b.score;
-                    }
-                    if (aHas) return -1; // only a matched — a first
-                    if (bHas) return 1; // only b matched — b first
-                    return a.idx - b.idx; // no hits: preserve initial order
-                })
-                .map(({ airport }) => airport)
-        );
+        return dbAirports.map((a) => ({
+            icao: a.icao_code,
+            iata: a.iata_code,
+            country: a.country,
+            city: a.city,
+            name: a.name,
+        }));
     }
 }

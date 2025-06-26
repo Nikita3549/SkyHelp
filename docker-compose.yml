@@ -12,6 +12,18 @@ services:
       - db_data:/var/lib/postgresql/data
     ports:
       - ${DATABASE_PORT}:5432
+  db-static:
+    image: postgres
+    container_name: db-static
+    restart: always
+    environment:
+      POSTGRES_USER: ${DATABASE_AIRPORTS_USER}
+      POSTGRES_PASSWORD: ${DATABASE_AIRPORTS_PASSWORD}
+      POSTGRES_DB: ${DATABASE_AIRPORTS_DBNAME}
+    volumes:
+      - ./init-db:/docker-entrypoint-initdb.d
+    ports:
+      - ${DATABASE_AIRPORTS_PORT}:5432
   redis:
     image: redis
     container_name: redis
