@@ -17,13 +17,13 @@ services:
     container_name: db-static
     restart: always
     environment:
-      POSTGRES_USER: ${DATABASE_AIRPORTS_USER}
-      POSTGRES_PASSWORD: ${DATABASE_AIRPORTS_PASSWORD}
-      POSTGRES_DB: ${DATABASE_AIRPORTS_DBNAME}
+      POSTGRES_USER: ${DATABASE_STATIC_USER}
+      POSTGRES_PASSWORD: ${DATABASE_STATIC_PASSWORD}
+      POSTGRES_DB: ${DATABASE_STATIC_DBNAME}
     volumes:
       - ./init-db:/docker-entrypoint-initdb.d
     ports:
-      - ${DATABASE_AIRPORTS_PORT}:5432
+      - ${DATABASE_STATIC_PORT}:${DATABASE_STATIC_PORT}
   redis:
     image: redis
     container_name: redis
