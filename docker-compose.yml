@@ -47,6 +47,7 @@ services:
       - ${API_PORT}:${API_PORT}
     volumes:
       - ./.env:/opt/api/.env
+      - ./uploads:/opt/api/uploads/
     networks:
       - main
     depends_on:
@@ -62,3 +63,4 @@ networks:
 volumes:
   db_data:
   redis_data:
+  uploads:
