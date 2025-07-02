@@ -11,5 +11,6 @@ FROM node:22-alpine
 WORKDIR opt/api
 COPY package.json ./
 COPY prisma ./
+COPY translations ./
 RUN npm install --only=prod
 COPY --from=build /opt/api/dist ./dist
