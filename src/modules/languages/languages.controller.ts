@@ -22,6 +22,7 @@ export class LanguagesController {
                     { encoding: 'utf-8' },
                 )
                 .catch((_e: unknown) => {
+                    console.error(_e);
                     throw new NotFoundException(INVALID_LANGUAGE);
                 }),
         );
