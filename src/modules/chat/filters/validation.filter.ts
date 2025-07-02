@@ -4,12 +4,12 @@ import { Socket } from 'socket.io';
 
 @Catch(BadRequestException)
 export class ValidationFilter extends BaseWsExceptionFilter {
-	catch(exception: BadRequestException, host: ArgumentsHost) {
-		const client: Socket = host.switchToWs().getClient();
+    catch(exception: BadRequestException, host: ArgumentsHost) {
+        const client: Socket = host.switchToWs().getClient();
 
-		client.emit(
-			'exception',
-			`Bad Request: ${JSON.stringify(exception.getResponse())}`,
-		);
-	}
+        client.emit(
+            'exception',
+            `Bad Request: ${JSON.stringify(exception.getResponse())}`,
+        );
+    }
 }

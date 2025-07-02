@@ -1,10 +1,10 @@
 import { IsOptional, IsString } from 'class-validator';
 
 export class MessageReadDto {
-	@IsString()
-	messageId: string;
+    @IsString()
+    messageId: string;
 
-	@IsOptional()
-	@IsString()
-	chatId: string;
+    @IsOptional()
+    @IsString()
+    chatId: string;
 }

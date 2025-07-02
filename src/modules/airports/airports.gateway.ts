@@ -49,7 +49,7 @@ export class AirportsGateway {
         if (airportName.length <= 1) {
             return [];
         }
-        const formatedAirportName = airportName.toLowerCase();
+        const formatedAirportName = airportName.toLowerCase().trim();
         const cache = await this.cacheService.getCache(
             `airports-${formatedAirportName}`,
         );

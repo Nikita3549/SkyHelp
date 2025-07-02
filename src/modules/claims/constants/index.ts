@@ -11,3 +11,5 @@ export const INVALID_JWT = 'Invalid jwt';
 export const INVALID_DOCUMENT_ID = 'Invalid document id';
 
 export const FILE_DOESNT_ON_DISK = 'File does not exist on disk';
+
+export const INVALID_ICAO = 'Invalid ICAO code';

@@ -23,6 +23,7 @@ import {
     INVALID_CLAIM_ID,
     INVALID_DOCUMENT_ID,
     INVALID_FLIGHT_ID,
+    INVALID_ICAO,
     INVALID_JWT,
     SAVE_DOCUMENTS_SUCCESS,
 } from './constants';
@@ -52,6 +53,8 @@ import { FlightDto } from './dto/update-parts/flight.dto';
 import { IssueDto } from './dto/update-parts/issue.dto';
 import { PaymentDto } from './dto/update-parts/payment.dto';
 import { StateDto } from './dto/update-parts/state.dto';
+import { GetCompensationQueryDto } from './dto/get-compensation-query.dto';
+import { AirportsService } from '../airports/airports.service';
 
 @Controller('claims')
 @UseGuards(JwtAuthGuard)
@@ -280,6 +283,7 @@ export class PublicClaimsController {
         private readonly claimsService: ClaimsService,
         private readonly tokenService: TokenService,
         private readonly flightService: FlightsService,
+        private readonly airportService: AirportsService,
     ) {}
 
     @Post()
@@ -328,19 +332,33 @@ export class PublicClaimsController {
         return await this.claimsService.updateClaim(dto, claimId);
     }
 
-    @Post('/:flightId/compensation')
+    @Post('/compensation')
     async getCompensation(
         @Body() dto: GetCompensationDto,
-        @Param('flightId') flightId: string,
+        @Query() query: GetCompensationQueryDto,
     ) {
-        const flight = await this.flightService
-            .getFlightById(flightId)
-            .catch((_e) => {
-                throw new BadRequestException(INVALID_FLIGHT_ID);
-            });
+        const { depIcao, arrIcao } = query;
+
+        const arrivalAirport =
+            await this.airportService.getAirportByIcao(arrIcao);
+        const departureAirport =
+            await this.airportService.getAirportByIcao(depIcao);
+
+        if (!arrivalAirport || !departureAirport) {
+            throw new BadRequestException(INVALID_ICAO);
+        }
+
+        const distance = this.flightService.calculateDistanceBetweenAirports(
+            departureAirport.latitude,
+            departureAirport.longitude,
+            departureAirport.altitude,
+            arrivalAirport.latitude,
+            arrivalAirport.longitude,
+            arrivalAirport.altitude,
+        );
 
         const compensation = this.claimsService.calculateCompensation(
-            Object.assign(dto, { flightDistanceKm: flight.actual_distance }),
+            Object.assign(dto, { flightDistanceKm: distance }),
         );
 
         return {

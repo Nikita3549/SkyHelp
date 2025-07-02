@@ -1,6 +1,5 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { IAirport } from './interfaces/airport.interface';
-import axios, { AxiosResponse } from 'axios';
 import { ConfigService } from '@nestjs/config';
 import { Pool } from 'pg';
 import { IDbAirport } from './interfaces/db-airport.interface';
@@ -69,5 +68,14 @@ export class AirportsService implements OnModuleInit {
             city: a.city,
             name: a.name,
         }));
+    }
+
+    public async getAirportByIcao(icao: string): Promise<IDbAirport | null> {
+        const airport = await this.pool.query<IDbAirport>(
+            `SELECT * FROM airports WHERE icao_code = $1`,
+            [icao],
+        );
+
+        return airport.rows[0] || null;
     }
 }
