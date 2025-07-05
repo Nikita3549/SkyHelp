@@ -2723,6 +2723,7 @@
   "Eligibility.euRegulation": "EU Regulation 261/2004",
   "Eligibility.youMayBeEntitled": "you may be entitled to",
   "Eligibility.compensationIfFlight": "compensation if your flight has been:",
+  "Eligibility.compensationIfFlightMobile": "Your compensation depends on the flight distance.",
   "Eligibility.planeAlt": "plane",
   "Eligibility.shortDistance": "Short Distance",
   "Eligibility.flightsUpTo1500": "Flights up to 1,500 km",
