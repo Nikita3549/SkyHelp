@@ -1529,6 +1529,8 @@
   "TermsOfService.finalAuthorization": "Принимая настоящие Условия, Клиент уполномочивает SkyHelp действовать от его имени для получения компенсации за рейс.",
   "ThankYouPage.thankYouTitle": "Спасибо за подпись!",
   "ThankYouPage.signatureSuccess": "Ваша подпись успешно сохранена.",
+  "ThankYouPage.thankYouTitleDeclined": "Упс...",
+  "ThankYouPage.signatureDeclined": "Что то пошло не так. Мы вышлем вам документ для подписи позже",
   "UserManagement.pageTitle": "Управление пользователями",
   "UserManagement.pageDescription": "Просмотр, редактирование и управление аккаунтами и правами пользователей",
   "UserManagement.fetchError": "Не удалось загрузить список пользователей. Пожалуйста, попробуйте позже.",

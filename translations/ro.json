@@ -1529,6 +1529,8 @@
   "TermsOfService.finalAuthorization": "Prin acceptarea acestor T&C, Clientul autorizează SkyHelp să acționeze în numele său pentru obținerea compensației de zbor.",
   "ThankYouPage.thankYouTitle": "Îți mulțumim pentru semnătură!",
   "ThankYouPage.signatureSuccess": "Semnătura ta a fost trimisă cu succes.",
+  "ThankYouPage.thankYouTitleDeclined": "Ups...",
+  "ThankYouPage.signatureDeclined": "Ceva nu a mers bine. Vă vom trimite documentul mai târziu pe e-mail.",
   "UserManagement.pageTitle": "Gestionare Utilizatori",
   "UserManagement.pageDescription": "Vizualizează, editează și administrează conturile și permisiunile utilizatorilor",
   "UserManagement.fetchError": "Nu s-au putut prelua utilizatorii. Te rugăm să încerci din nou mai târziu.",

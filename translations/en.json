@@ -1529,6 +1529,8 @@
   "TermsOfService.finalAuthorization": "By agreeing to these T&C, the Client authorizes SkyHelp to act on their behalf in pursuing flight compensation.",
   "ThankYouPage.thankYouTitle": "Thank you for signing!",
   "ThankYouPage.signatureSuccess": "Your signature has been successfully submitted.",
+  "ThankYouPage.thankYouTitleDeclined": "Oops...",
+  "ThankYouPage.signatureDeclined": "Something go wrong. We will send you document on the email later",
   "UserManagement.pageTitle": "User Management",
   "UserManagement.pageDescription": "View, edit and manage user accounts and permissions",
   "UserManagement.fetchError": "Failed to fetch users. Please try again later.",
