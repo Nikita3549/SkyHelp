@@ -55,6 +55,8 @@ import { PaymentDto } from './dto/update-parts/payment.dto';
 import { StateDto } from './dto/update-parts/state.dto';
 import { GetCompensationQueryDto } from './dto/get-compensation-query.dto';
 import { AirportsService } from '../airports/airports.service';
+import { NotificationsService } from '../notifications/notifications.service';
+import { ConfigService } from '@nestjs/config';
 
 @Controller('claims')
 @UseGuards(JwtAuthGuard)
@@ -72,6 +74,7 @@ export class ClaimsController {
                 description: dto.description,
                 endAt: dto.endAt ? new Date(dto.endAt) : null,
                 status: dto.status,
+                order: dto.order,
             },
             progressId,
         );
@@ -284,6 +287,8 @@ export class PublicClaimsController {
         private readonly tokenService: TokenService,
         private readonly flightService: FlightsService,
         private readonly airportService: AirportsService,
+        private readonly notificationService: NotificationsService,
+        private readonly configService: ConfigService,
     ) {}
 
     @Post()
@@ -303,7 +308,7 @@ export class PublicClaimsController {
             {
                 claimId: claim.id,
             },
-            { expiresIn: '2days' },
+            { expiresIn: '3days' },
         );
 
         return {
@@ -327,7 +332,14 @@ export class PublicClaimsController {
             throw new UnauthorizedException(INVALID_JWT);
         }
 
-        await this.claimsService.updateStep(claimId, step);
+        const claim = await this.claimsService.updateStep(claimId, step);
+
+        if (step == 9) {
+            await this.notificationService.sendClaimCreated(
+                claim.customer.email,
+                `${this.configService.getOrThrow('FRONTEND_URL')}/register?claim=${jwt}`,
+            );
+        }
 
         return await this.claimsService.updateClaim(dto, claimId);
     }

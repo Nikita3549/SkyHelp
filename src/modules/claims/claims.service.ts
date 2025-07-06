@@ -19,11 +19,13 @@ import { FlightDto } from './dto/update-parts/flight.dto';
 import { IssueDto } from './dto/update-parts/issue.dto';
 import { PaymentDto } from './dto/update-parts/payment.dto';
 import { StateDto } from './dto/update-parts/state.dto';
+import { IFullClaim } from './interfaces/full-claim.interface';
 
 @Injectable()
 export class ClaimsService {
     constructor(private readonly prisma: PrismaService) {}
-    async getClaim(claimId: string) {
+
+    async getClaim(claimId: string): Promise<IFullClaim | null> {
         return this.prisma.claim.findFirst({
             where: {
                 id: claimId,
@@ -56,7 +58,7 @@ export class ClaimsService {
     async createClaim(
         claim: CreateClaimDto,
         userId: string | null,
-    ): Promise<Claim> {
+    ): Promise<IFullClaim> {
         const maxAttempts = 5;
         for (let attempt = 0; attempt < maxAttempts; attempt++) {
             const numericId = this.generateNumericId();
@@ -152,7 +154,10 @@ export class ClaimsService {
         );
     }
 
-    async updateClaim(newClaim: UpdateClaimDto, claimId: string) {
+    async updateClaim(
+        newClaim: UpdateClaimDto,
+        claimId: string,
+    ): Promise<IFullClaim> {
         return this.prisma.claim.update({
             data: {
                 details: {
@@ -184,10 +189,6 @@ export class ClaimsService {
                     update: {
                         status: newClaim.state.status,
                         amount: newClaim.state.amount,
-                        progress: {
-                            deleteMany: {},
-                            create: newClaim.state.progress,
-                        },
                     },
                 },
                 customer: {
@@ -339,7 +340,7 @@ export class ClaimsService {
         userId?: string,
         page: number = 1,
         pageSize: number = 20,
-    ): Promise<Claim[]> {
+    ): Promise<IFullClaim[]> {
         const skip = (page - 1) * pageSize;
 
         return this.prisma.claim.findMany({
@@ -438,7 +439,7 @@ export class ClaimsService {
         };
     }
 
-    async updateStep(claimId: string, step: number): Promise<Claim> {
+    async updateStep(claimId: string, step: number): Promise<IFullClaim> {
         return this.prisma.claim.update({
             data: {
                 step,
@@ -453,7 +454,7 @@ export class ClaimsService {
     async updateEnvelopeId(
         claimId: string,
         envelopeId: string,
-    ): Promise<Claim> {
+    ): Promise<IFullClaim> {
         return this.prisma.claim.update({
             data: {
                 envelopeId,
@@ -465,7 +466,7 @@ export class ClaimsService {
         });
     }
 
-    async getClaimByEnvelopeId(envelopeId: string) {
+    async getClaimByEnvelopeId(envelopeId: string): Promise<IFullClaim | null> {
         return this.prisma.claim.findFirst({
             where: {
                 envelopeId,
@@ -631,6 +632,17 @@ export class ClaimsService {
             data: {
                 amount: dto.amount,
                 status: dto.status,
+            },
+        });
+    }
+
+    async connectWithUser(claimId: string, userId: string) {
+        return this.prisma.claim.update({
+            data: {
+                userId,
+            },
+            where: {
+                id: claimId,
             },
         });
     }

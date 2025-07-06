@@ -6,6 +6,7 @@ import { UserModule } from '../user/user.module';
 import { TokenModule } from '../token/token.module';
 import { NotificationsModule } from '../notifications/notifications.module';
 import { PassportModule } from '@nestjs/passport';
+import { ClaimsModule } from '../claims/claims.module';
 
 @Module({
     imports: [
@@ -14,6 +15,7 @@ import { PassportModule } from '@nestjs/passport';
         TokenModule,
         NotificationsModule,
         PassportModule,
+        ClaimsModule,
     ],
     controllers: [AuthController],
     providers: [AuthService],

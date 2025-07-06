@@ -12,6 +12,7 @@ import {
     NotFoundException,
     Get,
     Req,
+    Query,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
@@ -45,6 +46,8 @@ import { UserRole } from '@prisma/client';
 import { IsModeratorGuard } from '../../guards/isModerator.guard';
 import { UpdateStatusDto } from './dto/update-status.dto';
 import { AuthRequest } from '../../interfaces/AuthRequest.interface';
+import { IClaimJwt } from '../claims/interfaces/claim-jwt.interface';
+import { ClaimsService } from '../claims/claims.service';
 
 @Controller('auth')
 export class AuthController {
@@ -53,6 +56,7 @@ export class AuthController {
         private readonly userService: UserService,
         private readonly notificationService: NotificationsService,
         private readonly tokenService: TokenService,
+        private readonly claimService: ClaimsService,
     ) {}
 
     @Post('register')
@@ -96,6 +100,7 @@ export class AuthController {
     @Post('verify-register')
     async verifyRegister(
         @Body() dto: VerifyRegisterDto,
+        @Query('claim') claimToken?: string,
     ): Promise<IPublicUserDataWithJwt> {
         const { email, code } = dto;
 
@@ -125,6 +130,8 @@ export class AuthController {
             isActive: true,
         });
 
+        await this.connectWithClaim(userData.id, claimToken);
+
         return {
             userData,
             jwt,
@@ -153,7 +160,10 @@ export class AuthController {
 
     @Post('login')
     @HttpCode(HttpStatus.OK)
-    async login(@Body() dto: LoginDto): Promise<IPublicUserDataWithJwt> {
+    async login(
+        @Body() dto: LoginDto,
+        @Query('claim') claimToken?: string,
+    ): Promise<IPublicUserDataWithJwt> {
         const { email, password } = dto;
 
         const expiredUser = await this.userService.getUserByEmail(email);
@@ -185,6 +195,8 @@ export class AuthController {
         };
 
         const jwt = this.tokenService.generateJWT(publicUserData);
+
+        await this.connectWithClaim(user.id, claimToken);
 
         return {
             userData: publicUserData,
@@ -282,5 +294,19 @@ export class AuthController {
     @UseGuards(JwtAuthGuard)
     async decodeToken(@Req() req: AuthRequest) {
         return req.user;
+    }
+
+    private async connectWithClaim(userId: string, claimToken?: string) {
+        if (claimToken) {
+            try {
+                const payload =
+                    this.tokenService.verifyJWT<IClaimJwt>(claimToken);
+
+                await this.claimService.connectWithUser(
+                    payload.claimId,
+                    userId,
+                );
+            } catch (e: unknown) {}
+        }
     }
 }

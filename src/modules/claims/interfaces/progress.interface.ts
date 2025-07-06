@@ -5,4 +5,5 @@ export interface IProgress {
     description: string;
     endAt: Date | null;
     status: ProgressStatus;
+    order: number;
 }

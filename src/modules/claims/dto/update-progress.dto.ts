@@ -1,5 +1,5 @@
 import { ProgressStatus } from '@prisma/client';
-import { IsISO8601, IsOptional, IsString } from 'class-validator';
+import { IsISO8601, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class UpdateProgressDto {
     @IsString()
@@ -14,4 +14,7 @@ export class UpdateProgressDto {
 
     @IsString()
     status: ProgressStatus;
+
+    @IsNumber()
+    order: number;
 }

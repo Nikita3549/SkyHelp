@@ -28,4 +28,21 @@ export class NotificationsService {
             `Your SkyHelp password has recently changed.`,
         );
     }
+
+    async sendClaimCreated(to: string, registrationLink?: string) {
+        console.log(
+            `Send email: 
+to: ${to},
+subject: Your claim successfully submitted`,
+            `body: \`We've started process your claim.
+${registrationLink ? `Register to see your claim status: ${registrationLink}` : ''}\``,
+        );
+
+        await this.gmail.sendNoReplyEmail(
+            to,
+            `Your claim successfully submitted`,
+            `We've started process your claim.
+${registrationLink ? `Register to see your claim status: ${registrationLink}` : ''}`,
+        );
+    }
 }

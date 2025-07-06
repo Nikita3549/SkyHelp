@@ -37,7 +37,7 @@ export class GmailService implements OnModuleInit {
 
         this.gmail = google.gmail({ version: 'v1', auth: this.oauth2Client });
 
-        console.log(await this.getGmailPage());
+        // console.log(await this.getGmailPage());
     }
 
     async getGmailPage(
@@ -177,7 +177,7 @@ export class GmailService implements OnModuleInit {
             if (!accessToken) throw new Error();
 
             this.accessToken = accessToken;
-            console.log('Access token refreshed');
+            console.log('Gmail Access token refreshed');
         } catch (err) {
             console.error('Failed to refresh access token', err);
         }
