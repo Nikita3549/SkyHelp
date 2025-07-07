@@ -136,6 +136,73 @@ export class GmailService implements OnModuleInit {
         );
     }
 
+    async sendNoReplyEmailHtml(
+        to: string,
+        subject: string,
+        htmlContent: string,
+    ) {
+        await this.sendEmailHtml(
+            to,
+            subject,
+            htmlContent,
+            this.configService.getOrThrow('GMAIL_NOREPLY_EMAIL'),
+        );
+    }
+
+    async sendContactEmailHtml(
+        to: string,
+        subject: string,
+        htmlContent: string,
+    ) {
+        await this.sendEmailHtml(
+            to,
+            subject,
+            htmlContent,
+            this.configService.getOrThrow('GMAIL_CONTACT_EMAIL'),
+        );
+    }
+
+    private async sendEmailHtml(
+        to: string,
+        subject: string,
+        htmlContent: string,
+        from: string,
+    ) {
+        try {
+            const boundary = '__BOUNDARY__';
+
+            const rawMessage = Buffer.from(
+                [
+                    `From: ${from}`,
+                    `To: ${to}`,
+                    `Subject: ${subject}`,
+                    'MIME-Version: 1.0',
+                    `Content-Type: multipart/alternative; boundary="${boundary}"`,
+                    '',
+                    `--${boundary}`,
+                    'Content-Type: text/html; charset="UTF-8"',
+                    'Content-Transfer-Encoding: 7bit',
+                    '',
+                    htmlContent,
+                    `--${boundary}--`,
+                ].join('\n'),
+            )
+                .toString('base64')
+                .replace(/\+/g, '-')
+                .replace(/\//g, '_')
+                .replace(/=+$/, '');
+
+            const res = await this.gmail.users.messages.send({
+                userId: 'me',
+                requestBody: {
+                    raw: rawMessage,
+                },
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
     private async sendEmail(
         to: string,
         subject: string,

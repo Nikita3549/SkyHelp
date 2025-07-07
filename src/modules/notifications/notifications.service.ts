@@ -1,9 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { GmailService } from '../gmail/gmail.service';
+import * as fs from 'fs/promises';
+import * as path from 'node:path';
 
 @Injectable()
 export class NotificationsService {
     constructor(private readonly gmail: GmailService) {}
+
     async sendRegisterCode(to: string, code: number) {
         console.log(`Send register code: ${code} on ${to}`);
         await this.gmail.sendNoReplyEmail(
@@ -29,20 +32,30 @@ export class NotificationsService {
         );
     }
 
-    async sendClaimCreated(to: string, registrationLink?: string) {
-        console.log(
-            `Send email: 
-to: ${to},
-subject: Your claim successfully submitted`,
-            `body: \`We've started process your claim.
-${registrationLink ? `Register to see your claim status: ${registrationLink}` : ''}\``,
+    async sendClaimCreated(
+        to: string,
+        claimData: {
+            id: string;
+            airlineName: string;
+            link: string;
+        },
+    ) {
+        const letterTemplateBuffer = await fs.readFile(
+            path.join(__dirname, '../../../letters/createClaim.html'),
         );
 
-        await this.gmail.sendNoReplyEmail(
+        const letterTemplate = letterTemplateBuffer
+            .toString()
+            .replace('{{claimId}}', claimData.id)
+            .replace('{{airlineName}}', claimData.airlineName)
+            .replace('{{airlineName}}', claimData.airlineName)
+            .replace('{{airlineName}}', claimData.airlineName)
+            .replace('{{claimLink}}', claimData.link);
+
+        await this.gmail.sendNoReplyEmailHtml(
             to,
-            `Your claim successfully submitted`,
-            `We've started process your claim.
-${registrationLink ? `Register to see your claim status: ${registrationLink}` : ''}`,
+            `Your claim successfully submitted #${claimData.id}`,
+            letterTemplate,
         );
     }
 }

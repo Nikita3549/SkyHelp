@@ -337,7 +337,11 @@ export class PublicClaimsController {
         if (step == 9) {
             await this.notificationService.sendClaimCreated(
                 claim.customer.email,
-                `${this.configService.getOrThrow('FRONTEND_URL')}/register?claim=${jwt}`,
+                {
+                    id: claim.id,
+                    link: `${this.configService.getOrThrow('FRONTEND_HOST')}/${claim.userId ? 'dashboard' : `register?claim=${jwt}`}`,
+                    airlineName: claim.details.airlines.name,
+                },
             );
         }
 
