@@ -323,7 +323,7 @@ export class PublicClaimsController {
         @Param('claimId') claimId: string,
         @Query() query: JwtStepQueryDto,
     ) {
-        const { jwt, step } = query;
+        const { jwt, step, language } = query;
 
         const { claimId: jwtClaimId } =
             this.tokenService.verifyJWT<IClaimJwt>(jwt);
@@ -342,6 +342,8 @@ export class PublicClaimsController {
                     link: `${this.configService.getOrThrow('FRONTEND_HOST')}/${claim.userId ? 'dashboard' : `register?claim=${jwt}`}`,
                     airlineName: claim.details.airlines.name,
                 },
+                !!claim.userId,
+                language,
             );
         }
 

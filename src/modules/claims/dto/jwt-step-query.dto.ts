@@ -1,6 +1,7 @@
 import { IsJWT, IsNumber } from 'class-validator';
+import { LanguageQueryDto } from './update-parts/language-query.dto';
 
-export class JwtStepQueryDto {
+export class JwtStepQueryDto extends LanguageQueryDto {
     @IsJWT()
     jwt: string;
 

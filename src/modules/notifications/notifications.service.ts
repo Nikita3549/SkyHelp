@@ -1,7 +1,8 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { GmailService } from '../gmail/gmail.service';
 import * as fs from 'fs/promises';
 import * as path from 'node:path';
+import { Languages } from '../languages/enums/languages.enums';
 
 @Injectable()
 export class NotificationsService {
@@ -39,9 +40,14 @@ export class NotificationsService {
             airlineName: string;
             link: string;
         },
+        isRegistered: boolean,
+        language: Languages = Languages.EN,
     ) {
         const letterTemplateBuffer = await fs.readFile(
-            path.join(__dirname, '../../../letters/createClaim.html'),
+            path.join(
+                __dirname,
+                `../../../letters/${language}/createClaim.html`,
+            ),
         );
 
         const letterTemplate = letterTemplateBuffer
@@ -50,7 +56,10 @@ export class NotificationsService {
             .replace('{{airlineName}}', claimData.airlineName)
             .replace('{{airlineName}}', claimData.airlineName)
             .replace('{{airlineName}}', claimData.airlineName)
-            .replace('{{claimLink}}', claimData.link);
+            .replace('{{claimLink}}', claimData.link)
+            .replace('{{claimLink}}', claimData.link)
+            .replace('{{registered}}', isRegistered ? '' : 'display: none;')
+            .replace('{{notRegistered}}', isRegistered ? 'display: none;' : '');
 
         await this.gmail.sendNoReplyEmailHtml(
             to,
