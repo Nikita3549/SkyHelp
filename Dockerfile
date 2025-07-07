@@ -12,5 +12,6 @@ WORKDIR opt/api
 COPY package.json ./
 COPY prisma ./
 COPY translations ./translations
+COPY letters ./letters
 RUN npm install --only=prod
 COPY --from=build /opt/api/dist ./dist
