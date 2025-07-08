@@ -1,4 +1,4 @@
-import { IsString } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 
 export class CustomerDto {
     @IsString()
@@ -13,6 +13,27 @@ export class CustomerDto {
     @IsString()
     phone: string;
 
+    @IsOptional()
     @IsString()
-    address: string;
+    address?: string;
+
+    @IsOptional()
+    @IsString()
+    postalCode?: string;
+
+    @IsOptional()
+    @IsString()
+    secondAddress?: string;
+
+    @IsOptional()
+    @IsString()
+    country?: string;
+
+    @IsOptional()
+    @IsString()
+    city?: string;
+
+    @IsOptional()
+    @IsString()
+    state?: string;
 }

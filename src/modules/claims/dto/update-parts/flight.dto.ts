@@ -1,4 +1,4 @@
-import { IsArray, IsString } from 'class-validator';
+import { IsArray, IsOptional, IsString } from 'class-validator';
 
 export class FlightDto {
     @IsString()
@@ -9,6 +9,10 @@ export class FlightDto {
 
     @IsString()
     flightNumber: string;
+
+    @IsOptional()
+    @IsString()
+    bookingRef?: string;
 
     @IsArray()
     routes: {

@@ -347,6 +347,9 @@ export class ClaimsService {
             where: {
                 userId,
             },
+            orderBy: {
+                createdAt: 'desc',
+            },
             include: this.fullClaimInclude(),
             skip,
             take: pageSize,
@@ -539,6 +542,11 @@ export class ClaimsService {
                 email: dto.email,
                 phone: dto.phone,
                 address: dto.address,
+                postalCode: dto.postalCode,
+                secondAddress: dto.secondAddress,
+                country: dto.country,
+                city: dto.city,
+                state: dto.state,
             },
         });
     }
@@ -560,6 +568,7 @@ export class ClaimsService {
                         name: dto.airline,
                     },
                 },
+                bookingRef: dto.bookingRef,
                 routes: {
                     deleteMany: {},
                     create: dto.routes.map((r) => ({
