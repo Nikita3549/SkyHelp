@@ -228,6 +228,8 @@ export class ClaimsController {
             throw new BadRequestException(INVALID_CLAIM_ID);
         }
 
+        await this.claimsService.changeUpdatedAt(claimId);
+
         return await this.claimsService.updateCustomer(dto, claimId);
     }
     @UseGuards(IsModeratorGuard)
@@ -239,6 +241,8 @@ export class ClaimsController {
         if (!(await this.claimsService.getClaim(claimId))) {
             throw new BadRequestException(INVALID_CLAIM_ID);
         }
+
+        await this.claimsService.changeUpdatedAt(claimId);
 
         return await this.claimsService.updateFlight(dto, claimId);
     }
@@ -252,6 +256,8 @@ export class ClaimsController {
             throw new BadRequestException(INVALID_CLAIM_ID);
         }
 
+        await this.claimsService.changeUpdatedAt(claimId);
+
         return await this.claimsService.updateIssue(dto, claimId);
     }
     @UseGuards(IsModeratorGuard)
@@ -264,6 +270,8 @@ export class ClaimsController {
             throw new BadRequestException(INVALID_CLAIM_ID);
         }
 
+        await this.claimsService.changeUpdatedAt(claimId);
+
         return await this.claimsService.updatePayment(dto, claimId);
     }
     @UseGuards(IsModeratorGuard)
@@ -275,6 +283,8 @@ export class ClaimsController {
         if (!(await this.claimsService.getClaim(claimId))) {
             throw new BadRequestException(INVALID_CLAIM_ID);
         }
+
+        await this.claimsService.changeUpdatedAt(claimId);
 
         return await this.claimsService.updateState(dto, claimId);
     }

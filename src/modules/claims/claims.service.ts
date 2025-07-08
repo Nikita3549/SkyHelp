@@ -646,4 +646,15 @@ export class ClaimsService {
             },
         });
     }
+
+    async changeUpdatedAt(claimId: string) {
+        return this.prisma.claim.update({
+            data: {
+                updatedAt: new Date(),
+            },
+            where: {
+                id: claimId,
+            },
+        });
+    }
 }
