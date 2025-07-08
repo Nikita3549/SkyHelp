@@ -21,7 +21,14 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           port: ${{ secrets.SERVER_SSH_PORT }}
           script: |
+            #!/bin/bash
+            
+            set -e
+            
             cd ~/SkyHelp
+            
             git pull origin master
+            
             docker compose --profile api up --build -d
 
+            docker system prune -f
