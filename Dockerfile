@@ -13,5 +13,7 @@ COPY package.json ./
 COPY prisma ./
 COPY translations ./translations
 COPY letters ./letters
+COPY fonts ./fonts
+COPY assets ./assets
 RUN npm install --only=prod
 COPY --from=build /opt/api/dist ./dist

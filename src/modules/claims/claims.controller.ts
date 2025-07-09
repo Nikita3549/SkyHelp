@@ -57,6 +57,7 @@ import { GetCompensationQueryDto } from './dto/get-compensation-query.dto';
 import { AirportsService } from '../airports/airports.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import { ConfigService } from '@nestjs/config';
+import { UploadSignDto } from './dto/upload-sign.dto';
 
 @Controller('claims')
 @UseGuards(JwtAuthGuard)
@@ -325,6 +326,46 @@ export class PublicClaimsController {
             claimData: claim,
             jwt,
         };
+    }
+
+    @Put('/:claimId/sign')
+    async uploadSign(
+        @Param('claimId') claimId: string,
+        @Query() query: JwtQueryDto,
+        @Body() body: UploadSignDto,
+    ) {
+        const { jwt } = query;
+        const { signature } = body;
+
+        const { claimId: jwtClaimId } =
+            this.tokenService.verifyJWT<IClaimJwt>(jwt);
+
+        if (claimId != jwtClaimId) {
+            throw new UnauthorizedException(INVALID_JWT);
+        }
+
+        const claim = await this.claimsService.getClaim(claimId);
+
+        if (!claim) {
+            throw new NotFoundException(INVALID_CLAIM_ID);
+        }
+
+        const path = await this.claimsService.saveSignaturePdf(
+            signature,
+            claim,
+        );
+
+        this.claimsService.saveDocuments(
+            [
+                {
+                    path,
+                    name: 'assignment_agreement.pdf',
+                },
+            ],
+            claimId,
+        );
+
+        return SAVE_DOCUMENTS_SUCCESS;
     }
 
     @Put('/:claimId/')
