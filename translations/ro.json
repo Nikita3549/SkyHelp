@@ -3270,5 +3270,9 @@
   "IssueDetailsCard.strike": "Grevă",
   "IssueDetailsCard.issues": "Alte probleme ale companiei aeriene",
   "IssueDetailsCard.other": "Altceva",
-  "IssueDetailsCard.dont_remember": "Nu-mi amintesc"
+  "IssueDetailsCard.dont_remember": "Nu-mi amintesc",
+  "cookieBanner.acceptAll": "Acceptă tot",
+  "cookieBanner.onlyEssential": "Doar esențiale",
+  "cookieBanner.description": "Folosim cookie-uri pentru a îmbunătăți experiența ta și pentru a analiza utilizarea site-ului. Poți accepta toate cookie-urile sau poți alege să permiți doar cele esențiale."
+
 }

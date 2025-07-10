@@ -3271,5 +3271,8 @@
   "IssueDetailsCard.strike": "Strike",
   "IssueDetailsCard.issues": "Other airline issues",
   "IssueDetailsCard.other": "Other",
-  "IssueDetailsCard.dont_remember": "Don't remember"
+  "IssueDetailsCard.dont_remember": "Don't remember",
+  "cookieBanner.acceptAll": "Accept All",
+  "cookieBanner.onlyEssential": "Only Essential",
+  "cookieBanner.description": "We use cookies to enhance your experience and analyze site usage. You can accept all cookies or choose to allow only essential ones."
 }

@@ -3270,5 +3270,9 @@
   "IssueDetailsCard.strike": "Забастовка",
   "IssueDetailsCard.issues": "Другие проблемы авиакомпании",
   "IssueDetailsCard.other": "Другое",
-  "IssueDetailsCard.dont_remember": "Не помню"
+  "IssueDetailsCard.dont_remember": "Не помню",
+  "cookieBanner.acceptAll": "Принять все",
+  "cookieBanner.onlyEssential": "Только необходимые",
+  "cookieBanner.description": "Мы используем файлы cookie, чтобы улучшить ваш опыт и проанализировать использование сайта. Вы можете принять все файлы cookie или выбрать только необходимые."
+
 }
