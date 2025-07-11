@@ -20,6 +20,7 @@ import { ChatModule } from './modules/chat/chat.module';
 import { GmailModule } from './modules/gmail/gmail.module';
 import { AirlinesModule } from './modules/airlines/airlines.module';
 import { LanguagesModule } from './modules/languages/languages.module';
+import { ContactUsModule } from './modules/contact-us/contact-us.module';
 
 @Module({
     imports: [
@@ -42,6 +43,7 @@ import { LanguagesModule } from './modules/languages/languages.module';
         GmailModule,
         AirlinesModule,
         LanguagesModule,
+        ContactUsModule,
     ],
     controllers: [AppController, AuthController, UserController],
     providers: [AppService],
