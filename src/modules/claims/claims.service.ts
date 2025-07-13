@@ -162,8 +162,8 @@ export class ClaimsService {
         secondPage.drawText(
             `${documentData.firstName} ${documentData.lastName}`,
             {
-                x: 103,
-                y: 38,
+                x: 100,
+                y: 308,
                 size: 10.5,
                 color: rgb(0, 0, 0),
                 font: fontRegular,
