@@ -112,7 +112,7 @@ export class ClaimsService {
             `${documentData.firstName} ${documentData.lastName}`,
             {
                 x: 205,
-                y: 580,
+                y: 598,
                 size: 10.5,
                 color: rgb(0.333, 0.333, 0.333),
                 font: fontRegular,
@@ -121,7 +121,7 @@ export class ClaimsService {
 
         firstPage.drawText(documentData.address, {
             x: 205,
-            y: 600,
+            y: 618,
             size: 10.5,
             color: rgb(0, 0, 0),
             font: fontBold,
@@ -129,7 +129,7 @@ export class ClaimsService {
 
         firstPage.drawText(documentData.claimId, {
             x: 180,
-            y: 484,
+            y: 502,
             size: 10.5,
             color: rgb(0, 0, 0),
             font: fontRegular,
@@ -137,7 +137,7 @@ export class ClaimsService {
 
         firstPage.drawText(documentData.airlineName, {
             x: 180,
-            y: 449,
+            y: 467,
             size: 10.5,
             color: rgb(0, 0, 0),
             font: fontRegular,
@@ -145,7 +145,7 @@ export class ClaimsService {
 
         firstPage.drawText(documentData.flightNumber, {
             x: 180,
-            y: 418,
+            y: 436,
             size: 10.5,
             color: rgb(0, 0, 0),
             font: fontRegular,
@@ -153,7 +153,7 @@ export class ClaimsService {
 
         firstPage.drawText(this.formatDatePdf(documentData.date), {
             x: 180,
-            y: 387,
+            y: 405,
             size: 10.5,
             color: rgb(0, 0, 0),
             font: fontRegular,
@@ -163,7 +163,7 @@ export class ClaimsService {
             `${documentData.firstName} ${documentData.lastName}`,
             {
                 x: 103,
-                y: 290,
+                y: 38,
                 size: 10.5,
                 color: rgb(0, 0, 0),
                 font: fontRegular,
@@ -172,7 +172,7 @@ export class ClaimsService {
 
         secondPage.drawImage(pngImage, {
             x: 150,
-            y: 273 - 105,
+            y: 291 - 105,
             width: 160,
             height: 105,
         });
