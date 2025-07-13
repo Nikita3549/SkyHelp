@@ -2393,6 +2393,7 @@
   "signatureStep.toast.confirmDescription": "Примите условия",
   "signatureStep.toast.signTitle": "Пожалуйста, подпишитесь",
   "signatureStep.toast.signDescription": "Подпишите документ или подождите несколько секунд",
+  "SignatureStep.signature.required": "Подпись обязательна",
   "paymentDetails.title": "Платёжные реквизиты",
   "paymentDetails.description": "Укажите свои платёжные данные для получения компенсации.",
   "paymentDetails.toast.incompleteTitle": "Заполните форму",
@@ -3321,6 +3322,20 @@
   "IssueDetailsCard.dont_remember": "Не помню",
   "cookieBanner.acceptAll": "Принять все",
   "cookieBanner.onlyEssential": "Только необходимые",
-  "cookieBanner.description": "Мы используем файлы cookie, чтобы улучшить ваш опыт и проанализировать использование сайта. Вы можете принять все файлы cookie или выбрать только необходимые."
-
+  "cookieBanner.description": "Мы используем файлы cookie, чтобы улучшить ваш опыт и проанализировать использование сайта. Вы можете принять все файлы cookie или выбрать только необходимые.",
+  "PassengerDetailsStep.passenger": "Пассажир",
+  "PassengerDetailsStep.birthdayLabel": "Дата рождения",
+  "PassengerDetailsStep.add-passenger": "Добавить пассажира",
+  "PassengerDetailsStep.other-passengers": "Другие пассажиры",
+  "PassengerDetailsStep.passengers.title-1": "Получите ",
+  "PassengerDetailsStep.passengers.title-2": " за каждого дополнительного пассажира",
+  "PassengerDetailsStep.passengers.compensation": "Компенсация",
+  "Sign.title": "Ускорьте обработку вашей заявки!",
+  "Sign.description": "Подпишитесь ниже, и мы начнем обработку вашей заявки",
+  "SignatureStep.passengers.title": "Подпишите соглашение",
+  "SignatureStep.passengers.description": "Пожалуйста, отправьте ссылку другим пассажирам для подписи",
+  "SignatureStep.passengers.copy": "Скопировать ссылку",
+  "SignatureStep.passengers.sign-now": "Подписать сейчас",
+  "SignatureStep.passengers.copy.toast.title": "Скопировано",
+  "SignatureStep.passengers.copy.toast.description": "Ссылка успешно скопирована в буфер обмена"
 }

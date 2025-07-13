@@ -6,6 +6,7 @@ import {
     ClaimStatus,
     DelayCategory,
     Document,
+    OtherPassenger,
     Prisma,
     Progress,
 } from '@prisma/client';
@@ -24,6 +25,7 @@ import { PDFDocument, rgb } from 'pdf-lib';
 const fontkit = require('fontkit');
 import * as fs from 'fs/promises';
 import * as path from 'path';
+import { UpdatePassengerDto } from './dto/update-passenger.dto';
 
 @Injectable()
 export class ClaimsService {
@@ -54,7 +56,18 @@ export class ClaimsService {
 
         return `${day}.${month}.${year}`;
     }
-    async saveSignaturePdf(signatureDataUrl: string, claim: IFullClaim) {
+    async saveSignaturePdf(
+        signatureDataUrl: string,
+        documentData: {
+            claimId: string;
+            firstName: string;
+            lastName: string;
+            address: string;
+            date: Date;
+            flightNumber: string;
+            airlineName: string;
+        },
+    ) {
         const today = this.formatDatePdf(new Date());
 
         const fontBoldBuffer = await fs.readFile(
@@ -96,7 +109,7 @@ export class ClaimsService {
         });
 
         firstPage.drawText(
-            `${claim.customer.firstName} ${claim.customer.lastName}`,
+            `${documentData.firstName} ${documentData.lastName}`,
             {
                 x: 205,
                 y: 580,
@@ -106,7 +119,7 @@ export class ClaimsService {
             },
         );
 
-        firstPage.drawText(claim.customer.address, {
+        firstPage.drawText(documentData.address, {
             x: 205,
             y: 600,
             size: 10.5,
@@ -114,7 +127,7 @@ export class ClaimsService {
             font: fontBold,
         });
 
-        firstPage.drawText(claim.id, {
+        firstPage.drawText(documentData.claimId, {
             x: 180,
             y: 484,
             size: 10.5,
@@ -122,7 +135,7 @@ export class ClaimsService {
             font: fontRegular,
         });
 
-        firstPage.drawText(claim.details.airlines.name, {
+        firstPage.drawText(documentData.airlineName, {
             x: 180,
             y: 449,
             size: 10.5,
@@ -130,7 +143,7 @@ export class ClaimsService {
             font: fontRegular,
         });
 
-        firstPage.drawText(claim.details.flightNumber, {
+        firstPage.drawText(documentData.flightNumber, {
             x: 180,
             y: 418,
             size: 10.5,
@@ -138,7 +151,7 @@ export class ClaimsService {
             font: fontRegular,
         });
 
-        firstPage.drawText(this.formatDatePdf(claim.details.date), {
+        firstPage.drawText(this.formatDatePdf(documentData.date), {
             x: 180,
             y: 387,
             size: 10.5,
@@ -147,7 +160,7 @@ export class ClaimsService {
         });
 
         secondPage.drawText(
-            `${claim.customer.firstName} ${claim.customer.lastName}`,
+            `${documentData.firstName} ${documentData.lastName}`,
             {
                 x: 103,
                 y: 290,
@@ -176,6 +189,17 @@ export class ClaimsService {
         return filePath;
     }
 
+    async setIsSignedPassenger(passengerId: string, isSigned: boolean) {
+        return this.prisma.otherPassenger.update({
+            data: {
+                isSigned,
+            },
+            where: {
+                id: passengerId,
+            },
+        });
+    }
+
     async saveDocuments(
         documents: Omit<Omit<Document, 'id'>, 'claimId'>[],
         claimId: string,
@@ -186,6 +210,44 @@ export class ClaimsService {
                 path: doc.path,
                 claimId,
             })),
+        });
+    }
+
+    async createOtherPassenger(
+        passengers: Omit<
+            Omit<Omit<OtherPassenger, 'id'>, 'claimId'>,
+            'isSigned'
+        >[],
+        claimId: string,
+    ) {
+        return Promise.all(
+            passengers.map((p) =>
+                this.prisma.otherPassenger.create({
+                    data: {
+                        ...p,
+                        claimId,
+                    },
+                }),
+            ),
+        );
+    }
+
+    async updatePassenger(passenger: UpdatePassengerDto, passengerId: string) {
+        return this.prisma.otherPassenger.update({
+            data: passenger,
+            where: {
+                id: passengerId,
+            },
+        });
+    }
+
+    async getOtherPassenger(
+        passengerId: string,
+    ): Promise<OtherPassenger | null> {
+        return this.prisma.otherPassenger.findFirst({
+            where: {
+                id: passengerId,
+            },
         });
     }
 
@@ -651,6 +713,7 @@ export class ClaimsService {
             issue: true,
             payment: true,
             documents: true,
+            passengers: true,
         };
     }
 

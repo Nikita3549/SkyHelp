@@ -2394,6 +2394,7 @@
   "signatureStep.toast.confirmDescription": "Acceptă termenii",
   "signatureStep.toast.signTitle": "Te rugăm să semnezi",
   "signatureStep.toast.signDescription": "Semnează documentul sau așteaptă câteva secunde",
+  "SignatureStep.signature.required": "Semnătura este obligatorie",
   "paymentDetails.title": "Detalii de plată",
   "paymentDetails.description": "Te rugăm să furnizezi detaliile pentru a primi compensația.",
   "paymentDetails.toast.incompleteTitle": "Completează formularul",
@@ -3321,6 +3322,20 @@
   "IssueDetailsCard.dont_remember": "Nu-mi amintesc",
   "cookieBanner.acceptAll": "Acceptă tot",
   "cookieBanner.onlyEssential": "Doar esențiale",
-  "cookieBanner.description": "Folosim cookie-uri pentru a îmbunătăți experiența ta și pentru a analiza utilizarea site-ului. Poți accepta toate cookie-urile sau poți alege să permiți doar cele esențiale."
-
+  "cookieBanner.description": "Folosim cookie-uri pentru a îmbunătăți experiența ta și pentru a analiza utilizarea site-ului. Poți accepta toate cookie-urile sau poți alege să permiți doar cele esențiale.",
+  "PassengerDetailsStep.passenger": "Pasager",
+  "PassengerDetailsStep.birthdayLabel": "Data nașterii",
+  "PassengerDetailsStep.add-passenger": "Adaugă pasager",
+  "PassengerDetailsStep.other-passengers": "Alți pasageri",
+  "PassengerDetailsStep.passengers.title-1": "Câștigă ",
+  "PassengerDetailsStep.passengers.title-2": " pentru fiecare pasager suplimentar",
+  "PassengerDetailsStep.passengers.compensation": "Compensație",
+  "Sign.title": "Grăbiți procesarea cererii!",
+  "Sign.description": "Semnați mai jos și vom începe procesarea cererii dvs.",
+  "SignatureStep.passengers.title": "Semnează acordul",
+  "SignatureStep.passengers.description": "Te rugăm să trimiți linkul și celorlalți pasageri pentru semnare",
+  "SignatureStep.passengers.copy": "Copiază linkul",
+  "SignatureStep.passengers.sign-now": "Semnează acum",
+  "SignatureStep.passengers.copy.toast.title": "Copiat",
+  "SignatureStep.passengers.copy.toast.description": "Link copiat cu succes în clipboard"
 }

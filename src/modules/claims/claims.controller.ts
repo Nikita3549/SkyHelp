@@ -25,6 +25,7 @@ import {
     INVALID_FLIGHT_ID,
     INVALID_ICAO,
     INVALID_JWT,
+    INVALID_PASSENGER_ID,
     SAVE_DOCUMENTS_SUCCESS,
 } from './constants';
 import { JwtAuthGuard } from '../../guards/jwtAuth.guard';
@@ -58,6 +59,8 @@ import { AirportsService } from '../airports/airports.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import { ConfigService } from '@nestjs/config';
 import { UploadSignDto } from './dto/upload-sign.dto';
+import { CreateOtherPassengersDto } from './dto/create-other-passengers.dto';
+import { UpdatePassengerDto } from './dto/update-passenger.dto';
 
 @Controller('claims')
 @UseGuards(JwtAuthGuard)
@@ -289,6 +292,19 @@ export class ClaimsController {
 
         return await this.claimsService.updateState(dto, claimId);
     }
+
+    @UseGuards(IsModeratorGuard)
+    @Put('/passenger/admin/:passengerId')
+    async updatePassenger(
+        @Body() dto: UpdatePassengerDto,
+        @Param('passengerId') passengerId: string,
+    ) {
+        if (!(await this.claimsService.getOtherPassenger(passengerId))) {
+            throw new BadRequestException(INVALID_PASSENGER_ID);
+        }
+
+        return await this.claimsService.updatePassenger(dto, passengerId);
+    }
 }
 
 @Controller('claims')
@@ -327,6 +343,65 @@ export class PublicClaimsController {
             jwt,
         };
     }
+    @Get('/passenger/:passengerId')
+    async getPassenger(@Param('passengerId') passengerId: string) {
+        const passenger =
+            await this.claimsService.getOtherPassenger(passengerId);
+
+        if (!passenger) {
+            throw new NotFoundException(INVALID_PASSENGER_ID);
+        }
+
+        return passenger;
+    }
+
+    @Put('/:claimId/:passengerId/sign')
+    async uploadOtherPassengerSign(
+        @Body() body: UploadSignDto,
+        @Param('claimId') claimId: string,
+        @Param('passengerId') passengerId: string,
+    ) {
+        const { signature } = body;
+
+        const passenger =
+            await this.claimsService.getOtherPassenger(passengerId);
+
+        if (!passenger) {
+            throw new NotFoundException(INVALID_PASSENGER_ID);
+        }
+
+        if (passenger.isSigned) {
+            return;
+        }
+
+        const claim = await this.claimsService.getClaim(passenger.claimId);
+
+        if (!claim) {
+            return;
+        }
+
+        const path = await this.claimsService.saveSignaturePdf(signature, {
+            firstName: passenger.firstName,
+            lastName: passenger.lastName,
+            flightNumber: claim.details.flightNumber,
+            date: claim.details.date,
+            address: passenger.address,
+            claimId: claim.id,
+            airlineName: claim.details.airlines.name,
+        });
+
+        await this.claimsService.saveDocuments(
+            [
+                {
+                    path,
+                    name: `${passenger.firstName}_${passenger.lastName}-assignment_agreement.pdf`,
+                },
+            ],
+            claimId,
+        );
+
+        await this.claimsService.setIsSignedPassenger(passengerId, true);
+    }
 
     @Put('/:claimId/sign')
     async uploadSign(
@@ -350,22 +425,46 @@ export class PublicClaimsController {
             throw new NotFoundException(INVALID_CLAIM_ID);
         }
 
-        const path = await this.claimsService.saveSignaturePdf(
-            signature,
-            claim,
-        );
+        const path = await this.claimsService.saveSignaturePdf(signature, {
+            firstName: claim.customer.firstName,
+            lastName: claim.customer.lastName,
+            flightNumber: claim.details.flightNumber,
+            date: claim.details.date,
+            address: claim.customer.address,
+            claimId: claim.id,
+            airlineName: claim.details.airlines.name,
+        });
 
-        this.claimsService.saveDocuments(
+        await this.claimsService.saveDocuments(
             [
                 {
                     path,
-                    name: 'assignment_agreement.pdf',
+                    name: `${claim.customer.firstName}_${claim.customer.lastName}-assignment_agreement.pdf`,
                 },
             ],
             claimId,
         );
 
         return SAVE_DOCUMENTS_SUCCESS;
+    }
+
+    @Post('/:claimId/passengers')
+    async createOtherPassengers(
+        @Query() query: JwtQueryDto,
+        @Param('claimId') claimId: string,
+        @Body() body: CreateOtherPassengersDto,
+    ) {
+        const { jwt } = query;
+        const passengers = body.passengers;
+
+        const { claimId: jwtClaimId } =
+            this.tokenService.verifyJWT<IClaimJwt>(jwt);
+
+        if (claimId != jwtClaimId) {
+            throw new UnauthorizedException(INVALID_JWT);
+        }
+
+        return this.claimsService.createOtherPassenger(passengers, claimId);
     }
 
     @Put('/:claimId/')
