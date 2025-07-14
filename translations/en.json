@@ -3346,5 +3346,16 @@
   "OtherPassengerForm.label.city": "City",
   "OtherPassengerForm.label.country": "Country",
   "OtherPassengerForm.label.birthday": "Date of birth",
-  "OtherPassengerForm.label.email": "Email"
+  "OtherPassengerForm.label.email": "Email",
+  "ContactForm.toast.successTitle": "Success",
+  "ContactForm.toast.successDescription": "Your message was sent",
+  "ContactForm.toast.errorTitle": "Oops...",
+  "ContactForm.toast.errorDescription": "Something went wrong",
+  "TermsAgreementSection.text.beforePrivacy": "I have read and acknowledged",
+  "TermsAgreementSection.text.privacyLink": "Privacy Data Policy",
+  "TermsAgreementSection.text.between": "and the",
+  "TermsAgreementSection.text.termsLink": "Terms and Conditions",
+  "TermsAgreementSection.text.afterTerms": "of the website.",
+  "MessageSection.placeholder": "Type your message here...",
+  "EmailSubjectSection.subject": "Subject"
 }
