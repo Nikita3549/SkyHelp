@@ -489,7 +489,7 @@ export class PublicClaimsController {
                 claim.customer.email,
                 {
                     id: claim.id,
-                    link: `${this.configService.getOrThrow('FRONTEND_HOST')}/${claim.userId ? 'dashboard' : `register?claim=${jwt}`}`,
+                    link: `${this.configService.getOrThrow('FRONTEND_HOST')}/${claim.userId ? 'dashboard' : `register?claim=${jwt}&email=${claim.customer.email}`}`,
                     airlineName: claim.details.airlines.name,
                 },
                 !!claim.userId,
