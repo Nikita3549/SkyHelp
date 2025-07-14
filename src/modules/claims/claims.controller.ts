@@ -21,6 +21,7 @@ import {
     CLAIM_NOT_FOUND,
     FILE_DOESNT_ON_DISK,
     INVALID_CLAIM_ID,
+    INVALID_CUSTOMER_ID,
     INVALID_DOCUMENT_ID,
     INVALID_FLIGHT_ID,
     INVALID_ICAO,
@@ -61,6 +62,7 @@ import { ConfigService } from '@nestjs/config';
 import { UploadSignDto } from './dto/upload-sign.dto';
 import { CreateOtherPassengersDto } from './dto/create-other-passengers.dto';
 import { UpdatePassengerDto } from './dto/update-passenger.dto';
+import { UpdateFormStateDto } from './dto/update-form-state.dto';
 
 @Controller('claims')
 @UseGuards(JwtAuthGuard)
@@ -84,19 +86,19 @@ export class ClaimsController {
         );
     }
 
-    @Get('/:claimId')
-    async getClaim(@Param('claimId') claimId: string, @Req() req: AuthRequest) {
-        const claim = await this.claimsService.getClaim(claimId);
-
-        if (!claim) {
-            throw new BadRequestException(INVALID_CLAIM_ID);
-        }
-        if (claim.userId != req.user.id) {
-            throw new UnauthorizedException();
-        }
-
-        return claim;
-    }
+    // @Get('/:claimId')
+    // async getClaim(@Param('claimId') claimId: string, @Req() req: AuthRequest) {
+    //     const claim = await this.claimsService.getClaim(claimId);
+    //
+    //     if (!claim) {
+    //         throw new BadRequestException(INVALID_CLAIM_ID);
+    //     }
+    //     if (claim.userId != req.user.id) {
+    //         throw new UnauthorizedException();
+    //     }
+    //
+    //     return claim;
+    // }
 
     @Get()
     async getClaims(@Req() req: AuthRequest) {
@@ -354,6 +356,16 @@ export class PublicClaimsController {
 
         return passenger;
     }
+    @Get('/customer/:customerId')
+    async getCustomer(@Param('customerId') customerId: string) {
+        const customer = await this.claimsService.getCustomer(customerId);
+
+        if (!customer) {
+            throw new NotFoundException(INVALID_CUSTOMER_ID);
+        }
+
+        return customer;
+    }
 
     @Put('/:claimId/:passengerId/sign')
     async uploadOtherPassengerSign(
@@ -402,6 +414,52 @@ export class PublicClaimsController {
 
         await this.claimsService.setIsSignedPassenger(passengerId, true);
     }
+    @Put('/:claimId/customer/:customerId/sign')
+    async uploadCustomerSign(
+        @Body() body: UploadSignDto,
+        @Param('customerId') customerId: string,
+        @Param('claimId') claimId: string,
+    ) {
+        const { signature } = body;
+
+        const customer = await this.claimsService.getCustomer(customerId);
+
+        if (!customer) {
+            throw new NotFoundException(INVALID_PASSENGER_ID);
+        }
+
+        if (customer.isSigned) {
+            return;
+        }
+
+        const claim = await this.claimsService.getClaim(claimId);
+
+        if (!claim) {
+            throw new NotFoundException(INVALID_CLAIM_ID);
+        }
+
+        const path = await this.claimsService.saveSignaturePdf(signature, {
+            firstName: customer.firstName,
+            lastName: customer.lastName,
+            flightNumber: claim.details.flightNumber,
+            date: claim.details.date,
+            address: customer.address,
+            claimId: claim.id,
+            airlineName: claim.details.airlines.name,
+        });
+
+        await this.claimsService.saveDocuments(
+            [
+                {
+                    path,
+                    name: `${customer.firstName}_${customer.lastName}-assignment_agreement.pdf`,
+                },
+            ],
+            claimId,
+        );
+
+        await this.claimsService.setIsSignedCustomer(customerId, true);
+    }
 
     @Put('/:claimId/sign')
     async uploadSign(
@@ -445,6 +503,8 @@ export class PublicClaimsController {
             claimId,
         );
 
+        await this.claimsService.setIsSignedCustomer(claim.customerId, true);
+
         return SAVE_DOCUMENTS_SUCCESS;
     }
 
@@ -465,6 +525,35 @@ export class PublicClaimsController {
         }
 
         return this.claimsService.createOtherPassenger(passengers, claimId);
+    }
+
+    @Put('/:claimId/formState')
+    async updateFormState(
+        @Param('claimId') claimId: string,
+        @Body() dto: UpdateFormStateDto,
+        @Query() query: JwtQueryDto,
+    ) {
+        const { jwt } = query;
+
+        const { claimId: jwtClaimId } =
+            this.tokenService.verifyJWT<IClaimJwt>(jwt);
+
+        if (claimId != jwtClaimId) {
+            throw new UnauthorizedException(INVALID_JWT);
+        }
+
+        await this.claimsService.updateFormState(claimId, dto.formState);
+    }
+
+    @Get('/:claimId/')
+    async getClaim(@Param('claimId') claimId: string) {
+        const claim = this.claimsService.getClaim(claimId);
+
+        if (!claim) {
+            throw new NotFoundException(INVALID_CLAIM_ID);
+        }
+
+        return claim;
     }
 
     @Put('/:claimId/')

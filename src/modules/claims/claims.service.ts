@@ -3,6 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import {
     CancellationNotice,
     Claim,
+    ClaimCustomer,
     ClaimStatus,
     DelayCategory,
     Document,
@@ -189,6 +190,17 @@ export class ClaimsService {
         return filePath;
     }
 
+    async updateFormState(claimId: string, formState?: string) {
+        return this.prisma.claim.update({
+            data: {
+                formState,
+            },
+            where: {
+                id: claimId,
+            },
+        });
+    }
+
     async setIsSignedPassenger(passengerId: string, isSigned: boolean) {
         return this.prisma.otherPassenger.update({
             data: {
@@ -196,6 +208,16 @@ export class ClaimsService {
             },
             where: {
                 id: passengerId,
+            },
+        });
+    }
+    async setIsSignedCustomer(customerId: string, isSigned: boolean) {
+        return this.prisma.claimCustomer.update({
+            data: {
+                isSigned,
+            },
+            where: {
+                id: customerId,
             },
         });
     }
@@ -247,6 +269,14 @@ export class ClaimsService {
         return this.prisma.otherPassenger.findFirst({
             where: {
                 id: passengerId,
+            },
+        });
+    }
+
+    async getCustomer(customerId: string): Promise<ClaimCustomer | null> {
+        return this.prisma.claimCustomer.findFirst({
+            where: {
+                id: customerId,
             },
         });
     }

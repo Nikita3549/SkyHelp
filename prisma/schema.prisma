@@ -35,6 +35,7 @@ enum UserRole {
 model Claim {
   id         String           @id @default(cuid()) @map("id")
   step       Int              @default(5)
+  formState  String?          @default("") @map("form_state")
   userId     String?          @map("user_id")
   user       User?            @relation(fields: [userId], references: [id], onDelete: Cascade)
   detailsId  String           @map("details_id")
@@ -151,18 +152,19 @@ enum ProgressStatus {
 }
 
 model ClaimCustomer {
-  id            String  @id @default(cuid()) @map("id")
-  firstName     String  @map("first_name")
-  lastName      String  @map("last_name")
-  email         String  @map("email")
-  phone         String  @map("phone")
-  address       String  @map("address")
-  secondAddress String? @map("second_address")
-  city          String  @map("city")
-  postalCode    String  @map("postal_code")
-  state         String? @map("state")
-  country       String  @map("country")
-  whatsapp      Boolean @map("whatsapp")
+  id            String   @id @default(cuid()) @map("id")
+  firstName     String   @map("first_name")
+  lastName      String   @map("last_name")
+  email         String   @map("email")
+  phone         String   @map("phone")
+  address       String   @map("address")
+  secondAddress String?  @map("second_address")
+  city          String   @map("city")
+  postalCode    String   @map("postal_code")
+  state         String?  @map("state")
+  country       String   @map("country")
+  whatsapp      Boolean  @map("whatsapp")
+  isSigned      Boolean? @default(false) @map("is_signed")
   Claim         Claim[]
 
   @@map("claim_customers")

@@ -15,3 +15,5 @@ export const FILE_DOESNT_ON_DISK = 'File does not exist on disk';
 export const INVALID_ICAO = 'Invalid ICAO code';
 
 export const INVALID_PASSENGER_ID = 'Invalid passengerId';
+
+export const INVALID_CUSTOMER_ID = 'Invalid customerId';
