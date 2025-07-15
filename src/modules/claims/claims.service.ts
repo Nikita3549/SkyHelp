@@ -27,10 +27,38 @@ const fontkit = require('fontkit');
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import { UpdatePassengerDto } from './dto/update-passenger.dto';
+import { InjectQueue } from '@nestjs/bullmq';
+import {
+    CLAIM_QUEUE_KEY,
+    ONE_DAY_MILLISECONDS,
+    ONE_HOUR_MILLISECONDS,
+    TWO_DAYS_MILLISECONDS,
+} from './constants';
+import { Queue } from 'bullmq';
+import { IJobData } from './interfaces/job-data.interface';
 
 @Injectable()
 export class ClaimsService {
-    constructor(private readonly prisma: PrismaService) {}
+    constructor(
+        private readonly prisma: PrismaService,
+        @InjectQueue(CLAIM_QUEUE_KEY)
+        private readonly unfinishedClaimsQueue: Queue,
+    ) {}
+
+    async scheduleClaimFollowUpEmails(jobData: IJobData) {
+        await this.unfinishedClaimsQueue.add('followUpClaim', jobData, {
+            delay: ONE_HOUR_MILLISECONDS,
+            attempts: 1,
+        });
+        await this.unfinishedClaimsQueue.add('followUpClaim', jobData, {
+            delay: ONE_DAY_MILLISECONDS,
+            attempts: 1,
+        });
+        await this.unfinishedClaimsQueue.add('followUpClaim', jobData, {
+            delay: TWO_DAYS_MILLISECONDS,
+            attempts: 1,
+        });
+    }
 
     async getClaim(claimId: string): Promise<IFullClaim | null> {
         return this.prisma.claim.findFirst({

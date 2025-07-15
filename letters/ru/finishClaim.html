@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Завершите вашу заявку</title>
+</head>
+<body style="background-color: #f9fafb; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #1f2937; margin: 0; padding: 0;">
+<div style="max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 12px; overflow: hidden; border: 1px solid #e5e7eb;">
+  <div style="background-color: #3b82f6; padding: 24px; text-align: center;">
+    <img src="https://skyhelp.md/footer/logo.png" alt="SkyHelp" style="max-height: 40px;" />
+  </div>
+  <div style="padding: 24px;">
+    <h1 style="font-size: 22px; font-weight: 600; margin: 0 0 16px; color: #1e3a8a; text-align: start">
+      Остался всего один шаг!
+    </h1>
+
+    <p style="font-size: 16px; line-height: 1.6; color: #111827;">
+      Здравствуйте, {{clientName}}!
+    </p>
+
+    <p style="font-size: 16px; line-height: 1.6; color: #111827; {{notZeroCompensation}}">
+      Мы заметили, что вы начали оформлять заявку, но пока не завершили её. Это займёт всего минуту, и вы можете иметь право на компенсацию до <strong>€{{compensationAmount}}</strong>.
+    </p>
+
+    <p style="font-size: 16px; line-height: 1.6; color: #111827; {{zeroCompensation}}">
+      Мы заметили, что вы начали оформлять заявку, но пока не завершили её. Это займёт всего минуту.
+    </p>
+
+    <p style="font-size: 16px; line-height: 1.6; color: #111827; margin-top: 12px;">
+      ID вашей заявки: <strong>#{{claimId}}</strong>
+    </p>
+
+    <p style="font-size: 16px; line-height: 1.6; color: #111827;">
+      Вы можете продолжить оформление по кнопке ниже.
+    </p>
+
+    <div style="margin: 24px 0; text-align: center;">
+      <a href="{{claimLink}}" style="display: inline-block; padding: 12px 24px; background-color: #3b82f6; color: #ffffff; text-decoration: none; font-weight: 600; border-radius: 40px; font-size: 15px;">
+        Продолжить оформление
+      </a>
+    </div>
+
+    <div style="background-color: #f9fafb; padding: 12px; border-radius: 8px; font-size: 13px; color: #374151;">
+      Остались вопросы? Посетите наш <a href="https://skyhelp.md/#faq" style="color: #3b82f6; text-decoration: underline;">Центр поддержки</a>.
+    </div>
+  </div>
+  <div style="font-size: 12px; color: #6b7280; text-align: center; padding: 20px; background-color: #f3f4f6; border-top: 1px solid #e5e7eb;">
+    © 2025 SkyHelp •
+    <a href="https://skyhelp.md/privacy-policy" style="color: #3b82f6; text-decoration: underline;">Политика конфиденциальности</a> •
+    <a href="https://skyhelp.md/terms" style="color: #3b82f6; text-decoration: underline;">Условия</a><br />
+    Если вы не запрашивали это письмо, просто проигнорируйте его.
+  </div>
+</div>
+</body>
+</html>

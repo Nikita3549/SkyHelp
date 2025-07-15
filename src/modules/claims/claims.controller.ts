@@ -63,6 +63,7 @@ import { UploadSignDto } from './dto/upload-sign.dto';
 import { CreateOtherPassengersDto } from './dto/create-other-passengers.dto';
 import { UpdatePassengerDto } from './dto/update-passenger.dto';
 import { UpdateFormStateDto } from './dto/update-form-state.dto';
+import { LanguageQueryDto } from './dto/update-parts/language-query.dto';
 
 @Controller('claims')
 @UseGuards(JwtAuthGuard)
@@ -324,7 +325,9 @@ export class PublicClaimsController {
     async create(
         @Body() dto: CreateClaimDto,
         @Req() req: Request,
+        @Query() query: LanguageQueryDto,
     ): Promise<IClaimWithJwt> {
+        const { language } = query;
         let user = getAuthJwt(req);
 
         if (user) {
@@ -337,14 +340,48 @@ export class PublicClaimsController {
             {
                 claimId: claim.id,
             },
-            { expiresIn: '3days' },
+            { expiresIn: '5days' },
         );
+
+        await this.claimsService.scheduleClaimFollowUpEmails({
+            email: claim.customer.email,
+            claimId: claim.id,
+            language,
+            continueClaimLink: `${this.configService.getOrThrow('FRONTEND_HOST')}/claim?claimId=${claim.id}&jwt=${jwt}`,
+            clientFirstName: claim.customer.firstName,
+            compensation: claim.state.amount as number,
+        });
 
         return {
             claimData: claim,
             jwt,
         };
     }
+    @Get('/:claimId/formState')
+    async getFormState(
+        @Param('claimId') claimId: string,
+        @Query() query: JwtQueryDto,
+    ) {
+        const { jwt } = query;
+
+        const { claimId: jwtClaimId } =
+            this.tokenService.verifyJWT<IClaimJwt>(jwt);
+
+        if (claimId != jwtClaimId) {
+            throw new UnauthorizedException(INVALID_JWT);
+        }
+
+        const claim = await this.claimsService.getClaim(claimId);
+
+        if (!claim) {
+            throw new NotFoundException(INVALID_CLAIM_ID);
+        }
+
+        return {
+            formState: claim.formState,
+        };
+    }
+
     @Get('/passenger/:passengerId')
     async getPassenger(@Param('passengerId') passengerId: string) {
         const passenger =

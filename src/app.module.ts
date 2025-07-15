@@ -21,11 +21,19 @@ import { GmailModule } from './modules/gmail/gmail.module';
 import { AirlinesModule } from './modules/airlines/airlines.module';
 import { LanguagesModule } from './modules/languages/languages.module';
 import { ContactUsModule } from './modules/contact-us/contact-us.module';
+import { BullModule } from '@nestjs/bullmq';
 
 @Module({
     imports: [
         ConfigModule.forRoot({
             isGlobal: true,
+        }),
+        BullModule.forRoot({
+            connection: {
+                host: process.env.REDIS_HOST,
+                password: process.env.REDIS_PASSWORD,
+                port: +process.env.REDIS_PORT!,
+            },
         }),
         AuthModule,
         UserModule,
@@ -34,7 +42,8 @@ import { ContactUsModule } from './modules/contact-us/contact-us.module';
         NotificationsModule,
         RedisModule,
         ClaimsModule,
-        DocusignModule,
+        // Deprecated
+        // DocusignModule,
         ScheduleModule.forRoot(),
         AirportsModule,
         CacheModule,

@@ -118,51 +118,7 @@ export class GmailService implements OnModuleInit {
         return [];
     }
 
-    async sendNoReplyEmail(to: string, subject: string, content: string) {
-        await this.sendEmail(
-            to,
-            subject,
-            content,
-            this.configService.getOrThrow('GMAIL_NOREPLY_EMAIL'),
-        );
-    }
-
-    async sendContactEmail(to: string, subject: string, content: string) {
-        await this.sendEmail(
-            to,
-            subject,
-            content,
-            this.configService.getOrThrow('GMAIL_CONTACT_EMAIL'),
-        );
-    }
-
-    async sendNoReplyEmailHtml(
-        to: string,
-        subject: string,
-        htmlContent: string,
-    ) {
-        await this.sendEmailHtml(
-            to,
-            subject,
-            htmlContent,
-            this.configService.getOrThrow('GMAIL_NOREPLY_EMAIL'),
-        );
-    }
-
-    async sendContactEmailHtml(
-        to: string,
-        subject: string,
-        htmlContent: string,
-    ) {
-        await this.sendEmailHtml(
-            to,
-            subject,
-            htmlContent,
-            this.configService.getOrThrow('GMAIL_CONTACT_EMAIL'),
-        );
-    }
-
-    private async sendEmailHtml(
+    async sendEmailHtml(
         to: string,
         subject: string,
         htmlContent: string,
@@ -203,7 +159,7 @@ export class GmailService implements OnModuleInit {
         }
     }
 
-    private async sendEmail(
+    async sendEmail(
         to: string,
         subject: string,
         content: string,

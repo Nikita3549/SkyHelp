@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <title>Finalizați cererea dvs.</title>
+</head>
+<body style="background-color: #f9fafb; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #1f2937; margin: 0; padding: 0;">
+<div style="max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 12px; overflow: hidden; border: 1px solid #e5e7eb;">
+  <div style="background-color: #3b82f6; padding: 24px; text-align: center;">
+    <img src="https://skyhelp.md/footer/logo.png" alt="SkyHelp" style="max-height: 40px;" />
+  </div>
+  <div style="padding: 24px;">
+    <h1 style="font-size: 22px; font-weight: 600; margin: 0 0 16px; color: #1e3a8a; text-align: start">
+      Doar un pas rămas!
+    </h1>
+
+    <p style="font-size: 16px; line-height: 1.6; color: #111827;">
+      Salut, {{clientName}}!
+    </p>
+
+    <p style="font-size: 16px; line-height: 1.6; color: #111827; {{notZeroCompensation}}">
+      Am observat că ați început completarea cererii, dar nu ați finalizat-o. Finalizarea durează doar un minut și ați putea avea dreptul la o compensație de până la <strong>€{{compensationAmount}}</strong>.
+    </p>
+
+    <p style="font-size: 16px; line-height: 1.6; color: #111827; {{zeroCompensation}}">
+      Am observat că ați început completarea cererii, dar nu ați finalizat-o. Finalizarea durează doar un minut.
+    </p>
+
+    <p style="font-size: 16px; line-height: 1.6; color: #111827; margin-top: 12px;">
+      ID-ul cererii dvs.: <strong>#{{claimId}}</strong>
+    </p>
+
+    <p style="font-size: 16px; line-height: 1.6; color: #111827;">
+      Puteți continua procesul făcând clic pe butonul de mai jos.
+    </p>
+
+    <div style="margin: 24px 0; text-align: center;">
+      <a href="{{claimLink}}" style="display: inline-block; padding: 12px 24px; background-color: #3b82f6; color: #ffffff; text-decoration: none; font-weight: 600; border-radius: 40px; font-size: 15px;">
+        Reia cererea mea
+      </a>
+    </div>
+
+    <div style="background-color: #f9fafb; padding: 12px; border-radius: 8px; font-size: 13px; color: #374151;">
+      Aveți întrebări? Vizitați <a href="https://skyhelp.md/#faq" style="color: #3b82f6; text-decoration: underline;">Centrul de ajutor</a>.
+    </div>
+  </div>
+  <div style="font-size: 12px; color: #6b7280; text-align: center; padding: 20px; background-color: #f3f4f6; border-top: 1px solid #e5e7eb;">
+    © 2025 SkyHelp •
+    <a href="https://skyhelp.md/privacy-policy" style="color: #3b82f6; text-decoration: underline;">Politica de confidențialitate</a> •
+    <a href="https://skyhelp.md/terms" style="color: #3b82f6; text-decoration: underline;">Termeni</a><br />
+    Dacă nu ați solicitat acest mesaj, îl puteți ignora.
+  </div>
+</div>
+</body>
+</html>
