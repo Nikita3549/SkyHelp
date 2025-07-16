@@ -47,6 +47,7 @@ model Claim {
   issueId    String           @map("issue_id")
   issue      ClaimIssue       @relation(fields: [issueId], references: [id], onDelete: Cascade)
   envelopeId String?          @map("envelope_id")
+  archived   Boolean          @default(false)
   documents  Document[]
   passengers OtherPassenger[]
   paymentId  String?          @map("payment_id")

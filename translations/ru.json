@@ -3356,5 +3356,14 @@
   "TermsAgreementSection.text.termsLink": "Условия использования",
   "TermsAgreementSection.text.afterTerms": "данного сайта.",
   "MessageSection.placeholder": "Введите ваше сообщение здесь...",
-  "EmailSubjectSection.subject": "Тема"
+  "EmailSubjectSection.subject": "Тема",
+  "ClaimsTable.dialog.title": "Архивировать заявку",
+  "ClaimsTable.dialog.description": "Эта заявка будет удалена из активного списка, но останется доступной в архиве. Вы сможете восстановить её позже при необходимости.",
+  "ClaimsTable.dialog.confirm": "Архивировать",
+  "ClaimsTable.toast.archivedTitle": "Архивировано",
+  "ClaimsTable.toast.archivedDescription": "Заявка была успешно перемещена в архив",
+  "ClaimsTableHeader.archive-filter.button": "Только архив",
+  "ClaimsTable.dialog.title-dearchive": "Разархивировать заявку",
+  "ClaimsTable.dialog.description-dearchive": "Эта заявка будет удалена из архива и станет доступной на вкладке активных заявок. При необходимости вы сможете снова архивировать её позже.",
+  "ClaimsTable.dialog.confirm-dearchive": "Разархивировать"
 }

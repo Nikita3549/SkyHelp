@@ -3357,5 +3357,14 @@
   "TermsAgreementSection.text.termsLink": "Terms and Conditions",
   "TermsAgreementSection.text.afterTerms": "of the website.",
   "MessageSection.placeholder": "Type your message here...",
-  "EmailSubjectSection.subject": "Subject"
+  "EmailSubjectSection.subject": "Subject",
+  "ClaimsTable.dialog.title": "Archive claim",
+  "ClaimsTable.dialog.description": "This claim will be removed from the active list but will remain accessible in the archive. You can restore it later if needed.",
+  "ClaimsTable.dialog.confirm": "Archive",
+  "ClaimsTable.toast.archivedTitle": "Archived",
+  "ClaimsTable.toast.archivedDescription": "Claim was successfully submitted",
+  "ClaimsTableHeader.archive-filter.button": "Archived only",
+  "ClaimsTable.dialog.title-dearchive": "Dearchive claim",
+  "ClaimsTable.dialog.description-dearchive": "This claim will be removed from the archive list and will be accessible in the active tab. You can restore it later if needed.",
+  "ClaimsTable.dialog.confirm-dearchive": "Dearchive"
 }

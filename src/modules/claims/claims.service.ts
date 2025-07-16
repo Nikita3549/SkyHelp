@@ -593,6 +593,7 @@ export class ClaimsService {
     async getUserClaims(
         userId?: string,
         page: number = 1,
+        archived?: boolean,
         pageSize: number = 20,
     ): Promise<IFullClaim[]> {
         const skip = (page - 1) * pageSize;
@@ -600,6 +601,7 @@ export class ClaimsService {
         return this.prisma.claim.findMany({
             where: {
                 userId,
+                archived: archived,
             },
             orderBy: {
                 createdAt: 'desc',
@@ -633,7 +635,7 @@ export class ClaimsService {
                 //     take: pageSize,
                 // }),
                 // total claims
-                this.prisma.claim.count({ where: { userId } }),
+                this.prisma.claim.count({ where: { userId, archived: false } }),
 
                 // successful claims
                 this.prisma.claim.count({
@@ -642,6 +644,7 @@ export class ClaimsService {
                         state: {
                             status: ClaimStatus.COMPLETED,
                         },
+                        archived: false,
                     },
                 }),
 
@@ -657,13 +660,14 @@ export class ClaimsService {
                                 ],
                             },
                         },
+                        archived: false,
                     },
                 }),
                 // sum of ClaimState.amount where state.status = COMPLETED
                 this.prisma.claimState.aggregate({
                     where: {
                         status: ClaimStatus.COMPLETED,
-                        Claim: { some: { userId } },
+                        Claim: { some: { userId, archived: false } },
                     },
                     _sum: { amount: true },
                 }),
@@ -678,7 +682,7 @@ export class ClaimsService {
             FROM "claims" c
                 INNER JOIN "claim_states" s ON c."state_id" = s."id"
             WHERE s."status" = 'COMPLETED'
-                ${userId ? Prisma.sql`AND c."user_id" = ${userId}` : Prisma.empty}
+                ${userId ? Prisma.sql`AND c."user_id" = ${userId}` : Prisma.empty} AND archived = false
             GROUP BY month, date_trunc('month', c."created_at")
             ORDER BY date_trunc('month', c."created_at") DESC
         `;
@@ -916,6 +920,15 @@ export class ClaimsService {
             data: {
                 updatedAt: new Date(),
             },
+            where: {
+                id: claimId,
+            },
+        });
+    }
+
+    async setArchived(claimId: string, archived: boolean) {
+        return this.prisma.claim.update({
+            data: { archived },
             where: {
                 id: claimId,
             },

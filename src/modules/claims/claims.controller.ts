@@ -5,6 +5,7 @@ import {
     Get,
     NotFoundException,
     Param,
+    Patch,
     Post,
     Put,
     Query,
@@ -64,6 +65,7 @@ import { CreateOtherPassengersDto } from './dto/create-other-passengers.dto';
 import { UpdatePassengerDto } from './dto/update-passenger.dto';
 import { UpdateFormStateDto } from './dto/update-form-state.dto';
 import { LanguageQueryDto } from './dto/update-parts/language-query.dto';
+import { ArchiveClaimDto } from './dto/archive-claim.dto';
 
 @Controller('claims')
 @UseGuards(JwtAuthGuard)
@@ -87,20 +89,6 @@ export class ClaimsController {
         );
     }
 
-    // @Get('/:claimId')
-    // async getClaim(@Param('claimId') claimId: string, @Req() req: AuthRequest) {
-    //     const claim = await this.claimsService.getClaim(claimId);
-    //
-    //     if (!claim) {
-    //         throw new BadRequestException(INVALID_CLAIM_ID);
-    //     }
-    //     if (claim.userId != req.user.id) {
-    //         throw new UnauthorizedException();
-    //     }
-    //
-    //     return claim;
-    // }
-
     @Get()
     async getClaims(@Req() req: AuthRequest) {
         return this.claimsService.getUserClaims(req.user.id);
@@ -108,15 +96,36 @@ export class ClaimsController {
     @Get('/admin/all')
     @UseGuards(IsModeratorGuard)
     async getAdminClaims(@Query() query: GetAdminClaimsQuery) {
-        const { userId, page } = query;
+        const { userId, page, archived } = query;
 
-        return this.claimsService.getUserClaims(userId, +page);
+        return this.claimsService.getUserClaims(
+            userId,
+            +page,
+            archived == undefined ? undefined : archived == 'yes',
+        );
     }
 
     @Get('/admin/stats')
     @UseGuards(IsModeratorGuard)
     async getAdminClaimsStats(@Query('userId') userId?: string) {
         return this.claimsService.getUserClaimsStats(userId);
+    }
+
+    @Patch('/admin/:claimId/archive')
+    @UseGuards(IsModeratorGuard)
+    async archiveClaim(
+        @Body() dto: ArchiveClaimDto,
+        @Param('claimId') claimId: string,
+    ) {
+        const { archived } = dto;
+
+        const claim = await this.claimsService.getClaim(claimId);
+
+        if (!claim) {
+            throw new NotFoundException(INVALID_CLAIM_ID);
+        }
+
+        await this.claimsService.setArchived(claimId, archived);
     }
 
     @Get('/admin/:claimId')
@@ -406,11 +415,11 @@ export class PublicClaimsController {
 
     @Put('/:claimId/:passengerId/sign')
     async uploadOtherPassengerSign(
-        @Body() body: UploadSignDto,
+        @Body() dto: UploadSignDto,
         @Param('claimId') claimId: string,
         @Param('passengerId') passengerId: string,
     ) {
-        const { signature } = body;
+        const { signature } = dto;
 
         const passenger =
             await this.claimsService.getOtherPassenger(passengerId);
@@ -453,11 +462,11 @@ export class PublicClaimsController {
     }
     @Put('/:claimId/customer/:customerId/sign')
     async uploadCustomerSign(
-        @Body() body: UploadSignDto,
+        @Body() dto: UploadSignDto,
         @Param('customerId') customerId: string,
         @Param('claimId') claimId: string,
     ) {
-        const { signature } = body;
+        const { signature } = dto;
 
         const customer = await this.claimsService.getCustomer(customerId);
 
@@ -502,10 +511,10 @@ export class PublicClaimsController {
     async uploadSign(
         @Param('claimId') claimId: string,
         @Query() query: JwtQueryDto,
-        @Body() body: UploadSignDto,
+        @Body() dto: UploadSignDto,
     ) {
         const { jwt } = query;
-        const { signature } = body;
+        const { signature } = dto;
 
         const { claimId: jwtClaimId } =
             this.tokenService.verifyJWT<IClaimJwt>(jwt);
@@ -549,10 +558,10 @@ export class PublicClaimsController {
     async createOtherPassengers(
         @Query() query: JwtQueryDto,
         @Param('claimId') claimId: string,
-        @Body() body: CreateOtherPassengersDto,
+        @Body() dto: CreateOtherPassengersDto,
     ) {
         const { jwt } = query;
-        const passengers = body.passengers;
+        const passengers = dto.passengers;
 
         const { claimId: jwtClaimId } =
             this.tokenService.verifyJWT<IClaimJwt>(jwt);

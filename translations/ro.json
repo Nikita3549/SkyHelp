@@ -3356,5 +3356,14 @@
   "TermsAgreementSection.text.termsLink": "Termenii și condițiile",
   "TermsAgreementSection.text.afterTerms": "site-ului.",
   "MessageSection.placeholder": "Scrie mesajul tău aici...",
-  "EmailSubjectSection.subject": "Subiect"
+  "EmailSubjectSection.subject": "Subiect",
+  "ClaimsTable.dialog.title": "Arhivează cererea",
+  "ClaimsTable.dialog.description": "Această cerere va fi eliminată din lista activă, dar va rămâne disponibilă în arhivă. O poți restaura ulterior, dacă este necesar.",
+  "ClaimsTable.dialog.confirm": "Arhivează",
+  "ClaimsTable.toast.archivedTitle": "Arhivat",
+  "ClaimsTable.toast.archivedDescription": "Cererea a fost mutată cu succes în arhivă",
+  "ClaimsTableHeader.archive-filter.button": "Doar arhivate",
+  "ClaimsTable.dialog.title-dearchive": "Dez-arhivează cererea",
+  "ClaimsTable.dialog.description-dearchive": "Această cerere va fi eliminată din lista de arhivă și va fi disponibilă în fila activă. O poți arhiva din nou mai târziu, dacă este necesar.",
+  "ClaimsTable.dialog.confirm-dearchive": "Dez-arhivează"
 }
