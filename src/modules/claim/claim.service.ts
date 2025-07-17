@@ -2,29 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import {
     CancellationNotice,
-    Claim,
-    ClaimCustomer,
     ClaimStatus,
     DelayCategory,
-    Document,
-    OtherPassenger,
     Prisma,
 } from '@prisma/client';
 import { CreateClaimDto } from './dto/create-claim.dto';
 import { IGetCompensation } from './interfaces/compensation.interface';
 import { defaultProgress } from './constants/default-progress';
 import { UpdateClaimDto } from './dto/update-claim.dto';
-import { CustomerDto } from './customer/dto/customer.dto';
-import { FlightDto } from './detail/dto/flight.dto';
-import { IssueDto } from './issue/dto/issue.dto';
-import { PaymentDto } from './payment/dto/payment.dto';
-import { StateDto } from './state/dto/state.dto';
 import { IFullClaim } from './interfaces/full-claim.interface';
-import { PDFDocument, rgb } from 'pdf-lib';
-const fontkit = require('fontkit');
-import * as fs from 'fs/promises';
-import * as path from 'path';
-import { UpdatePassengerDto } from './other-passenger/dto/update-passenger.dto';
 import { InjectQueue } from '@nestjs/bullmq';
 import {
     CLAIM_QUEUE_KEY,

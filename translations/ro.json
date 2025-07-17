@@ -3365,5 +3365,6 @@
   "ClaimsTableHeader.archive-filter.button": "Doar arhivate",
   "ClaimsTable.dialog.title-dearchive": "Dez-arhivează cererea",
   "ClaimsTable.dialog.description-dearchive": "Această cerere va fi eliminată din lista de arhivă și va fi disponibilă în fila activă. O poți arhiva din nou mai târziu, dacă este necesar.",
-  "ClaimsTable.dialog.confirm-dearchive": "Dez-arhivează"
+  "ClaimsTable.dialog.confirm-dearchive": "Dez-arhivează",
+  "ClaimStatusCard.completed-steps": "Etape finalizate"
 }

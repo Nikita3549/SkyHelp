@@ -3365,5 +3365,6 @@
   "ClaimsTableHeader.archive-filter.button": "Только архив",
   "ClaimsTable.dialog.title-dearchive": "Разархивировать заявку",
   "ClaimsTable.dialog.description-dearchive": "Эта заявка будет удалена из архива и станет доступной на вкладке активных заявок. При необходимости вы сможете снова архивировать её позже.",
-  "ClaimsTable.dialog.confirm-dearchive": "Разархивировать"
+  "ClaimsTable.dialog.confirm-dearchive": "Разархивировать",
+  "ClaimStatusCard.completed-steps": "Завершённые этапы"
 }

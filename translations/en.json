@@ -3366,5 +3366,6 @@
   "ClaimsTableHeader.archive-filter.button": "Archived only",
   "ClaimsTable.dialog.title-dearchive": "Dearchive claim",
   "ClaimsTable.dialog.description-dearchive": "This claim will be removed from the archive list and will be accessible in the active tab. You can restore it later if needed.",
-  "ClaimsTable.dialog.confirm-dearchive": "Dearchive"
+  "ClaimsTable.dialog.confirm-dearchive": "Dearchive",
+  "ClaimStatusCard.completed-steps": "Completed steps"
 }
