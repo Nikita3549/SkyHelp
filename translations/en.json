@@ -3367,5 +3367,14 @@
   "ClaimsTable.dialog.title-dearchive": "Dearchive claim",
   "ClaimsTable.dialog.description-dearchive": "This claim will be removed from the archive list and will be accessible in the active tab. You can restore it later if needed.",
   "ClaimsTable.dialog.confirm-dearchive": "Dearchive",
-  "ClaimStatusCard.completed-steps": "Completed steps"
+  "ClaimStatusCard.completed-steps": "Completed steps",
+  "StepProgressMini.flight-route": "Flight Route",
+  "StepProgressMini.flight-details": "Flight Details",
+  "StepProgressMini.disruption-type": "Disruption Type",
+  "StepProgressMini.disruption-details": "Disruption Details",
+  "StepProgressMini.passenger-details": "Passenger Details",
+  "StepProgressMini.booking-reference": "Booking Reference",
+  "StepProgressMini.signature": "Signature",
+  "StepProgressMini.documents": "Documents",
+  "StepProgressMini.payment": "Payment"
 }

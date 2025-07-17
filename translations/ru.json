@@ -3366,5 +3366,14 @@
   "ClaimsTable.dialog.title-dearchive": "Разархивировать заявку",
   "ClaimsTable.dialog.description-dearchive": "Эта заявка будет удалена из архива и станет доступной на вкладке активных заявок. При необходимости вы сможете снова архивировать её позже.",
   "ClaimsTable.dialog.confirm-dearchive": "Разархивировать",
-  "ClaimStatusCard.completed-steps": "Завершённые этапы"
+  "ClaimStatusCard.completed-steps": "Завершённые этапы",
+  "StepProgressMini.flight-route": "Маршрут рейса",
+  "StepProgressMini.flight-details": "Детали рейса",
+  "StepProgressMini.disruption-type": "Тип нарушения",
+  "StepProgressMini.disruption-details": "Подробности нарушения",
+  "StepProgressMini.passenger-details": "Данные пассажира",
+  "StepProgressMini.booking-reference": "Бронирование",
+  "StepProgressMini.signature": "Подпись",
+  "StepProgressMini.documents": "Документы",
+  "StepProgressMini.payment": "Оплата"
 }

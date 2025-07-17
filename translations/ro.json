@@ -3366,5 +3366,14 @@
   "ClaimsTable.dialog.title-dearchive": "Dez-arhivează cererea",
   "ClaimsTable.dialog.description-dearchive": "Această cerere va fi eliminată din lista de arhivă și va fi disponibilă în fila activă. O poți arhiva din nou mai târziu, dacă este necesar.",
   "ClaimsTable.dialog.confirm-dearchive": "Dez-arhivează",
-  "ClaimStatusCard.completed-steps": "Etape finalizate"
+  "ClaimStatusCard.completed-steps": "Etape finalizate",
+  "StepProgressMini.flight-route": "Rută zbor",
+  "StepProgressMini.flight-details": "Detalii zbor",
+  "StepProgressMini.disruption-type": "Tip perturbare",
+  "StepProgressMini.disruption-details": "Detalii perturbare",
+  "StepProgressMini.passenger-details": "Date pasager",
+  "StepProgressMini.booking-reference": "Referință rezervare",
+  "StepProgressMini.signature": "Semnătură",
+  "StepProgressMini.documents": "Documente",
+  "StepProgressMini.payment": "Plată"
 }
