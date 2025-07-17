@@ -4,18 +4,18 @@ import { RedisModule } from '../redis/redis.module';
 import { AuthController } from './auth.controller';
 import { UserModule } from '../user/user.module';
 import { TokenModule } from '../token/token.module';
-import { NotificationsModule } from '../notifications/notifications.module';
+import { NotificationModule } from '../notification/notification.module';
 import { PassportModule } from '@nestjs/passport';
-import { ClaimsModule } from '../claims/claims.module';
+import { ClaimModule } from '../claim/claim.module';
 
 @Module({
     imports: [
         RedisModule,
         UserModule,
         TokenModule,
-        NotificationsModule,
+        NotificationModule,
         PassportModule,
-        ClaimsModule,
+        ClaimModule,
     ],
     controllers: [AuthController],
     providers: [AuthService],

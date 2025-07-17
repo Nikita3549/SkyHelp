@@ -31,7 +31,7 @@ import {
     WRONG_EMAIL,
     WRONG_EMAIL_OR_PASSWORD,
 } from './constants';
-import { NotificationsService } from '../notifications/notifications.service';
+import { NotificationService } from '../notification/notification.service';
 import { VerifyRegisterDto } from './dto/verify-register.dto';
 import { TokenService } from '../token/token.service';
 import { IPublicUserDataWithJwt } from './interfaces/publicUserDataWithJwt.interface';
@@ -46,17 +46,17 @@ import { UserRole } from '@prisma/client';
 import { IsModeratorGuard } from '../../guards/isModerator.guard';
 import { UpdateStatusDto } from './dto/update-status.dto';
 import { AuthRequest } from '../../interfaces/AuthRequest.interface';
-import { IClaimJwt } from '../claims/interfaces/claim-jwt.interface';
-import { ClaimsService } from '../claims/claims.service';
+import { IClaimJwt } from '../claim/interfaces/claim-jwt.interface';
+import { ClaimService } from '../claim/claim.service';
 
 @Controller('auth')
 export class AuthController {
     constructor(
         private readonly authService: AuthService,
         private readonly userService: UserService,
-        private readonly notificationService: NotificationsService,
+        private readonly notificationService: NotificationService,
         private readonly tokenService: TokenService,
-        private readonly claimService: ClaimsService,
+        private readonly claimService: ClaimService,
     ) {}
 
     @Post('register')

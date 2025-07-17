@@ -8,18 +8,17 @@ import { UserController } from './modules/user/user.controller';
 import { UserModule } from './modules/user/user.module';
 import { TokenModule } from './modules/token/token.module';
 import { PrismaModule } from './modules/prisma/prisma.module';
-import { NotificationsModule } from './modules/notifications/notifications.module';
+import { NotificationModule } from './modules/notification/notification.module';
 import { RedisModule } from './modules/redis/redis.module';
-import { ClaimsModule } from './modules/claims/claims.module';
-import { DocusignModule } from './modules/docusign/docusign.module';
+import { ClaimModule } from './modules/claim/claim.module';
 import { ScheduleModule } from '@nestjs/schedule';
-import { AirportsModule } from './modules/airports/airports.module';
+import { AirportModule } from './modules/airport/airport.module';
 import { CacheModule } from './modules/cache/cache.module';
-import { FlightsModule } from './modules/flights/flights.module';
+import { FlightModule } from './modules/flight/flight.module';
 import { ChatModule } from './modules/chat/chat.module';
 import { GmailModule } from './modules/gmail/gmail.module';
-import { AirlinesModule } from './modules/airlines/airlines.module';
-import { LanguagesModule } from './modules/languages/languages.module';
+import { AirlineModule } from './modules/airline/airline.module';
+import { LanguageModule } from './modules/language/language.module';
 import { ContactUsModule } from './modules/contact-us/contact-us.module';
 import { BullModule } from '@nestjs/bullmq';
 
@@ -39,22 +38,20 @@ import { BullModule } from '@nestjs/bullmq';
         UserModule,
         TokenModule,
         PrismaModule,
-        NotificationsModule,
+        NotificationModule,
         RedisModule,
-        ClaimsModule,
-        // Deprecated
-        // DocusignModule,
+        ClaimModule,
         ScheduleModule.forRoot(),
-        AirportsModule,
+        AirportModule,
         CacheModule,
-        FlightsModule,
+        FlightModule,
         ChatModule,
         GmailModule,
-        AirlinesModule,
-        LanguagesModule,
+        AirlineModule,
+        LanguageModule,
         ContactUsModule,
     ],
-    controllers: [AppController, AuthController, UserController],
+    controllers: [AppController],
     providers: [AppService],
 })
 export class AppModule {}
