@@ -85,7 +85,7 @@ export class PublicClaimController {
             {
                 claimId: claim.id,
             },
-            { expiresIn: '5days' },
+            { expiresIn: '30days' },
         );
 
         await this.claimService.scheduleClaimFollowUpEmails({

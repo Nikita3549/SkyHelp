@@ -14,8 +14,12 @@ import { IFullClaim } from './interfaces/full-claim.interface';
 import { InjectQueue } from '@nestjs/bullmq';
 import {
     CLAIM_QUEUE_KEY,
+    FIVE_DAYS_MILLISECONDS,
+    FOUR_DAYS_MILLISECONDS,
     ONE_DAY_MILLISECONDS,
     ONE_HOUR_MILLISECONDS,
+    SIX_DAYS_MILLISECONDS,
+    THREE_DAYS_MILLISECONDS,
     TWO_DAYS_MILLISECONDS,
 } from './constants';
 import { Queue } from 'bullmq';
@@ -30,17 +34,21 @@ export class ClaimService {
     ) {}
 
     async scheduleClaimFollowUpEmails(jobData: IJobData) {
-        await this.claimFollowupQueue.add('followUpClaim', jobData, {
-            delay: ONE_HOUR_MILLISECONDS,
-            attempts: 1,
-        });
-        await this.claimFollowupQueue.add('followUpClaim', jobData, {
-            delay: ONE_DAY_MILLISECONDS,
-            attempts: 1,
-        });
-        await this.claimFollowupQueue.add('followUpClaim', jobData, {
-            delay: TWO_DAYS_MILLISECONDS,
-            attempts: 1,
+        const delays = [
+            ONE_HOUR_MILLISECONDS,
+            ONE_DAY_MILLISECONDS,
+            TWO_DAYS_MILLISECONDS,
+            THREE_DAYS_MILLISECONDS,
+            FOUR_DAYS_MILLISECONDS,
+            FIVE_DAYS_MILLISECONDS,
+            SIX_DAYS_MILLISECONDS,
+        ];
+
+        delays.forEach((delay) => {
+            this.claimFollowupQueue.add('followUpClaim', jobData, {
+                delay,
+                attempts: 1,
+            });
         });
     }
 
