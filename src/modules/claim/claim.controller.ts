@@ -13,11 +13,7 @@ import {
 } from '@nestjs/common';
 import { CreateClaimDto } from './dto/create-claim.dto';
 import { ClaimService } from './claim.service';
-import {
-    INVALID_CLAIM_ID,
-    INVALID_ICAO,
-    SAVE_DOCUMENTS_SUCCESS,
-} from './constants';
+import { INVALID_CLAIM_ID, INVALID_ICAO } from './constants';
 import { JwtAuthGuard } from '../../guards/jwtAuth.guard';
 import { AuthRequest } from '../../interfaces/AuthRequest.interface';
 import { GetCompensationDto } from './dto/get-compensation.dto';
@@ -41,6 +37,7 @@ import { LanguageQueryDto } from './dto/language-query.dto';
 import { DocumentService } from './document/document.service';
 import { CustomerService } from './customer/customer.service';
 import { validateClaimJwt } from './utils/validate-claim-jwt';
+import { IFullClaim } from './interfaces/full-claim.interface';
 
 @Controller('claims')
 @UseGuards(JwtAuthGuard)
@@ -127,7 +124,10 @@ export class PublicClaimController {
     }
 
     @Post('/sign')
-    async uploadSign(@Query() query: JwtQueryDto, @Body() dto: UploadSignDto) {
+    async uploadSign(
+        @Query() query: JwtQueryDto,
+        @Body() dto: UploadSignDto,
+    ): Promise<IFullClaim> {
         const { jwt } = query;
         const { signature, claimId } = dto;
 
@@ -153,7 +153,7 @@ export class PublicClaimController {
             airlineName: claim.details.airlines.name,
         });
 
-        await this.documentService.saveDocuments(
+        const documents = await this.documentService.saveDocuments(
             [
                 {
                     path,
@@ -165,7 +165,14 @@ export class PublicClaimController {
 
         await this.customerService.setIsSignedCustomer(claim.customerId, true);
 
-        return SAVE_DOCUMENTS_SUCCESS;
+        return {
+            ...claim,
+            customer: {
+                ...claim.customer,
+                isSigned: true,
+            },
+            documents: [...documents],
+        };
     }
 
     @Put(':claimId/formState')

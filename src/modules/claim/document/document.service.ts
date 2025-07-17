@@ -21,14 +21,17 @@ export class DocumentService {
     async saveDocuments(
         documents: Omit<Omit<Document, 'id'>, 'claimId'>[],
         claimId: string,
-    ) {
-        return this.prisma.document.createMany({
-            data: documents.map((doc) => ({
-                name: doc.name,
-                path: doc.path,
-                claimId,
-            })),
-        });
+    ): Promise<Document[]> {
+        return Promise.all(
+            documents.map((doc) =>
+                this.prisma.document.create({
+                    data: {
+                        ...doc,
+                        claimId,
+                    },
+                }),
+            ),
+        );
     }
 
     async doesAssignmentAgreementExist(claimId: string) {

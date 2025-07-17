@@ -1,9 +1,7 @@
 import {
-    Body,
     Controller,
     Get,
     NotFoundException,
-    Param,
     Post,
     Query,
     Req,
@@ -17,7 +15,6 @@ import {
     CLAIM_NOT_FOUND,
     FILE_DOESNT_ON_DISK,
     INVALID_DOCUMENT_ID,
-    SAVE_DOCUMENTS_SUCCESS,
 } from '../constants';
 import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
 import { ClaimService } from '../claim.service';
@@ -56,7 +53,7 @@ export class DocumentController {
             throw new NotFoundException(CLAIM_NOT_FOUND);
         }
 
-        await this.documentService.saveDocuments(
+        return await this.documentService.saveDocuments(
             files.map((doc) => {
                 return {
                     name: doc.originalname,
@@ -65,8 +62,6 @@ export class DocumentController {
             }),
             claimId,
         );
-
-        return SAVE_DOCUMENTS_SUCCESS;
     }
 
     @Get('admin')
@@ -114,7 +109,7 @@ export class DocumentController {
             throw new NotFoundException(CLAIM_NOT_FOUND);
         }
 
-        await this.documentService.saveDocuments(
+        return await this.documentService.saveDocuments(
             files.map((doc) => {
                 return {
                     name: doc.originalname,
@@ -123,8 +118,6 @@ export class DocumentController {
             }),
             claimId,
         );
-
-        return SAVE_DOCUMENTS_SUCCESS;
     }
 }
 
@@ -155,7 +148,7 @@ export class PublicDocumentController {
 
         await this.claimService.updateStep(claimId, 8);
 
-        await this.documentService.saveDocuments(
+        return await this.documentService.saveDocuments(
             files.map((doc) => {
                 return {
                     name: doc.originalname,
@@ -164,7 +157,5 @@ export class PublicDocumentController {
             }),
             claimId,
         );
-
-        return SAVE_DOCUMENTS_SUCCESS;
     }
 }
