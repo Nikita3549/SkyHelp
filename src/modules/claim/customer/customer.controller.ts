@@ -103,6 +103,8 @@ export class PublicCustomerController {
             claimId,
         );
 
+        await this.customerService.setIsSignedCustomer(claim.customerId, true);
+
         await this.customerService.setIsSignedCustomer(customerId, true);
     }
 }
