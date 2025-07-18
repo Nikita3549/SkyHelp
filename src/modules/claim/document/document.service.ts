@@ -159,9 +159,9 @@ export class DocumentService {
 
         secondPage.drawImage(pngImage, {
             x: 150,
-            y: 291 - 105,
+            y: 217,
             width: 160,
-            height: 105,
+            height: 70,
         });
 
         const pdfBytes = await pdfDoc.save();
