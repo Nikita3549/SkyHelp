@@ -163,6 +163,8 @@ export class PublicClaimController {
             claimId,
         );
 
+        await this.claimService.updateStep(claimId, 7);
+
         await this.customerService.setIsSignedCustomer(claim.customerId, true);
 
         return {
