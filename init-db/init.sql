@@ -1,3 +1,6 @@
+DROP TABLE airports;
+DROP TABLE airlines;
+
 CREATE TABLE airports (
     id SERIAL PRIMARY KEY,
     name TEXT,

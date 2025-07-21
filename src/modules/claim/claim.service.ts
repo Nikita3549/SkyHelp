@@ -268,7 +268,6 @@ export class ClaimService {
             wasDeniedBoarding,
             wasAlternativeFlightOffered,
             arrivalTimeDelayOfAlternative,
-            wasDisruptionDuoExtraordinaryCircumstances,
         } = compensation;
 
         if (!flightDistanceKm) {
@@ -278,12 +277,10 @@ export class ClaimService {
         const delayIsLessThan3h = delayHours === DelayCategory.less_than_3hours;
         const cancellationNoticeIs14daysOrMore =
             cancellationNoticeDays === CancellationNotice.fourteen_days_or_more;
-        const isExtraordinary = wasDisruptionDuoExtraordinaryCircumstances;
 
         if (
             (delayIsLessThan3h && !wasDeniedBoarding) ||
-            cancellationNoticeIs14daysOrMore ||
-            isExtraordinary
+            cancellationNoticeIs14daysOrMore
         ) {
             return 0;
         }
