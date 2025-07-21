@@ -1,11 +1,12 @@
-import { UseInterceptors } from '@nestjs/common';
+import { UseInterceptors, BadRequestException } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import * as path from 'path';
+import { ALLOWED_EXTENSIONS, MAX_FILE_SIZE, MAX_FILES } from './constants';
 
 export function DocumentsUploadInterceptor() {
     return UseInterceptors(
-        FilesInterceptor('documents', 10, {
+        FilesInterceptor('documents', MAX_FILES, {
             storage: diskStorage({
                 destination: path.join(__dirname, '../../../uploads'),
                 filename: (_req, file, cb) => {
@@ -15,9 +16,22 @@ export function DocumentsUploadInterceptor() {
                     cb(null, `${uniqueSuffix}${ext}`);
                 },
             }),
+            fileFilter: (_req, file, cb) => {
+                const ext = path.extname(file.originalname).toLowerCase();
+                if (ALLOWED_EXTENSIONS.includes(ext)) {
+                    cb(null, true);
+                } else {
+                    cb(
+                        new BadRequestException(
+                            `Unsupported file type: ${ext}`,
+                        ),
+                        false,
+                    );
+                }
+            },
             limits: {
-                files: 10,
-                fileSize: 10 * 1024 * 1024,
+                files: MAX_FILES,
+                fileSize: MAX_FILE_SIZE,
             },
         }),
     );
