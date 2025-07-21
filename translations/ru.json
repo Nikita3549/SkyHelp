@@ -3375,5 +3375,9 @@
   "StepProgressMini.booking-reference": "Бронирование",
   "StepProgressMini.signature": "Подпись",
   "StepProgressMini.documents": "Документы",
-  "StepProgressMini.payment": "Оплата"
+  "StepProgressMini.payment": "Оплата",
+  "HeaderSection.document.bookingConfirmation": "Подтверждение бронирования (email)",
+  "HeaderSection.document.boardingPass": "Посадочный талон",
+  "HeaderSection.document.passportPhoto": "Фотография вашего паспорта",
+  "HeaderSection.document.otherDocuments": "Любые другие документы о бронировании"
 }

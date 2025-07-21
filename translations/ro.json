@@ -3375,5 +3375,9 @@
   "StepProgressMini.booking-reference": "Referință rezervare",
   "StepProgressMini.signature": "Semnătură",
   "StepProgressMini.documents": "Documente",
-  "StepProgressMini.payment": "Plată"
+  "StepProgressMini.payment": "Plată",
+  "HeaderSection.document.bookingConfirmation": "E-mail de confirmare a rezervării",
+  "HeaderSection.document.boardingPass": "Cartă de îmbarcare",
+  "HeaderSection.document.passportPhoto": "Fotografie a pașaportului",
+  "HeaderSection.document.otherDocuments": "Orice alte documente de rezervare"
 }

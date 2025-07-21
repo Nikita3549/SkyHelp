@@ -3376,5 +3376,9 @@
   "StepProgressMini.booking-reference": "Booking Reference",
   "StepProgressMini.signature": "Signature",
   "StepProgressMini.documents": "Documents",
-  "StepProgressMini.payment": "Payment"
+  "StepProgressMini.payment": "Payment",
+  "HeaderSection.document.bookingConfirmation": "Booking confirmation email",
+  "HeaderSection.document.boardingPass": "Boarding pass",
+  "HeaderSection.document.passportPhoto": "Photo of your passport",
+  "HeaderSection.document.otherDocuments": "Any other reservation documents"
 }
