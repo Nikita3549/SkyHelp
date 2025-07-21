@@ -121,7 +121,7 @@ export class DocumentController {
     }
 }
 
-@Controller('claims/documents')
+@Controller('claims/documents/public')
 export class PublicDocumentController {
     constructor(
         private readonly documentService: DocumentService,
