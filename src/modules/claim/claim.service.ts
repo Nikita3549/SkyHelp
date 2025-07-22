@@ -555,4 +555,15 @@ export class ClaimService {
             },
         });
     }
+
+    async updateContinueLink(claimId: string, continueLink: string) {
+        return this.prisma.claim.update({
+            data: {
+                continueLink,
+            },
+            where: {
+                id: claimId,
+            },
+        });
+    }
 }

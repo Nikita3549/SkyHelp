@@ -85,14 +85,18 @@ export class PublicClaimController {
             { expiresIn: '30days' },
         );
 
+        const continueClaimLink = `${this.configService.getOrThrow('FRONTEND_HOST')}/claim?claimId=${claim.id}&jwt=${jwt}`;
+
         await this.claimService.scheduleClaimFollowUpEmails({
             email: claim.customer.email,
             claimId: claim.id,
             language,
-            continueClaimLink: `${this.configService.getOrThrow('FRONTEND_HOST')}/claim?claimId=${claim.id}&jwt=${jwt}`,
+            continueClaimLink,
             clientFirstName: claim.customer.firstName,
             compensation: claim.state.amount as number,
         });
+
+        await this.claimService.updateContinueLink(claim.id, continueClaimLink);
 
         return {
             claimData: claim,
