@@ -134,7 +134,7 @@ export class PublicDocumentController {
         @UploadedFiles() files: Express.Multer.File[],
         @Query() query: UploadDocumentsJwtQueryDto,
     ) {
-        const { jwt, claimId } = query;
+        const { jwt, claimId, step } = query;
 
         validateClaimJwt(
             jwt,
@@ -146,7 +146,7 @@ export class PublicDocumentController {
             throw new NotFoundException(CLAIM_NOT_FOUND);
         }
 
-        await this.claimService.updateStep(claimId, 8);
+        await this.claimService.updateStep(claimId, step);
 
         return await this.documentService.saveDocuments(
             files.map((doc) => {

@@ -1,4 +1,4 @@
-import { IsJWT, IsString } from 'class-validator';
+import { IsJWT, IsNumber, IsString } from 'class-validator';
 
 export class UploadDocumentsJwtQueryDto {
     @IsJWT()
@@ -6,4 +6,7 @@ export class UploadDocumentsJwtQueryDto {
 
     @IsString()
     claimId: string;
+
+    @IsNumber()
+    step: number;
 }
