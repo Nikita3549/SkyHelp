@@ -2449,8 +2449,6 @@
   "FlightRouteStep.noRiskTextStrong": "gratuită",
   "FlightRouteStep.noRiskTextPart2": ".",
   "FlightRouteStep.continueButton": "Continuă",
-  "FlightDocumentsStep.uploadFailedTitle": "Încărcarea a eșuat",
-  "FlightDocumentsStep.uploadFailedDescription": "Încearcă din nou",
   "FlightDocumentsStep.continueButton": "Continuă",
   "FlightDetailsStep.helpItem1": "Introdu datele tuturor zborurilor rezervate împreună – nu doar ale celui afectat.",
   "FlightDetailsStep.helpItem2": "Dacă ai primit un zbor de înlocuire, datele acestuia pot fi diferite – introdu doar detaliile zborului original.",
@@ -3381,5 +3379,14 @@
   "HeaderSection.document.bookingConfirmation": "E-mail de confirmare a rezervării",
   "HeaderSection.document.boardingPass": "Cartă de îmbarcare",
   "HeaderSection.document.passportPhoto": "Fotografie a pașaportului",
-  "HeaderSection.document.otherDocuments": "Orice alte documente de rezervare"
+  "HeaderSection.document.otherDocuments": "Orice alte documente de rezervare",
+  "UploadPassportStep.title": "Încarcă pașaportul tău",
+  "UploadPassportStep.description": "Avem nevoie de o copie a pașaportului tău pentru a procesa compensația.",
+  "UploadPassportStep.continue": "Continuă",
+  "UploadPassportStep.toast.uploadRequired": "Te rugăm să încarci pașaportul tău",
+  "FlightDocumentsStep.uploadFailedTitle": "Încărcare eșuată",
+  "FlightDocumentsStep.uploadFailedDescription": "A apărut o eroare în timpul încărcării. Te rugăm să încerci din nou.",
+  "PassportDropZone.dropText": "Trage și plasează pașaportul tău aici",
+  "PassportDropZone.uploaded": "Pașaport încărcat",
+  "PassportDropZone.replace": "Înlocuiește fișierul"
 }

@@ -2448,8 +2448,6 @@
   "FlightRouteStep.noRiskTextStrong": "бесплатна",
   "FlightRouteStep.noRiskTextPart2": ".",
   "FlightRouteStep.continueButton": "Продолжить",
-  "FlightDocumentsStep.uploadFailedTitle": "Ошибка загрузки",
-  "FlightDocumentsStep.uploadFailedDescription": "Попробуйте снова",
   "FlightDocumentsStep.continueButton": "Продолжить",
   "FlightDetailsStep.helpItem1": "Укажите данные всех рейсов, которые вы бронировали вместе — не только проблемного.",
   "FlightDetailsStep.helpItem2": "Если вам был предложен альтернативный рейс, его данные могут отличаться — укажите только оригинальные детали.",
@@ -3381,5 +3379,14 @@
   "HeaderSection.document.bookingConfirmation": "Подтверждение бронирования (email)",
   "HeaderSection.document.boardingPass": "Посадочный талон",
   "HeaderSection.document.passportPhoto": "Фотография вашего паспорта",
-  "HeaderSection.document.otherDocuments": "Любые другие документы о бронировании"
+  "HeaderSection.document.otherDocuments": "Любые другие документы о бронировании",
+  "UploadPassportStep.title": "Загрузите ваш паспорт",
+  "UploadPassportStep.description": "Нам нужна копия вашего паспорта для обработки компенсации.",
+  "UploadPassportStep.continue": "Продолжить",
+  "UploadPassportStep.toast.uploadRequired": "Пожалуйста, загрузите ваш паспорт",
+  "FlightDocumentsStep.uploadFailedTitle": "Ошибка загрузки",
+  "FlightDocumentsStep.uploadFailedDescription": "Во время загрузки произошла ошибка. Пожалуйста, попробуйте ещё раз.",
+  "PassportDropZone.dropText": "Перетащите ваш паспорт сюда",
+  "PassportDropZone.uploaded": "Паспорт загружен",
+  "PassportDropZone.replace": "Заменить файл"
 }

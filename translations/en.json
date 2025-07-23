@@ -2449,8 +2449,6 @@
   "FlightRouteStep.noRiskTextStrong": "free of charge",
   "FlightRouteStep.noRiskTextPart2": ".",
   "FlightRouteStep.continueButton": "Continue",
-  "FlightDocumentsStep.uploadFailedTitle": "Upload failed",
-  "FlightDocumentsStep.uploadFailedDescription": "Try again",
   "FlightDocumentsStep.continueButton": "Continue",
   "FlightDetailsStep.helpItem1": "Enter the data for all the flights that you have booked together - not only for the disrupted one.",
   "FlightDetailsStep.helpItem2": "If you were given a substitute flight, its data may differ - so enter only the original flight details.",
@@ -3382,5 +3380,14 @@
   "HeaderSection.document.bookingConfirmation": "Booking confirmation email",
   "HeaderSection.document.boardingPass": "Boarding pass",
   "HeaderSection.document.passportPhoto": "Photo of your passport",
-  "HeaderSection.document.otherDocuments": "Any other reservation documents"
+  "HeaderSection.document.otherDocuments": "Any other reservation documents",
+  "UploadPassportStep.title": "Upload your passport",
+  "UploadPassportStep.description": "We need a copy of your passport to process your compensation.",
+  "UploadPassportStep.continue": "Continue",
+  "UploadPassportStep.toast.uploadRequired": "Please, upload your passport",
+  "FlightDocumentsStep.uploadFailedTitle": "Upload failed",
+  "FlightDocumentsStep.uploadFailedDescription": "An error occurred during the upload. Please try again.",
+  "PassportDropZone.dropText": "Drag & Drop your Passport here",
+  "PassportDropZone.uploaded": "Passport uploaded",
+  "PassportDropZone.replace": "Replace file"
 }
