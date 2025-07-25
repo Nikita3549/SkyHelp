@@ -3384,6 +3384,8 @@
   "UploadPassportStep.description": "Нам нужна копия вашего паспорта для обработки компенсации.",
   "UploadPassportStep.continue": "Продолжить",
   "UploadPassportStep.toast.uploadRequired": "Пожалуйста, загрузите ваш паспорт",
+  "FlightDocumentsStep.upload-required.title": "Требуется загрузка",
+  "FlightDocumentsStep.upload-required.description": "Пожалуйста, загрузите как минимум один файл",
   "FlightDocumentsStep.uploadFailedTitle": "Ошибка загрузки",
   "FlightDocumentsStep.uploadFailedDescription": "Во время загрузки произошла ошибка. Пожалуйста, попробуйте ещё раз.",
   "PassportDropZone.dropText": "Перетащите ваш паспорт сюда",

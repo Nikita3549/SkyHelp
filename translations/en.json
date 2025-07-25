@@ -3385,6 +3385,8 @@
   "UploadPassportStep.description": "We need a copy of your passport to process your compensation.",
   "UploadPassportStep.continue": "Continue",
   "UploadPassportStep.toast.uploadRequired": "Please, upload your passport",
+  "FlightDocumentsStep.upload-required.title": "Upload required",
+  "FlightDocumentsStep.upload-required.description": "Please, upload at least 1 file",
   "FlightDocumentsStep.uploadFailedTitle": "Upload failed",
   "FlightDocumentsStep.uploadFailedDescription": "An error occurred during the upload. Please try again.",
   "PassportDropZone.dropText": "Drag & Drop your Passport here",

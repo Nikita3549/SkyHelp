@@ -3384,6 +3384,8 @@
   "UploadPassportStep.description": "Avem nevoie de o copie a pașaportului tău pentru a procesa compensația.",
   "UploadPassportStep.continue": "Continuă",
   "UploadPassportStep.toast.uploadRequired": "Te rugăm să încarci pașaportul tău",
+  "FlightDocumentsStep.upload-required.title": "Încărcare necesară",
+  "FlightDocumentsStep.upload-required.description": "Te rugăm să încarci cel puțin un fișier",
   "FlightDocumentsStep.uploadFailedTitle": "Încărcare eșuată",
   "FlightDocumentsStep.uploadFailedDescription": "A apărut o eroare în timpul încărcării. Te rugăm să încerci din nou.",
   "PassportDropZone.dropText": "Trage și plasează pașaportul tău aici",
