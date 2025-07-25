@@ -17,6 +17,7 @@ import { CustomerService } from './customer.service';
 import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
 import { UploadSignDto } from './dto/upload-sign.dto';
 import { DocumentService } from '../document/document.service';
+import { DocumentType } from '@prisma/client';
 
 @Controller('claims/customer')
 @UseGuards(JwtAuthGuard)
@@ -101,6 +102,7 @@ export class PublicCustomerController {
                 },
             ],
             claimId,
+            DocumentType.ASSIGNMENT,
         );
 
         await this.customerService.setIsSignedCustomer(claim.customerId, true);

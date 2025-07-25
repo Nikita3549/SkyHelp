@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Document } from '@prisma/client';
+import { Document, DocumentType } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import * as fs from 'fs/promises';
 import * as path from 'path';
@@ -19,8 +19,9 @@ export class DocumentService {
     }
 
     async saveDocuments(
-        documents: Omit<Omit<Document, 'id'>, 'claimId'>[],
+        documents: Omit<Omit<Omit<Document, 'id'>, 'claimId'>, 'type'>[],
         claimId: string,
+        documentType: DocumentType,
     ): Promise<Document[]> {
         return Promise.all(
             documents.map((doc) =>

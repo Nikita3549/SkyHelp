@@ -10,6 +10,6 @@ export class GmailController {
 
     @Get()
     async getGmailMessages(@Query('page') page?: number) {
-        return this.gmailService.getGmailPage(page);
+        // return this.gmailService.getGmailPage(page);
     }
 }

@@ -221,13 +221,20 @@ enum AirlineReason {
 }
 
 model Document {
-  id      String @id @default(cuid()) @map("id")
-  name    String @map("name")
-  path    String @map("path")
-  claimId String @map("claim_id")
-  claim   Claim  @relation(fields: [claimId], references: [id], onDelete: Cascade)
+  id      String       @id @default(cuid()) @map("id")
+  name    String       @map("name")
+  path    String       @map("path")
+  type    DocumentType @default(DOCUMENT)
+  claimId String       @map("claim_id")
+  claim   Claim        @relation(fields: [claimId], references: [id], onDelete: Cascade)
 
   @@map("documents")
+}
+
+enum DocumentType {
+  ASSIGNMENT
+  PASSPORT
+  DOCUMENT
 }
 
 model ClaimPayment {

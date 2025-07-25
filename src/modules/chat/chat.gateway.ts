@@ -21,12 +21,13 @@ import {
 } from './constants';
 import { MessageReadDto } from './dto/message-read.dto';
 import { CreateChatDto } from './dto/create-chat.dto';
-import { ValidationFilter } from './filters/validation.filter';
+import { ValidationFilter } from '../../filters/validation.filter';
 import { FollowStatusDto } from './dto/follow-status.dto';
 import { JwtPayload } from 'jsonwebtoken';
+import { IJwtPayload } from '../token/interfaces/jwtPayload';
 
 @WebSocketGateway({
-    namespace: '/chat',
+    namespace: '/ws/chat',
     cors: {
         origin: '*',
     },
@@ -50,13 +51,14 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
                 throw new Error();
             }
 
-            const { id: userId } =
-                this.tokenService.verifyJWT<JwtPayload>(token);
+            const payload = this.tokenService.verifyJWT<IJwtPayload>(token);
 
-            (client as AuthSocket).data.userId = userId;
+            client.data = payload;
 
-            await this.chatService.saveOnlineStatus(userId);
-            this.server.in(`status_${userId}`).emit('status_online', userId);
+            await this.chatService.saveOnlineStatus(payload.id);
+            this.server
+                .in(`status_${payload.id}`)
+                .emit('status_online', payload.id);
         } catch (e: unknown) {
             client.emit('exception', INVALID_TOKEN);
             client.disconnect();
@@ -80,7 +82,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
 
     async handleDisconnect(client: AuthSocket) {
-        const { userId } = client.data;
+        const { id: userId } = client.data;
 
         await this.chatService.deleteOnlineStatus(userId);
 
@@ -91,12 +93,12 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     async handleNewChat(client: AuthSocket, dto: CreateChatDto) {
         const { secondChatUser } = dto;
 
-        if (client.data.userId == secondChatUser) {
+        if (client.data.id == secondChatUser) {
             throw new WsException(INVALID_CHAT_ID);
         }
 
         await this.chatService
-            .createChat(client.data.userId, secondChatUser)
+            .createChat(client.data.id, secondChatUser)
             .catch((_e: unknown) => {
                 throw new WsException(INVALID_USER_ID);
             });
@@ -108,7 +110,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         const { chatId, content } = dto;
 
         const message = await this.chatService
-            .createMessage(chatId, client.data.userId, content)
+            .createMessage(chatId, client.data.id, content)
             .catch((e: unknown) => {
                 throw new WsException(INVALID_CHAT_ID);
             });
@@ -134,7 +136,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     async handleStatusFollow(client: AuthSocket, dto: FollowStatusDto) {
         const { userId } = dto;
 
-        if (userId == client.data.userId) {
+        if (userId == client.data.id) {
             throw new WsException('Bad Request');
         }
 

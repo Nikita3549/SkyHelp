@@ -22,6 +22,7 @@ import { JwtQueryDto } from '../dto/jwt-query.dto';
 import { CreateOtherPassengersDto } from './dto/create-other-passengers.dto';
 import { validateClaimJwt } from '../utils/validate-claim-jwt';
 import { TokenService } from '../../token/token.service';
+import { DocumentType } from '@prisma/client';
 
 @Controller('claims/passengers')
 @UseGuards(JwtAuthGuard)
@@ -111,6 +112,7 @@ export class PublicOtherPassengerController {
                 },
             ],
             claimId,
+            DocumentType.ASSIGNMENT,
         );
 
         await this.otherPassengerService.setIsSignedPassenger(

@@ -45,7 +45,7 @@ export class DocumentController {
         @UploadedFiles() files: Express.Multer.File[],
         @Query() query: UploadAdminDocumentsDto,
     ) {
-        const { claimId } = query;
+        const { claimId, documentType } = query;
 
         const claim = await this.claimService.getClaim(claimId);
 
@@ -61,6 +61,7 @@ export class DocumentController {
                 };
             }),
             claimId,
+            documentType,
         );
     }
 
@@ -101,7 +102,7 @@ export class DocumentController {
         @Req() req: AuthRequest,
         @Query() query: UploadDocumentsQueryDto,
     ) {
-        const { claimId } = query;
+        const { claimId, documentType } = query;
 
         const claim = await this.claimService.getClaim(claimId);
 
@@ -117,6 +118,7 @@ export class DocumentController {
                 };
             }),
             claimId,
+            documentType,
         );
     }
 }
@@ -134,7 +136,7 @@ export class PublicDocumentController {
         @UploadedFiles() files: Express.Multer.File[],
         @Query() query: UploadDocumentsJwtQueryDto,
     ) {
-        const { jwt, claimId, step } = query;
+        const { jwt, claimId, step, documentType } = query;
 
         validateClaimJwt(
             jwt,
@@ -156,6 +158,7 @@ export class PublicDocumentController {
                 };
             }),
             claimId,
+            documentType,
         );
     }
 }

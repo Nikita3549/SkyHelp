@@ -24,6 +24,7 @@ import {
 } from './constants';
 import { Queue } from 'bullmq';
 import { IJobData } from './interfaces/job-data.interface';
+import { SearchClaimsDto } from './dto/search-claims.dto';
 
 @Injectable()
 export class ClaimService {
@@ -564,6 +565,55 @@ export class ClaimService {
             where: {
                 id: claimId,
             },
+        });
+    }
+
+    async searchClaims(
+        data: {
+            claimId?: string;
+            lastName?: string;
+            firstName?: string;
+            dateStart?: Date;
+            dateEnd?: Date;
+        },
+        page: number = 20,
+    ) {
+        const { claimId, lastName, firstName, dateStart, dateEnd } = data;
+
+        return this.prisma.claim.findMany({
+            where: {
+                AND: [
+                    claimId ? { id: claimId } : {},
+                    firstName
+                        ? {
+                              customer: {
+                                  firstName: {
+                                      contains: firstName,
+                                      mode: 'insensitive',
+                                  },
+                              },
+                          }
+                        : {},
+                    lastName
+                        ? {
+                              customer: {
+                                  lastName: {
+                                      contains: lastName,
+                                      mode: 'insensitive',
+                                  },
+                              },
+                          }
+                        : {},
+                    dateStart && dateEnd
+                        ? { createdAt: { gte: dateStart, lt: dateEnd } }
+                        : {},
+                ],
+            },
+            include: this.fullClaimInclude(),
+            orderBy: {
+                createdAt: 'desc',
+            },
+            take: page,
         });
     }
 }

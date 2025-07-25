@@ -9,10 +9,10 @@ import {
     FIFTY_FIVE_MINUTES,
     LABEL_ID_INBOX,
     NEGATIVE_PAGE_ERROR,
-    UPDATE_ACCESS_TOKEN_ERROR,
     USER_ID_ME,
 } from './constants';
 import Gmail = gmail_v1.Gmail;
+import { MessagePreview } from './interfaces/message-preview.interface';
 
 @Injectable()
 export class GmailService implements OnModuleInit {
@@ -40,84 +40,96 @@ export class GmailService implements OnModuleInit {
         // console.log(await this.getGmailPage());
     }
 
-    async getGmailPage(
-        page: number = 0,
-        alias: string = DEFAULT_GET_PAGE_ALIAS,
-        pageSize = DEFAULT_GET_PAGE_SIZE,
-    ) {
-        if (page < 0) throw new Error(NEGATIVE_PAGE_ERROR);
-        page = page + 1;
+    async getMessagesForAliasTeam(): Promise<MessagePreview[]> {
+        const res = await this.gmail.users.messages.list({
+            userId: 'me',
+            auth: this.oauth2Client,
+            q: 'to:team@skyhelp.md OR from:team@skyhelp.md',
+            maxResults: 100,
+        });
 
-        let nextPageToken: string | undefined;
-        let currentPage = 1;
+        if (!res.data.messages) return [];
 
-        while (true) {
-            const res = await this.gmail.users.messages.list({
-                userId: USER_ID_ME,
-                q: `to:${alias}`,
-                labelIds: [LABEL_ID_INBOX],
-                maxResults: pageSize,
-                pageToken: nextPageToken,
-            });
+        const messages = await Promise.all(
+            res.data.messages.map((msg) =>
+                this.gmail.users.messages.get({
+                    userId: 'me',
+                    id: msg.id!,
+                    format: 'metadata',
+                    metadataHeaders: ['Subject', 'From', 'To', 'Date'],
+                    auth: this.oauth2Client,
+                }),
+            ),
+        );
 
-            if (currentPage == page) {
-                const messages = res.data.messages ?? [];
-
-                return await Promise.all(
-                    messages.map(async (message) => {
-                        if (!message.id) return;
-
-                        const fullMessage = await this.gmail.users.messages.get(
-                            {
-                                userId: USER_ID_ME,
-                                id: message.id,
-                            },
-                        );
-
-                        const payload = fullMessage.data.payload;
-                        if (!payload) {
-                            return;
-                        }
-                        const headers = payload?.headers || [];
-
-                        const subject = headers.find(
-                            (h) => h.name === 'Subject',
-                        )?.value;
-                        const from = headers.find(
-                            (h) => h.name === 'From',
-                        )?.value;
-                        const to = headers.find((h) => h.name === 'To')?.value;
-
-                        const body = this.extractBodyFromPayload(payload);
-                        const attachments = await this.extractAttachments(
-                            message.id,
-                            payload,
-                        );
-
-                        return {
-                            id: fullMessage.data.id,
-                            subject,
-                            from,
-                            to,
-                            snippet: fullMessage.data.snippet,
-                            body,
-                            attachments,
-                        };
-                    }),
-                );
-            }
-
-            nextPageToken = res.data.nextPageToken
-                ? res.data.nextPageToken
-                : undefined;
-            if (!nextPageToken) break;
-
-            currentPage++;
-        }
-
-        return [];
+        return messages.map(({ data }) => ({
+            id: data.id!,
+            threadId: data.threadId!,
+            from: this.extractHeader(data.payload?.headers, 'From') || '',
+            to:
+                this.extractHeader(data.payload?.headers, 'To')
+                    ?.split(',')
+                    .map((e) => e.trim()) || [],
+            subject: this.extractHeader(data.payload?.headers, 'Subject') || '',
+            date: Number(data.internalDate),
+            snippet: data.snippet || '',
+            hasAttachments: this.hasAttachments(data),
+        }));
     }
 
+    async getMessagesWithUserForAliasTeam(
+        email: string,
+    ): Promise<MessagePreview[]> {
+        const query = `(from:${email} OR to:${email}) (from:team@skyhelp.md OR to:team@skyhelp.md)`;
+
+        const res = await this.gmail.users.messages.list({
+            userId: 'me',
+            auth: this.oauth2Client,
+            q: query,
+            maxResults: 100,
+        });
+
+        if (!res.data.messages) return [];
+
+        const messages = await Promise.all(
+            res.data.messages.map((msg) =>
+                this.gmail.users.messages.get({
+                    userId: 'me',
+                    id: msg.id!,
+                    format: 'metadata',
+                    metadataHeaders: ['Subject', 'From', 'To', 'Date'],
+                    auth: this.oauth2Client,
+                }),
+            ),
+        );
+
+        return messages.map(({ data }) => ({
+            id: data.id!,
+            threadId: data.threadId!,
+            from: this.extractHeader(data.payload?.headers, 'From') || '',
+            to:
+                this.extractHeader(data.payload?.headers, 'To')
+                    ?.split(',')
+                    .map((e) => e.trim()) || [],
+            subject: this.extractHeader(data.payload?.headers, 'Subject') || '',
+            date: Number(data.internalDate),
+            snippet: data.snippet || '',
+            hasAttachments: this.hasAttachments(data),
+        }));
+    }
+
+    private extractHeader(
+        headers: gmail_v1.Schema$MessagePartHeader[] = [],
+        name: string,
+    ): string | undefined | null {
+        return headers.find((h) => h.name?.toLowerCase() === name.toLowerCase())
+            ?.value;
+    }
+
+    private hasAttachments(message: gmail_v1.Schema$Message): boolean {
+        const parts = message.payload?.parts || [];
+        return parts.some((p) => !!p.filename && !!p.body?.attachmentId);
+    }
     async sendEmailHtml(
         to: string,
         subject: string,

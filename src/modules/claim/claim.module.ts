@@ -18,6 +18,7 @@ import { PaymentModule } from './payment/payment.module';
 import { OtherPassengerModule } from './other-passenger/other-passenger.module';
 import { AdminModule } from './admin/admin.module';
 import { AdminController } from './admin/admin.controller';
+import { ClaimGateway } from './claim.gateway';
 
 @Module({
     imports: [
@@ -40,7 +41,7 @@ import { AdminController } from './admin/admin.controller';
         forwardRef(() => AdminModule),
     ],
     controllers: [ClaimController, AdminController, PublicClaimController],
-    providers: [ClaimService, ClaimFollowupProcessor],
+    providers: [ClaimService, ClaimFollowupProcessor, ClaimGateway],
     exports: [ClaimService],
 })
 export class ClaimModule {}

@@ -5,7 +5,7 @@ export const UPDATE_ACCESS_TOKEN_ERROR =
 
 export const NEGATIVE_PAGE_ERROR = 'Page cannot be negative';
 
-export const DEFAULT_GET_PAGE_ALIAS = 'contact';
+export const DEFAULT_GET_PAGE_ALIAS = 'team';
 
 export const DEFAULT_GET_PAGE_SIZE = 10;
 

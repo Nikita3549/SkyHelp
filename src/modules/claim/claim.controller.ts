@@ -38,6 +38,7 @@ import { DocumentService } from './document/document.service';
 import { CustomerService } from './customer/customer.service';
 import { validateClaimJwt } from './utils/validate-claim-jwt';
 import { IFullClaim } from './interfaces/full-claim.interface';
+import { DocumentType } from '@prisma/client';
 
 @Controller('claims')
 @UseGuards(JwtAuthGuard)
@@ -165,6 +166,7 @@ export class PublicClaimController {
                 },
             ],
             claimId,
+            DocumentType.ASSIGNMENT,
         );
 
         await this.claimService.updateStep(claimId, 7);
