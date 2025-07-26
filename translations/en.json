@@ -3422,5 +3422,6 @@
   "DocumentsTab.Action.Preview": "Preview",
   "DocumentsTab.Action.Upload": "Upload",
   "DocumentsTab.Action.Add": "Add",
-  "DocumentsTab.Guidelines.Title": "Document Guidelines"
+  "DocumentsTab.Guidelines.Title": "Document Guidelines",
+  "ClaimsTable.headerProgress": "Progress"
 }

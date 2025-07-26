@@ -3421,5 +3421,6 @@
   "DocumentsTab.Action.Preview": "Previzualizare",
   "DocumentsTab.Action.Upload": "Încărcare",
   "DocumentsTab.Action.Add": "Adaugă",
-  "DocumentsTab.Guidelines.Title": "Ghid pentru documente"
+  "DocumentsTab.Guidelines.Title": "Ghid pentru documente",
+  "ClaimsTable.headerProgress": "Progres"
 }

@@ -3421,5 +3421,6 @@
   "DocumentsTab.Action.Preview": "Просмотр",
   "DocumentsTab.Action.Upload": "Загрузить",
   "DocumentsTab.Action.Add": "Добавить",
-  "DocumentsTab.Guidelines.Title": "Руководство по документам"
+  "DocumentsTab.Guidelines.Title": "Руководство по документам",
+  "ClaimsTable.headerProgress": "Прогресс"
 }
