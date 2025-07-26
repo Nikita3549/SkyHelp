@@ -29,7 +29,7 @@ export class ClaimFollowupProcessor extends WorkerHost {
             throw new Error(INVALID_CLAIM_ID);
         }
 
-        if (claim.step == 9) {
+        if (claim.step == 10) {
             return;
         }
 
