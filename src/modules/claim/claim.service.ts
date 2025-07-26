@@ -362,70 +362,70 @@ export class ClaimService {
         });
     }
 
-    async getUserClaimsStats(
-        userId?: string,
-        page = 1,
-        pageSize = 20,
-    ): Promise<{
+    async getUserClaimsStats(userId?: string): Promise<{
         total: number;
         successful: number;
         active: number;
         completedAmount: number;
+        claimsByDay: { date: string; count: number }[];
         successByMonth: { month: string; success: string }[];
     }> {
-        // const skip = (page - 1) * pageSize;
+        const [
+            total,
+            successful,
+            active,
+            completedAmountAgg,
+            claimsByDay,
+            successByMonth,
+        ] = await this.prisma.$transaction([
+            // total claims
+            this.prisma.claim.count({ where: { userId, archived: false } }),
 
-        const [total, successful, active, completedAmountAgg] =
-            await this.prisma.$transaction([
-                // page data
-                // this.prisma.claim.findMany({
-                //     where: { userId },
-                //     include: this.fullClaimInclude(),
-                //     skip,
-                //     take: pageSize,
-                // }),
-                // total claims
-                this.prisma.claim.count({ where: { userId, archived: false } }),
-
-                // successful claims
-                this.prisma.claim.count({
-                    where: {
-                        userId,
-                        state: {
-                            status: ClaimStatus.COMPLETED,
-                        },
-                        archived: false,
-                    },
-                }),
-
-                // active claims
-                this.prisma.claim.count({
-                    where: {
-                        userId,
-                        state: {
-                            status: {
-                                in: [
-                                    ClaimStatus.PENDING,
-                                    ClaimStatus.IN_PROGRESS,
-                                ],
-                            },
-                        },
-                        archived: false,
-                    },
-                }),
-                // sum of ClaimState.amount where state.status = COMPLETED
-                this.prisma.claimState.aggregate({
-                    where: {
+            // successful claims
+            this.prisma.claim.count({
+                where: {
+                    userId,
+                    state: {
                         status: ClaimStatus.COMPLETED,
-                        Claim: { some: { userId, archived: false } },
                     },
-                    _sum: { amount: true },
-                }),
-            ]);
+                    archived: false,
+                },
+            }),
 
-        const successByMonth = await this.prisma.$queryRaw<
-            { month: string; success: number }[]
-        >`
+            // active claims
+            this.prisma.claim.count({
+                where: {
+                    userId,
+                    state: {
+                        status: {
+                            in: [ClaimStatus.PENDING, ClaimStatus.IN_PROGRESS],
+                        },
+                    },
+                    archived: false,
+                },
+            }),
+            // sum of ClaimState.amount where state.status = COMPLETED
+            this.prisma.claimState.aggregate({
+                where: {
+                    status: ClaimStatus.COMPLETED,
+                    Claim: { some: { userId, archived: false } },
+                },
+                _sum: { amount: true },
+            }),
+
+            // claims/day
+            this.prisma.$queryRaw<{ date: string; count: number }[]>`SELECT
+                  TO_CHAR(c."created_at"::date, 'DD.MM.YYYY') AS date,
+            COUNT(*) AS count
+              FROM "claims" c
+              WHERE ${userId ? Prisma.sql`c."user_id" = ${userId} AND` : Prisma.empty}
+                  c."archived" = false AND
+                  c."created_at" >= NOW() - INTERVAL '1 month'
+              GROUP BY c."created_at"::date
+              ORDER BY c."created_at"::date DESC`,
+
+            // success claims by month
+            this.prisma.$queryRaw<{ month: string; success: number }[]>`
             SELECT
                 TO_CHAR(c."created_at", 'Mon') AS month,
     COUNT(*) AS success
@@ -435,7 +435,8 @@ export class ClaimService {
                 ${userId ? Prisma.sql`AND c."user_id" = ${userId}` : Prisma.empty} AND archived = false
             GROUP BY month, date_trunc('month', c."created_at")
             ORDER BY date_trunc('month', c."created_at") DESC
-        `;
+        `,
+        ]);
 
         const completedAmount = completedAmountAgg._sum.amount ?? 0;
         return {
@@ -443,9 +444,13 @@ export class ClaimService {
             successful,
             active,
             completedAmount,
+            claimsByDay: claimsByDay.map(({ date, count }) => ({
+                date,
+                count: Number(count), // <- BIGINT FIX
+            })),
             successByMonth: successByMonth.map(({ month, success }) => ({
                 month,
-                success: success.toString(),
+                success: success.toString(), // <- BIGINT FIX
             })),
         };
     }

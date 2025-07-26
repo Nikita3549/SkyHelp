@@ -29,6 +29,7 @@ export class DocumentService {
                     data: {
                         ...doc,
                         claimId,
+                        type: documentType,
                     },
                 }),
             ),
