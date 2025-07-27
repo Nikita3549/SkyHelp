@@ -1,7 +1,10 @@
 import {
+    Body,
     Controller,
     Get,
     NotFoundException,
+    Param,
+    Patch,
     Post,
     Query,
     Req,
@@ -30,6 +33,7 @@ import { TokenService } from '../../token/token.service';
 import { UploadDocumentsJwtQueryDto } from './dto/upload-documents-jwt-query.dto';
 import { AuthRequest } from '../../../interfaces/AuthRequest.interface';
 import { UploadDocumentsQueryDto } from './dto/upload-documents-query.dto';
+import { UpdateDocumentTypeDto } from './dto/update-document-type.dto';
 
 @Controller('claims/documents')
 @UseGuards(JwtAuthGuard)
@@ -63,6 +67,17 @@ export class DocumentController {
             claimId,
             documentType,
         );
+    }
+
+    @Patch('/:documentId/admin')
+    @UseGuards(IsModeratorGuard)
+    async updateDocumentType(
+        @Body() dto: UpdateDocumentTypeDto,
+        @Param('documentId') documentId: string,
+    ) {
+        const { type } = dto;
+
+        return await this.documentService.updateType(type, documentId);
     }
 
     @Get('admin')

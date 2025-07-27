@@ -61,8 +61,8 @@ export class ClaimGateway implements OnGatewayConnection {
     }
 
     @SubscribeMessage('claims')
-    handleMessage(client: AuthSocket, dto: SearchClaimsDto) {
-        const { claimId, firstName, lastName, date } = dto;
+    handleMessage(_client: AuthSocket, dto: SearchClaimsDto) {
+        const { date } = dto;
 
         let dateStart: Date | undefined;
         let dateEnd: Date | undefined;

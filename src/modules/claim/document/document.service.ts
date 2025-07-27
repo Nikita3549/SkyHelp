@@ -177,6 +177,21 @@ export class DocumentService {
 
         return filePath;
     }
+
+    async updateType(
+        newType: DocumentType,
+        documentId: string,
+    ): Promise<Document> {
+        return this.prisma.document.update({
+            data: {
+                type: newType,
+            },
+            where: {
+                id: documentId,
+            },
+        });
+    }
+
     private formatDatePdf(date: Date): string {
         const d = date;
         const day = String(d.getDate()).padStart(2, '0');
