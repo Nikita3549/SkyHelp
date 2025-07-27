@@ -13,6 +13,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Upload validate-env.sh to server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          port: ${{ secrets.SERVER_SSH_PORT }}
+          source: "./validate-env.sh"
+          target: "~/SkyHelp/validate-env.sh"
+
       - name: Validate .env on server
         uses: appleboy/ssh-action@v0.1.10
         with:
