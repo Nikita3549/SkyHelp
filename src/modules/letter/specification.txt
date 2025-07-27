@@ -1,0 +1,160 @@
+ENGLISH/RUSSIAN
+
+------------ ENGLISH ------------
+
+Controller: /letters
+
+Send Email — POST /letters/
+Consumes multipart/form-data.
+
+Required fields in the request body:
+
+to (string) — recipient email
+subject (string) — email subject
+content (string) — email body
+You can also attach any number of files using the attachments field.
+
+Example curl request:
+
+curl -X POST http://localhost:3000/v1/letters \
+  -H "Authorization: Bearer {{Token}}" \
+  -F "to={{to}}" \
+  -F "subject={{subject}}" \
+  -F "content={{content}}" \
+  -F "attachments=@./dev/test-1.pdf;type=application/pdf" \
+  -F "attachments=@./dev/test.jpg;type=image/jpeg"
+Note: If you're using an api Axios instance on the frontend (strongly recommended), the Authorization token will be attached automatically.
+
+Get Emails with Pagination — GET /letters/
+A simple GET call returns 20 latest emails sent/received from team@skyhelp.md.
+
+If you add the dialogWith query param with someone's email, the response will be filtered to only include emails between team@skyhelp.md and that address.
+
+Response format:
+
+{
+  "messages": [
+    {
+      "id": "1984d4af37d31e20",
+      "threadId": "1984d4af37d31e20",
+      "from": "SkyHelp Team <team@skyhelp.md>",
+      "to": ["nikitatsarenko7@gmail.com"],
+      "subject": "Test email from API WITH ATTACHMENTS",
+      "date": "2025-07-27T19:10:14.000Z",
+      "snippet": "TEST",
+      "attachments": [
+        {
+          "filename": "test.jpg",
+          "mimeType": "image/jpeg",
+          "attachmentId": "1",
+          "size": 158839
+        }
+      ],
+      "body": "TEST\r\n"
+    }
+  ],
+  "nextPageToken": string | null
+}
+About nextPageToken: Gmail uses a token-based pagination system. To get the first page — you don't need a token. To get the second page — you must use the nextPageToken from the first page, and so on. Tokens are valid for about an hour. If there are no more messages to fetch, nextPageToken will be null.
+
+Use the pageToken query param to go forward in pagination.
+
+Backward pagination is not supported unless you store previous tokens yourself, but even then it's unreliable. The recommended behavior is: only allow forward pagination, not backward. Either you're on the first page (no token) or you're on the next one (token provided).
+
+Get Email Attachment — GET /letters/:letterId/attachments/:attachmentId
+This endpoint returns the raw buffer of a specific attachment.
+
+letterId — ID of the email (from /letters/)
+attachmentId — ID of the attachment (also from /letters/)
+Response: raw buffer content with appropriate headers including filename, content type, and size.
+
+------------ RUSSIAN ------------
+
+Контроллер /letters
+
+1. Отправить письмо POST /letters/
+
+Принимает multipart/form-data.
+
+В тело запроса принимает обязательные поля:
+{
+    to: string; - получатель письма
+
+    subject: string; - тема письма
+
+    content: string; - контент письма
+}
+
+Также можно прикладывать неограниченное количество файлов в поля attachments.
+
+Вот пример запроса в curl:
+
+curl -X POST http://localhost:3000/v1/letters \
+  -H "Authorization: Bearer {{Token}}" \
+  -F "to={{to}}" \
+  -F "subject={{subject}}" \
+  -F "content={{content}}" \
+  -F "attachments=@./dev/test-1.pdf;type=application/pdf" \
+  -F "attachments=@./dev/test.jpg;type=image/jpeg"
+
+P.S  Напомню, что если используешь объект api на фронте(настоятельно рекомендую) для axios запросов токен авторизации сам прикладывается
+
+2. Получить письма с пагинацией в 20 писем GET /letters/
+
+Просто вызов - вернет все 20 отправленные и полученные письма с почты team@skyhelp.md.
+Если в query параметр dialogWith ты вставишь чью-то почту, то будут возвращаться только письма между team@skyhelp.md и этой почтой
+
+Возвращает письма в таком формате:
+
+{
+  "messages": [
+    {
+      "id": "1984d4af37d31e20",
+      "threadId": "1984d4af37d31e20",
+      "from": "SkyHelp Team <team@skyhelp.md>",
+      "to": [
+        "nikitatsarenko7@gmail.com"
+      ],
+      "subject": "Test email from API WITH ATTACHMENTS",
+      "date": "2025-07-27T19:10:14.000Z",
+      "snippet": "TEST",
+      "attachments": [
+        {
+          "filename": "test.jpg",
+          "mimeType": "image/jpeg",
+          "attachmentId": "1",
+          "size": 158839
+        }
+      ],
+      "body": "TEST\r\n"
+    },
+  ],
+  "nextPageToken": string | null,
+}
+
+Я думаю здесь все должно быть понятно кроме nextPageToken.
+
+Проблема в том что гуглу надо было высрать очень хитровыебаную идею с пагинацией.
+Вообще главная идея такова: для того чтобы перейти на новую страницу - нужен токен, который ты получишь на прошлой странице + максимум токен живет где-то час.
+Из всех вариантов мне кажется оптимальным просто давать пользователю идти вперед(лутая токен с одной страницы и используя его на второй),
+но не давать идти назад потому что с этим много проблем. Вообщем есть либо первая страницы, либо следующая для выбора.
+Это мое видение мб ты придумаешь что-то гениальное.
+
+Как это вообще работает?
+
+Чтобы получить первую страницу - тебе нахуй не нужен токен.
+Но для того чтобы перейти на вторую - нужно залутать токен с первой страницы.
+И так далее для последующих страниц, с предыдущей получаешь - на следующей используешь.
+
+Если следующей страницы нету - токен будет == null
+Токен прикладываешь в query параметр pageToken
+
+3. Получить Buffer приложенного документа к письму GET /letters/:letterId/attachments/:attachmentId
+
+Думаю все должно быть понятно.
+letterId - id письма,
+attachmentId - id приложенного файла
+
+Все их берешь из роута GET /letters/
+
+Возвращает просто buffer а в заголовках всю интересующую тебя про документ информацию

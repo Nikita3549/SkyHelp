@@ -4,12 +4,7 @@ import {
     WebSocketGateway,
     WebSocketServer,
 } from '@nestjs/websockets';
-import {
-    BadRequestException,
-    UseFilters,
-    UsePipes,
-    ValidationPipe,
-} from '@nestjs/common';
+import { UseFilters, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ValidationFilter } from '../../filters/validation.filter';
 import { TokenService } from '../token/token.service';
 import { Server, Socket } from 'socket.io';

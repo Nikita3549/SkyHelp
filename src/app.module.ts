@@ -20,6 +20,7 @@ import { LanguageModule } from './modules/language/language.module';
 import { ContactUsModule } from './modules/contact-us/contact-us.module';
 import { BullModule } from '@nestjs/bullmq';
 import { UnixTimeModule } from './modules/unix-time/unix-time.module';
+import { LetterModule } from './modules/letter/letter.module';
 
 @Module({
     imports: [
@@ -50,6 +51,7 @@ import { UnixTimeModule } from './modules/unix-time/unix-time.module';
         LanguageModule,
         ContactUsModule,
         UnixTimeModule,
+        LetterModule,
     ],
     controllers: [AppController],
     providers: [AppService],
