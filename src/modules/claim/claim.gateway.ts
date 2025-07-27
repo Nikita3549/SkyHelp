@@ -62,29 +62,8 @@ export class ClaimGateway implements OnGatewayConnection {
 
     @SubscribeMessage('claims')
     handleMessage(_client: AuthSocket, dto: SearchClaimsDto) {
-        const { date } = dto;
+        const { search } = dto;
 
-        let dateStart: Date | undefined;
-        let dateEnd: Date | undefined;
-
-        if (date) {
-            const [day, month, year] = date.split('.');
-            if (!day || !month || !year)
-                throw new BadRequestException('Invalid date format');
-
-            const parsedDate = new Date(`${year}-${month}-${day}T00:00:00Z`);
-            if (isNaN(parsedDate.getTime()))
-                throw new BadRequestException('Invalid date');
-
-            dateStart = new Date(parsedDate);
-            dateEnd = new Date(parsedDate);
-            dateEnd.setUTCDate(dateEnd.getUTCDate() + 1);
-        }
-
-        return this.claimService.searchClaims({
-            ...dto,
-            dateEnd,
-            dateStart,
-        });
+        return this.claimService.searchClaims(search);
     }
 }

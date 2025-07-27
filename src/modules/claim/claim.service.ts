@@ -24,7 +24,6 @@ import {
 } from './constants';
 import { Queue } from 'bullmq';
 import { IJobData } from './interfaces/job-data.interface';
-import { SearchClaimsDto } from './dto/search-claims.dto';
 
 @Injectable()
 export class ClaimService {
@@ -573,52 +572,73 @@ export class ClaimService {
         });
     }
 
-    async searchClaims(
-        data: {
-            claimId?: string;
-            lastName?: string;
-            firstName?: string;
-            dateStart?: Date;
-            dateEnd?: Date;
-        },
-        page: number = 20,
-    ) {
-        const { claimId, lastName, firstName, dateStart, dateEnd } = data;
-
+    async searchClaims(search: string, page: number = 20) {
         return this.prisma.claim.findMany({
             where: {
-                AND: [
-                    claimId ? { id: claimId } : {},
-                    firstName
-                        ? {
-                              customer: {
-                                  firstName: {
-                                      contains: firstName,
-                                      mode: 'insensitive',
-                                  },
-                              },
-                          }
-                        : {},
-                    lastName
-                        ? {
-                              customer: {
-                                  lastName: {
-                                      contains: lastName,
-                                      mode: 'insensitive',
-                                  },
-                              },
-                          }
-                        : {},
-                    dateStart && dateEnd
-                        ? { createdAt: { gte: dateStart, lt: dateEnd } }
-                        : {},
+                OR: [
+                    { id: search }, // exact id match
+                    {
+                        customer: {
+                            OR: [
+                                {
+                                    firstName: {
+                                        contains: search,
+                                        mode: 'insensitive',
+                                    },
+                                },
+                                {
+                                    lastName: {
+                                        contains: search,
+                                        mode: 'insensitive',
+                                    },
+                                },
+                            ],
+                        },
+                    },
                 ],
             },
-            include: this.fullClaimInclude(),
+            include: {
+                details: {
+                    include: {
+                        airlines: true,
+                        routes: {
+                            include: {
+                                ArrivalAirport: true,
+                                DepartureAirport: true,
+                            },
+                        },
+                    },
+                },
+                state: {
+                    select: {
+                        id: true,
+                        status: true,
+                        amount: true,
+                        updatedAt: true,
+                        progress: {
+                            orderBy: {
+                                order: 'asc',
+                            },
+                        },
+                    },
+                },
+                customer: true,
+                issue: true,
+                payment: true,
+                documents: true,
+                passengers: true,
+            },
             orderBy: {
                 createdAt: 'desc',
             },
             take: page,
         });
+    }
+
+    private formatDateToDDMMYYYY(date: Date): string {
+        const dd = String(date.getDate()).padStart(2, '0');
+        const mm = String(date.getMonth() + 1).padStart(2, '0');
+        const yyyy = date.getFullYear();
+        return `${dd}.${mm}.${yyyy}`;
     }
 }
