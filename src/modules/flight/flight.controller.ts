@@ -1,7 +1,14 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import {
+    BadRequestException,
+    Body,
+    Controller,
+    Post,
+    UseGuards,
+} from '@nestjs/common';
 import { FlightService } from './flight.service';
 import { GetFlightsDto } from './dto/get-flights.dto';
 import { JwtAuthGuard } from '../../guards/jwtAuth.guard';
+import { INVALID_FLIGHT_DATA } from './constants';
 
 @Controller('flights')
 export class FlightController {
@@ -9,6 +16,12 @@ export class FlightController {
 
     @Post()
     async getFlights(@Body() dto: GetFlightsDto) {
-        return this.flightService.getFlightsByDateAirportsCompany(dto);
+        const flights = await this.flightService
+            .getFlightsByDateAirportsCompany(dto)
+            .catch((e: unknown) => {
+                throw new BadRequestException(INVALID_FLIGHT_DATA);
+            });
+
+        return flights;
     }
 }
