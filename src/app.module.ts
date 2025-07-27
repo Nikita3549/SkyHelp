@@ -2,9 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
-import { AuthController } from './modules/auth/auth.controller';
 import { AuthModule } from './modules/auth/auth.module';
-import { UserController } from './modules/user/user.controller';
 import { UserModule } from './modules/user/user.module';
 import { TokenModule } from './modules/token/token.module';
 import { PrismaModule } from './modules/prisma/prisma.module';
@@ -21,6 +19,7 @@ import { AirlineModule } from './modules/airline/airline.module';
 import { LanguageModule } from './modules/language/language.module';
 import { ContactUsModule } from './modules/contact-us/contact-us.module';
 import { BullModule } from '@nestjs/bullmq';
+import { UnixTimeModule } from './modules/unix-time/unix-time.module';
 
 @Module({
     imports: [
@@ -50,6 +49,7 @@ import { BullModule } from '@nestjs/bullmq';
         AirlineModule,
         LanguageModule,
         ContactUsModule,
+        UnixTimeModule,
     ],
     controllers: [AppController],
     providers: [AppService],
