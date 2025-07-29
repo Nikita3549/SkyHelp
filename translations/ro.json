@@ -3380,9 +3380,6 @@
     "HeaderSection.document.boardingPass": "Cartă de îmbarcare",
     "HeaderSection.document.passportPhoto": "Fotografie a pașaportului",
     "HeaderSection.document.otherDocuments": "Orice alte documente de rezervare",
-    "UploadPassportStep.title": "Încarcă pașaportul tău",
-    "UploadPassportStep.description": "Avem nevoie de o copie a pașaportului tău pentru a procesa compensația.",
-    "UploadPassportStep.continue": "Continuă",
     "UploadPassportStep.toast.uploadRequired": "Te rugăm să încarci pașaportul tău",
     "FlightDocumentsStep.upload-required.title": "Încărcare necesară",
     "FlightDocumentsStep.upload-required.description": "Te rugăm să încarci cel puțin un fișier",
@@ -3422,5 +3419,9 @@
     "DocumentsTab.Action.Upload": "Încărcare",
     "DocumentsTab.Action.Add": "Adaugă",
     "DocumentsTab.Guidelines.Title": "Ghid pentru documente",
-    "ClaimsTable.headerProgress": "Progres"
+    "ClaimsTable.headerProgress": "Прогресс",
+    "UploadPassportStep.title": "Sube los pasaportes de todos los pasajeros",
+    "UploadPassportStep.description": "Por favor, sube una copia del pasaporte de cada pasajero en tu reserva.",
+    "UploadPassportStep.note": "Asegúrate de subir un pasaporte por cada pasajero.",
+    "UploadPassportStep.continue": "Continuar"
 }

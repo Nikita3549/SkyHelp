@@ -3381,9 +3381,6 @@
     "HeaderSection.document.boardingPass": "Boarding pass",
     "HeaderSection.document.passportPhoto": "Photo of your passport",
     "HeaderSection.document.otherDocuments": "Any other reservation documents",
-    "UploadPassportStep.title": "Upload your passport",
-    "UploadPassportStep.description": "We need a copy of your passport to process your compensation.",
-    "UploadPassportStep.continue": "Continue",
     "UploadPassportStep.toast.uploadRequired": "Please, upload your passport",
     "FlightDocumentsStep.upload-required.title": "Upload required",
     "FlightDocumentsStep.upload-required.description": "Please, upload at least 1 file",
@@ -3423,5 +3420,9 @@
     "DocumentsTab.Action.Upload": "Upload",
     "DocumentsTab.Action.Add": "Add",
     "DocumentsTab.Guidelines.Title": "Document Guidelines",
-    "ClaimsTable.headerProgress": "Progress"
+    "ClaimsTable.headerProgress": "Progress",
+    "UploadPassportStep.title": "Upload passports of all passengers",
+    "UploadPassportStep.description": "Please upload a copy of the passport for each passenger in your booking.",
+    "UploadPassportStep.note": "Make sure to upload one passport per passenger.",
+    "UploadPassportStep.continue": "Continue"
 }

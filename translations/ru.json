@@ -3381,9 +3381,6 @@
     "HeaderSection.document.boardingPass": "Посадочный талон",
     "HeaderSection.document.passportPhoto": "Фотография вашего паспорта",
     "HeaderSection.document.otherDocuments": "Любые другие документы о бронировании",
-    "UploadPassportStep.title": "Загрузите ваш паспорт",
-    "UploadPassportStep.description": "Нам нужна копия вашего паспорта для обработки компенсации.",
-    "UploadPassportStep.continue": "Продолжить",
     "UploadPassportStep.toast.uploadRequired": "Пожалуйста, загрузите ваш паспорт",
     "FlightDocumentsStep.upload-required.title": "Требуется загрузка",
     "FlightDocumentsStep.upload-required.description": "Пожалуйста, загрузите как минимум один файл",
@@ -3423,5 +3420,9 @@
     "DocumentsTab.Action.Upload": "Загрузить",
     "DocumentsTab.Action.Add": "Добавить",
     "DocumentsTab.Guidelines.Title": "Руководство по документам",
-    "ClaimsTable.headerProgress": "Прогресс"
+    "ClaimsTable.headerProgress": "Progres",
+    "UploadPassportStep.title": "Загрузите паспорта всех пассажиров",
+    "UploadPassportStep.description": "Пожалуйста, загрузите копии паспортов для каждого пассажира в вашем бронировании.",
+    "UploadPassportStep.note": "Убедитесь, что загружен паспорт для каждого пассажира.",
+    "UploadPassportStep.continue": "Продолжить"
 }
