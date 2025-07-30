@@ -3424,5 +3424,12 @@
     "UploadPassportStep.title": "Upload passports of all passengers",
     "UploadPassportStep.description": "Please upload a copy of the passport for each passenger in your booking.",
     "UploadPassportStep.note": "Make sure to upload one passport per passenger.",
-    "UploadPassportStep.continue": "Continue"
+    "UploadPassportStep.continue": "Continue",
+    "DocumentsTab.TypeChangeFailed": "Failed to change document type",
+    "DocumentsTab.toastTypeChangeSuccessTitle": "Document Type Changed",
+    "DocumentsTab.toastTypeChangeSuccessDescription": "Document type has been updated successfully",
+    "DocumentsTab.TypeChangeError": "Error changing document type:",
+    "DocumentsTab.toastTypeChangeErrorTitle": "Error",
+    "DocumentsTab.toastTypeChangeErrorDescription": "Failed to change document type",
+    "DocumentsTab.Action.ChangeType": "Change Type"
 }

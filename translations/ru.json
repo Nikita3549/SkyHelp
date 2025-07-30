@@ -3424,5 +3424,12 @@
     "UploadPassportStep.title": "Загрузите паспорта всех пассажиров",
     "UploadPassportStep.description": "Пожалуйста, загрузите копии паспортов для каждого пассажира в вашем бронировании.",
     "UploadPassportStep.note": "Убедитесь, что загружен паспорт для каждого пассажира.",
-    "UploadPassportStep.continue": "Продолжить"
+    "UploadPassportStep.continue": "Продолжить",
+    "DocumentsTab.TypeChangeFailed": "Не удалось изменить тип документа",
+    "DocumentsTab.toastTypeChangeSuccessTitle": "Тип документа изменён",
+    "DocumentsTab.toastTypeChangeSuccessDescription": "Тип документа успешно обновлён",
+    "DocumentsTab.TypeChangeError": "Ошибка при изменении типа документа:",
+    "DocumentsTab.toastTypeChangeErrorTitle": "Ошибка",
+    "DocumentsTab.toastTypeChangeErrorDescription": "Не удалось изменить тип документа",
+    "DocumentsTab.Action.ChangeType": "Изменить тип"
 }

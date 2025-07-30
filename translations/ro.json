@@ -3423,5 +3423,12 @@
     "UploadPassportStep.title": "Sube los pasaportes de todos los pasajeros",
     "UploadPassportStep.description": "Por favor, sube una copia del pasaporte de cada pasajero en tu reserva.",
     "UploadPassportStep.note": "Asegúrate de subir un pasaporte por cada pasajero.",
-    "UploadPassportStep.continue": "Continuar"
+    "UploadPassportStep.continue": "Continuar",
+    "DocumentsTab.TypeChangeFailed": "Nu s-a putut schimba tipul documentului",
+    "DocumentsTab.toastTypeChangeSuccessTitle": "Tipul documentului a fost schimbat",
+    "DocumentsTab.toastTypeChangeSuccessDescription": "Tipul documentului a fost actualizat cu succes",
+    "DocumentsTab.TypeChangeError": "Eroare la schimbarea tipului documentului:",
+    "DocumentsTab.toastTypeChangeErrorTitle": "Eroare",
+    "DocumentsTab.toastTypeChangeErrorDescription": "Nu s-a putut schimba tipul documentului",
+    "DocumentsTab.Action.ChangeType": "Schimbă tipul"
 }
