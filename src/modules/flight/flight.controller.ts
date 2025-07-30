@@ -19,6 +19,7 @@ export class FlightController {
         const flights = await this.flightService
             .getFlightsByDateAirportsCompany(dto)
             .catch((e: unknown) => {
+                console.log('Fetching flight data error', e);
                 throw new BadRequestException(INVALID_FLIGHT_DATA);
             });
 
