@@ -12,5 +12,6 @@ import { TokenModule } from '../../token/token.module';
     imports: [forwardRef(() => ClaimModule), DocumentModule, TokenModule],
     controllers: [OtherPassengerController, PublicOtherPassengerController],
     providers: [OtherPassengerService],
+    exports: [OtherPassengerService],
 })
 export class OtherPassengerModule {}

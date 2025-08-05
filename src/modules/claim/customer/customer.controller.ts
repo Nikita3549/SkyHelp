@@ -105,8 +105,6 @@ export class PublicCustomerController {
             DocumentType.ASSIGNMENT,
         );
 
-        await this.customerService.setIsSignedCustomer(claim.customerId, true);
-
         await this.customerService.setIsSignedCustomer(customerId, true);
     }
 }

@@ -34,10 +34,7 @@ async function bootstrap() {
         }),
     );
 
-    app.use(
-        '/v1/docusign/webhook',
-        express.raw({ type: '*/*', limit: '100mb' }),
-    );
+    app.use('/v1/zoho/webhook', express.raw({ type: '*/*', limit: '100mb' }));
     app.use(express.json({ limit: '10mb' }));
 
     await app.listen(port);

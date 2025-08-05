@@ -136,7 +136,7 @@ export class GmailService implements OnModuleInit {
                 },
             });
         } catch (error) {
-            console.error(error);
+            console.error('[Gmail]', error);
         }
     }
 
@@ -226,7 +226,7 @@ export class GmailService implements OnModuleInit {
                 },
             });
         } catch (error) {
-            console.error(error);
+            console.error('[Gmail]', error);
         }
     }
 
@@ -239,9 +239,9 @@ export class GmailService implements OnModuleInit {
             if (!accessToken) throw new Error();
 
             this.accessToken = accessToken;
-            console.log('Gmail Access token refreshed');
+            console.log('[Gmail] Access token refreshed');
         } catch (err) {
-            console.error('Failed to refresh access token', err);
+            console.error('[Gmail] Failed to refresh access token', err);
         }
     }
 

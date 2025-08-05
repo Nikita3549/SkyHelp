@@ -36,7 +36,7 @@ import { UpdateFormStateDto } from './dto/update-form-state.dto';
 import { LanguageQueryDto } from './dto/language-query.dto';
 import { DocumentService } from './document/document.service';
 import { CustomerService } from './customer/customer.service';
-import { validateClaimJwt } from './utils/validate-claim-jwt';
+import { validateClaimJwt } from '../../utils/validate-claim-jwt';
 import { IFullClaim } from './interfaces/full-claim.interface';
 import { DocumentType } from '@prisma/client';
 

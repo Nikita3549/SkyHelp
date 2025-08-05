@@ -21,6 +21,7 @@ import { ContactUsModule } from './modules/contact-us/contact-us.module';
 import { BullModule } from '@nestjs/bullmq';
 import { UnixTimeModule } from './modules/unix-time/unix-time.module';
 import { LetterModule } from './modules/letter/letter.module';
+import { ZohoModule } from './modules/zoho/zoho.module';
 
 @Module({
     imports: [
@@ -52,6 +53,7 @@ import { LetterModule } from './modules/letter/letter.module';
         ContactUsModule,
         UnixTimeModule,
         LetterModule,
+        ZohoModule,
     ],
     controllers: [AppController],
     providers: [AppService],

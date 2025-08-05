@@ -28,7 +28,7 @@ import { Response } from 'express';
 import * as path from 'path';
 import * as fs from 'fs';
 import { lookup as mimeLookup } from 'mime-types';
-import { validateClaimJwt } from '../utils/validate-claim-jwt';
+import { validateClaimJwt } from '../../../utils/validate-claim-jwt';
 import { TokenService } from '../../token/token.service';
 import { UploadDocumentsJwtQueryDto } from './dto/upload-documents-jwt-query.dto';
 import { AuthRequest } from '../../../interfaces/AuthRequest.interface';

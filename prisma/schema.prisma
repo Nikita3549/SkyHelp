@@ -33,28 +33,29 @@ enum UserRole {
 }
 
 model Claim {
-  id           String           @id @default(cuid()) @map("id")
-  step         Int              @default(5)
-  formState    String?          @default("") @map("form_state")
-  userId       String?          @map("user_id")
-  user         User?            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  detailsId    String           @map("details_id")
-  details      ClaimDetails     @relation(fields: [detailsId], references: [id], onDelete: Cascade)
-  stateId      String           @map("state_id")
-  state        ClaimState       @relation(fields: [stateId], references: [id], onDelete: Cascade)
-  customerId   String           @map("customer_id")
-  customer     ClaimCustomer    @relation(fields: [customerId], references: [id], onDelete: Cascade)
-  issueId      String           @map("issue_id")
-  issue        ClaimIssue       @relation(fields: [issueId], references: [id], onDelete: Cascade)
-  envelopeId   String?          @map("envelope_id")
-  archived     Boolean          @default(false)
-  continueLink String?          @map("continue_link")
-  documents    Document[]
-  passengers   OtherPassenger[]
-  paymentId    String?          @map("payment_id")
-  payment      ClaimPayment?    @relation(fields: [paymentId], references: [id], onDelete: Cascade)
-  createdAt    DateTime         @default(now()) @map("created_at")
-  updatedAt    DateTime         @updatedAt @map("updated_at")
+  id            String           @id @default(cuid()) @map("id")
+  step          Int              @default(5)
+  formState     String?          @default("") @map("form_state")
+  userId        String?          @map("user_id")
+  user          User?            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  detailsId     String           @map("details_id")
+  details       ClaimDetails     @relation(fields: [detailsId], references: [id], onDelete: Cascade)
+  stateId       String           @map("state_id")
+  state         ClaimState       @relation(fields: [stateId], references: [id], onDelete: Cascade)
+  customerId    String           @map("customer_id")
+  customer      ClaimCustomer    @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  issueId       String           @map("issue_id")
+  issue         ClaimIssue       @relation(fields: [issueId], references: [id], onDelete: Cascade)
+  envelopeId    String?          @map("envelope_id")
+  archived      Boolean          @default(false)
+  continueLink  String?          @map("continue_link")
+  documents     Document[]
+  passengers    OtherPassenger[]
+  paymentId     String?          @map("payment_id")
+  payment       ClaimPayment?    @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+  createdAt     DateTime         @default(now()) @map("created_at")
+  updatedAt     DateTime         @updatedAt @map("updated_at")
+  signScenarios SignScenario[]
 
   @@map("claims")
 }
@@ -253,17 +254,18 @@ model ClaimPayment {
 }
 
 model OtherPassenger {
-  id        String   @id @default(cuid()) @map("id")
-  claimId   String   @map("claim_id")
-  claim     Claim    @relation(fields: [claimId], references: [id], onDelete: Cascade)
-  firstName String   @map("first_name")
-  lastName  String   @map("last_name")
-  city      String
-  country   String
-  address   String
-  birthday  DateTime
-  isSigned  Boolean  @default(false)
-  email     String?
+  id           String         @id @default(cuid()) @map("id")
+  claimId      String         @map("claim_id")
+  claim        Claim          @relation(fields: [claimId], references: [id], onDelete: Cascade)
+  firstName    String         @map("first_name")
+  lastName     String         @map("last_name")
+  city         String
+  country      String
+  address      String
+  birthday     DateTime
+  isSigned     Boolean        @default(false)
+  email        String?
+  SignScenario SignScenario[]
 
   @@map("claim_other_passengers")
 }
@@ -321,4 +323,23 @@ enum ChatType {
   GROUP
 
   @@map("chat_types")
+}
+
+model SignScenario {
+  id          String           @id @default(uuid())
+  claimId     String           @map("claim_id")
+  passengerId String?          @map("passenger_id")
+  requestId   String           @map("request_id")
+  scenario    SignScenarioType
+
+  claim     Claim           @relation(fields: [claimId], references: [id])
+  passenger OtherPassenger? @relation(fields: [passengerId], references: [id])
+
+  @@map("sign_scenarios")
+}
+
+enum SignScenarioType {
+  MainFlow
+  ExternalFlow
+  OtherPassenger
 }
