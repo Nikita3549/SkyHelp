@@ -3431,5 +3431,16 @@
     "DocumentsTab.TypeChangeError": "Ошибка при изменении типа документа:",
     "DocumentsTab.toastTypeChangeErrorTitle": "Ошибка",
     "DocumentsTab.toastTypeChangeErrorDescription": "Не удалось изменить тип документа",
-    "DocumentsTab.Action.ChangeType": "Изменить тип"
+    "DocumentsTab.Action.ChangeType": "Изменить тип",
+    "SignatureStep.title": "Подпишите документ",
+    "SignatureStep.description": "Пожалуйста, ознакомьтесь и подпишите юридический документ, чтобы продолжить.",
+    "SignatureStep.documentLabel": "Подписание документа",
+    "SignatureStep.loading.title": "Загрузка интерфейса для подписи...",
+    "SignatureStep.error.title": "Ошибка при подписании",
+    "SignatureStep.error.retry": "Повторить",
+    "SignatureStep.signedConfirmation": "✓ Документ успешно подписан",
+    "SignatureStep.toast.signingRequired.title": "Требуется подпись",
+    "SignatureStep.toast.signingRequired.description": "Пожалуйста, завершите подписание документа перед продолжением.",
+    "SignatureStep.toast.signed.title": "Документ подписан",
+    "SignatureStep.toast.signed.description": "Ваш документ был успешно подписан."
 }

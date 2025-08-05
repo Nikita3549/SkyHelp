@@ -3430,5 +3430,16 @@
     "DocumentsTab.TypeChangeError": "Eroare la schimbarea tipului documentului:",
     "DocumentsTab.toastTypeChangeErrorTitle": "Eroare",
     "DocumentsTab.toastTypeChangeErrorDescription": "Nu s-a putut schimba tipul documentului",
-    "DocumentsTab.Action.ChangeType": "Schimbă tipul"
+    "DocumentsTab.Action.ChangeType": "Schimbă tipul",
+    "SignatureStep.title": "Semnează documentul",
+    "SignatureStep.description": "Te rugăm să citești și să semnezi documentul legal pentru a continua.",
+    "SignatureStep.documentLabel": "Semnarea documentului",
+    "SignatureStep.loading.title": "Se încarcă interfața de semnare...",
+    "SignatureStep.error.title": "Eroare la semnare",
+    "SignatureStep.error.retry": "Reîncearcă",
+    "SignatureStep.signedConfirmation": "✓ Documentul a fost semnat cu succes",
+    "SignatureStep.toast.signingRequired.title": "Semnătură necesară",
+    "SignatureStep.toast.signingRequired.description": "Te rugăm să finalizezi semnarea documentului înainte de a continua.",
+    "SignatureStep.toast.signed.title": "Document semnat",
+    "SignatureStep.toast.signed.description": "Documentul tău a fost semnat cu succes."
 }

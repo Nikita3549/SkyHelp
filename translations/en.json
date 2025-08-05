@@ -3431,5 +3431,16 @@
     "DocumentsTab.TypeChangeError": "Error changing document type:",
     "DocumentsTab.toastTypeChangeErrorTitle": "Error",
     "DocumentsTab.toastTypeChangeErrorDescription": "Failed to change document type",
-    "DocumentsTab.Action.ChangeType": "Change Type"
+    "DocumentsTab.Action.ChangeType": "Change Type",
+    "SignatureStep.title": "Sign the Document",
+    "SignatureStep.description": "Please read and sign the legal document to proceed.",
+    "SignatureStep.documentLabel": "Document Signing",
+    "SignatureStep.loading.title": "Loading signing interface...",
+    "SignatureStep.error.title": "Signing Error",
+    "SignatureStep.error.retry": "Retry",
+    "SignatureStep.signedConfirmation": "✓ Document has been successfully signed",
+    "SignatureStep.toast.signingRequired.title": "Signing Required",
+    "SignatureStep.toast.signingRequired.description": "Please complete the document signing before continuing.",
+    "SignatureStep.toast.signed.title": "Document Signed",
+    "SignatureStep.toast.signed.description": "Your document has been successfully signed."
 }
