@@ -23,6 +23,8 @@ import { UnixTimeModule } from './modules/unix-time/unix-time.module';
 import { LetterModule } from './modules/letter/letter.module';
 import { ZohoModule } from './modules/zoho/zoho.module';
 import { LogModule } from './modules/log/log.module';
+import { GoogleSheetsModule } from './modules/google-sheets/google-sheets.module';
+import { YandexMetrikaModule } from './modules/yandex-metrika/yandex-metrika.module';
 
 @Module({
     imports: [
@@ -56,6 +58,8 @@ import { LogModule } from './modules/log/log.module';
         LetterModule,
         ZohoModule,
         LogModule,
+        GoogleSheetsModule,
+        YandexMetrikaModule,
     ],
     controllers: [AppController],
     providers: [AppService],

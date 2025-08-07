@@ -55,6 +55,7 @@ export class ZohoService implements OnModuleInit {
     }
 
     async onModuleInit() {
+        if (this.configService.get('NODE_ENV') != 'PROD') return;
         await this.refreshAccessToken();
     }
 
