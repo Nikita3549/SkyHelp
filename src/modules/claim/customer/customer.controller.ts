@@ -18,6 +18,8 @@ import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
 import { UploadSignDto } from './dto/upload-sign.dto';
 import { DocumentService } from '../document/document.service';
 import { DocumentType } from '@prisma/client';
+import { validateClaimJwt } from '../../../utils/validate-claim-jwt';
+import { TokenService } from '../../token/token.service';
 
 @Controller('claims/customer')
 @UseGuards(JwtAuthGuard)
@@ -48,6 +50,7 @@ export class PublicCustomerController {
         private readonly customerService: CustomerService,
         private readonly claimService: ClaimService,
         private readonly documentService: DocumentService,
+        private readonly tokenService: TokenService,
     ) {}
 
     @Get(':customerId')
@@ -66,7 +69,13 @@ export class PublicCustomerController {
         @Body() dto: UploadSignDto,
         @Param('customerId') customerId: string,
     ) {
-        const { signature, claimId } = dto;
+        const { signature, claimId, jwt } = dto;
+
+        validateClaimJwt(
+            jwt,
+            claimId,
+            this.tokenService.verifyJWT.bind(this.tokenService),
+        );
 
         const customer = await this.customerService.getCustomer(customerId);
 

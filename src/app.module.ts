@@ -25,6 +25,7 @@ import { ZohoModule } from './modules/zoho/zoho.module';
 import { LogModule } from './modules/log/log.module';
 import { GoogleSheetsModule } from './modules/google-sheets/google-sheets.module';
 import { YandexMetrikaModule } from './modules/yandex-metrika/yandex-metrika.module';
+import { GenerateJwtModule } from './modules/generate-jwt/generate-jwt.module';
 
 @Module({
     imports: [
@@ -60,6 +61,7 @@ import { YandexMetrikaModule } from './modules/yandex-metrika/yandex-metrika.mod
         LogModule,
         GoogleSheetsModule,
         YandexMetrikaModule,
+        GenerateJwtModule,
     ],
     controllers: [AppController],
     providers: [AppService],

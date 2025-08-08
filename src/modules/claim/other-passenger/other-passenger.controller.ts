@@ -8,12 +8,13 @@ import {
     Post,
     Put,
     Query,
+    UploadedFiles,
     UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
 import { IsModeratorGuard } from '../../../guards/isModerator.guard';
 import { UpdatePassengerDto } from './dto/update-passenger.dto';
-import { INVALID_PASSENGER_ID } from '../constants';
+import { CLAIM_NOT_FOUND, INVALID_PASSENGER_ID } from '../constants';
 import { OtherPassengerService } from './other-passenger.service';
 import { DocumentService } from '../document/document.service';
 import { ClaimService } from '../claim.service';
@@ -23,6 +24,8 @@ import { CreateOtherPassengersDto } from './dto/create-other-passengers.dto';
 import { validateClaimJwt } from '../../../utils/validate-claim-jwt';
 import { TokenService } from '../../token/token.service';
 import { DocumentType } from '@prisma/client';
+import { DocumentsUploadInterceptor } from '../../../interceptors/documents/documents-upload.interceptor';
+import { UploadOtherPassengerDto } from './dto/upload-other-passenger.dto';
 
 @Controller('claims/passengers')
 @UseGuards(JwtAuthGuard)
@@ -75,7 +78,13 @@ export class PublicOtherPassengerController {
         @Body() dto: UploadSignDto,
         @Param('passengerId') passengerId: string,
     ) {
-        const { signature, claimId } = dto;
+        const { signature, claimId, jwt } = dto;
+
+        validateClaimJwt(
+            jwt,
+            claimId,
+            this.tokenService.verifyJWT.bind(this.tokenService),
+        );
 
         const passenger =
             await this.otherPassengerService.getOtherPassenger(passengerId);
@@ -140,6 +149,38 @@ export class PublicOtherPassengerController {
         return this.otherPassengerService.createOtherPassengers(
             passengers,
             claimId,
+        );
+    }
+
+    @Post('upload')
+    @DocumentsUploadInterceptor()
+    async uploadOtherPassengerDocument(
+        @UploadedFiles() files: Express.Multer.File[] = [],
+        @Body() dto: UploadOtherPassengerDto,
+    ) {
+        const { claimId, documentType, jwt } = dto;
+
+        validateClaimJwt(
+            jwt,
+            claimId,
+            this.tokenService.verifyJWT.bind(this.tokenService),
+        );
+
+        const claim = await this.claimService.getClaim(claimId);
+
+        if (!claim) {
+            throw new NotFoundException(CLAIM_NOT_FOUND);
+        }
+
+        await this.documentService.saveDocuments(
+            files.map((doc) => {
+                return {
+                    name: doc.originalname,
+                    path: doc.path,
+                };
+            }),
+            claimId,
+            documentType,
         );
     }
 }

@@ -113,7 +113,7 @@ export class DocumentController {
     @Post()
     @DocumentsUploadInterceptor()
     async uploadDocuments(
-        @UploadedFiles() files: Express.Multer.File[],
+        @UploadedFiles() files: Express.Multer.File[] = [],
         @Req() req: AuthRequest,
         @Query() query: UploadDocumentsQueryDto,
     ) {
@@ -148,7 +148,7 @@ export class PublicDocumentController {
     @Post()
     @DocumentsUploadInterceptor()
     async uploadDocuments(
-        @UploadedFiles() files: Express.Multer.File[],
+        @UploadedFiles() files: Express.Multer.File[] = [],
         @Query() query: UploadDocumentsJwtQueryDto,
     ) {
         const { jwt, claimId, step, documentType } = query;

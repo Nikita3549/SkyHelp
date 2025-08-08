@@ -1,4 +1,4 @@
-import { IsString } from 'class-validator';
+import { IsJWT, IsString } from 'class-validator';
 
 export class UploadSignDto {
     @IsString()
@@ -6,4 +6,7 @@ export class UploadSignDto {
 
     @IsString()
     signature: string;
+
+    @IsJWT()
+    jwt: string;
 }
