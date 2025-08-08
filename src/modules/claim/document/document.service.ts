@@ -97,24 +97,24 @@ export class DocumentService {
             font: fontRegular,
         });
 
+        firstPage.drawText(documentData.address, {
+            x: 205,
+            y: 598,
+            size: 10.5,
+            color: rgb(0.333, 0.333, 0.333),
+            font: fontRegular,
+        });
+
         firstPage.drawText(
             `${documentData.firstName} ${documentData.lastName}`,
             {
                 x: 205,
-                y: 598,
+                y: 618,
                 size: 10.5,
-                color: rgb(0.333, 0.333, 0.333),
-                font: fontRegular,
+                color: rgb(0, 0, 0),
+                font: fontBold,
             },
         );
-
-        firstPage.drawText(documentData.address, {
-            x: 205,
-            y: 618,
-            size: 10.5,
-            color: rgb(0, 0, 0),
-            font: fontBold,
-        });
 
         firstPage.drawText(documentData.claimId, {
             x: 180,
