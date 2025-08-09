@@ -14,7 +14,6 @@ export class AirlineService implements OnModuleInit {
         this.pool = new Pool({
             user: this.configService.getOrThrow('DATABASE_STATIC_USER'),
             database: this.configService.getOrThrow('DATABASE_STATIC_DBNAME'),
-            port: this.configService.getOrThrow('DATABASE_STATIC_PORT'),
             password: this.configService.getOrThrow('DATABASE_STATIC_PASSWORD'),
             host: this.configService.getOrThrow('DATABASE_STATIC_HOST'),
         });

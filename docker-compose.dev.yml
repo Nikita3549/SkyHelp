@@ -1,0 +1,33 @@
+services:
+  db:
+    container_name: dev_database
+    networks:
+      - dev_main
+    volumes:
+      - dev_db_data:/var/lib/postgresql/data
+  db-static:
+    container_name: dev_db-static
+    networks:
+      - dev_main
+  redis:
+    container_name: dev_redis
+    networks:
+      - dev_main
+    volumes:
+      - dev_redis_data:/data
+  api:
+    container_name: dev_api
+    networks:
+      - dev_main
+    environment:
+      - ./dev_uploads:/opt/api/uploads/
+    command: sh -c "cd /opt/api/ && npx prisma db push && NODE_ENV=DEV node dist/main"
+
+networks:
+  dev_main:
+    driver: bridge
+
+volumes:
+  dev_db_data:
+  dev_redis_data:
+  dev_uploads:
