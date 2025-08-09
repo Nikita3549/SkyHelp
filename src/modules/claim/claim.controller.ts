@@ -39,6 +39,7 @@ import { CustomerService } from './customer/customer.service';
 import { validateClaimJwt } from '../../utils/validate-claim-jwt';
 import { IFullClaim } from './interfaces/full-claim.interface';
 import { DocumentType } from '@prisma/client';
+import { UploadFormSignDto } from './dto/upload-form-sign-dto';
 
 @Controller('claims')
 @UseGuards(JwtAuthGuard)
@@ -131,7 +132,7 @@ export class PublicClaimController {
     @Post('/sign')
     async uploadSign(
         @Query() query: JwtQueryDto,
-        @Body() dto: UploadSignDto,
+        @Body() dto: UploadFormSignDto,
     ): Promise<IFullClaim> {
         const { jwt } = query;
         const { signature, claimId } = dto;
