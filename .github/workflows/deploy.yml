@@ -45,25 +45,33 @@ jobs:
           script: |
             cd ~/SkyHelp || { echo "❌ Directory not found"; exit 1; }
             last_commit=$(cat .last_commit)
-
+            
             echo "✅ Pulling latest changes"
             git pull origin master || { echo "❌ Git pull failed"; exit 1; }
-
-            echo "🔧 Building and restarting containers"
+            
+            echo "🔧 Building and restarting PROD containers"
             if ! docker compose --profile api up --build -d --remove-orphans; then
               echo "❌ Docker Compose failed — rolling back"
               git reset --hard $last_commit
               docker compose --profile api up -d --remove-orphans || { echo "❌ Rollback failed"; exit 1; }
               exit 1
             fi
-
+            
+            echo "🔧 Building and restarting DEV containers"
+            docker compose --env-file .env.development \
+              -f docker-compose.yml \
+              -f docker-compose.dev.yml \
+              -p sky-help_dev \
+              --profile api up --build -d --remove-orphans
+            
             echo "🧹 Cleaning up dangling images"
             docker image prune -f
-
+            
             echo "🔍 Checking running containers"
             docker ps | grep database || { echo "❌ Database not running"; exit 1; }
             docker ps | grep db-static || { echo "❌ Db-static not running"; exit 1; }
             docker ps | grep redis || { echo "❌ Redis not running"; exit 1; }
             docker ps | grep api || { echo "❌ Api not running"; exit 1; }
-
+            docker ps | grep sky-help_dev || { echo "❌ Dev environment not running"; exit 1; }
+            
             echo "✅ Deployment complete"
