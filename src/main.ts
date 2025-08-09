@@ -14,14 +14,22 @@ async function bootstrap() {
     const configService = app.get(ConfigService);
     const port = configService.getOrThrow<number>('API_PORT');
 
-    // HTTP CORS
-    app.enableCors({
-        origin: configService.getOrThrow<string>('FRONTEND_URL'),
-        credentials: true,
-    });
+    if (process.env.NODE_ENV === 'PROD') {
+        app.enableCors({
+            origin: configService.getOrThrow<string>('FRONTEND_URL'),
+            credentials: true,
+        });
+    } else {
+        // Allow each sources in dev
+        app.enableCors({
+            origin: true,
+            credentials: true,
+        });
+    }
 
     // WS CORS
-    app.useWebSocketAdapter(new SocketIoAdapter(app, configService));
+    process.env.NODE_ENV == 'PROD' &&
+        app.useWebSocketAdapter(new SocketIoAdapter(app, configService));
 
     app.setGlobalPrefix('v1');
     app.useGlobalPipes(

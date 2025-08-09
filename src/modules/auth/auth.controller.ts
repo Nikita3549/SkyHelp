@@ -13,6 +13,7 @@ import {
     Get,
     Req,
     Query,
+    InternalServerErrorException,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
@@ -293,7 +294,26 @@ export class AuthController {
     @Get('/me')
     @UseGuards(JwtAuthGuard)
     async decodeToken(@Req() req: AuthRequest) {
-        return req.user;
+        const user = await this.userService.getUserById(req.user.id);
+
+        if (!user) {
+            throw new InternalServerErrorException();
+        }
+
+        const publicUserData = {
+            name: user.name,
+            secondName: user.secondName,
+            role: user.role,
+            email: user.email,
+            id: user.id,
+            isActive: user.isActive,
+            lastSign: user.lastSign,
+            createdAt: user.lastSign,
+        };
+
+        const jwt = this.tokenService.generateJWT(publicUserData);
+
+        return { ...user, jwt };
     }
 
     private async connectWithClaim(userId: string, claimToken?: string) {
