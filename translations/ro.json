@@ -3468,5 +3468,15 @@
     "PassportSection.selectedFiles.remove": "Șterge",
     "ThankYouPage.documentsUploaded.title": "Mulțumim pentru încărcarea pașaportului!",
     "ThankYouPage.documentsUploaded.description": "Pașaportul tău a fost încărcat cu succes. Îl vom procesa în curând.",
-    "ThankYouPage.documentsUploaded.continue": "Continuă"
+    "ThankYouPage.documentsUploaded.continue": "Continuă",
+    "UploadPassportStep.otherPassengers.title": "Alți pasageri",
+    "UploadPassportStep.otherPassengers.description": "Partajează linkul cu alți pasageri pentru a-și încărca pașapoartele",
+    "UploadPassportStep.otherPassengers.copyLink": "Copiază linkul",
+    "UploadPassportStep.otherPassengers.uploadNow": "Încarcă acum",
+    "UploadPassportStep.toast.linkCopied.title": "Link copiat!",
+    "UploadPassportStep.toast.linkCopied.description": "Linkul a fost copiat în clipboard",
+    "UploadPassportStep.toast.filesSelected.title": "Fișiere selectate!",
+    "UploadPassportStep.toast.filesSelected.description": "fișier(e) selectate pentru",
+    "UploadPassportStep.uploadedFiles.title": "Sumar fișiere încărcate:",
+    "UploadPassportStep.uploadedFiles.fileCount": "fișier(e)"
 }

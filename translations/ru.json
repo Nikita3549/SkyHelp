@@ -3467,5 +3467,15 @@
     "PassportSection.selectedFiles.remove": "Удалить",
     "ThankYouPage.documentsUploaded.title": "Спасибо за загрузку паспорта!",
     "ThankYouPage.documentsUploaded.description": "Ваш паспорт был успешно загружен. Мы обработаем его в ближайшее время.",
-    "ThankYouPage.documentsUploaded.continue": "Продолжить"
+    "ThankYouPage.documentsUploaded.continue": "Продолжить",
+    "UploadPassportStep.otherPassengers.title": "Другие пассажиры",
+    "UploadPassportStep.otherPassengers.description": "Поделитесь ссылкой с другими пассажирами для загрузки их паспортов",
+    "UploadPassportStep.otherPassengers.copyLink": "Скопировать ссылку",
+    "UploadPassportStep.otherPassengers.uploadNow": "Загрузить сейчас",
+    "UploadPassportStep.toast.linkCopied.title": "Ссылка скопирована!",
+    "UploadPassportStep.toast.linkCopied.description": "Ссылка была скопирована в буфер обмена",
+    "UploadPassportStep.toast.filesSelected.title": "Файлы выбраны!",
+    "UploadPassportStep.toast.filesSelected.description": "файл(ы) выбраны для",
+    "UploadPassportStep.uploadedFiles.title": "Сводка загруженных файлов:",
+    "UploadPassportStep.uploadedFiles.fileCount": "файл(ов)"
 }

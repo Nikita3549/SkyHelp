@@ -3469,5 +3469,13 @@
     "PassportSection.selectedFiles.remove": "Remove",
     "ThankYouPage.documentsUploaded.title": "Thank you for uploading your passport!",
     "ThankYouPage.documentsUploaded.description": "Your passport has been successfully uploaded. We will process it shortly.",
-    "ThankYouPage.documentsUploaded.continue": "Continue"
+    "ThankYouPage.documentsUploaded.continue": "Continue",
+    "UploadPassportStep.otherPassengers.title": "Other Passengers",
+    "UploadPassportStep.otherPassengers.description": "Share the link with other passengers to upload their passports",
+    "UploadPassportStep.otherPassengers.copyLink": "Copy Link",
+    "UploadPassportStep.otherPassengers.uploadNow": "Upload Now",
+    "UploadPassportStep.toast.linkCopied.title": "Link copied!",
+    "UploadPassportStep.toast.linkCopied.description": "The link has been copied to your clipboard",   "UploadPassportStep.toast.filesSelected.title": "Files selected!",
+    "UploadPassportStep.toast.filesSelected.description": "file(s) selected for",   "UploadPassportStep.uploadedFiles.title": "Uploaded Files Summary:",
+    "UploadPassportStep.uploadedFiles.fileCount": "file(s)"
 }
