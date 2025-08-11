@@ -3456,5 +3456,18 @@
     "PassportUploadFlow.toast.filesChosen.title": "Files ready",
     "PassportUploadFlow.toast.filesChosen.text": "file(s) selected for upload",
     "PassportUploadFlow.summary.title": "Files Uploaded:",
-    "PassportUploadFlow.summary.count": "file(s)"
+    "PassportUploadFlow.summary.count": "file(s)",
+    "PassportSection.title": "Upload your passport",
+    "PassportSection.description": "Allowed types: JPG, PNG, PDF. Max size:",
+    "PassportSection.buttonUpload": "Upload",
+    "PassportSection.errors.fileTypeNotAllowed": "Only JPG, PNG, or PDF files are allowed.",
+    "PassportSection.errors.fileTooLarge": "File too large. Max",
+    "PassportSection.errors.noFileSelected": "Please choose a file first.",
+    "PassportSection.errors.invalidLink": "Invalid upload link. Please request a new one.",
+    "PassportSection.errors.uploadFailed": "Upload failed. Please try again.",
+    "PassportSection.selectedFiles.title": "Selected files",
+    "PassportSection.selectedFiles.remove": "Remove",
+    "ThankYouPage.documentsUploaded.title": "Thank you for uploading your passport!",
+    "ThankYouPage.documentsUploaded.description": "Your passport has been successfully uploaded. We will process it shortly.",
+    "ThankYouPage.documentsUploaded.continue": "Continue"
 }

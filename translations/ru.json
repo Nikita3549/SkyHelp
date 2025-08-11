@@ -3456,5 +3456,16 @@
     "PassportUploadFlow.toast.filesChosen.title": "Файлы готовы",
     "PassportUploadFlow.toast.filesChosen.text": "файл(ы) выбраны для загрузки",
     "PassportUploadFlow.summary.title": "Загруженные файлы:",
-    "PassportUploadFlow.summary.count": "файл(ов)"
+    "PassportUploadFlow.summary.count": "файл(ов)",
+    "PassportSection.title": "Загрузите ваш паспорт",
+    "PassportSection.description": "Допустимые форматы: JPG, PNG, PDF. Максимальный размер:",
+    "PassportSection.buttonUpload": "Загрузить",
+    "PassportSection.errors.fileTypeNotAllowed": "Разрешены только файлы JPG, PNG или PDF.",
+    "PassportSection.errors.fileTooLarge": "Файл слишком большой. Максимум", "PassportSection.errors.noFileSelected": "Пожалуйста, сначала выберите файл.", "PassportSection.errors.invalidLink": "Недействительная ссылка для загрузки. Пожалуйста, запросите новую.",
+    "PassportSection.errors.uploadFailed": "Ошибка загрузки. Попробуйте еще раз.",
+    "PassportSection.selectedFiles.title": "Выбранные файлы",
+    "PassportSection.selectedFiles.remove": "Удалить",
+    "ThankYouPage.documentsUploaded.title": "Спасибо за загрузку паспорта!",
+    "ThankYouPage.documentsUploaded.description": "Ваш паспорт был успешно загружен. Мы обработаем его в ближайшее время.",
+    "ThankYouPage.documentsUploaded.continue": "Продолжить"
 }

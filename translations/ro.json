@@ -3455,5 +3455,18 @@
     "PassportUploadFlow.toast.filesChosen.title": "Fișiere pregătite",
     "PassportUploadFlow.toast.filesChosen.text": "fișier(e) selectate pentru încărcare",
     "PassportUploadFlow.summary.title": "Fișiere încărcate:",
-    "PassportUploadFlow.summary.count": "fișier(e)"
+    "PassportUploadFlow.summary.count": "fișier(e)",
+    "PassportSection.title": "Încarcă pașaportul tău",
+    "PassportSection.description": "Tipuri permise: JPG, PNG, PDF. Dimensiune maximă:",
+    "PassportSection.buttonUpload": "Încarcă",
+    "PassportSection.errors.fileTypeNotAllowed": "Sunt permise doar fișiere JPG, PNG sau PDF.",
+    "PassportSection.errors.fileTooLarge": "Fișier prea mare. Maxim",
+    "PassportSection.errors.noFileSelected": "Te rugăm să alegi mai întâi un fișier.",
+    "PassportSection.errors.invalidLink": "Link de încărcare invalid. Te rugăm să soliciți unul nou.",
+    "PassportSection.errors.uploadFailed": "Încărcare eșuată. Te rugăm să încerci din nou.",
+    "PassportSection.selectedFiles.title": "Fișiere selectate",
+    "PassportSection.selectedFiles.remove": "Șterge",
+    "ThankYouPage.documentsUploaded.title": "Mulțumim pentru încărcarea pașaportului!",
+    "ThankYouPage.documentsUploaded.description": "Pașaportul tău a fost încărcat cu succes. Îl vom procesa în curând.",
+    "ThankYouPage.documentsUploaded.continue": "Continuă"
 }
