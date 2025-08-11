@@ -1,4 +1,6 @@
-import { IsEnum, IsOptional, IsString } from 'class-validator';
+import { IsDate, IsEnum, IsOptional, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import { ClaimStatus } from '@prisma/client';
 enum IsArchived {
     YES = 'yes',
     NO = 'no',
@@ -15,4 +17,17 @@ export class GetClaimsQuery {
     @IsOptional()
     @IsEnum(IsArchived)
     archived: IsArchived;
+
+    @IsOptional()
+    @Type(() => Date)
+    @IsDate()
+    date?: Date;
+
+    @IsOptional()
+    @IsEnum(ClaimStatus)
+    status?: ClaimStatus;
+
+    @IsOptional()
+    @IsString()
+    icao?: string;
 }

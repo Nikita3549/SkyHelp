@@ -25,13 +25,14 @@ export class AdminController {
 
     @Get()
     async getClaims(@Query() query: GetClaimsQuery) {
-        const { userId, page, archived } = query;
+        const { userId, page, archived, date, status, icao } = query;
 
-        return this.claimService.getUserClaims(
-            userId,
-            +page,
-            archived == undefined ? undefined : archived == 'yes',
-        );
+        return this.claimService.getUserClaims(userId, +page, {
+            archived: archived == undefined ? undefined : archived == 'yes',
+            date,
+            status,
+            icao,
+        });
     }
 
     @Get('stats')

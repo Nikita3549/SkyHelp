@@ -342,16 +342,48 @@ export class ClaimService {
     async getUserClaims(
         userId?: string,
         page: number = 1,
-        archived?: boolean,
+        searchParams?: {
+            archived?: boolean;
+            date?: Date;
+            status?: ClaimStatus;
+            icao?: string;
+        },
         pageSize: number = 20,
     ): Promise<IFullClaim[]> {
         const skip = (page - 1) * pageSize;
 
+        const where: Prisma.ClaimWhereInput = {
+            userId,
+            archived: searchParams?.archived,
+        };
+
+        if (searchParams?.status) {
+            where.state = {
+                status: searchParams.status,
+            };
+        }
+
+        if (searchParams?.icao) {
+            where.details = {
+                airlines: {
+                    icao: searchParams.icao,
+                },
+            };
+        }
+
+        if (searchParams?.date) {
+            const date = new Date(searchParams.date);
+            const nextDate = new Date(date);
+            nextDate.setDate(date.getDate() + 1);
+
+            where.createdAt = {
+                gte: date,
+                lt: nextDate,
+            };
+        }
+
         return this.prisma.claim.findMany({
-            where: {
-                userId,
-                archived: archived,
-            },
+            where,
             orderBy: {
                 createdAt: 'desc',
             },
