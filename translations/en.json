@@ -3442,5 +3442,19 @@
     "SignatureStep.toast.signingRequired.title": "Signing Required",
     "SignatureStep.toast.signingRequired.description": "Please complete the document signing before continuing.",
     "SignatureStep.toast.signed.title": "Document Signed",
-    "SignatureStep.toast.signed.description": "Your document has been successfully signed."
+    "SignatureStep.toast.signed.description": "Your document has been successfully signed.",
+    "PassportUploadFlow.heading": "Provide Passport Copy",
+    "PassportUploadFlow.instructions": "Upload a high-quality photo or scan of your passport",
+    "PassportUploadFlow.note": "We will use this information to confirm your identity",
+    "PassportUploadFlow.buttonContinue": "Next Step",
+    "PassportUploadFlow.sectionOtherPeople.title": "Additional Travelers",
+    "PassportUploadFlow.sectionOtherPeople.text": "Send this link to other travelers so they can upload their passports",
+    "PassportUploadFlow.sectionOtherPeople.copy": "Copy Link",
+    "PassportUploadFlow.sectionOtherPeople.upload": "Upload Now",
+    "PassportUploadFlow.toast.linkCopied.title": "Link copied successfully",
+    "PassportUploadFlow.toast.linkCopied.text": "The link is now in your clipboard",
+    "PassportUploadFlow.toast.filesChosen.title": "Files ready",
+    "PassportUploadFlow.toast.filesChosen.text": "file(s) selected for upload",
+    "PassportUploadFlow.summary.title": "Files Uploaded:",
+    "PassportUploadFlow.summary.count": "file(s)"
 }

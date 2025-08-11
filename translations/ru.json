@@ -3442,5 +3442,19 @@
     "SignatureStep.toast.signingRequired.title": "Требуется подпись",
     "SignatureStep.toast.signingRequired.description": "Пожалуйста, завершите подписание документа перед продолжением.",
     "SignatureStep.toast.signed.title": "Документ подписан",
-    "SignatureStep.toast.signed.description": "Ваш документ был успешно подписан."
+    "SignatureStep.toast.signed.description": "Ваш документ был успешно подписан.",
+    "PassportUploadFlow.heading": "Предоставьте копию паспорта",
+    "PassportUploadFlow.instructions": "Загрузите качественное фото или скан вашего паспорта",
+    "PassportUploadFlow.note": "Эта информация будет использована для подтверждения вашей личности",
+    "PassportUploadFlow.buttonContinue": "Следующий шаг",
+    "PassportUploadFlow.sectionOtherPeople.title": "Дополнительные путешественники",
+    "PassportUploadFlow.sectionOtherPeople.text": "Отправьте эту ссылку другим путешественникам, чтобы они могли загрузить свои паспорта",
+    "PassportUploadFlow.sectionOtherPeople.copy": "Скопировать ссылку",
+    "PassportUploadFlow.sectionOtherPeople.upload": "Загрузить сейчас",
+    "PassportUploadFlow.toast.linkCopied.title": "Ссылка успешно скопирована",
+    "PassportUploadFlow.toast.linkCopied.text": "Ссылка теперь в вашем буфере обмена",
+    "PassportUploadFlow.toast.filesChosen.title": "Файлы готовы",
+    "PassportUploadFlow.toast.filesChosen.text": "файл(ы) выбраны для загрузки",
+    "PassportUploadFlow.summary.title": "Загруженные файлы:",
+    "PassportUploadFlow.summary.count": "файл(ов)"
 }
