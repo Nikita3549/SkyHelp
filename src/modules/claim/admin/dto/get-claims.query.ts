@@ -21,7 +21,12 @@ export class GetClaimsQuery {
     @IsOptional()
     @Type(() => Date)
     @IsDate()
-    date?: Date;
+    startDate?: Date;
+
+    @IsOptional()
+    @Type(() => Date)
+    @IsDate()
+    endDate?: Date;
 
     @IsOptional()
     @IsEnum(ClaimStatus)
@@ -30,4 +35,8 @@ export class GetClaimsQuery {
     @IsOptional()
     @IsString()
     icao?: string;
+
+    @IsOptional()
+    @IsString()
+    flightNumber?: string
 }

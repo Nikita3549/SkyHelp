@@ -344,9 +344,13 @@ export class ClaimService {
         page: number = 1,
         searchParams?: {
             archived?: boolean;
-            date?: Date;
+            date?: {
+                start: Date;
+                end: Date;
+            };
             status?: ClaimStatus;
             icao?: string;
+            flightNumber?: string;
         },
         pageSize: number = 20,
     ): Promise<IFullClaim[]> {
@@ -363,6 +367,12 @@ export class ClaimService {
             };
         }
 
+        if (searchParams?.flightNumber) {
+            where.details = {
+                flightNumber: searchParams.flightNumber,
+            };
+        }
+
         if (searchParams?.icao) {
             where.details = {
                 airlines: {
@@ -372,13 +382,9 @@ export class ClaimService {
         }
 
         if (searchParams?.date) {
-            const date = new Date(searchParams.date);
-            const nextDate = new Date(date);
-            nextDate.setDate(date.getDate() + 1);
-
             where.createdAt = {
-                gte: date,
-                lt: nextDate,
+                gte: searchParams.date.start,
+                lt: searchParams.date.end,
             };
         }
 

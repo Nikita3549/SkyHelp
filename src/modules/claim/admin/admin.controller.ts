@@ -25,13 +25,27 @@ export class AdminController {
 
     @Get()
     async getClaims(@Query() query: GetClaimsQuery) {
-        const { userId, page, archived, date, status, icao } = query;
+        const {
+            userId,
+            page,
+            archived,
+            endDate,
+            startDate,
+            status,
+            flightNumber,
+            icao,
+        } = query;
 
         return this.claimService.getUserClaims(userId, +page, {
             archived: archived == undefined ? undefined : archived == 'yes',
-            date,
+            date: endDate &&
+                startDate && {
+                    start: startDate,
+                    end: startDate,
+                },
             status,
             icao,
+            flightNumber,
         });
     }
 
