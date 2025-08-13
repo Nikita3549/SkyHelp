@@ -74,6 +74,7 @@ This message was automatically generated.
         isRegistered: boolean,
         language: Languages = Languages.EN,
     ) {
+        if (this.configService.get('NODE_ENV') != 'PROD') return;
         const letterTemplate = await this.getLetterTemplate(
             'createClaim.html',
             language,
@@ -106,6 +107,7 @@ This message was automatically generated.
         },
         language: Languages = Languages.EN,
     ) {
+        if (this.configService.get('NODE_ENV') != 'PROD') return;
         const letterTemplate = await this.getLetterTemplate(
             'finishClaim.html',
             language,
