@@ -41,7 +41,7 @@ export class AdminController {
             date: endDate &&
                 startDate && {
                     start: startDate,
-                    end: startDate,
+                    end: endDate,
                 },
             status,
             icao,

@@ -1,4 +1,11 @@
-import { IsDate, IsEnum, IsOptional, IsString } from 'class-validator';
+import {
+    IsDate,
+    IsEnum,
+    IsInt,
+    IsOptional,
+    IsString,
+    Min,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 import { ClaimStatus } from '@prisma/client';
 enum IsArchived {
@@ -11,8 +18,10 @@ export class GetClaimsQuery {
     @IsOptional()
     userId?: string;
 
-    @IsString()
-    page: string;
+    @Type(() => Number)
+    @IsInt()
+    @Min(1)
+    page: number;
 
     @IsOptional()
     @IsEnum(IsArchived)
@@ -38,5 +47,5 @@ export class GetClaimsQuery {
 
     @IsOptional()
     @IsString()
-    flightNumber?: string
+    flightNumber?: string;
 }
