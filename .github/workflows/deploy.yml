@@ -49,6 +49,14 @@ jobs:
             echo "✅ Pulling latest changes"
             git pull origin master || { echo "❌ Git pull failed"; exit 1; }
             
+            echo "✅ Restart static db"
+            cd ~/SkyHelp
+            source .env
+            docker exec -i db-static psql \
+            -U "$DATABASE_STATIC_USER" \
+            -d "$DATABASE_STATIC_DBNAME" \
+            -f /docker-entrypoint-initdb.d/update.sql
+  
             echo "🔧 Building and restarting PROD containers"
             if ! docker compose --profile api up --build -d --remove-orphans; then
               echo "❌ Docker Compose failed — rolling back"
