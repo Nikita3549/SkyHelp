@@ -171,6 +171,16 @@ export class ClaimService {
         );
     }
 
+    async getClaimByEmail(email: string) {
+        return this.prisma.claim.findFirst({
+            where: {
+                customer: {
+                    email,
+                },
+            },
+        });
+    }
+
     async updateClaim(
         newClaim: UpdateClaimDto,
         claimId: string,
@@ -353,7 +363,7 @@ export class ClaimService {
             flightNumber?: string;
         },
         pageSize: number = 20,
-    ): Promise<IFullClaim[]> {
+    ): Promise<{ claims: IFullClaim[]; total: number }> {
         const skip = (page - 1) * pageSize;
 
         const where: Prisma.ClaimWhereInput = {
@@ -388,15 +398,23 @@ export class ClaimService {
             };
         }
 
-        return this.prisma.claim.findMany({
-            where,
-            orderBy: {
-                createdAt: 'desc',
-            },
-            include: this.fullClaimInclude(),
-            skip,
-            take: pageSize,
-        });
+        const [claims, total] = await this.prisma.$transaction([
+            this.prisma.claim.findMany({
+                where,
+                orderBy: {
+                    createdAt: 'desc',
+                },
+                include: this.fullClaimInclude(),
+                skip,
+                take: pageSize,
+            }),
+            this.prisma.claim.count(),
+        ]);
+
+        return {
+            claims,
+            total,
+        };
     }
 
     async getUserClaimsStats(userId?: string): Promise<{
