@@ -3477,5 +3477,7 @@
     "UploadPassportStep.toast.filesSelected.title": "Файлы выбраны!",
     "UploadPassportStep.toast.filesSelected.description": "файл(ы) выбраны для",
     "UploadPassportStep.uploadedFiles.title": "Сводка загруженных файлов:",
-    "UploadPassportStep.uploadedFiles.fileCount": "файл(ов)"
+    "UploadPassportStep.uploadedFiles.fileCount": "файл(ов)",
+    "PassengerList.status.saved": "Сохранено",
+    "PassengerList.action.savePassenger": "Сохранить пассажира"
 }

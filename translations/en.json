@@ -2564,7 +2564,7 @@
     "AddressFields.disclaimerText": "An early submission can increase your chances of getting your compensation. More than half of early submissions are compensated in the same month.",
     "DocumentInfoSection.title": "What is a boarding pass or an e-ticket?",
     "DocumentInfoSection.boardingPassIntroPart1": "The",
-    "DocumentInfoSection.boardingPass": "boarding pass",
+    "DocumentInfoSection.boardingPass": "The boarding pass",
     "DocumentInfoSection.boardingPassIntroPart2": "is the physical slip you receive after checking in at the airport, or an in-app document if you check-in online. You use this to board the plane and it has details like your name and seat number.",
     "DocumentInfoSection.eTicket": "E-ticket",
     "DocumentInfoSection.eTicketDescription": "you'll receive your e-ticket after making your booking - it's an electronic confirmation that gets emailed to you containing the passenger's names, flight details, and booking reference.",
@@ -3477,5 +3477,7 @@
     "UploadPassportStep.toast.linkCopied.title": "Link copied!",
     "UploadPassportStep.toast.linkCopied.description": "The link has been copied to your clipboard",   "UploadPassportStep.toast.filesSelected.title": "Files selected!",
     "UploadPassportStep.toast.filesSelected.description": "file(s) selected for",   "UploadPassportStep.uploadedFiles.title": "Uploaded Files Summary:",
-    "UploadPassportStep.uploadedFiles.fileCount": "file(s)"
+    "UploadPassportStep.uploadedFiles.fileCount": "file(s)",
+    "PassengerList.status.saved": "Saved",
+    "PassengerList.action.savePassenger": "Save Passenger"
 }
