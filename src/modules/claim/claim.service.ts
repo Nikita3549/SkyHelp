@@ -408,7 +408,9 @@ export class ClaimService {
                 skip,
                 take: pageSize,
             }),
-            this.prisma.claim.count(),
+            this.prisma.claim.count({
+                where,
+            }),
         ]);
 
         return {
