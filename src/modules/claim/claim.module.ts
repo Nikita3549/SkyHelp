@@ -19,6 +19,7 @@ import { OtherPassengerModule } from './other-passenger/other-passenger.module';
 import { AdminModule } from './admin/admin.module';
 import { AdminController } from './admin/admin.controller';
 import { ClaimGateway } from './claim.gateway';
+import { EmailResumeClickModule } from '../email-resume-click/email-resume-click.module';
 
 @Module({
     imports: [
@@ -39,6 +40,7 @@ import { ClaimGateway } from './claim.gateway';
         forwardRef(() => PaymentModule),
         forwardRef(() => OtherPassengerModule),
         forwardRef(() => AdminModule),
+        EmailResumeClickModule,
     ],
     controllers: [ClaimController, AdminController, PublicClaimController],
     providers: [ClaimService, ClaimFollowupProcessor, ClaimGateway],

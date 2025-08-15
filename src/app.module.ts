@@ -26,6 +26,7 @@ import { LogModule } from './modules/log/log.module';
 import { GoogleSheetsModule } from './modules/google-sheets/google-sheets.module';
 import { YandexMetrikaModule } from './modules/yandex-metrika/yandex-metrika.module';
 import { GenerateJwtModule } from './modules/generate-jwt/generate-jwt.module';
+import { EmailResumeClickModule } from './modules/email-resume-click/email-resume-click.module';
 
 @Module({
     imports: [
@@ -62,6 +63,7 @@ import { GenerateJwtModule } from './modules/generate-jwt/generate-jwt.module';
         GoogleSheetsModule,
         YandexMetrikaModule,
         GenerateJwtModule,
+        EmailResumeClickModule,
     ],
     controllers: [AppController],
     providers: [AppService],

@@ -4,12 +4,14 @@ import { CLAIM_QUEUE_KEY, INVALID_CLAIM_ID } from '../constants';
 import { NotificationService } from '../../notification/notification.service';
 import { IJobData } from '../interfaces/job-data.interface';
 import { ClaimService } from '../claim.service';
+import { EmailResumeClickService } from '../../email-resume-click/email-resume-click.service';
 
 @Processor(CLAIM_QUEUE_KEY)
 export class ClaimFollowupProcessor extends WorkerHost {
     constructor(
         private readonly notificationService: NotificationService,
         private readonly claimService: ClaimService,
+        private readonly emailResumeClickService: EmailResumeClickService,
     ) {
         super();
     }
@@ -32,6 +34,8 @@ export class ClaimFollowupProcessor extends WorkerHost {
         if (claim.step == 10 || claim.archived) {
             return;
         }
+
+        await this.emailResumeClickService.createRecord(claimId);
 
         await this.notificationService.sendFinishClaim(
             email,
