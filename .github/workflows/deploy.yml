@@ -1,6 +1,16 @@
 name: Deploy
 
 on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Select environment to deploy"
+        required: true
+        default: "prod"
+        type: choice
+        options:
+          - prod
+          - both
   push:
     branches:
       - master
@@ -35,7 +45,7 @@ jobs:
             cd ~/SkyHelp || { echo "❌ Directory not found"; exit 1; }
             git rev-parse HEAD > .last_commit
 
-      - name: Pull latest and deploy on server
+      - name: Deploy
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.SERVER_HOST }}
@@ -45,41 +55,39 @@ jobs:
           script: |
             cd ~/SkyHelp || { echo "❌ Directory not found"; exit 1; }
             last_commit=$(cat .last_commit)
-            
+
             echo "✅ Pulling latest changes"
             git pull origin master || { echo "❌ Git pull failed"; exit 1; }
-            
-            echo "✅ Restart static db"
-            cd ~/SkyHelp
             source .env
-            docker exec -i db-static psql \
-            -U "$DATABASE_STATIC_USER" \
-            -d "$DATABASE_STATIC_DBNAME" \
-            -f /docker-entrypoint-initdb.d/update.sql
-  
-            echo "🔧 Building and restarting PROD containers"
-            if ! docker compose --profile api up --build -d --remove-orphans; then
-              echo "❌ Docker Compose failed — rolling back"
-              git reset --hard $last_commit
-              docker compose --profile api up -d --remove-orphans || { echo "❌ Rollback failed"; exit 1; }
-              exit 1
+
+            # Deploy prod only if manually triggered
+            if [ "${{ github.event_name }}" = "workflow_dispatch" ] && \
+               ( [ "${{ github.event.inputs.environment }}" = "prod" ] || \
+                 [ "${{ github.event.inputs.environment }}" = "both" ] ); then
+
+              echo "🔧 Building and restarting PROD containers"
+              docker exec -i db-static psql \
+                -U "$DATABASE_STATIC_USER" \
+                -d "$DATABASE_STATIC_DBNAME" \
+                -f /docker-entrypoint-initdb.d/update.sql
+
+              if ! docker compose --profile api up --build -d --remove-orphans; then
+                echo "❌ Docker Compose failed — rolling back"
+                git reset --hard $last_commit
+                docker compose --profile api up -d --remove-orphans || { echo "❌ Rollback failed"; exit 1; }
+                exit 1
+              fi
             fi
-            
+
+            # Always deploy dev
             echo "🔧 Building and restarting DEV containers"
             docker compose --env-file .env.development \
               -f docker-compose.yml \
               -f docker-compose.dev.yml \
               -p sky-help_dev \
               --profile api up --build -d --remove-orphans
-            
+
             echo "🧹 Cleaning up dangling images"
             docker image prune -f
-            
-            echo "🔍 Checking running containers"
-            docker ps | grep database || { echo "❌ Database not running"; exit 1; }
-            docker ps | grep db-static || { echo "❌ Db-static not running"; exit 1; }
-            docker ps | grep redis || { echo "❌ Redis not running"; exit 1; }
-            docker ps | grep api || { echo "❌ Api not running"; exit 1; }
-            docker ps | grep sky-help_dev || { echo "❌ Dev environment not running"; exit 1; }
-            
+
             echo "✅ Deployment complete"
