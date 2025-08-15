@@ -49,6 +49,7 @@ services:
     volumes:
       - ./.env:/opt/api/.env
       - ./uploads:/opt/api/uploads/
+      - ./logs:/opt/api/logs/
     networks:
       - main
     depends_on:

@@ -1,9 +1,19 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { GmailService } from './gmail.service';
 import { UnixTimeModule } from '../unix-time/unix-time.module';
+import { ClaimModule } from '../claim/claim.module';
+import { GmailOfficeAccountModule } from './accounts/gmail-office-account/gmail-office-account.module';
+import { AttachmentModule } from './attachment/attachment.module';
+import { EmailModule } from './email/email.module';
 
 @Module({
-    imports: [UnixTimeModule],
+    imports: [
+        UnixTimeModule,
+        ClaimModule,
+        forwardRef(() => GmailOfficeAccountModule),
+        AttachmentModule,
+        EmailModule,
+    ],
     providers: [GmailService],
     exports: [GmailService],
 })

@@ -1,11 +1,22 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsInt, IsOptional, IsString, Min } from 'class-validator';
+import { Type } from 'class-transformer';
+import { EmailStatus, EmailType } from '@prisma/client';
 
 export class GetLettersQueryDto {
     @IsOptional()
     @IsString()
-    dialogWith?: string;
+    claimId?: string;
+
+    @Type(() => Number)
+    @IsInt()
+    @Min(1)
+    page: number;
 
     @IsOptional()
-    @IsString()
-    pageToken?: string;
+    @IsEnum(EmailStatus)
+    status?: EmailStatus;
+
+    @IsOptional()
+    @IsEnum(EmailType)
+    type?: EmailType;
 }

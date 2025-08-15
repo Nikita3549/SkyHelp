@@ -1,18 +1,26 @@
 ENGLISH/RUSSIAN
 
 ------------ ENGLISH ------------
+Controller /letters
 
-Controller: /letters
+1. Send an email
+POST /letters/
 
-Send Email — POST /letters/
-Consumes multipart/form-data.
+Returns the newly created email entity plus all its attachments.
 
-Required fields in the request body:
+Accepts multipart/form-data.
 
-to (string) — recipient email
-subject (string) — email subject
-content (string) — email body
-You can also attach any number of files using the attachments field.
+Request body must include:
+
+{
+    "to": "string",         // recipient email
+    "subject": "string",    // email subject
+    "content": "string",    // email content
+    "claimId": "string"     // claim ID to which the email will be linked (NEW FIELD, optional)
+}
+
+
+You can also attach an unlimited number of files using the attachments fields.
 
 Example curl request:
 
@@ -23,56 +31,117 @@ curl -X POST http://localhost:3000/v1/letters \
   -F "content={{content}}" \
   -F "attachments=@./dev/test-1.pdf;type=application/pdf" \
   -F "attachments=@./dev/test.jpg;type=image/jpeg"
-Note: If you're using an api Axios instance on the frontend (strongly recommended), the Authorization token will be attached automatically.
 
-Get Emails with Pagination — GET /letters/
-A simple GET call returns 20 latest emails sent/received from team@skyhelp.md.
 
-If you add the dialogWith query param with someone's email, the response will be filtered to only include emails between team@skyhelp.md and that address.
+Note:
 
-Response format:
+If you use the api object on the frontend (highly recommended) for Axios requests, the authorization token will be attached automatically.
+
+In case of an invalid claimId → 404 Not Found
+
+2. Get emails with pagination (20 emails per page)
+GET /letters/
+
+Returns data in the following format:
 
 {
-  "messages": [
+  "letters": [
     {
-      "id": "1984d4af37d31e20",
-      "threadId": "1984d4af37d31e20",
-      "from": "SkyHelp Team <team@skyhelp.md>",
-      "to": ["nikitatsarenko7@gmail.com"],
-      "subject": "Test email from API WITH ATTACHMENTS",
-      "date": "2025-07-27T19:10:14.000Z",
-      "snippet": "TEST",
+      "id": "198aa43cef8ee282",
+      "gmailThreadId": "198aa43cef8ee282",
+      "messageId": "198aa43cef8ee282",
+      "inReplyTo": "",
+      "references": [],
+      "subject": "Re: Test",
+      "normalizedSubject": "test",
+      "fromName": "Test Test",
+      "fromEmail": "test@gmail.com",
+      "toName": "SkyHelp Team",
+      "toEmail": "office@skyhelp.md",
+      "snippet": "test",
+      "bodyPlain": "test\r\n",
+      "bodyHtml": "<div dir=\"ltr\">test</div>\r\n",
+      "sizeEstimate": 5628,
+      "internalDate": "2025-08-14T20:26:55.000Z",
+      "headersJson": "...",
+      "type": "INBOX",
+      "status": "UNREAD",
+      "claimId": "605146",
+      "createdAt": "2025-08-14T20:27:09.608Z",
+      "updatedAt": "2025-08-14T20:27:09.608Z",
       "attachments": [
         {
-          "filename": "test.jpg",
-          "mimeType": "image/jpeg",
-          "attachmentId": "1",
-          "size": 158839
+          "id": "cmebuseew00018zirz1nd0aix",
+          "filename": "Screenshot 2025-08-06 at 14.29.58.png",
+          "mimeType": "image/png",
+          "size": 122207,
+          "emailId": "198aa46753cd41d4",
+          "createdAt": "2025-08-14T20:30:04.279Z"
         }
-      ],
-      "body": "TEST\r\n"
+      ]
     }
   ],
-  "nextPageToken": string | null
+  "total": 1
 }
-About nextPageToken: Gmail uses a token-based pagination system. To get the first page — you don't need a token. To get the second page — you must use the nextPageToken from the first page, and so on. Tokens are valid for about an hour. If there are no more messages to fetch, nextPageToken will be null.
 
-Use the pageToken query param to go forward in pagination.
 
-Backward pagination is not supported unless you store previous tokens yourself, but even then it's unreliable. The recommended behavior is: only allow forward pagination, not backward. Either you're on the first page (no token) or you're on the next one (token provided).
+Optional query parameters:
 
-Get Email Attachment — GET /letters/:letterId/attachments/:attachmentId
-This endpoint returns the raw buffer of a specific attachment.
+claimId → get only emails linked to specific claims
 
-letterId — ID of the email (from /letters/)
-attachmentId — ID of the attachment (also from /letters/)
-Response: raw buffer content with appropriate headers including filename, content type, and size.
+status → get emails of only one status: "READ" or "UNREAD"
+
+type → get emails of only one type: "INBOX" or "SENT"
+
+page → page number
+
+3. Get an attachment’s Buffer
+GET /letters/attachments/:attachmentId
+
+⚠ Changed: note that the path no longer contains :letterId.
+
+attachmentId → ID of the attached file
+
+You can get all attachment IDs from the GET /letters/ route
+
+Returns the file buffer; all relevant document information is provided in the response headers.
+
+4. Update email status
+PATCH /letters/:letterId
+
+Request body:
+
+{
+    "newStatus": "READ" | "UNREAD"
+}
+
+
+Updates the status.
+Returns the letters object with attachments.
+
+5. Link email to a claim
+PUT /letters/:letterId
+
+Request body:
+
+{
+    "claimId": "string"
+}
+
+
+If the ID is invalid → 404 Not Found
+
+Returns the letters object with attachments
+
+Do you want me to also make a shortened developer-friendly version without the big JSON example so the .txt is more compact? That could be easier for quick API reference.
 
 ------------ RUSSIAN ------------
 
 Контроллер /letters
 
 1. Отправить письмо POST /letters/
+
+Возвращает сущность нового письма + все его attachments
 
 Принимает multipart/form-data.
 
@@ -83,6 +152,8 @@ Response: raw buffer content with appropriate headers including filename, conten
     subject: string; - тема письма
 
     content: string; - контент письма
+
+    claimId?: string - id заявки к которой будет привязан claim !!!НОВОЕ ПОЛЕ(необязательное)
 }
 
 Также можно прикладывать неограниченное количество файлов в поля attachments.
@@ -98,63 +169,83 @@ curl -X POST http://localhost:3000/v1/letters \
   -F "attachments=@./dev/test.jpg;type=image/jpeg"
 
 P.S  Напомню, что если используешь объект api на фронте(настоятельно рекомендую) для axios запросов токен авторизации сам прикладывается
+P.S.S В случае невалидного claimId - 404 not found
 
 2. Получить письма с пагинацией в 20 писем GET /letters/
 
-Просто вызов - вернет все 20 отправленные и полученные письма с почты team@skyhelp.md.
-Если в query параметр dialogWith ты вставишь чью-то почту, то будут возвращаться только письма между team@skyhelp.md и этой почтой
-
-Возвращает письма в таком формате:
-
-{
-  "messages": [
+Возвращает данные в формате {
+  "letters": [
     {
-      "id": "1984d4af37d31e20",
-      "threadId": "1984d4af37d31e20",
-      "from": "SkyHelp Team <team@skyhelp.md>",
-      "to": [
-        "nikitatsarenko7@gmail.com"
-      ],
-      "subject": "Test email from API WITH ATTACHMENTS",
-      "date": "2025-07-27T19:10:14.000Z",
-      "snippet": "TEST",
-      "attachments": [
+      "id": "198aa43cef8ee282",
+      "gmailThreadId": "198aa43cef8ee282",
+      "messageId": "198aa43cef8ee282",
+      "inReplyTo": "",
+      "references": [],
+      "subject": "Re: Test",
+      "normalizedSubject": "test",
+      "fromName": "Test Test",
+      "fromEmail": "test@gmail.com",
+      "toName": "SkyHelp Team",
+      "toEmail": "office@skyhelp.md",
+      "snippet": "test",
+      "bodyPlain": "test\r\n",
+      "bodyHtml": "<div dir=\"ltr\">test</div>\r\n",
+      "sizeEstimate": 5628,
+      "internalDate": "2025-08-14T20:26:55.000Z",
+      "headersJson": "[{\"name\":\"Delivered-To\",\"value\":\"office@skyhelp.md\"},{\"name\":\"Received\",\"value\":\"by 2002:a05:6358:5f13:b0:1ff:73ee:29d7 with SMTP id y19csp3898633rwn;        Thu, 14 Aug 2025 13:27:07 -0700 (PDT)\"},{\"name\":\"X-Received\",\"value\":\"by 2002:a05:6a00:2da9:b0:76b:fd26:162f with SMTP id d2e1a72fcca58-76e2fde2422mr6162728b3a.20.1755203227563;        Thu, 14 Aug 2025 13:27:07 -0700 (PDT)\"},{\"name\":\"ARC-Seal\",\"value\":\"i=1; a=rsa-sha256; t=1755203227; cv=none;        d=google.com; s=arc-20240605;        b=E5LudUPNcUB05UIbtQDrsw2jNhVc/goMKOqLJlYd7U5NaYQfN5kbi+u18+XjAe3Z9D         uWTl52EIeYlh7puRoBl5DRyRHgOjEBLZUY5PGA1XCtWPx2BZS9Nj+n0grRFBD1SUvECa         F/466ikNEXqCiHsn8e4/EcMlct2eJV/E4gMVywZeoTuq/AnUJhMY0yiPmyfdpPNZl5dH         elAxRk+jMkj5i3T91iGJK6nDV6ibFzYj+kAQ+MKxWx1V7mTjBhqA1p8MQpQZcak9bes5         KWrajPV0w8tjMSTnIoaCC46GOQ2xvhe5HHfn1tNdEkYQ0fl2Buw/Ll0UI8cOzj5CPGC0         1WgA==\"},{\"name\":\"ARC-Message-Signature\",\"value\":\"i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;        h=to:subject:message-id:date:from:mime-version:dkim-signature;        bh=YuEb2BAFZoVdGlpB7rrtfPngvu7/pejmROBL/hhWvFQ=;        fh=7Hqb25MgtA0S2f0RaNSBO9+tkgGxK1id2rZqZdXvO+Y=;        b=FBGOI7XyZvctnwuYbzrLmFUcqA7zGP01J/4xjal7h04GzMYkrtgMQ7z8npz13SMC2e         lwEnwcdm1Bluiv2WxPD2zL/WUafqqU/jnQ7w6B5SNWEIGPyB1uh1KRYcEAvFYY7X4cdF         NMFQc6aZx0416wu3xfStR7GLqbPMD6pVXqlS5wT7vKUlCT2Fx6zKKpHCkFuTmD/nQv/B         bk6x2yP35rqqyWbDp2EFOnI4oM6hT5vQYVY983PLBiJIZE9cZk4ZX/Qh0O3ej99sbDLg         epf2u/YkBdSeuCUB9oC0bjmt82iPbodoqgGJtzsvEpLzb1voNfu0/yfZLiWBdH8xpWSi         IJAQ==;        dara=google.com\"},{\"name\":\"ARC-Authentication-Results\",\"value\":\"i=1; mx.google.com;       dkim=pass header.i=@gmail.com header.s=20230601 header.b=XDvNMF4h;       spf=pass (google.com: domain of nikitatsarenko7@gmail.com designates 209.85.220.41 as permitted sender) smtp.mailfrom=nikitatsarenko7@gmail.com;       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com;       dara=pass header.i=@skyhelp.md\"},{\"name\":\"Return-Path\",\"value\":\"<nikitatsarenko7@gmail.com>\"},{\"name\":\"Received\",\"value\":\"from mail-sor-f41.google.com (mail-sor-f41.google.com. [209.85.220.41])        by mx.google.com with SMTPS id d2e1a72fcca58-76c2b1a9268sor11768366b3a.7.2025.08.14.13.27.07        for <office@skyhelp.md>        (Google Transport Security);        Thu, 14 Aug 2025 13:27:07 -0700 (PDT)\"},{\"name\":\"Received-SPF\",\"value\":\"pass (google.com: domain of nikitatsarenko7@gmail.com designates 209.85.220.41 as permitted sender) client-ip=209.85.220.41;\"},{\"name\":\"Authentication-Results\",\"value\":\"mx.google.com;       dkim=pass header.i=@gmail.com header.s=20230601 header.b=XDvNMF4h;       spf=pass (google.com: domain of nikitatsarenko7@gmail.com designates 209.85.220.41 as permitted sender) smtp.mailfrom=nikitatsarenko7@gmail.com;       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com;       dara=pass header.i=@skyhelp.md\"},{\"name\":\"DKIM-Signature\",\"value\":\"v=1; a=rsa-sha256; c=relaxed/relaxed;        d=gmail.com; s=20230601; t=1755203227; x=1755808027; darn=skyhelp.md;        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject         :date:message-id:reply-to;        bh=YuEb2BAFZoVdGlpB7rrtfPngvu7/pejmROBL/hhWvFQ=;        b=XDvNMF4hECpIgwwOJbPUGiyrQQFKUrnNAeldeE4jK+rTaDV6JyNl124bbtrSo8shrP         1QoxbKtF8l8Ql1oJKGaoZDaH+YES+DZTZwp2XmicIs4ds4Qkh6gAmznnB99SAFHSt/5N         m5WXhvRGdnXRPb+wBtRjzNeVdHOCtkziNQH301QlwoyH0k+rfUpzDErrYJgAze1bHvDO         d/2SsxRPDGRsmJMzhvEPIwSkU91SawiSGWB/K8fc1Yow1JIZ87VC8XBwBIZzcCWLeHTG         Clx+QbAkhMs/f4VrST2rIv+hKuJYr74UFnWoPwkduzVb7814hPMAnbKBaMe7C0w2/JhR         TnCA==\"},{\"name\":\"X-Google-DKIM-Signature\",\"value\":\"v=1; a=rsa-sha256; c=relaxed/relaxed;        d=1e100.net; s=20230601; t=1755203227; x=1755808027;        h=to:subject:message-id:date:from:mime-version:x-gm-message-state         :from:to:cc:subject:date:message-id:reply-to;        bh=YuEb2BAFZoVdGlpB7rrtfPngvu7/pejmROBL/hhWvFQ=;        b=wqHqHmFsLC48WUgDlnvjkSAFCo6aCP0C3ppPj78T3zhmEz++K6zXu6Un64QvjSWrpp         s0ht3TWykadY/k5yJCFgzhaQCLUFdB/7PxdI4PAuzgWN7F83is+ZNkV6uo+e6KbCZ08J         amW7G1H88sP5iNHHoEWs/x+V664fXOBKNVF6AL2sm9oPNJIYD4nhfBRiHNa43mAMvE3K         vjYKJgkRyGi1FUzeZ9nIQ72JaZTglyNZU1cLe9hdky85YxgY01puHkUadw+habY13fUS         7VgT/KSVfZfSCBurAkCnU0FNsR+iGf47t3s0Glm0YWqPOMlDbH2rBB78TLoLR2fLYI+s         Mm7w==\"},{\"name\":\"X-Gm-Message-State\",\"value\":\"AOJu0Yw9C16mOqGRJvUtVTdann/wOw8xIEus37orPGbAY6VYsujZS1EW 1QOKdZEQQ2qmV2G+UzVwdcLLpDU3P1W4rCpU78J2o41kYBApvUB9DK5Nds0OR5N1vN9pz9jxfjA FMB475VnOAUlJ38EqhLQdqe+O/UDDPX3Laa6VLpE=\"},{\"name\":\"X-Gm-Gg\",\"value\":\"ASbGncuwhiFajTxljLJqDU2DsJ920C4xKI+dhl9v6csTfyFtALf20AawxvCPp8a0lme 6Q1aVrUrYd5g2vqAb2COsTDGL6wmNBWF+O+Ae9D9dRW+fVvzy24lUvZEVGmHJ0W5zAphWbLdz+g H4ITIpsDetca+W3segNXsrf08TJWy/KtsiiEaUBPL9w2gHEFUWRRUrBN9xWD4fyqZHRP+8HnWej aLZL1Q=\"},{\"name\":\"X-Google-Smtp-Source\",\"value\":\"AGHT+IG53zdKat7fbJUUD2icmi1f7gHLO++xZL+CF8P+w8EDnqfJWzReqjnUVCEJvX1bdR0qm0VNosbYlRJgLnp63hg=\"},{\"name\":\"X-Received\",\"value\":\"by 2002:a17:903:1b50:b0:242:b42b:1335 with SMTP id d9443c01a7336-244584f4d6dmr75811335ad.22.1755203226616; Thu, 14 Aug 2025 13:27:06 -0700 (PDT)\"},{\"name\":\"MIME-Version\",\"value\":\"1.0\"},{\"name\":\"From\",\"value\":\"\\\"Никита Царенко\\\" <nikitatsarenko7@gmail.com>\"},{\"name\":\"Date\",\"value\":\"Thu, 14 Aug 2025 23:26:55 +0300\"},{\"name\":\"X-Gm-Features\",\"value\":\"Ac12FXyABYCQ5_lY8KHb4npwHC8q7bZT4ftiTL9AtX3n_soqqjny_1N_6mHb8G4\"},{\"name\":\"Message-ID\",\"value\":\"<CAKfqCK2DAAzp9rLbpvf+y2yjLUN9a7zhW0Fm1K+dpR5QMK8n=w@mail.gmail.com>\"},{\"name\":\"Subject\",\"value\":\"Test\"},{\"name\":\"To\",\"value\":\"Max Hartman <office@skyhelp.md>\"},{\"name\":\"Content-Type\",\"value\":\"multipart/alternative; boundary=\\\"000000000000d4c822063c59187e\\\"\"}]",
+      "type": "INBOX",
+      "status": "UNREAD",
+      "claimId": "605146",
+      "createdAt": "2025-08-14T20:27:09.608Z",
+      "updatedAt": "2025-08-14T20:27:09.608Z",
+     "attachments": [
         {
-          "filename": "test.jpg",
-          "mimeType": "image/jpeg",
-          "attachmentId": "1",
-          "size": 158839
+          "id": "cmebuseew00018zirz1nd0aix",
+          "filename": "Screenshot 2025-08-06 at 14.29.58.png",
+          "mimeType": "image/png",
+          "size": 122207,
+          "emailId": "198aa46753cd41d4",
+          "createdAt": "2025-08-14T20:30:04.279Z"
         }
-      ],
-      "body": "TEST\r\n"
-    },
+      ]
+    }
   ],
-  "nextPageToken": string | null,
+  "total": 1
 }
 
-Я думаю здесь все должно быть понятно кроме nextPageToken.
+Принимает необязательные query фильтры + параметр page с номером страницы:
 
-Проблема в том что гуглу надо было высрать очень хитровыебаную идею с пагинацией.
-Вообще главная идея такова: для того чтобы перейти на новую страницу - нужен токен, который ты получишь на прошлой странице + максимум токен живет где-то час.
-Из всех вариантов мне кажется оптимальным просто давать пользователю идти вперед(лутая токен с одной страницы и используя его на второй),
-но не давать идти назад потому что с этим много проблем. Вообщем есть либо первая страницы, либо следующая для выбора.
-Это мое видение мб ты придумаешь что-то гениальное.
+claimId - получить только письма определенных заявок
 
-Как это вообще работает?
+status - получить заявки только одного из статусов "READ" | "UNREAD"
 
-Чтобы получить первую страницу - тебе нахуй не нужен токен.
-Но для того чтобы перейти на вторую - нужно залутать токен с первой страницы.
-И так далее для последующих страниц, с предыдущей получаешь - на следующей используешь.
+type - получить заявки только одного из типов "INBOX" | "SENT"
 
-Если следующей страницы нету - токен будет == null
-Токен прикладываешь в query параметр pageToken
-
-3. Получить Buffer приложенного документа к письму GET /letters/:letterId/attachments/:attachmentId
+3. Получить Buffer приложенного документа к письму GET /letters/attachments/:attachmentId
+!!!Изменено: обрати внимание на путь(убрал :letterId)
 
 Думаю все должно быть понятно.
-letterId - id письма,
 attachmentId - id приложенного файла
 
 Все их берешь из роута GET /letters/
 
 Возвращает просто buffer а в заголовках всю интересующую тебя про документ информацию
+
+4. PATCH /letters/:letterId
+
+Принимает:
+{
+    newStatus: "READ" | "UNREAD"
+}
+
+Обновляет статус.
+Возвращает объект letters с attachments
+
+5. PUT /letters/:letterId
+
+{
+    claimId: string
+}
+
+Как обычно - если неправильный id - 404
+Возвращает объект letters с attachments

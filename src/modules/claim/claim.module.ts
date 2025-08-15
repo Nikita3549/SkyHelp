@@ -26,7 +26,7 @@ import { ClaimGateway } from './claim.gateway';
         TokenModule,
         AirportModule,
         ClaimModule,
-        NotificationModule,
+        forwardRef(() => NotificationModule),
         BullModule.registerQueue({
             name: CLAIM_QUEUE_KEY,
         }),

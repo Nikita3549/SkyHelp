@@ -1,30 +1,38 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { gmail_v1, google } from 'googleapis';
 import { OAuth2Client } from 'google-auth-library';
 import { ConfigService } from '@nestjs/config';
 import { Interval } from '@nestjs/schedule';
 import { ATTACHMENT_NOT_FOUND, FIFTY_FIVE_MINUTES } from './constants';
 import Gmail = gmail_v1.Gmail;
-import { GmailLetterSearchParams } from './interfaces/gmail-message-search-params.interface';
-import { ILetter } from '../letter/interfaces/letter.interface';
 import { IAttachment } from './interfaces/attachment.interface';
-import { UnixTimeService } from '../unix-time/unix-time.service';
 import { AttachmentNotFoundError } from './errors/attachment-not-found.error';
+import { ParsedMailbox, parseOneAddress } from 'email-addresses';
+import * as path from 'path';
+import * as fs from 'fs/promises';
+import { PrismaService } from '../prisma/prisma.service';
+import { GmailEmailPayload } from './interfaces/gmail-email-payload.interface';
+import { Email, EmailStatus, EmailType } from '@prisma/client';
+import { ClaimService } from '../claim/claim.service';
+import { GmailOfficeAccountService } from './accounts/gmail-office-account/gmail-office-account.service';
+import { AttachmentService } from './attachment/attachment.service';
+import { EmailService } from './email/email.service';
 
 @Injectable()
 export class GmailService implements OnModuleInit {
     private oauth2Client: OAuth2Client;
     private _accessToken: string;
     private gmail: Gmail;
-    private readonly GMAIL_TEAM_EMAIL: string;
 
     constructor(
         private readonly configService: ConfigService,
-        private readonly unixTimeService: UnixTimeService,
-    ) {
-        this.GMAIL_TEAM_EMAIL =
-            this.configService.getOrThrow('GMAIL_TEAM_EMAIL');
-    }
+        private readonly prisma: PrismaService,
+        private readonly claimService: ClaimService,
+        @Inject(forwardRef(() => GmailOfficeAccountService))
+        readonly office: GmailOfficeAccountService,
+        readonly attachment: AttachmentService,
+        readonly email: EmailService,
+    ) {}
 
     async onModuleInit() {
         this.oauth2Client = new google.auth.OAuth2(
@@ -42,15 +50,32 @@ export class GmailService implements OnModuleInit {
         this.gmail = google.gmail({ version: 'v1', auth: this.oauth2Client });
     }
 
-    async getAttachmentById(
+    async findClaimIdForEmail(
+        fromEmail: string,
+        threadId: string,
+    ): Promise<string | null> {
+        const email = await this.email.getEmailByThreadId(threadId);
+
+        if (email?.claimId) {
+            return email.claimId;
+        }
+
+        const claim = await this.claimService.getClaimByEmail(fromEmail);
+
+        return claim?.id || null;
+    }
+
+    async getAttachmentByIdFromGmail(
         messageId: string,
         partId: string,
+        gmail: gmail_v1.Gmail = this.gmail,
+        oauth2Client: OAuth2Client = this.oauth2Client,
     ): Promise<{ filename: string; mimeType: string; data: Buffer }> {
-        const message = await this.gmail.users.messages.get({
+        const message = await gmail.users.messages.get({
             userId: 'me',
             id: messageId,
             format: 'full',
-            auth: this.oauth2Client,
+            auth: oauth2Client,
         });
 
         const attachmentPart = this.findPartWithPartId(
@@ -63,11 +88,11 @@ export class GmailService implements OnModuleInit {
 
         const attachmentId = attachmentPart.body.attachmentId;
 
-        const attachment = await this.gmail.users.messages.attachments.get({
+        const attachment = await gmail.users.messages.attachments.get({
             userId: 'me',
             messageId,
             id: attachmentId,
-            auth: this.oauth2Client,
+            auth: oauth2Client,
         });
 
         const buffer = Buffer.from(
@@ -129,7 +154,7 @@ export class GmailService implements OnModuleInit {
                 .replace(/\//g, '_')
                 .replace(/=+$/, '');
 
-            const res = await this.gmail.users.messages.send({
+            await this.gmail.users.messages.send({
                 userId: 'me',
                 requestBody: {
                     raw: rawMessage,
@@ -146,7 +171,8 @@ export class GmailService implements OnModuleInit {
         content: string,
         from: string,
         attachments: { filename: string; content: Buffer; mimeType: string }[],
-    ) {
+        oauth2Client: OAuth2Client = this.oauth2Client,
+    ): Promise<gmail_v1.Schema$Message> {
         const boundary = '__MAIL__BOUNDARY__';
         const newline = '\r\n';
 
@@ -189,13 +215,15 @@ export class GmailService implements OnModuleInit {
             'base64',
         );
 
-        await this.gmail.users.messages.send({
+        const res = await this.gmail.users.messages.send({
             userId: 'me',
-            auth: this.oauth2Client,
+            auth: oauth2Client,
             requestBody: {
                 raw: rawMessage,
             },
         });
+
+        return res.data;
     }
 
     async sendEmail(
@@ -245,85 +273,7 @@ export class GmailService implements OnModuleInit {
         }
     }
 
-    async getLetters(
-        params: GmailLetterSearchParams = {},
-        pageToken?: string,
-        limit: number = 20,
-    ): Promise<{ messages: ILetter[]; nextPageToken: string | null }> {
-        const query = this.buildQuery(params);
-
-        const res = await this.gmail.users.messages.list({
-            userId: 'me',
-            auth: this.oauth2Client,
-            q: query,
-            maxResults: limit,
-            pageToken,
-        });
-
-        return {
-            messages: await this.loadAndFormatFullMessages(res.data.messages),
-            nextPageToken: res.data.nextPageToken || null,
-        };
-    }
-
-    private buildQuery(params: GmailLetterSearchParams): string {
-        const parts: string[] = [];
-
-        if (params.dialogWith) {
-            parts.push(
-                `(from:${params.dialogWith} OR to:${params.dialogWith})`,
-            );
-        }
-
-        parts.push(
-            `(from:${this.GMAIL_TEAM_EMAIL} OR to:${this.GMAIL_TEAM_EMAIL})`,
-        );
-
-        return parts.join(' ');
-    }
-    private async loadAndFormatFullMessages(
-        resMessages?: gmail_v1.Schema$Message[],
-    ): Promise<ILetter[]> {
-        if (!resMessages) return [];
-
-        const messages = await Promise.all(
-            resMessages.map((msg) =>
-                this.gmail.users.messages.get({
-                    userId: 'me',
-                    id: msg.id!,
-                    format: 'full',
-                    auth: this.oauth2Client,
-                }),
-            ),
-        );
-
-        return messages.map(({ data }) => {
-            const attachments = this.extractAttachments(data.payload);
-            const body = this.extractBody(data.payload);
-            const from =
-                this.extractHeader(data.payload?.headers, 'From') || '';
-            const to =
-                this.extractHeader(data.payload?.headers, 'To')
-                    ?.split(',')
-                    .map((e) => e.trim()) || [];
-            const subject =
-                this.extractHeader(data.payload?.headers, 'Subject') || '';
-
-            return {
-                id: data.id!,
-                threadId: data.threadId!,
-                from,
-                to,
-                subject,
-                date: this.unixTimeService.toDate(Number(data.internalDate)),
-                snippet: data.snippet || '',
-                attachments,
-                body,
-            };
-        });
-    }
-
-    private extractAttachments(
+    extractAttachments(
         payload?: gmail_v1.Schema$MessagePart,
         collected: IAttachment[] = [],
     ): IAttachment[] {
@@ -333,7 +283,7 @@ export class GmailService implements OnModuleInit {
             collected.push({
                 filename: payload.filename,
                 mimeType: payload.mimeType || '',
-                attachmentId: payload.partId!,
+                id: payload.partId!,
                 size: payload.body.size || 0,
             });
         }
@@ -347,42 +297,109 @@ export class GmailService implements OnModuleInit {
         return collected;
     }
 
-    private extractBody(payload?: gmail_v1.Schema$MessagePart): string {
-        if (!payload) return '';
+    normalizeSubject(subject?: string | null) {
+        if (!subject) return null;
 
-        if (payload.mimeType === 'text/plain' && payload.body?.data) {
-            return this.decodeBase64(payload.body.data);
-        }
-
-        if (payload.parts) {
-            for (const part of payload.parts) {
-                if (part.mimeType === 'text/plain' && part.body?.data) {
-                    return this.decodeBase64(part.body.data);
-                }
-            }
-
-            for (const part of payload.parts) {
-                if (part.mimeType === 'text/html' && part.body?.data) {
-                    return this.decodeBase64(part.body.data);
-                }
-            }
-        }
-
-        return '';
+        return subject
+            .replace(/^(re|fw|fwd|ответ)(\[[0-9]+\])?:\s*/gi, '')
+            .trim()
+            .toLowerCase();
     }
 
-    private decodeBase64(data: string): string {
-        const buff = Buffer.from(data, 'base64');
-        return buff.toString('utf-8');
+    parseFromHeader(headerValue?: string | null) {
+        if (!headerValue) return { name: null, email: null };
+
+        const parsed = parseOneAddress(headerValue) as ParsedMailbox;
+        return {
+            name: parsed?.name || null,
+            email: parsed?.address || null,
+        };
     }
 
-    private extractHeader(
+    extractBody(payload?: gmail_v1.Schema$MessagePart): {
+        bodyPlain: string | null;
+        bodyHtml: string | null;
+    } {
+        let bodyPlain: string | null = null;
+        let bodyHtml: string | null = null;
+
+        const traverse = (part?: gmail_v1.Schema$MessagePart) => {
+            if (!part) return;
+
+            if (part.parts && part.parts.length > 0) {
+                for (const p of part.parts) traverse(p);
+            }
+
+            if (part.body?.data) {
+                const decoded = this.decodeUrlBase64(part.body.data);
+                const mt = part.mimeType || '';
+
+                if (mt === 'text/plain') {
+                    bodyPlain = bodyPlain ?? decoded;
+                } else if (mt === 'text/html') {
+                    bodyHtml = bodyHtml ?? decoded;
+                } else if (mt.startsWith('text/')) {
+                    bodyPlain = bodyPlain ?? decoded;
+                }
+            }
+        };
+
+        traverse(payload);
+
+        return { bodyPlain, bodyHtml };
+    }
+
+    decodeUrlBase64(data: string): string {
+        let normalized = data.replace(/-/g, '+').replace(/_/g, '/');
+        const pad = normalized.length % 4;
+        if (pad === 2) normalized += '==';
+        else if (pad === 3) normalized += '=';
+        else if (pad === 1) normalized += '===';
+
+        return Buffer.from(normalized, 'base64').toString('utf-8');
+    }
+
+    extractHeader(
         headers: gmail_v1.Schema$MessagePartHeader[] = [],
         name: string,
     ): string | undefined | null {
         return headers.find((h) => h.name?.toLowerCase() == name.toLowerCase())
             ?.value;
     }
+    normalizeMessageIds(refs?: string | null): string[] {
+        return (
+            refs
+                ?.split(/\s+/)
+                .map((ref) => ref.replace(/^<|>$/g, '').trim())
+                .filter(Boolean) || []
+        );
+    }
+    async uploadFileBuffer(file: { filename: string; data: Buffer }) {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+        const ext = path.extname(file.filename);
+        const fileName = `${uniqueSuffix}${ext}`;
+
+        const uploadDir = path.join(__dirname, '../../../uploads');
+
+        await fs.mkdir(uploadDir, { recursive: true });
+
+        const filePath = path.join(uploadDir, fileName);
+        await fs.writeFile(filePath, file.data);
+
+        return filePath;
+    }
+
+    getFromHeaderTo(message: gmail_v1.Schema$Message): string[] {
+        const headers = message.payload?.headers || [];
+        const toHeader =
+            headers.find((h) => h.name?.toLowerCase() === 'to')?.value || '';
+
+        return toHeader
+            .split(',')
+            .map((addr) => addr.trim())
+            .filter(Boolean);
+    }
+
     private get accessToken() {
         return this._accessToken;
     }

@@ -21,6 +21,7 @@
     "check-env": "bash validate-env.sh"
   },
   "dependencies": {
+    "@google-cloud/pubsub": "^5.2.0",
     "@nestjs/bullmq": "^11.0.2",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.2",
@@ -40,6 +41,7 @@
     "class-validator": "^0.14.2",
     "crypto-js": "^4.2.0",
     "docusign-esign": "^8.1.0",
+    "email-addresses": "^5.0.0",
     "fontkit": "^2.0.4",
     "googleapis": "^150.0.1",
     "ioredis": "^5.6.1",
