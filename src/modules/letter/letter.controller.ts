@@ -71,7 +71,7 @@ export class LetterController {
             messageId: message.id,
             inReplyTo: null,
             references: undefined,
-            subject: undefined,
+            subject: subject,
             normalizedSubject: this.gmailService.normalizeSubject(subject),
             fromName: undefined,
             fromEmail: this.configService.getOrThrow('GMAIL_OFFICE_EMAIL'),

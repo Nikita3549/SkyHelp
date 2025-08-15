@@ -88,6 +88,9 @@ export class EmailService {
             this.prisma.email.findMany({
                 where,
                 skip,
+                orderBy: {
+                    createdAt: 'desc',
+                },
                 take: pageSize,
                 include: {
                     attachments: {
