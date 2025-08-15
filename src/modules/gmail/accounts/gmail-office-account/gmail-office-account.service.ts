@@ -237,17 +237,31 @@ export class GmailOfficeAccountService implements OnModuleInit {
 
     @Interval(FIFTY_FIVE_MINUTES)
     async refreshAccessToken() {
-        this.logger.log('Refreshing access token...');
-        try {
-            const tokens = await this.oauth2Client.refreshAccessToken();
-            const accessToken = tokens.credentials.access_token;
+        const maxAttempts = 5;
+        let attempt = 0;
 
-            if (!accessToken) throw new Error('No access token received');
+        while (attempt < maxAttempts) {
+            attempt++;
+            this.logger.log(
+                `Refreshing access token... Attempt ${attempt}/${maxAttempts}`,
+            );
+            try {
+                const tokens = await this.oauth2Client.refreshAccessToken();
+                const accessToken = tokens.credentials.access_token;
 
-            this.accessToken = accessToken;
-            this.logger.log('Access token refreshed');
-        } catch (err) {
-            this.logger.error('Failed to refresh access token', err);
+                if (!accessToken) throw new Error('No access token received');
+
+                this.accessToken = accessToken;
+                this.logger.log('Access token refreshed');
+                return;
+            } catch (err) {
+                this.logger.error(
+                    `Failed to refresh access token (Attempt ${attempt})`,
+                    err,
+                );
+                if (attempt >= maxAttempts) throw err;
+                await new Promise((res) => setTimeout(res, 1000 * attempt));
+            }
         }
     }
 
