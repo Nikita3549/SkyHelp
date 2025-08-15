@@ -40,6 +40,8 @@ export class LetterController {
     async getLetters(@Query() query: GetLettersQueryDto) {
         const { claimId, page, type, status } = query;
 
+        console.log(claimId);
+
         return this.gmailService.email.getEmails(page, claimId, type, status);
     }
 

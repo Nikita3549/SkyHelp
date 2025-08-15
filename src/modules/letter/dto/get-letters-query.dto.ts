@@ -1,8 +1,9 @@
-import { IsEnum, IsInt, IsOptional, IsString, Min } from 'class-validator';
+import { IsEnum, IsInt, IsOptional, Min } from 'class-validator';
 import { Transform, Type } from 'class-transformer';
 import { EmailStatus, EmailType } from '@prisma/client';
 
 export class GetLettersQueryDto {
+    @IsOptional()
     @Transform(({ value }) => (value === 'null' ? null : value))
     claimId?: string | null;
 
