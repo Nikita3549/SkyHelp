@@ -16,6 +16,14 @@ export class EmailResumeClickService {
         });
     }
 
+    async getRecordByClaimId(claimId: string) {
+        return this.prisma.emailResumeClick.findFirst({
+            where: {
+                claimId,
+            },
+        });
+    }
+
     async saveClick(claimId: string) {
         return this.prisma.emailResumeClick.update({
             where: {

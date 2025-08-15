@@ -1,9 +1,16 @@
-import { Body, Controller, HttpCode, Put } from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    HttpCode,
+    NotFoundException,
+    Put,
+} from '@nestjs/common';
 import { validateClaimJwt } from '../../utils/validate-claim-jwt';
 import { SaveClickDto } from './dto/save-click.dto';
 import { TokenService } from '../token/token.service';
 import { EmailResumeClickService } from './email-resume-click.service';
 import { HttpStatusCode } from 'axios';
+import { NO_RECORD } from './constants';
 
 @Controller('track/email')
 export class EmailResumeClickController {
@@ -22,6 +29,13 @@ export class EmailResumeClickController {
             claimId,
             this.tokenService.verifyJWT.bind(this.tokenService),
         );
+
+        const record =
+            await this.emailResumeClickService.getRecordByClaimId(claimId);
+
+        if (!record) {
+            throw new NotFoundException(NO_RECORD);
+        }
 
         await this.emailResumeClickService.saveClick(claimId);
     }
