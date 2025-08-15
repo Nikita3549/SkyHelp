@@ -8,9 +8,13 @@ export const validateClaimJwt = (
     expectedClaimId: string,
     verify: <I extends JwtPayload | string>(jwt: string) => I,
 ) => {
-    const { claimId } = verify<IClaimJwt>(jwt);
+    try {
+        const { claimId } = verify<IClaimJwt>(jwt);
 
-    if (claimId != expectedClaimId) {
+        if (claimId != expectedClaimId) {
+            throw new UnauthorizedException(INVALID_JWT);
+        }
+    } catch (e: unknown) {
         throw new UnauthorizedException(INVALID_JWT);
     }
 };
