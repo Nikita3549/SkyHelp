@@ -4,11 +4,9 @@ import {
     Controller,
     HttpStatus,
     Post,
-    UseGuards,
 } from '@nestjs/common';
 import { FlightService } from './flight.service';
 import { GetFlightsDto } from './dto/get-flights.dto';
-import { JwtAuthGuard } from '../../guards/jwtAuth.guard';
 import { INVALID_FLIGHT_DATA } from './constants';
 import { AxiosError } from 'axios';
 

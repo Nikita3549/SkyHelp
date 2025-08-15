@@ -326,7 +326,7 @@ export class AuthController {
                     payload.claimId,
                     userId,
                 );
-            } catch (e: unknown) {}
+            } catch (_e: unknown) {}
         }
     }
 }

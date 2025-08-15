@@ -138,7 +138,7 @@ export class GmailOfficeAccountService implements OnModuleInit {
             (async () => {
                 const { filename, data, mimeType } =
                     await this.gmailService.getAttachmentByIdFromGmail(
-                        messageId!,
+                        messageId,
                         attachment.id,
                         this.gmail,
                         this.oauth2Client,
@@ -185,7 +185,7 @@ export class GmailOfficeAccountService implements OnModuleInit {
             await this.watchMailbox();
 
             this.logger.log('Starting pullMessages...');
-            await this.pullMessages();
+            this.pullMessages();
 
             await this.refreshAccessToken();
 
@@ -196,7 +196,7 @@ export class GmailOfficeAccountService implements OnModuleInit {
         }
     }
 
-    async pullMessages() {
+    pullMessages() {
         this.logger.log('Pull messages subscription started');
 
         const subscription = this.pubsub.subscription(
@@ -208,7 +208,7 @@ export class GmailOfficeAccountService implements OnModuleInit {
         subscription.on('message', async (message) => {
             this.logger.log('PubSub message received:', message.id);
             try {
-                const data = JSON.parse(message.data.toString('utf8'));
+                JSON.parse(message.data.toString('utf8'));
 
                 const newMessage = await this.getNewMessages().finally(() => {
                     message.ack();
@@ -221,7 +221,7 @@ export class GmailOfficeAccountService implements OnModuleInit {
                 }
 
                 await this.handleMessage(newMessage);
-            } catch (err) {
+            } catch (_err: unknown) {
                 message.nack();
             }
         });

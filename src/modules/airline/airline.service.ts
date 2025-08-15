@@ -1,6 +1,5 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import axios, { AxiosResponse } from 'axios';
 import { IAirline } from './interfaces/airline.interface';
 import { Pool } from 'pg';
 import { IDbAirline } from './interfaces/db-airline.interface';

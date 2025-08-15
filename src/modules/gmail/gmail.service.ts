@@ -11,8 +11,6 @@ import { ParsedMailbox, parseOneAddress } from 'email-addresses';
 import * as path from 'path';
 import * as fs from 'fs/promises';
 import { PrismaService } from '../prisma/prisma.service';
-import { GmailEmailPayload } from './interfaces/gmail-email-payload.interface';
-import { Email, EmailStatus, EmailType } from '@prisma/client';
 import { ClaimService } from '../claim/claim.service';
 import { GmailOfficeAccountService } from './accounts/gmail-office-account/gmail-office-account.service';
 import { AttachmentService } from './attachment/attachment.service';

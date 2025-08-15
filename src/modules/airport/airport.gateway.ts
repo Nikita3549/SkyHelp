@@ -1,6 +1,5 @@
 import { SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
-import { TokenService } from '../token/token.service';
 import {
     InternalServerErrorException,
     UseFilters,
@@ -8,12 +7,9 @@ import {
     ValidationPipe,
 } from '@nestjs/common';
 import { ValidationFilter } from './filters/validation.filter';
-import { INVALID_TOKEN } from './constants';
-import { AuthSocket } from '../auth/interfaces/authSocket.interface';
 import { LookupAirportDto } from './dto/lookup-airport.dto';
 import { AirportService } from './airport.service';
 import { CacheService } from '../cache/cache.service';
-import { JwtPayload } from 'jsonwebtoken';
 
 @WebSocketGateway({ namespace: '/ws/airports' })
 @UseFilters(new ValidationFilter())

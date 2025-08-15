@@ -7,7 +7,7 @@ export class CacheService {
     constructor(private readonly redis: RedisService) {}
 
     async setCache(key: string, value: string) {
-        this.redis.set(key, value, 'EX', TTL);
+        await this.redis.set(key, value, 'EX', TTL);
     }
 
     async getCache(key: string): Promise<string | null> {

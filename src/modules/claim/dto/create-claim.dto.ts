@@ -13,29 +13,9 @@ import { Type } from 'class-transformer';
 import {
     AirlineReason,
     CancellationNotice,
-    ClaimStatus,
     DelayCategory,
     DisruptionType,
-    IssueReason,
-    PaymentMethod,
-    ProgressStatus,
 } from '@prisma/client';
-
-// --- Nested DTOs ---
-
-// class AssignmentAgreementDto {
-//     @IsString()
-//     envelopeId: string;
-//
-//     @IsString()
-//     documentUrl: string;
-//
-//     @IsString()
-//     certificateUrl: string;
-//
-//     @IsString()
-//     storagePath: string;
-// }
 
 class AirportDto {
     @IsString()
@@ -88,21 +68,6 @@ class DetailsDto {
     routes: RouteDto[];
 }
 
-// class ProgressStepDto {
-//     @IsString()
-//     title: string;
-//
-//     @IsString()
-//     description: string;
-//
-//     @IsDate()
-//     @Type(() => Date)
-//     endAt: Date;
-//
-//     @IsEnum(ProgressStatus)
-//     status: ProgressStatus;
-// }
-
 class StateDto {
     @IsNumber()
     amount: number;
@@ -146,9 +111,6 @@ class CustomerDto {
 }
 
 class IssueDto {
-    // @IsEnum(IssueReason)
-    // reason: IssueReason;
-
     @IsOptional()
     @IsEnum(DelayCategory)
     delay: DelayCategory;
@@ -177,52 +139,6 @@ class IssueDto {
     additionalInfo: string;
 }
 
-// class DocumentDto {
-//     @IsString()
-//     name: string;
-//
-//     @IsString()
-//     path: string;
-// }
-
-// class PaymentDto {
-//     @IsOptional()
-//     @IsEmail()
-//     email?: string;
-//
-//     @IsOptional()
-//     @IsBoolean()
-//     termsAgreed?: boolean;
-//
-//     @IsOptional()
-//     @IsEnum(PaymentMethod)
-//     paymentMethod?: PaymentMethod;
-//
-//     @IsOptional()
-//     @IsString()
-//     bankName?: string;
-//
-//     @IsOptional()
-//     @IsString()
-//     accountName?: string;
-//
-//     @IsOptional()
-//     @IsString()
-//     accountNumber?: string;
-//
-//     @IsOptional()
-//     @IsString()
-//     routingNumber?: string;
-//
-//     @IsOptional()
-//     @IsString()
-//     iban?: string;
-//
-//     @IsOptional()
-//     @IsEmail()
-//     paypalEmail?: string;
-// }
-
 export class CreateClaimDto {
     @ValidateNested()
     @Type(() => DetailsDto)
@@ -239,8 +155,4 @@ export class CreateClaimDto {
     @ValidateNested()
     @Type(() => IssueDto)
     issue: IssueDto;
-
-    // @ValidateNested()
-    // @Type(() => PaymentDto)
-    // payment: PaymentDto;
 }

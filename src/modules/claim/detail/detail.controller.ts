@@ -2,7 +2,6 @@ import {
     BadRequestException,
     Body,
     Controller,
-    Param,
     Put,
     UseGuards,
 } from '@nestjs/common';

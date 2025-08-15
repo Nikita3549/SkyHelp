@@ -23,7 +23,6 @@ import { MessageReadDto } from './dto/message-read.dto';
 import { CreateChatDto } from './dto/create-chat.dto';
 import { ValidationFilter } from '../../filters/validation.filter';
 import { FollowStatusDto } from './dto/follow-status.dto';
-import { JwtPayload } from 'jsonwebtoken';
 import { IJwtPayload } from '../token/interfaces/jwtPayload';
 
 @WebSocketGateway({
@@ -59,7 +58,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
             this.server
                 .in(`status_${payload.id}`)
                 .emit('status_online', payload.id);
-        } catch (e: unknown) {
+        } catch (_e: unknown) {
             client.emit('exception', INVALID_TOKEN);
             client.disconnect();
         }
@@ -111,7 +110,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
         const message = await this.chatService
             .createMessage(chatId, client.data.id, content)
-            .catch((e: unknown) => {
+            .catch((_e: unknown) => {
                 throw new WsException(INVALID_CHAT_ID);
             });
 

@@ -1,4 +1,3 @@
-import { AuthRequest } from '../../../interfaces/AuthRequest.interface';
 import { Request } from 'express';
 
 export function getAuthJwt(req: Request): string | null {

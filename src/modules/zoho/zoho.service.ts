@@ -207,8 +207,7 @@ export class ZohoService implements OnModuleInit {
             },
         );
 
-        const signUrl = embedRes.data.sign_url;
-        return signUrl;
+        return embedRes.data.sign_url;
     }
 
     private get accessToken(): string {

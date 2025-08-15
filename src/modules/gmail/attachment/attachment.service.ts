@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import * as fs from 'fs/promises';
 import { PrismaService } from '../../prisma/prisma.service';
-import { EmailStatus } from '@prisma/client';
 
 @Injectable()
 export class AttachmentService {

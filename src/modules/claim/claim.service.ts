@@ -33,7 +33,7 @@ export class ClaimService {
         private readonly claimFollowupQueue: Queue,
     ) {}
 
-    async scheduleClaimFollowUpEmails(jobData: IJobData) {
+    scheduleClaimFollowUpEmails(jobData: IJobData) {
         const delays = [
             ONE_HOUR_MILLISECONDS,
             ONE_DAY_MILLISECONDS,
@@ -44,8 +44,8 @@ export class ClaimService {
             SIX_DAYS_MILLISECONDS,
         ];
 
-        delays.forEach((delay) => {
-            this.claimFollowupQueue.add('followUpClaim', jobData, {
+        delays.forEach(async (delay) => {
+            await this.claimFollowupQueue.add('followUpClaim', jobData, {
                 delay,
                 attempts: 1,
             });

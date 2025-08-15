@@ -10,7 +10,7 @@ export class GenerateJwtController {
 
     @Post()
     @UseGuards(JwtAuthGuard, IsModeratorGuard)
-    async generateJwt(@Body() dto: GenerateJwtDto) {
+    generateJwt(@Body() dto: GenerateJwtDto) {
         const { claimId } = dto;
 
         return this.tokenService.generateJWT({ claimId });

@@ -30,7 +30,7 @@ export class ClaimGateway implements OnGatewayConnection {
     ) {}
     @WebSocketServer() server: Server;
 
-    async handleConnection(client: Socket) {
+    handleConnection(client: Socket) {
         try {
             const token: string | undefined =
                 client.handshake.auth?.token ||

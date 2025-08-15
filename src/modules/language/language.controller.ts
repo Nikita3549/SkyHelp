@@ -1,10 +1,4 @@
-import {
-    Controller,
-    Get,
-    NotFoundException,
-    Param,
-    Query,
-} from '@nestjs/common';
+import { Controller, Get, NotFoundException, Param } from '@nestjs/common';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import { INVALID_LANGUAGE } from './constants';

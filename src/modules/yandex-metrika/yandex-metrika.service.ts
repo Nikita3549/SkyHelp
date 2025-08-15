@@ -55,9 +55,9 @@ export class YandexMetrikaService implements OnModuleInit {
 
         const fetchedGoalConversions = await this.fetchGoalConversionsWithUTM();
 
-        let stats: Record<string, number> = {};
+        const stats: Record<string, number> = {};
 
-        for (let row of fetchedGoalConversions) {
+        for (const row of fetchedGoalConversions) {
             stats[row.utmSource] = +row.goalReaches;
         }
 

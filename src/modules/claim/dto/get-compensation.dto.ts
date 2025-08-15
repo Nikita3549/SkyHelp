@@ -1,19 +1,7 @@
-import {
-    IsBoolean,
-    IsEnum,
-    IsNumber,
-    IsOptional,
-    IsString,
-} from 'class-validator';
+import { IsBoolean, IsEnum, IsNumber, IsOptional } from 'class-validator';
 import { CancellationNotice, DelayCategory } from '@prisma/client';
 
 export class GetCompensationDto {
-    // @IsString()
-    // departureAirport: string;
-    //
-    // @IsString()
-    // arrivalAirport: string;
-
     @IsOptional()
     @IsEnum(DelayCategory)
     delayHours: DelayCategory | null;

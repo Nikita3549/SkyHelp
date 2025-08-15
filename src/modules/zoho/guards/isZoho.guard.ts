@@ -15,7 +15,6 @@ export class IsZohoGuard implements CanActivate {
     async canActivate(ctx: ExecutionContext): Promise<boolean> {
         const req = ctx.switchToHttp().getRequest<Request>();
         const signatureHeader = req.headers['x-zs-webhook-signature'];
-        // console.log('process guard: ', JSON.parse(req.body.toString()));
 
         if (typeof signatureHeader != 'string') {
             console.log('forbidden', JSON.parse(req.body.toString()));

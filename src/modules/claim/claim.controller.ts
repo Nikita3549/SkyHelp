@@ -31,7 +31,6 @@ import { GetCompensationQueryDto } from './dto/get-compensation-query.dto';
 import { AirportService } from '../airport/airport.service';
 import { NotificationService } from '../notification/notification.service';
 import { ConfigService } from '@nestjs/config';
-import { UploadSignDto } from './customer/dto/upload-sign.dto';
 import { UpdateFormStateDto } from './dto/update-form-state.dto';
 import { LanguageQueryDto } from './dto/language-query.dto';
 import { DocumentService } from './document/document.service';
@@ -203,7 +202,7 @@ export class PublicClaimController {
 
     @Get(':claimId')
     async getClaim(@Param('claimId') claimId: string) {
-        const claim = this.claimService.getClaim(claimId);
+        const claim = await this.claimService.getClaim(claimId);
 
         if (!claim) {
             throw new NotFoundException(INVALID_CLAIM_ID);

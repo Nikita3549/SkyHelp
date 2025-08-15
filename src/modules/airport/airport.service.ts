@@ -9,7 +9,7 @@ export class AirportService implements OnModuleInit {
     private pool: Pool;
     constructor(private readonly configService: ConfigService) {}
 
-    async onModuleInit() {
+    onModuleInit() {
         this.pool = new Pool({
             user: this.configService.getOrThrow('DATABASE_STATIC_USER'),
             database: this.configService.getOrThrow('DATABASE_STATIC_DBNAME'),

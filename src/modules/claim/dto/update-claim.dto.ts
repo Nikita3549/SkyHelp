@@ -16,7 +16,6 @@ import {
     ClaimStatus,
     DelayCategory,
     DisruptionType,
-    IssueReason,
     PaymentMethod,
     ProgressStatus,
 } from '@prisma/client';

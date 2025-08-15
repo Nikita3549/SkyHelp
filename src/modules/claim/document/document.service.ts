@@ -4,7 +4,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import { PDFDocument, rgb } from 'pdf-lib';
-const fontkit = require('fontkit');
+const fontkit = require('fontkit'); // fix fonkit bug
 
 @Injectable()
 export class DocumentService {

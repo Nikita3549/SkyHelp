@@ -1,11 +1,8 @@
 import {
-    Body,
     Controller,
     Get,
     NotFoundException,
     Param,
-    Put,
-    Req,
     UseGuards,
 } from '@nestjs/common';
 import { IPublicUserData } from './interfaces/publicUserData.interface';
