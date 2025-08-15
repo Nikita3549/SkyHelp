@@ -52,13 +52,17 @@ export class GmailService implements OnModuleInit {
         fromEmail: string,
         threadId: string,
     ): Promise<string | null> {
+        const claim = await this.claimService.getClaimByEmail(fromEmail);
+
+        if (claim?.archived) {
+            return null;
+        }
+
         const email = await this.email.getEmailByThreadId(threadId);
 
         if (email?.claimId) {
             return email.claimId;
         }
-
-        const claim = await this.claimService.getClaimByEmail(fromEmail);
 
         return claim?.id || null;
     }
