@@ -34,4 +34,20 @@ export class EmailResumeClickService {
             },
         });
     }
+
+    async getStats(): Promise<{ total: number; clicked: number }> {
+        const [total, clicked] = await this.prisma.$transaction([
+            this.prisma.emailResumeClick.count(),
+            this.prisma.emailResumeClick.count({
+                where: {
+                    isClicked: true,
+                },
+            }),
+        ]);
+
+        return {
+            total,
+            clicked,
+        };
+    }
 }

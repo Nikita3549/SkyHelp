@@ -1,9 +1,11 @@
 import {
     Body,
     Controller,
+    Get,
     HttpCode,
     NotFoundException,
     Put,
+    UseGuards,
 } from '@nestjs/common';
 import { validateClaimJwt } from '../../utils/validate-claim-jwt';
 import { SaveClickDto } from './dto/save-click.dto';
@@ -11,6 +13,8 @@ import { TokenService } from '../token/token.service';
 import { EmailResumeClickService } from './email-resume-click.service';
 import { HttpStatusCode } from 'axios';
 import { NO_RECORD } from './constants';
+import { JwtAuthGuard } from '../../guards/jwtAuth.guard';
+import { IsModeratorGuard } from '../../guards/isModerator.guard';
 
 @Controller('track/email')
 export class EmailResumeClickController {
@@ -38,5 +42,11 @@ export class EmailResumeClickController {
         }
 
         await this.emailResumeClickService.saveClick(claimId);
+    }
+
+    @Get('stats')
+    @UseGuards(JwtAuthGuard, IsModeratorGuard)
+    async getStats() {
+        return this.emailResumeClickService.getStats();
     }
 }
