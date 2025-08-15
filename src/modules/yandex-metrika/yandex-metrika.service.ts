@@ -7,6 +7,7 @@ import { EVERY_DAY_AT_FOUR_AM, EVERY_MONTH_AT_THREE_AM } from './constants';
 import { GoogleSheetsService } from '../google-sheets/google-sheets.service';
 import { YandexMetrikaRow } from './interfaces/yandex-metrika-row';
 import { getYesterdayDate } from '../../utils/getYesterdayDate';
+import { isProd } from '../../utils/isProd';
 
 @Injectable()
 export class YandexMetrikaService implements OnModuleInit {
@@ -43,14 +44,14 @@ export class YandexMetrikaService implements OnModuleInit {
     }
 
     async onModuleInit() {
-        if (this.configService.get('NODE_ENV') != 'PROD') return;
+        if (!isProd()) return;
 
         await this.refreshAccessToken();
     }
 
     @Cron(EVERY_DAY_AT_FOUR_AM)
     async sendReportInSheet() {
-        if (this.configService.get('NODE_ENV') != 'PROD') return;
+        if (!isProd()) return;
 
         const fetchedGoalConversions = await this.fetchGoalConversionsWithUTM();
 

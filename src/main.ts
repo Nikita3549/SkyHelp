@@ -5,6 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import { ValidationPipe } from '@nestjs/common';
 import { SocketIoAdapter } from './common/adapters/socket-io.adapter';
 import * as express from 'express';
+import { isProd } from './utils/isProd';
 
 async function bootstrap() {
     const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -14,7 +15,7 @@ async function bootstrap() {
     const configService = app.get(ConfigService);
     const port = configService.getOrThrow<number>('API_PORT');
 
-    if (process.env.NODE_ENV === 'PROD') {
+    if (isProd()) {
         app.enableCors({
             origin: configService.getOrThrow<string>('FRONTEND_URL'),
             credentials: true,
@@ -28,7 +29,7 @@ async function bootstrap() {
     }
 
     // WS CORS
-    process.env.NODE_ENV == 'PROD' &&
+    isProd() &&
         app.useWebSocketAdapter(new SocketIoAdapter(app, configService));
 
     app.setGlobalPrefix('v1');

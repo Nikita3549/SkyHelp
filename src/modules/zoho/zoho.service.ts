@@ -15,6 +15,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import * as path from 'path';
 import * as fs from 'fs/promises';
 import { IAssignmentData } from './interfaces/assignment-data.interface';
+import { isProd } from '../../utils/isProd';
 
 @Injectable()
 export class ZohoService implements OnModuleInit {
@@ -55,7 +56,7 @@ export class ZohoService implements OnModuleInit {
     }
 
     async onModuleInit() {
-        if (this.configService.get('NODE_ENV') != 'PROD') return;
+        if (!isProd()) return;
         await this.refreshAccessToken();
     }
 

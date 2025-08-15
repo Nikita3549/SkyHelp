@@ -2,6 +2,7 @@ import { Injectable, OnModuleInit } from '@nestjs/common';
 import { sheets_v4, google } from 'googleapis';
 import { ConfigService } from '@nestjs/config';
 import { JWT } from 'google-auth-library';
+import { isProd } from '../../utils/isProd';
 
 @Injectable()
 export class GoogleSheetsService implements OnModuleInit {
@@ -31,7 +32,7 @@ export class GoogleSheetsService implements OnModuleInit {
     }
 
     async onModuleInit() {
-        if (this.configService.get('NODE_ENV') != 'PROD') return;
+        if (!isProd()) return;
 
         const authClient = new JWT({
             key: this.GOOGLE_SHEETS_PRIVATE_KEY.replace(/\\n/g, '\n'),

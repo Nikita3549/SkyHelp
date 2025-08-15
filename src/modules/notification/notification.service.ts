@@ -4,6 +4,7 @@ import * as path from 'node:path';
 import { Languages } from '../language/enums/languages.enums';
 import { EmailService } from './email/email.service';
 import { ConfigService } from '@nestjs/config';
+import { isProd } from '../../utils/isProd';
 
 @Injectable()
 export class NotificationService {
@@ -74,7 +75,7 @@ This message was automatically generated.
         isRegistered: boolean,
         language: Languages = Languages.EN,
     ) {
-        if (this.configService.get('NODE_ENV') != 'PROD') return;
+        if (!isProd()) return;
         const letterTemplate = await this.getLetterTemplate(
             'createClaim.html',
             language,
@@ -107,7 +108,7 @@ This message was automatically generated.
         },
         language: Languages = Languages.EN,
     ) {
-        if (this.configService.get('NODE_ENV') != 'PROD') return;
+        if (!isProd()) return;
         const letterTemplate = await this.getLetterTemplate(
             'finishClaim.html',
             language,
