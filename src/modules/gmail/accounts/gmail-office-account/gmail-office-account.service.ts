@@ -13,6 +13,7 @@ import {
 import { PubSub } from '@google-cloud/pubsub';
 import { GmailService } from '../../gmail.service';
 import { GmailOfficeAccountLogger } from './gmail-office-account.logger';
+import { isProd } from '../../../../utils/isProd';
 
 @Injectable()
 export class GmailOfficeAccountService implements OnModuleInit {
@@ -30,6 +31,7 @@ export class GmailOfficeAccountService implements OnModuleInit {
         private readonly gmailService: GmailService,
     ) {
         this.logger = new GmailOfficeAccountLogger();
+        if (!isProd()) return;
 
         this.pubsub = new PubSub({
             projectId: this.configService.getOrThrow(
@@ -162,6 +164,7 @@ export class GmailOfficeAccountService implements OnModuleInit {
 
     async onModuleInit() {
         this.logger.log('Module init started');
+        if (!isProd()) return;
 
         try {
             this.oauth2Client = new google.auth.OAuth2(
@@ -198,6 +201,7 @@ export class GmailOfficeAccountService implements OnModuleInit {
 
     pullMessages() {
         this.logger.log('Pull messages subscription started');
+        if (!isProd()) return;
 
         const subscription = this.pubsub.subscription(
             this.configService.getOrThrow(
@@ -249,6 +253,8 @@ export class GmailOfficeAccountService implements OnModuleInit {
 
     async watchMailbox(labelIds = ['INBOX']) {
         this.logger.log('Setting watch on mailbox...');
+        if (!isProd()) return;
+
         try {
             const topicName = this.configService.getOrThrow(
                 'GMAIL_OFFICE_PUBSUB_TOPIC_NAME',
@@ -279,6 +285,7 @@ export class GmailOfficeAccountService implements OnModuleInit {
 
     @Interval(SIX_HOURS)
     async refreshWatchIfNeeded() {
+        if (!isProd()) return;
         this.logger.log('Checking watch expiration...');
         const now = Date.now();
 
@@ -294,6 +301,7 @@ export class GmailOfficeAccountService implements OnModuleInit {
     async getNewMessages(): Promise<
         gmail_v1.Schema$Message | null | undefined
     > {
+        if (!isProd()) return;
         this.logger.log(
             'Fetching new messages. startHistoryId:',
             this.startHistoryId,
