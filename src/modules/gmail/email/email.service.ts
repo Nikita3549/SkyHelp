@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
-import { Email, EmailStatus, EmailType } from '@prisma/client';
+import { Email, EmailStatus, EmailType, Prisma } from '@prisma/client';
 import { GmailEmailPayload } from '../interfaces/gmail-email-payload.interface';
 
 @Injectable()
@@ -78,14 +78,15 @@ export class EmailService {
         pageSize: number = 20,
     ): Promise<{ letters: Email[]; total: number }> {
         const skip = (page - 1) * pageSize;
+        const where: Prisma.EmailWhereInput = {
+            claimId,
+            type,
+            status,
+        };
 
         const [emails, total] = await this.prisma.$transaction([
             this.prisma.email.findMany({
-                where: {
-                    claimId,
-                    type,
-                    status,
-                },
+                where,
                 skip,
                 take: pageSize,
                 include: {
@@ -101,7 +102,9 @@ export class EmailService {
                     },
                 },
             }),
-            this.prisma.email.count(),
+            this.prisma.email.count({
+                where,
+            }),
         ]);
 
         return {
