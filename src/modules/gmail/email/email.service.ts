@@ -72,7 +72,7 @@ export class EmailService {
 
     async getEmails(
         page: number,
-        claimId?: string,
+        claimId?: string | null,
         type?: EmailType,
         status?: EmailStatus,
         pageSize: number = 20,
