@@ -14,7 +14,6 @@ import { AirportModule } from './modules/airport/airport.module';
 import { CacheModule } from './modules/cache/cache.module';
 import { FlightModule } from './modules/flight/flight.module';
 import { ChatModule } from './modules/chat/chat.module';
-import { GmailModule } from './modules/gmail/gmail.module';
 import { AirlineModule } from './modules/airline/airline.module';
 import { LanguageModule } from './modules/language/language.module';
 import { ContactUsModule } from './modules/contact-us/contact-us.module';
@@ -52,7 +51,6 @@ import { EmailResumeClickModule } from './modules/email-resume-click/email-resum
         CacheModule,
         FlightModule,
         ChatModule,
-        GmailModule,
         AirlineModule,
         LanguageModule,
         ContactUsModule,

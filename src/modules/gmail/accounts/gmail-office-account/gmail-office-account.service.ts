@@ -61,7 +61,7 @@ export class GmailOfficeAccountService implements OnModuleInit {
             content,
             from,
             attachments,
-            this.oauth2Client,
+            this.gmail,
         );
     }
 

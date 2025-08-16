@@ -15,6 +15,7 @@ import { ClaimService } from '../claim/claim.service';
 import { GmailOfficeAccountService } from './accounts/gmail-office-account/gmail-office-account.service';
 import { AttachmentService } from './attachment/attachment.service';
 import { EmailService } from './email/email.service';
+import { GmailNoreplyAccountService } from './accounts/gmail-noreply-account/gmail-noreply-account.service';
 
 @Injectable()
 export class GmailService implements OnModuleInit {
@@ -24,10 +25,11 @@ export class GmailService implements OnModuleInit {
 
     constructor(
         private readonly configService: ConfigService,
-        private readonly prisma: PrismaService,
         private readonly claimService: ClaimService,
         @Inject(forwardRef(() => GmailOfficeAccountService))
         readonly office: GmailOfficeAccountService,
+        @Inject(forwardRef(() => GmailNoreplyAccountService))
+        readonly noreply: GmailNoreplyAccountService,
         readonly attachment: AttachmentService,
         readonly email: EmailService,
     ) {}
@@ -43,7 +45,7 @@ export class GmailService implements OnModuleInit {
             refresh_token: this.configService.getOrThrow('GMAIL_REFRESH_TOKEN'),
         });
 
-        await this.updateAccessToken();
+        await this.refreshAccessToken();
 
         this.gmail = google.gmail({ version: 'v1', auth: this.oauth2Client });
     }
@@ -131,6 +133,7 @@ export class GmailService implements OnModuleInit {
         subject: string,
         htmlContent: string,
         from: string,
+        gmail: gmail_v1.Gmail = this.gmail,
     ) {
         try {
             const boundary = '__BOUNDARY__';
@@ -156,7 +159,7 @@ export class GmailService implements OnModuleInit {
                 .replace(/\//g, '_')
                 .replace(/=+$/, '');
 
-            await this.gmail.users.messages.send({
+            await gmail.users.messages.send({
                 userId: 'me',
                 requestBody: {
                     raw: rawMessage,
@@ -173,7 +176,7 @@ export class GmailService implements OnModuleInit {
         content: string,
         from: string,
         attachments: { filename: string; content: Buffer; mimeType: string }[],
-        oauth2Client: OAuth2Client = this.oauth2Client,
+        gmail: gmail_v1.Gmail = this.gmail,
     ): Promise<gmail_v1.Schema$Message> {
         const boundary = '__MAIL__BOUNDARY__';
         const newline = '\r\n';
@@ -217,9 +220,8 @@ export class GmailService implements OnModuleInit {
             'base64',
         );
 
-        const res = await this.gmail.users.messages.send({
+        const res = await gmail.users.messages.send({
             userId: 'me',
-            auth: oauth2Client,
             requestBody: {
                 raw: rawMessage,
             },
@@ -233,6 +235,7 @@ export class GmailService implements OnModuleInit {
         subject: string,
         content: string,
         from: string,
+        gmail: gmail_v1.Gmail = this.gmail,
     ) {
         try {
             const rawMessage = Buffer.from(
@@ -249,7 +252,7 @@ export class GmailService implements OnModuleInit {
                 .replace(/\//g, '_')
                 .replace(/=+$/, '');
 
-            await this.gmail.users.messages.send({
+            await gmail.users.messages.send({
                 userId: 'me',
                 requestBody: {
                     raw: rawMessage,
@@ -261,7 +264,7 @@ export class GmailService implements OnModuleInit {
     }
 
     @Interval(FIFTY_FIVE_MINUTES)
-    async updateAccessToken() {
+    async refreshAccessToken() {
         try {
             const tokens = await this.oauth2Client.refreshAccessToken();
             const accessToken = tokens.credentials.access_token;

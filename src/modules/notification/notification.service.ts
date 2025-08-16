@@ -2,20 +2,21 @@ import { Injectable } from '@nestjs/common';
 import * as fs from 'fs/promises';
 import * as path from 'node:path';
 import { Languages } from '../language/enums/languages.enums';
-import { EmailService } from './email/email.service';
 import { ConfigService } from '@nestjs/config';
 import { isProd } from '../../utils/isProd';
+import { GmailService } from '../gmail/gmail.service';
 
 @Injectable()
 export class NotificationService {
     constructor(
-        private readonly emailService: EmailService,
         private readonly configService: ConfigService,
+        private readonly gmailService: GmailService,
     ) {}
 
     async sendRegisterCode(to: string, code: number) {
-        console.log(`Send register code: ${code} on ${to}`);
-        await this.emailService.sendNoReplyEmail(
+        !isProd() && console.log(`Send register code: ${code} on ${to}`);
+
+        await this.gmailService.noreply.sendEmail(
             to,
             `Your verification code is: ${code}`,
             `${code} is your SkyHelp verification code.`,
@@ -23,15 +24,16 @@ export class NotificationService {
     }
 
     async sendForgotPasswordCode(to: string, code: number) {
-        console.log(`Send forgot password code: ${code} on ${to}`);
-        await this.emailService.sendNoReplyEmail(
+        !isProd() && console.log(`Send forgot password code: ${code} on ${to}`);
+
+        await this.gmailService.noreply.sendEmail(
             to,
             `Your verification code is: ${code}`,
             `Verify your identity to log in to SkyHelp.`,
         );
     }
     async sendPasswordChanged(to: string) {
-        await this.emailService.sendNoReplyEmail(
+        await this.gmailService.noreply.sendEmail(
             to,
             `Your SkyHelp password has been changed`,
             `Your SkyHelp password has recently changed.`,
@@ -45,7 +47,7 @@ export class NotificationService {
         message: string,
         phone: string,
     ) {
-        await this.emailService.sendNoReplyEmail(
+        await this.gmailService.noreply.sendEmail(
             this.configService.getOrThrow('GMAIL_CONTACT_US_SUBMIT_EMAIL'),
             `New Contact Form Submission from ${name}`,
             `You have received a new message via the Contact Us form.
@@ -91,7 +93,7 @@ This message was automatically generated.
             .replace('{{registered}}', isRegistered ? '' : 'display: none;')
             .replace('{{notRegistered}}', isRegistered ? 'display: none;' : '');
 
-        await this.emailService.sendNoReplyEmailHtml(
+        await this.gmailService.noreply.sendEmailHtml(
             to,
             `Your claim successfully submitted #${claimData.id}`,
             letter,
@@ -131,7 +133,7 @@ This message was automatically generated.
                 claimData.compensation == 0 ? 'display: none;' : '',
             );
 
-        await this.emailService.sendNoReplyEmailHtml(
+        await this.gmailService.noreply.sendEmailHtml(
             to,
             'Just one step away from your compensation',
             letter,
