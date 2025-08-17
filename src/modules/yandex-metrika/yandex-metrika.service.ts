@@ -58,7 +58,8 @@ export class YandexMetrikaService implements OnModuleInit {
         const stats: Record<string, number> = {};
 
         for (const row of fetchedGoalConversions) {
-            stats[row.utmSource] = +row.goalReaches;
+            stats[`${row.utmSource}, ${row.utmCampaign}, ${row.utmMedium}`] =
+                +row.goalReaches;
         }
 
         await this.googleSheetService.upsertDailyUtmStats(
