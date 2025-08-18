@@ -2609,7 +2609,7 @@
     "EligibilityResult.eligibleDescription": " Uçuş detaylarınıza göre, EU Regulation 261/2004'e göre tazminat alabilirsiniz.",
     "EligibilityResult.eligibleButton": " Taleple devam et",
     "EligibilityResult.notEligibleTitle": " Tazminat alamazsınız",
-    "EligibilityResult.notEligibleDescription": " Sağlanan bilgilere göre, EU Regulation 261/2004'e göre tazminat alamazsınız, 3 saat veya daha fazla gecikme gerektirir.",
+    "EligibilityResult.notEligibleDescription": "Tazminat alma hakkınız olmadığını üzülerek bildiriyoruz. EC261/2004 sayılı Avrupa yönetmeliğine göre, uçuşunuz 3 saatten az geciktiyse veya iptal bildirimi size 14 günden fazla önceden yapıldıysa, havayolunun size tazminat ödemesi gerekmez. Bunun hayal kırıklığı yaratabileceğini anlıyor ve anlayışınız için teşekkür ediyoruz.",
     "EligibilityResult.notEligibleButton": " Devam et",
     "DisruptionTypeRadioGroup.delay": " Uçuş gecikti",
     "DisruptionTypeRadioGroup.cancellation": " Uçuş iptal edildi",

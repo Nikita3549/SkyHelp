@@ -2607,7 +2607,7 @@
     "EligibilityResult.eligibleDescription": "Pe baza detaliilor zborului tău, este posibil să ai dreptul la compensație conform Regulamentului UE 261/2004.",
     "EligibilityResult.eligibleButton": "Continuă cu cererea",
     "EligibilityResult.notEligibleTitle": "Este posibil să nu fii eligibil pentru compensație",
-    "EligibilityResult.notEligibleDescription": "Pe baza informațiilor furnizate, se pare că situația ta nu se califică pentru compensație conform Regulamentului UE 261/2004, care necesită întârzieri de 3 ore sau mai mult.",
+    "EligibilityResult.notEligibleDescription": "Regretăm să vă informăm că nu aveți dreptul la compensație. Conform regulamentului european EC261/2004, compania aeriană nu este obligată să vă despăgubească dacă zborul dumneavoastră a avut o întârziere mai mică de 3 ore sau dacă ați fost anunțat despre anulare cu mai mult de 14 zile înainte. Înțelegem că acest lucru poate fi dezamăgitor și vă mulțumim pentru înțelegere.",
     "EligibilityResult.notEligibleButton": "Continuă oricum",
     "DisruptionTypeRadioGroup.delay": "Zborul a avut întârziere",
     "DisruptionTypeRadioGroup.cancellation": "Zborul a fost anulat",

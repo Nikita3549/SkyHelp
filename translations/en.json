@@ -2607,7 +2607,7 @@
     "EligibilityResult.eligibleDescription": "Based on your flight details, you could be entitled to compensation under EU Regulation 261/2004.",
     "EligibilityResult.eligibleButton": "Continue with your claim",
     "EligibilityResult.notEligibleTitle": "You may not be eligible for compensation",
-    "EligibilityResult.notEligibleDescription": "Based on the information provided, it appears that your situation may not qualify for compensation under EU Regulation 261/2004, which requires delays of 3 hours or more.",
+    "EligibilityResult.notEligibleDescription": "We regret to inform you that you are not entitled to compensation. According to the European regulation EC261/2004, the airline is not required to compensate you if your flight was delayed by less than 3 hours, or if you were notified of the cancellation more than 14 days in advance. We understand that this can be disappointing, and we thank you for your understanding.",
     "EligibilityResult.notEligibleButton": "Continue anyway",
     "DisruptionTypeRadioGroup.delay": "Flight was delayed",
     "DisruptionTypeRadioGroup.cancellation": "Flight was cancelled",
