@@ -43,6 +43,7 @@ export class GmailNoreplyAccountService implements OnModuleInit {
             subject,
             htmlContent,
             this.configService.getOrThrow('GMAIL_NOREPLY_SENDER_NAME'),
+            this.gmail,
         );
     }
     async sendEmail(to: string, subject: string, content: string) {
