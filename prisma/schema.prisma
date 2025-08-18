@@ -165,9 +165,9 @@ model ClaimCustomer {
   address       String   @map("address")
   secondAddress String?  @map("second_address")
   city          String   @map("city")
-  postalCode    String   @map("postal_code")
+  postalCode    String?  @map("postal_code")
   state         String?  @map("state")
-  country       String   @map("country")
+  country       String?  @map("country")
   whatsapp      Boolean  @map("whatsapp")
   isSigned      Boolean? @default(false) @map("is_signed")
   Claim         Claim[]

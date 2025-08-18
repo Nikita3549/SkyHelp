@@ -115,31 +115,18 @@ class CustomerDto {
     @IsString()
     address: string;
 
-    @IsOptional()
-    @IsString()
-    secondAddress?: string;
-
     @IsString()
     city: string;
-
-    @IsString()
-    postalCode: string;
 
     @IsOptional()
     @IsString()
     state?: string;
-
-    @IsString()
-    country: string;
 
     @IsBoolean()
     whatsapp: boolean;
 }
 
 class IssueDto {
-    // @IsEnum(IssueReason)
-    // reason: IssueReason;
-
     @IsOptional()
     @IsEnum(DelayCategory)
     delay: DelayCategory;
