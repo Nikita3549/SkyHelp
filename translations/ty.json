@@ -3530,5 +3530,7 @@
     "DocumentActions.download": "PDF’yi indir",
     "ZohoSigningIframe.noSigningUrl": "İmzalama URL’si sağlanmadı", "ZohoSigningIframe.signingFailed": "İmzalama başarısız",  "ZohoSigningIframe.loadingFailed": "İmzalama arayüzü yüklenemedi", "ZohoSigningIframe.signingError": "İmzalama Hatası",
     "ZohoSigningIframe.retry": "Yeniden dene",
-    "ZohoSigningIframe.loadingInterface": "İmzalama arayüzü yükleniyor..."
+    "ZohoSigningIframe.loadingInterface": "İmzalama arayüzü yükleniyor...",
+    "SkipPayment.toastTitle": "Ödeme bilgilerini daha sonra ekleyebilirsiniz",
+    "SkipPayment.toastDescription": "Talebiniz onaylandığında sizden ödeme bilgilerini isteyeceğiz."
 }

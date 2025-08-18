@@ -3509,5 +3509,7 @@
     "ZohoSigningIframe.loadingFailed": "Failed to load signing interface",
     "ZohoSigningIframe.signingError": "Signing Error",
     "ZohoSigningIframe.retry": "Retry",
-    "ZohoSigningIframe.loadingInterface": "Loading signing interface..."
+    "ZohoSigningIframe.loadingInterface": "Loading signing interface...",
+    "SkipPayment.toastTitle": "You can add payment details later",
+    "SkipPayment.toastDescription": "We'll request payment information when your claim is approved."
 }

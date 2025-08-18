@@ -3510,5 +3510,7 @@
     "ZohoSigningIframe.loadingFailed": "Nu s-a putut încărca interfața de semnare",
     "ZohoSigningIframe.signingError": "Eroare de semnare",
     "ZohoSigningIframe.retry": "Reîncearcă",
-    "ZohoSigningIframe.loadingInterface": "Se încarcă interfața de semnare..."
+    "ZohoSigningIframe.loadingInterface": "Se încarcă interfața de semnare...",
+    "SkipPayment.toastTitle": "Poți adăuga detaliile de plată mai târziu",
+    "SkipPayment.toastDescription": "Vom solicita informațiile de plată atunci când cererea ta va fi aprobată."
 }

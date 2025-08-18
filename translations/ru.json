@@ -3509,5 +3509,7 @@
     "ZohoSigningIframe.loadingFailed": "Не удалось загрузить интерфейс подписи",
     "ZohoSigningIframe.signingError": "Ошибка при подписании",
     "ZohoSigningIframe.retry": "Повторить",
-    "ZohoSigningIframe.loadingInterface": "Загрузка интерфейса подписи..."
+    "ZohoSigningIframe.loadingInterface": "Загрузка интерфейса подписи...",
+    "SkipPayment.toastTitle": "Вы можете добавить платежные данные позже",
+    "SkipPayment.toastDescription": "Мы запросим платежную информацию, когда ваша заявка будет одобрена."
 }
