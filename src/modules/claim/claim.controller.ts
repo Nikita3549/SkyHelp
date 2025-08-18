@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 import { CreateClaimDto } from './dto/create-claim.dto';
 import { ClaimService } from './claim.service';
-import { INVALID_CLAIM_ID, INVALID_ICAO } from './constants';
+import { FINAL_STEP, INVALID_CLAIM_ID, INVALID_ICAO } from './constants';
 import { JwtAuthGuard } from '../../guards/jwtAuth.guard';
 import { AuthRequest } from '../../interfaces/AuthRequest.interface';
 import { GetCompensationDto } from './dto/get-compensation.dto';
@@ -227,7 +227,7 @@ export class PublicClaimController {
 
         const claim = await this.claimService.updateStep(claimId, step);
 
-        if (step == 9) {
+        if (step == FINAL_STEP) {
             await this.notificationService.sendClaimCreated(
                 claim.customer.email,
                 {

@@ -1,6 +1,6 @@
 import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
-import { CLAIM_QUEUE_KEY, INVALID_CLAIM_ID } from '../constants';
+import { CLAIM_QUEUE_KEY, FINAL_STEP, INVALID_CLAIM_ID } from '../constants';
 import { NotificationService } from '../../notification/notification.service';
 import { IJobData } from '../interfaces/job-data.interface';
 import { ClaimService } from '../claim.service';
@@ -31,7 +31,7 @@ export class ClaimFollowupProcessor extends WorkerHost {
             throw new Error(INVALID_CLAIM_ID);
         }
 
-        if (claim.step == 10 || claim.archived) {
+        if (claim.step == FINAL_STEP || claim.archived) {
             return;
         }
 
