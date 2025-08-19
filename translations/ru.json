@@ -3511,5 +3511,14 @@
     "ZohoSigningIframe.retry": "Повторить",
     "ZohoSigningIframe.loadingInterface": "Загрузка интерфейса подписи...",
     "SkipPayment.toastTitle": "Вы можете добавить платежные данные позже",
-    "SkipPayment.toastDescription": "Мы запросим платежную информацию, когда ваша заявка будет одобрена."
+    "SkipPayment.toastDescription": "Мы запросим платежную информацию, когда ваша заявка будет одобрена.",
+    "FlightDetailsCard.otherPassengers": "Дополнительные пассажиры",
+    "FlightDetailsCard.email": "Электронная почта",
+    "FlightDetailsCard.address": "Адрес",
+    "FlightDetailsCard.city": "Город",
+    "FlightDetailsCard.country": "Страна",
+    "FlightDetailsCard.birthday": "Дата рождения",
+    "FlightDetailsCard.signed": "Подписано",
+    "FlightDetailsCard.yes": "Да",
+    "FlightDetailsCard.no": "Нет"
 }

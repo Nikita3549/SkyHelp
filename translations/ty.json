@@ -3532,5 +3532,14 @@
     "ZohoSigningIframe.retry": "Yeniden dene",
     "ZohoSigningIframe.loadingInterface": "İmzalama arayüzü yükleniyor...",
     "SkipPayment.toastTitle": "Ödeme bilgilerini daha sonra ekleyebilirsiniz",
-    "SkipPayment.toastDescription": "Talebiniz onaylandığında sizden ödeme bilgilerini isteyeceğiz."
+    "SkipPayment.toastDescription": "Talebiniz onaylandığında sizden ödeme bilgilerini isteyeceğiz.",
+    "FlightDetailsCard.otherPassengers": "Diğer yolcular",
+    "FlightDetailsCard.email": "E-posta",
+    "FlightDetailsCard.address": "Adres",
+    "FlightDetailsCard.city": "Şehir",
+    "FlightDetailsCard.country": "Ülke",
+    "FlightDetailsCard.birthday": "Doğum tarihi",
+    "FlightDetailsCard.signed": "İmzalandı",
+    "FlightDetailsCard.yes": "Evet",
+    "FlightDetailsCard.no": "Hayır"
 }

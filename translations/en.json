@@ -3511,5 +3511,14 @@
     "ZohoSigningIframe.retry": "Retry",
     "ZohoSigningIframe.loadingInterface": "Loading signing interface...",
     "SkipPayment.toastTitle": "You can add payment details later",
-    "SkipPayment.toastDescription": "We'll request payment information when your claim is approved."
+    "SkipPayment.toastDescription": "We'll request payment information when your claim is approved.",
+    "FlightDetailsCard.otherPassengers": "Additional passengers",
+    "FlightDetailsCard.email": "Email",
+    "FlightDetailsCard.address": "Address",
+    "FlightDetailsCard.city": "City",
+    "FlightDetailsCard.country": "Country",
+    "FlightDetailsCard.birthday": "Birthday",
+    "FlightDetailsCard.signed": "Signed",
+    "FlightDetailsCard.yes": "Yes",
+    "FlightDetailsCard.no": "No"
 }

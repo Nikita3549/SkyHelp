@@ -3512,5 +3512,14 @@
     "ZohoSigningIframe.retry": "Reîncearcă",
     "ZohoSigningIframe.loadingInterface": "Se încarcă interfața de semnare...",
     "SkipPayment.toastTitle": "Poți adăuga detaliile de plată mai târziu",
-    "SkipPayment.toastDescription": "Vom solicita informațiile de plată atunci când cererea ta va fi aprobată."
+    "SkipPayment.toastDescription": "Vom solicita informațiile de plată atunci când cererea ta va fi aprobată.",
+    "FlightDetailsCard.otherPassengers": "Pasageri suplimentari",
+    "FlightDetailsCard.email": "Email",
+    "FlightDetailsCard.address": "Adresă",
+    "FlightDetailsCard.city": "Oraș",
+    "FlightDetailsCard.country": "Țară",
+    "FlightDetailsCard.birthday": "Data nașterii",
+    "FlightDetailsCard.signed": "Semnat",
+    "FlightDetailsCard.yes": "Da",
+    "FlightDetailsCard.no": "Nu"
 }
