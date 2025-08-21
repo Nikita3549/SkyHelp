@@ -3560,5 +3560,6 @@
     "DocumentsTab.guidelines.format": "Lütfen belgeleri PDF, JPG veya PNG formatında yükleyin",
     "DocumentsTab.guidelines.size": "Maksimum dosya boyutu belge başına 10MB'dir",
     "DocumentsTab.guidelines.legible": "Tüm belgelerin okunaklı olduğundan emin olun",
-    "DocumentsTab.guidelines.nameMatch": "Kimlik belgeleri talepteki yolcu adıyla eşleşmelidir"
+    "DocumentsTab.guidelines.nameMatch": "Kimlik belgeleri talepteki yolcu adıyla eşleşmelidir",
+    "Dashboard.setupPassword": "Şifreyi sıfırla"
 }

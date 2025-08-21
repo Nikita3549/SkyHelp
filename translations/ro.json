@@ -3540,5 +3540,6 @@
     "DocumentsTab.guidelines.format": "Te rugăm să încarci documente în format PDF, JPG sau PNG",
     "DocumentsTab.guidelines.size": "Dimensiunea maximă a fișierului este de 10MB per document",
     "DocumentsTab.guidelines.legible": "Asigură-te că toate documentele sunt lizibile",
-    "DocumentsTab.guidelines.nameMatch": "Documentele de identitate trebuie să corespundă cu numele pasagerului din cerere"
+    "DocumentsTab.guidelines.nameMatch": "Documentele de identitate trebuie să corespundă cu numele pasagerului din cerere",
+    "Dashboard.setupPassword": "Resetează parola"
 }

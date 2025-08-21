@@ -3539,5 +3539,6 @@
     "DocumentsTab.guidelines.format": "Пожалуйста, загружайте документы в формате PDF, JPG или PNG",
     "DocumentsTab.guidelines.size": "Максимальный размер файла — 10 МБ на документ",
     "DocumentsTab.guidelines.legible": "Убедитесь, что все документы читаемы",
-    "DocumentsTab.guidelines.nameMatch": "Документы удостоверяющие личность должны совпадать с именем пассажира в заявке"
+    "DocumentsTab.guidelines.nameMatch": "Документы удостоверяющие личность должны совпадать с именем пассажира в заявке",
+    "Dashboard.setupPassword": "Сбросить пароль"
 }
