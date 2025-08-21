@@ -78,18 +78,24 @@ export class PublicClaimController {
         let userId = getAuthJwt(req);
 
         if (!userId) {
+            const user = await this.userService.getUserByEmail(
+                dto.customer.email,
+            );
+
             const password = this.authService.generatePassword();
 
             const hashedPassword =
                 await this.authService.hashPassword(password);
 
-            const user = await this.userService.saveUser({
-                email: dto.customer.email,
-                hashedPassword,
-                name: dto.customer.firstName,
-                secondName: dto.customer.lastName,
-            });
-            userId = user.id;
+            if (!user) {
+                const newUser = await this.userService.saveUser({
+                    email: dto.customer.email,
+                    hashedPassword,
+                    name: dto.customer.firstName,
+                    secondName: dto.customer.lastName,
+                });
+                userId = newUser.id;
+            }
 
             this.notificationService.sendNewGeneratedAccount(
                 dto.customer.email,
