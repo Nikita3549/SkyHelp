@@ -75,13 +75,42 @@ export class PublicClaimController {
         @Query() query: LanguageQueryDto,
     ): Promise<IClaimWithJwt> {
         const { language } = query;
-        let user = getAuthJwt(req);
+        let userId = getAuthJwt(req);
 
-        if (user) {
-            user = this.tokenService.verifyJWT<IJwtPayload>(user).id;
+        if (!userId) {
+            const user = await this.userService.getUserByEmail(
+                dto.customer.email,
+            );
+
+            const password = this.authService.generatePassword();
+
+            const hashedPassword =
+                await this.authService.hashPassword(password);
+
+            if (!user) {
+                const user = await this.userService.saveUser({
+                    email: dto.customer.email,
+                    hashedPassword,
+                    name: dto.customer.firstName,
+                    secondName: dto.customer.lastName,
+                });
+                userId = user.id;
+            }
+
+            this.notificationService.sendNewGeneratedAccount(
+                dto.customer.email,
+                {
+                    email: dto.customer.email,
+                    password,
+                },
+            );
         }
 
-        const claim = await this.claimService.createClaim(dto, user);
+        if (userId) {
+            userId = this.tokenService.verifyJWT<IJwtPayload>(userId).id;
+        }
+
+        const claim = await this.claimService.createClaim(dto, userId);
 
         const jwt = this.tokenService.generateJWT<IClaimJwt>(
             {
@@ -241,34 +270,6 @@ export class PublicClaimController {
                 },
                 true, // deprecated param
                 language,
-            );
-
-            const user = await this.userService.getUserByEmail(
-                claim.customer.email,
-            );
-
-            const password = this.authService.generatePassword();
-
-            const hashedPassword =
-                await this.authService.hashPassword(password);
-
-            if (!user) {
-                await this.userService.saveUser({
-                    email: claim.customer.email,
-                    hashedPassword,
-                    name: claim.customer.firstName,
-                    secondName: claim.customer.lastName,
-                });
-            } else {
-                await this.claimService.connectWithUser(claimId, user.id);
-            }
-
-            this.notificationService.sendNewGeneratedAccount(
-                claim.customer.email,
-                {
-                    email: claim.customer.email,
-                    password,
-                },
             );
         }
 
