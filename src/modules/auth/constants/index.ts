@@ -32,3 +32,5 @@ export const CORRECT_CODE = 'Code is correct';
 export const PASSWORD_WAS_CHANGED_SUCCESS = 'Password was changed successful';
 
 export const INVALID_USER_ID = 'Invalid user uuid';
+
+export const DEFAULT_GENERATED_PASSWORD_LENGTH = 16;

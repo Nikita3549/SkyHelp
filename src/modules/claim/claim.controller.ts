@@ -39,6 +39,8 @@ import { validateClaimJwt } from '../../utils/validate-claim-jwt';
 import { IFullClaim } from './interfaces/full-claim.interface';
 import { DocumentType } from '@prisma/client';
 import { UploadFormSignDto } from './dto/upload-form-sign-dto';
+import { UserService } from '../user/user.service';
+import { AuthService } from '../auth/auth.service';
 
 @Controller('claims')
 @UseGuards(JwtAuthGuard)
@@ -62,6 +64,8 @@ export class PublicClaimController {
         private readonly configService: ConfigService,
         private readonly documentService: DocumentService,
         private readonly customerService: CustomerService,
+        private readonly userService: UserService,
+        private readonly authService: AuthService,
     ) {}
 
     @Post()
@@ -88,7 +92,7 @@ export class PublicClaimController {
 
         const continueClaimLink = `${this.configService.getOrThrow('FRONTEND_HOST')}/claim?claimId=${claim.id}&jwt=${jwt}`;
 
-        await this.claimService.scheduleClaimFollowUpEmails({
+        this.claimService.scheduleClaimFollowUpEmails({
             email: claim.customer.email,
             claimId: claim.id,
             language,
@@ -232,11 +236,39 @@ export class PublicClaimController {
                 claim.customer.email,
                 {
                     id: claim.id,
-                    link: `${this.configService.getOrThrow('FRONTEND_HOST')}/${claim.userId ? 'dashboard' : `register?claim=${jwt}&email=${claim.customer.email}`}`,
+                    link: `${this.configService.getOrThrow('FRONTEND_HOST')}/dashboard}`,
                     airlineName: claim.details.airlines.name,
                 },
-                !!claim.userId,
+                true, // deprecated param
                 language,
+            );
+
+            const user = await this.userService.getUserByEmail(
+                claim.customer.email,
+            );
+
+            const password = this.authService.generatePassword();
+
+            const hashedPassword =
+                await this.authService.hashPassword(password);
+
+            if (!user) {
+                await this.userService.saveUser({
+                    email: claim.customer.email,
+                    hashedPassword,
+                    name: claim.customer.firstName,
+                    secondName: claim.customer.lastName,
+                });
+            } else {
+                await this.claimService.connectWithUser(claimId, user.id);
+            }
+
+            this.notificationService.sendNewGeneratedAccount(
+                claim.customer.email,
+                {
+                    email: claim.customer.email,
+                    password,
+                },
             );
         }
 

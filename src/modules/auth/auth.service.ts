@@ -6,8 +6,10 @@ import {
     FORGOT_PASSWORD_CODE_TTL,
     REDIS_REGISTER_DATA_KEY_POSTFIX,
     REDIS_RESET_PASSWORD_CODE_KEY_POSTFIX,
+    DEFAULT_GENERATED_PASSWORD_LENGTH,
 } from './constants';
 import * as bcrypt from 'bcryptjs';
+import * as crypto from 'crypto';
 
 @Injectable()
 export class AuthService {
@@ -85,5 +87,13 @@ export class AuthService {
             return;
         }
         new Error("Redis error. Data from redis doesn't match save pattern");
+    }
+
+    generatePassword(length = DEFAULT_GENERATED_PASSWORD_LENGTH) {
+        return crypto
+            .randomBytes(length)
+            .toString('base64')
+            .slice(0, length)
+            .replace(/[+/]/g, 'A');
     }
 }

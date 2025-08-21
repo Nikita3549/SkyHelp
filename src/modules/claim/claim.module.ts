@@ -20,6 +20,8 @@ import { AdminModule } from './admin/admin.module';
 import { AdminController } from './admin/admin.controller';
 import { ClaimGateway } from './claim.gateway';
 import { EmailResumeClickModule } from '../email-resume-click/email-resume-click.module';
+import { UserModule } from '../user/user.module';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
     imports: [
@@ -32,6 +34,8 @@ import { EmailResumeClickModule } from '../email-resume-click/email-resume-click
             name: CLAIM_QUEUE_KEY,
         }),
         ProgressModule,
+        UserModule,
+        forwardRef(() => AuthModule),
         forwardRef(() => DocumentModule),
         forwardRef(() => StateModule),
         forwardRef(() => CustomerModule),

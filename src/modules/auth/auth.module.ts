@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RedisModule } from '../redis/redis.module';
 import { AuthController } from './auth.controller';
@@ -15,7 +15,7 @@ import { ClaimModule } from '../claim/claim.module';
         TokenModule,
         NotificationModule,
         PassportModule,
-        ClaimModule,
+        forwardRef(() => ClaimModule),
     ],
     controllers: [AuthController],
     providers: [AuthService],

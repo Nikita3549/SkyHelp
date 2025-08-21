@@ -23,6 +23,34 @@ export class NotificationService {
         );
     }
 
+    async sendNewGeneratedAccount(
+        to: string,
+        userData: {
+            email: string;
+            password: string;
+        },
+    ) {
+        !isProd() &&
+            console.log(
+                `User data send: ${userData.email}, ${userData.password} on ${to}`,
+            );
+
+        await this.gmailService.noreply.sendEmail(
+            to,
+            'Your SkyHelp account details',
+            `
+Your account has been created successfully.
+Here are your login details:
+Email: ${userData.email}
+Password: ${userData.password}
+Please keep this information safe and do not share it with anyone.
+If you need to reset your password, use this link: ${this.configService.getOrThrow('FRONTEND_HOST')}/forgot
+
+Best regards,
+SkyHelp`,
+        );
+    }
+
     async sendForgotPasswordCode(to: string, code: number) {
         !isProd() && console.log(`Send forgot password code: ${code} on ${to}`);
 
@@ -74,7 +102,7 @@ This message was automatically generated.
             airlineName: string;
             link: string;
         },
-        isRegistered: boolean,
+        isRegistered: boolean, // deprecated param
         language: Languages = Languages.EN,
     ) {
         if (!isProd()) return;

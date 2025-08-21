@@ -3539,5 +3539,5 @@
     "DocumentsTab.guidelines.format": "Please upload documents in PDF, JPG, or PNG format",
     "DocumentsTab.guidelines.size": "Maximum file size is 10MB per document",
     "DocumentsTab.guidelines.legible": "Ensure all documents are clearly legible",
-    "DocumentsTab.guidelines.nameMatch": "ID documents must match the passenger name in the claim"    
+    "DocumentsTab.guidelines.nameMatch": "ID documents must match the passenger name in the claim"
 }
