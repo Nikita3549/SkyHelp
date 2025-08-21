@@ -75,19 +75,24 @@ export class PublicClaimController {
         @Query() query: LanguageQueryDto,
     ): Promise<IClaimWithJwt> {
         const { language } = query;
-        let userId = getAuthJwt(req);
+        let userId: string | null | undefined;
+
+        const jwtPayload = getAuthJwt(req);
+        if (jwtPayload) {
+            userId = this.tokenService.verifyJWT<IJwtPayload>(jwtPayload).id;
+        }
 
         if (!userId) {
             const user = await this.userService.getUserByEmail(
                 dto.customer.email,
             );
 
-            const password = this.authService.generatePassword();
-
-            const hashedPassword =
-                await this.authService.hashPassword(password);
-
             if (!user) {
+                const password = this.authService.generatePassword();
+
+                const hashedPassword =
+                    await this.authService.hashPassword(password);
+
                 const newUser = await this.userService.saveUser({
                     email: dto.customer.email,
                     hashedPassword,
@@ -95,19 +100,16 @@ export class PublicClaimController {
                     secondName: dto.customer.lastName,
                 });
                 userId = newUser.id;
+
+                this.notificationService.sendNewGeneratedAccount(
+                    dto.customer.email,
+                    {
+                        email: dto.customer.email,
+                        password,
+                    },
+                    language,
+                );
             }
-
-            this.notificationService.sendNewGeneratedAccount(
-                dto.customer.email,
-                {
-                    email: dto.customer.email,
-                    password,
-                },
-            );
-        }
-
-        if (userId) {
-            userId = this.tokenService.verifyJWT<IJwtPayload>(userId).id;
         }
 
         const claim = await this.claimService.createClaim(dto, userId);

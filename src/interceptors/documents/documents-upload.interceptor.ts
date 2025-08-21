@@ -3,12 +3,13 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import * as path from 'path';
 import { ALLOWED_EXTENSIONS, MAX_FILE_SIZE, MAX_FILES } from './constants';
+import { UPLOAD_DIRECTORY_PATH } from '../../constants/UploadsDirectoryPath';
 
 export function DocumentsUploadInterceptor() {
     return UseInterceptors(
         FilesInterceptor('documents', MAX_FILES, {
             storage: diskStorage({
-                destination: path.join(__dirname, '../../../uploads'),
+                destination: UPLOAD_DIRECTORY_PATH,
                 filename: (_req, file, cb) => {
                     const uniqueSuffix =
                         Date.now() + '-' + Math.round(Math.random() * 1e9);

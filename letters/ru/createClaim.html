@@ -1,65 +1,42 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-  <meta charset="UTF-8" />
-  <title>SkyHelp — Заявка отправлена</title>
-</head>
-<body style="background-color: #f9fafb; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #1f2937; margin: 0; padding: 0;">
-<div style="max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);">
-  <div style="background-color: #3b82f6; padding: 32px; text-align: center;">
-    <img src="https://skyhelp.md/footer/logo.png" alt="SkyHelp" style="max-height: 48px;" />
-  </div>
-  <div style="padding: 32px;">
-    <h1 style="font-size: 24px; font-weight: 700; margin: 0 0 16px; color: #1e3a8a;">Спасибо за подачу заявки!</h1>
-    <p style="font-size: 15px; line-height: 1.6;">ID вашей заявки: <strong>#{{claimId}}</strong>.</p>
+<h1 style="font-size: 24px; font-weight: 700; margin: 0 0 16px; color: #1e3a8a;">Спасибо за подачу заявки!</h1>
+<p style="font-size: 15px; line-height: 1.6;">ID вашей заявки: <strong>#{{claimId}}</strong>.</p>
 
-    <div style="display: flex; gap: 16px; margin-bottom: 24px; align-items: flex-start;">
-      <div>
-        <div style="font-weight: 600; font-size: 15px; margin-bottom: 4px; color: #111827;">1. Подготавливаем дело</div>
-        <div style="font-size: 14px; color: #374151;">Мы собираем все документы и подаём дело в <strong>{{airlineName}}</strong>.</div>
-      </div>
-    </div>
-
-    <div style="display: flex; gap: 16px; margin-bottom: 24px; align-items: flex-start;">
-      <div>
-        <div style="font-weight: 600; font-size: 15px; margin-bottom: 4px; color: #111827;">2. Ведём переговоры</div>
-        <div style="font-size: 14px; color: #374151;">Наши юристы связываются с {{airlineName}} и добиваются результата.</div>
-      </div>
-    </div>
-
-    <div style="display: flex; gap: 16px; margin-bottom: 24px; align-items: flex-start;">
-      <div>
-        <div style="font-weight: 600; font-size: 15px; margin-bottom: 4px; color: #111827;">3. Держим в курсе</div>
-        <div style="font-size: 14px; color: #374151;">Вы будете получать письма об изменениях. Также всё доступно в Личном кабинете.</div>
-      </div>
-    </div>
-
-    <div style="display: flex; gap: 16px; margin-bottom: 24px; align-items: flex-start;">
-      <div>
-        <div style="font-weight: 600; font-size: 15px; margin-bottom: 4px; color: #111827;">4. Юридическая поддержка</div>
-        <div style="font-size: 14px; color: #374151;">Если {{airlineName}} игнорирует запрос — мы подаём в суд. Без дополнительных затрат для вас.</div>
-      </div>
-    </div>
-
-    <div style="display: flex; gap: 16px; margin-bottom: 24px; align-items: flex-start;">
-      <div>
-        <div style="font-weight: 600; font-size: 15px; margin-bottom: 4px; color: #111827;">5. Выплата</div>
-        <div style="font-size: 14px; color: #374151;">После одобрения заявки компенсация переводится на ваш банковский счёт.</div>
-      </div>
-    </div>
-
-    <div style="background-color: #eff6ff; padding: 16px; border-radius: 12px; margin-top: 32px; font-size: 14px; color: #2563eb;">
-      Нужна помощь? Посетите наш <a href="https://skyhelp.md/#faq" style="color: #3b82f6; text-decoration: underline;">Центр поддержки</a>.
-    </div>
-
-    <div style="text-align: center; margin-top: 40px;">
-      <a href="{{claimLink}}" style="display: inline-block; padding: 14px 28px; background-color: #3b82f6; color: #fff; text-decoration: none; font-weight: 600; border-radius: 9999px; font-size: 15px; {{registered}}">Посмотреть статус заявки</a>
-      <a href="{{claimLink}}" style="display: inline-block; padding: 14px 28px; background-color: #3b82f6; color: #fff; text-decoration: none; font-weight: 600; border-radius: 9999px; font-size: 15px; {{notRegistered}}">Зарегистрироваться и отслеживать заявку</a>
-    </div>
-  </div>
-  <div style="font-size: 12px; color: #9ca3af; text-align: center; padding: 24px; background-color: #f3f4f6; border-top: 1px solid #e5e7eb;">
-    © 2025 SkyHelp • <a href="https://skyhelp.md/privacy-policy" style="color: #3b82f6; text-decoration: underline;">Политика конфиденциальности</a> • <a href="https://skyhelp.md/terms" style="color: #3b82f6; text-decoration: underline;">Условия использования</a>
+<div style="display: flex; gap: 16px; margin-bottom: 24px; align-items: flex-start;">
+  <div>
+    <div style="font-weight: 600; font-size: 15px; margin-bottom: 4px; color: #111827;">1. Подготавливаем дело</div>
+    <div style="font-size: 14px; color: #374151;">Мы собираем все документы и подаём дело в <strong>{{airlineName}}</strong>.</div>
   </div>
 </div>
-</body>
-</html>
+
+<div style="display: flex; gap: 16px; margin-bottom: 24px; align-items: flex-start;">
+  <div>
+    <div style="font-weight: 600; font-size: 15px; margin-bottom: 4px; color: #111827;">2. Ведём переговоры</div>
+    <div style="font-size: 14px; color: #374151;">Наши юристы связываются с {{airlineName}} и добиваются результата.</div>
+  </div>
+</div>
+
+<div style="display: flex; gap: 16px; margin-bottom: 24px; align-items: flex-start;">
+  <div>
+    <div style="font-weight: 600; font-size: 15px; margin-bottom: 4px; color: #111827;">3. Держим в курсе</div>
+    <div style="font-size: 14px; color: #374151;">Вы будете получать письма об изменениях. Также всё доступно в Личном кабинете.</div>
+  </div>
+</div>
+
+<div style="display: flex; gap: 16px; margin-bottom: 24px; align-items: flex-start;">
+  <div>
+    <div style="font-weight: 600; font-size: 15px; margin-bottom: 4px; color: #111827;">4. Юридическая поддержка</div>
+    <div style="font-size: 14px; color: #374151;">Если {{airlineName}} игнорирует запрос — мы подаём в суд. Без дополнительных затрат для вас.</div>
+  </div>
+</div>
+
+<div style="display: flex; gap: 16px; margin-bottom: 24px; align-items: flex-start;">
+  <div>
+    <div style="font-weight: 600; font-size: 15px; margin-bottom: 4px; color: #111827;">5. Выплата</div>
+    <div style="font-size: 14px; color: #374151;">После одобрения заявки компенсация переводится на ваш банковский счёт.</div>
+  </div>
+</div>
+
+<div style="text-align: center; margin-top: 40px;">
+  <a href="{{claimLink}}" style="display: inline-block; padding: 14px 28px; background-color: #3b82f6; color: #fff; text-decoration: none; font-weight: 600; border-radius: 9999px; font-size: 15px; {{registered}}">Посмотреть статус заявки</a>
+  <a href="{{claimLink}}" style="display: inline-block; padding: 14px 28px; background-color: #3b82f6; color: #fff; text-decoration: none; font-weight: 600; border-radius: 9999px; font-size: 15px; {{notRegistered}}">Зарегистрироваться и отслеживать заявку</a>
+</div>

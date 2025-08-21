@@ -1,9 +1,4 @@
-import {
-    HttpStatus,
-    Injectable,
-    InternalServerErrorException,
-    OnModuleInit,
-} from '@nestjs/common';
+import { HttpStatus, Injectable, OnModuleInit } from '@nestjs/common';
 import { Interval } from '@nestjs/schedule';
 import { FIFTY_MINUTES, REFRESH_ACCESS_TOKEN_ATTEMPTS } from './constants';
 import axios, { AxiosError } from 'axios';
@@ -16,6 +11,7 @@ import * as path from 'path';
 import * as fs from 'fs/promises';
 import { IAssignmentData } from './interfaces/assignment-data.interface';
 import { isProd } from '../../utils/isProd';
+import { UPLOAD_DIRECTORY_PATH } from '../../constants/UploadsDirectoryPath';
 
 @Injectable()
 export class ZohoService implements OnModuleInit {
@@ -251,8 +247,7 @@ export class ZohoService implements OnModuleInit {
 
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
         const fileName = `${uniqueSuffix}.pdf`;
-        const uploadDir = path.join(__dirname, '../../../uploads');
-        const filePath = path.join(uploadDir, fileName);
+        const filePath = path.join(UPLOAD_DIRECTORY_PATH, fileName);
 
         await fs.writeFile(filePath, res.data);
 

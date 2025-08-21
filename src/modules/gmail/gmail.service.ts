@@ -10,12 +10,12 @@ import { AttachmentNotFoundError } from './errors/attachment-not-found.error';
 import { ParsedMailbox, parseOneAddress } from 'email-addresses';
 import * as path from 'path';
 import * as fs from 'fs/promises';
-import { PrismaService } from '../prisma/prisma.service';
 import { ClaimService } from '../claim/claim.service';
 import { GmailOfficeAccountService } from './accounts/gmail-office-account/gmail-office-account.service';
 import { AttachmentService } from './attachment/attachment.service';
 import { EmailService } from './email/email.service';
 import { GmailNoreplyAccountService } from './accounts/gmail-noreply-account/gmail-noreply-account.service';
+import { UPLOAD_DIRECTORY_PATH } from '../../constants/UploadsDirectoryPath';
 
 @Injectable()
 export class GmailService implements OnModuleInit {
@@ -384,7 +384,7 @@ export class GmailService implements OnModuleInit {
         const ext = path.extname(file.filename);
         const fileName = `${uniqueSuffix}${ext}`;
 
-        const uploadDir = path.join(__dirname, '../../../uploads');
+        const uploadDir = UPLOAD_DIRECTORY_PATH;
 
         await fs.mkdir(uploadDir, { recursive: true });
 

@@ -5,6 +5,12 @@ import { Languages } from '../language/enums/languages.enums';
 import { ConfigService } from '@nestjs/config';
 import { isProd } from '../../utils/isProd';
 import { GmailService } from '../gmail/gmail.service';
+import {
+    CREATE_CLAIM_FILENAME,
+    FINISH_CLAIM_FILENAME,
+    GENERATE_NEW_ACCOUNT_FILENAME,
+} from './constants';
+import { LETTERS_DIRECTORY_PATH } from '../../constants/LettersDirectoryPath';
 
 @Injectable()
 export class NotificationService {
@@ -29,25 +35,34 @@ export class NotificationService {
             email: string;
             password: string;
         },
+        language: Languages = Languages.EN,
     ) {
         !isProd() &&
             console.log(
                 `User data send: ${userData.email}, ${userData.password} on ${to}`,
             );
 
-        await this.gmailService.noreply.sendEmail(
+        const letterContentHtml = (
+            await this.getLetterContent(GENERATE_NEW_ACCOUNT_FILENAME, language)
+        )
+            .replace('{{email}}', userData.email)
+            .replace('{{password}}', userData.password)
+            .replace(
+                '{{resetPasswordLink}}',
+                `${this.configService.getOrThrow('FRONTEND_HOST')}/forgot`,
+            );
+
+        const layoutHtml = await this.getLayout(language);
+
+        const letterHtml = this.setContentInLayout(
+            letterContentHtml,
+            layoutHtml,
+        );
+
+        await this.gmailService.noreply.sendEmailHtml(
             to,
             'Your SkyHelp account details',
-            `
-Your account has been created successfully.
-Here are your login details:
-Email: ${userData.email}
-Password: ${userData.password}
-Please keep this information safe and do not share it with anyone.
-If you need to reset your password, use this link: ${this.configService.getOrThrow('FRONTEND_HOST')}/forgot
-
-Best regards,
-SkyHelp`,
+            letterHtml,
         );
     }
 
@@ -105,13 +120,12 @@ This message was automatically generated.
         isRegistered: boolean, // deprecated param
         language: Languages = Languages.EN,
     ) {
-        if (!isProd()) return;
-        const letterTemplate = await this.getLetterTemplate(
-            'createClaim.html',
+        const letterTemplateHtml = await this.getLetterContent(
+            CREATE_CLAIM_FILENAME,
             language,
         );
 
-        const letter = letterTemplate
+        const letterContentHtml = letterTemplateHtml
             .replace('{{claimId}}', claimData.id)
             .replace('{{airlineName}}', claimData.airlineName)
             .replace('{{airlineName}}', claimData.airlineName)
@@ -121,10 +135,17 @@ This message was automatically generated.
             .replace('{{registered}}', isRegistered ? '' : 'display: none;')
             .replace('{{notRegistered}}', isRegistered ? 'display: none;' : '');
 
+        const layoutHtml = await this.getLayout(language);
+
+        const letterHtml = this.setContentInLayout(
+            letterContentHtml,
+            layoutHtml,
+        );
+
         await this.gmailService.noreply.sendEmailHtml(
             to,
             `Your claim successfully submitted #${claimData.id}`,
-            letter,
+            letterHtml,
         );
     }
 
@@ -139,12 +160,13 @@ This message was automatically generated.
         language: Languages = Languages.EN,
     ) {
         if (!isProd()) return;
-        const letterTemplate = await this.getLetterTemplate(
-            'finishClaim.html',
+
+        const letterTemplateHtml = await this.getLetterContent(
+            FINISH_CLAIM_FILENAME,
             language,
         );
 
-        const letter = letterTemplate
+        const letterContentHtml = letterTemplateHtml
             .replace('{{clientName}}', claimData.clientFirstName)
             .replace(
                 '{{compensationAmount}}',
@@ -161,24 +183,42 @@ This message was automatically generated.
                 claimData.compensation == 0 ? 'display: none;' : '',
             );
 
+        const layoutHtml = await this.getLayout(language);
+
+        const letterHtml = this.setContentInLayout(
+            letterContentHtml,
+            layoutHtml,
+        );
+
         await this.gmailService.noreply.sendEmailHtml(
             to,
             'Just one step away from your compensation',
-            letter,
+            letterHtml,
         );
     }
 
-    private async getLetterTemplate(
+    private async getLetterContent(
         fileName: string,
         language: Languages = Languages.EN,
     ): Promise<string> {
         return (
             await fs.readFile(
-                path.join(
-                    __dirname,
-                    `../../../letters/${language}/${fileName}`,
-                ),
+                path.join(LETTERS_DIRECTORY_PATH, `${language}/${fileName}`),
             )
         ).toString();
+    }
+
+    private async getLayout(
+        language: Languages = Languages.EN,
+    ): Promise<string> {
+        return (
+            await fs.readFile(
+                path.join(LETTERS_DIRECTORY_PATH, `layout/${language}.html`),
+            )
+        ).toString();
+    }
+
+    private setContentInLayout(content: string, layout: string): string {
+        return layout.replace('{{{content}}}', content);
     }
 }

@@ -74,7 +74,7 @@ export class ClaimService {
 
     async createClaim(
         claim: CreateClaimDto,
-        userId: string | null,
+        userId?: string | null,
     ): Promise<IFullClaim> {
         const maxAttempts = 5;
         for (let attempt = 0; attempt < maxAttempts; attempt++) {

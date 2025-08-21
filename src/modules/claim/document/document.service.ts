@@ -4,6 +4,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import { PDFDocument, rgb } from 'pdf-lib';
+import { UPLOAD_DIRECTORY_PATH } from '../../../constants/UploadsDirectoryPath';
 const fontkit = require('fontkit'); // fix fonkit bug
 
 @Injectable()
@@ -170,8 +171,7 @@ export class DocumentService {
 
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
         const fileName = `${uniqueSuffix}.pdf`;
-        const uploadDir = path.join(__dirname, '../../../../uploads');
-        const filePath = path.join(uploadDir, fileName);
+        const filePath = path.join(UPLOAD_DIRECTORY_PATH, fileName);
 
         await fs.writeFile(filePath, pdfBytes);
 
