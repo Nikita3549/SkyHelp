@@ -8,6 +8,7 @@ import {
     Patch,
     Put,
     Query,
+    Req,
     UseGuards,
 } from '@nestjs/common';
 import { IsModeratorGuard } from '../../../guards/isModerator.guard';
@@ -21,9 +22,11 @@ import { AddPartnerDto } from './dto/add-partner.dto';
 import { UserService } from '../../user/user.service';
 import { UserRole } from '@prisma/client';
 import { INVALID_PARTNER_ID } from './constants';
+import { IsPartnerGuard } from '../../../guards/isPartner.guard';
+import { AuthRequest } from '../../../interfaces/AuthRequest.interface';
 
 @Controller('claims/admin')
-@UseGuards(JwtAuthGuard, IsModeratorGuard)
+@UseGuards(JwtAuthGuard, IsPartnerGuard)
 export class AdminController {
     constructor(
         private readonly claimService: ClaimService,
@@ -31,7 +34,7 @@ export class AdminController {
     ) {}
 
     @Get()
-    async getClaims(@Query() query: GetClaimsQuery) {
+    async getClaims(@Query() query: GetClaimsQuery, @Req() req: AuthRequest) {
         const {
             userId,
             page,
@@ -43,25 +46,32 @@ export class AdminController {
             icao,
         } = query;
 
-        return this.claimService.getUserClaims(userId, +page, {
-            archived: archived == undefined ? undefined : archived == 'yes',
-            date: endDate &&
-                startDate && {
-                    start: startDate,
-                    end: endDate,
-                },
-            status,
-            icao,
-            flightNumber,
-        });
+        return this.claimService.getUserClaims(
+            userId,
+            +page,
+            {
+                archived: archived == undefined ? undefined : archived == 'yes',
+                date: endDate &&
+                    startDate && {
+                        start: startDate,
+                        end: endDate,
+                    },
+                status,
+                icao,
+                flightNumber,
+            },
+            req.user.role == UserRole.PARTNER ? req.user.id : undefined,
+        );
     }
 
     @Get('stats')
+    @UseGuards(IsModeratorGuard)
     async getAdminClaimsStats(@Query('userId') userId?: string) {
         return this.claimService.getUserClaimsStats(userId);
     }
 
     @Patch(':claimId/archive')
+    @UseGuards(IsModeratorGuard)
     async archiveClaim(
         @Body() dto: ArchiveClaimDto,
         @Param('claimId') claimId: string,
@@ -78,6 +88,7 @@ export class AdminController {
     }
 
     @Get(':claimId')
+    @UseGuards(IsModeratorGuard)
     async getAdminClaim(@Param('claimId') claimId: string) {
         const claim = await this.claimService.getClaim(claimId);
 
@@ -89,6 +100,7 @@ export class AdminController {
     }
 
     @Put(':claimId')
+    @UseGuards(IsModeratorGuard)
     async updateClaim(
         @Body() dto: UpdateClaimDto,
         @Param('claimId') claimId: string,
@@ -101,6 +113,7 @@ export class AdminController {
     }
 
     @Patch(':claimId/partner')
+    @UseGuards(IsModeratorGuard)
     async addPartner(
         @Body() dto: AddPartnerDto,
         @Param('claimId') claimId: string,

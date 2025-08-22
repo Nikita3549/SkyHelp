@@ -1,14 +1,14 @@
 import { Body, Controller, Param, Put, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
-import { IsModeratorGuard } from '../../../guards/isModerator.guard';
 import { UpdateProgressDto } from './dto/update-progress.dto';
 import { ProgressService } from './progress.service';
+import { IsPartnerGuard } from '../../../guards/isPartner.guard';
 
 @Controller('claims/progresses')
 @UseGuards(JwtAuthGuard)
 export class ProgressController {
     constructor(private readonly progressesService: ProgressService) {}
-    @UseGuards(IsModeratorGuard)
+    @UseGuards(IsPartnerGuard)
     @Put(':progressId')
     async updateProgress(
         @Body() dto: UpdateProgressDto,

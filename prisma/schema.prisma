@@ -19,11 +19,10 @@ model User {
   createdAt      DateTime @default(now()) @map("created_at")
   updatedAt      DateTime @updatedAt @map("updated_at")
 
-
-  claims     Claim[] @relation("UserClaims")
-  claimsAsPartner Claim[] @relation("PartnerClaims")
-  messages   Message[]
-  membership ChatMember[]
+  claims          Claim[]      @relation("UserClaims")
+  claimsAsPartner Claim[]      @relation("PartnerClaims")
+  messages        Message[]
+  membership      ChatMember[]
 
   @@map("users")
 }
@@ -39,10 +38,10 @@ model Claim {
   id               String             @id @default(cuid()) @map("id")
   step             Int                @default(5)
   formState        String?            @default("") @map("form_state")
-  userId    String? @map("user_id")
-  user      User?    @relation("UserClaims", fields: [userId], references: [id], onDelete: Cascade)
-  partnerId String?
-  partner   User?    @relation("PartnerClaims", fields: [partnerId], references: [id], onDelete: Cascade)
+  userId           String?            @map("user_id")
+  user             User?              @relation("UserClaims", fields: [userId], references: [id], onDelete: Cascade)
+  partnerId        String?
+  partner          User?              @relation("PartnerClaims", fields: [partnerId], references: [id], onDelete: Cascade)
   detailsId        String             @map("details_id")
   details          ClaimDetails       @relation(fields: [detailsId], references: [id], onDelete: Cascade)
   stateId          String             @map("state_id")

@@ -56,9 +56,12 @@ export class ClaimGateway implements OnGatewayConnection {
     }
 
     @SubscribeMessage('claims')
-    handleMessage(_client: AuthSocket, dto: SearchClaimsDto) {
+    handleMessage(client: AuthSocket, dto: SearchClaimsDto) {
         const { search } = dto;
 
-        return this.claimService.searchClaims(search);
+        return this.claimService.searchClaims(
+            search,
+            client.data.role == UserRole.PARTNER ? client.data.id : undefined,
+        );
     }
 }
