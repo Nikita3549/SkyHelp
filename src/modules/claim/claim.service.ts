@@ -518,30 +518,6 @@ export class ClaimService {
         });
     }
 
-    async updateEnvelopeId(
-        claimId: string,
-        envelopeId: string,
-    ): Promise<IFullClaim> {
-        return this.prisma.claim.update({
-            data: {
-                envelopeId,
-            },
-            where: {
-                id: claimId,
-            },
-            include: this.fullClaimInclude(),
-        });
-    }
-
-    async getClaimByEnvelopeId(envelopeId: string): Promise<IFullClaim | null> {
-        return this.prisma.claim.findFirst({
-            where: {
-                envelopeId,
-            },
-            include: this.fullClaimInclude(),
-        });
-    }
-
     private fullClaimInclude() {
         return {
             details: {
@@ -625,72 +601,31 @@ export class ClaimService {
     }
 
     async searchClaims(search: string, page: number = 20) {
+        const normalized = search.replace(/\s+/g, '');
+
+        const ids = await this.prisma.$queryRaw<Array<{ id: string }>>`
+            SELECT "id"
+            FROM "Claim"
+            LEFT JOIN "Customer" ON "Claim"."customerId" = "Customer"."id"
+            LEFT JOIN "ClaimDetails" ON "ClaimDetails"."claimId" = "Claim"."id"
+            WHERE REPLACE("ClaimDetails"."bookingRef", ' ', '') ILIKE ${`%${normalized}%`}
+               OR REPLACE("ClaimDetails"."flightNumber", ' ', '') ILIKE ${`%${normalized}%`}
+               OR REPLACE("Customer"."phone", ' ', '') ILIKE ${`%${normalized}%`}
+               OR REPLACE("Customer"."email", ' ', '') ILIKE ${`%${normalized}%`}
+               OR REPLACE("Customer"."firstName", ' ', '') ILIKE ${`%${normalized}%`}
+               OR REPLACE("Customer"."lastName", ' ', '') ILIKE ${`%${normalized}%`}
+               OR REPLACE("Claim"."id"::text, ' ', '') ILIKE ${`%${normalized}%`}
+            ORDER BY "Claim"."createdAt" DESC
+            LIMIT ${page}
+          `;
+
         return this.prisma.claim.findMany({
-            where: {
-                OR: [
-                    { id: search }, // exact id match
-                    {
-                        details: {
-                            OR: [
-                                {
-                                    bookingRef: {
-                                        contains: search.trim(),
-                                        mode: 'insensitive',
-                                    },
-                                },
-                                {
-                                    flightNumber: {
-                                        contains: search.trim(),
-                                        mode: 'insensitive',
-                                    },
-                                },
-                            ],
-                        },
-                    },
-                    {
-                        customer: {
-                            OR: [
-                                {
-                                    phone: {
-                                        contains: search,
-                                        mode: 'insensitive',
-                                    },
-                                },
-                                {
-                                    email: {
-                                        contains: search,
-                                        mode: 'insensitive',
-                                    },
-                                },
-                                {
-                                    firstName: {
-                                        contains: search,
-                                        mode: 'insensitive',
-                                    },
-                                },
-                                {
-                                    lastName: {
-                                        contains: search,
-                                        mode: 'insensitive',
-                                    },
-                                },
-                            ],
-                        },
-                    },
-                ],
-            },
+            where: { id: { in: ids.map((i) => i.id) } },
             include: this.fullClaimInclude(),
             orderBy: {
                 createdAt: 'desc',
             },
             take: page,
         });
-    }
-
-    private formatDateToDDMMYYYY(date: Date): string {
-        const dd = String(date.getDate()).padStart(2, '0');
-        const mm = String(date.getMonth() + 1).padStart(2, '0');
-        const yyyy = date.getFullYear();
-        return `${dd}.${mm}.${yyyy}`;
     }
 }
