@@ -3541,5 +3541,7 @@
     "DocumentsTab.guidelines.size": "Dimensiunea maximă a fișierului este de 10MB per document",
     "DocumentsTab.guidelines.legible": "Asigură-te că toate documentele sunt lizibile",
     "DocumentsTab.guidelines.nameMatch": "Documentele de identitate trebuie să corespundă cu numele pasagerului din cerere",
-    "Dashboard.setupPassword": "Resetează parola"
+    "Dashboard.setupPassword": "Resetează parola",
+    "ClaimsTable.actionArchive": "Arhivează",
+    "ClaimsTable.actionMoveToPartner": "Atribuie partenerului"
 }

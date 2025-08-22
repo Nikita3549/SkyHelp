@@ -3540,5 +3540,7 @@
     "DocumentsTab.guidelines.size": "Максимальный размер файла — 10 МБ на документ",
     "DocumentsTab.guidelines.legible": "Убедитесь, что все документы читаемы",
     "DocumentsTab.guidelines.nameMatch": "Документы удостоверяющие личность должны совпадать с именем пассажира в заявке",
-    "Dashboard.setupPassword": "Сбросить пароль"
+    "Dashboard.setupPassword": "Сбросить пароль",
+    "ClaimsTable.actionArchive": "Архивировать",
+    "ClaimsTable.actionMoveToPartner": "Назначить партнёру"
 }

@@ -3540,5 +3540,7 @@
     "DocumentsTab.guidelines.size": "Maximum file size is 10MB per document",
     "DocumentsTab.guidelines.legible": "Ensure all documents are clearly legible",
     "DocumentsTab.guidelines.nameMatch": "ID documents must match the passenger name in the claim",
-    "Dashboard.setupPassword": "Reset password"
+    "Dashboard.setupPassword": "Reset password",
+    "ClaimsTable.actionArchive": "Archive",
+    "ClaimsTable.actionMoveToPartner": "Assign to partner"
 }

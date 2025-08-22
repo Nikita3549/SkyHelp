@@ -3561,5 +3561,7 @@
     "DocumentsTab.guidelines.size": "Maksimum dosya boyutu belge başına 10MB'dir",
     "DocumentsTab.guidelines.legible": "Tüm belgelerin okunaklı olduğundan emin olun",
     "DocumentsTab.guidelines.nameMatch": "Kimlik belgeleri talepteki yolcu adıyla eşleşmelidir",
-    "Dashboard.setupPassword": "Şifreyi sıfırla"
+    "Dashboard.setupPassword": "Şifreyi sıfırla",
+    "ClaimsTable.actionArchive": "Arşivle",
+    "ClaimsTable.actionMoveToPartner": "Ortağa ata"
 }
