@@ -12,7 +12,6 @@ import {
     UploadedFiles,
     UseGuards,
 } from '@nestjs/common';
-import { IsModeratorGuard } from '../../../guards/isModerator.guard';
 import { DocumentsUploadInterceptor } from '../../../interceptors/documents/documents-upload.interceptor';
 import {
     CLAIM_NOT_FOUND,
@@ -34,6 +33,7 @@ import { UploadDocumentsJwtQueryDto } from './dto/upload-documents-jwt-query.dto
 import { AuthRequest } from '../../../interfaces/AuthRequest.interface';
 import { UploadDocumentsQueryDto } from './dto/upload-documents-query.dto';
 import { UpdateDocumentTypeDto } from './dto/update-document-type.dto';
+import { IsPartnerGuard } from '../../../guards/isPartner.guard';
 
 @Controller('claims/documents')
 @UseGuards(JwtAuthGuard)
@@ -43,7 +43,7 @@ export class DocumentController {
         private readonly claimService: ClaimService,
     ) {}
     @Post('admin')
-    @UseGuards(IsModeratorGuard)
+    @UseGuards(IsPartnerGuard)
     @DocumentsUploadInterceptor()
     async uploadAdminDocuments(
         @UploadedFiles() files: Express.Multer.File[],
@@ -70,7 +70,7 @@ export class DocumentController {
     }
 
     @Patch('/:documentId/admin')
-    @UseGuards(IsModeratorGuard)
+    @UseGuards(IsPartnerGuard)
     async updateDocumentType(
         @Body() dto: UpdateDocumentTypeDto,
         @Param('documentId') documentId: string,
@@ -81,7 +81,7 @@ export class DocumentController {
     }
 
     @Get('admin')
-    @UseGuards(IsModeratorGuard)
+    @UseGuards(IsPartnerGuard)
     async getDocumentAdmin(
         @Query() query: GetDocumentAdminDto,
         @Res() res: Response,
