@@ -20,6 +20,7 @@ export interface IFullClaim extends Claim {
     state: IClaimState;
     payment: ClaimPayment | null;
     documents: Document[];
+    partner: IPartner | null;
 }
 
 interface IClaimDetails extends ClaimDetails {
@@ -34,4 +35,10 @@ interface IClaimRoute extends Route {
 
 interface IClaimState extends ClaimState {
     progress: Progress[];
+}
+
+interface IPartner {
+    email: string;
+    name: string;
+    secondName: string;
 }
