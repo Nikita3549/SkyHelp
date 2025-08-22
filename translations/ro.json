@@ -3543,5 +3543,7 @@
     "DocumentsTab.guidelines.nameMatch": "Documentele de identitate trebuie să corespundă cu numele pasagerului din cerere",
     "Dashboard.setupPassword": "Resetează parola",
     "ClaimsTable.actionArchive": "Arhivează",
-    "ClaimsTable.actionMoveToPartner": "Atribuie partenerului"
+    "ClaimsTable.actionMoveToPartner": "Atribuie partenerului",
+    "UserRolesSection.partnerLabel": "Partener",
+    "UserRolesSection.partnerDescription": "Utilizator desemnat ca partener cu acces extins"
 }

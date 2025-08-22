@@ -3542,5 +3542,7 @@
     "DocumentsTab.guidelines.nameMatch": "Документы удостоверяющие личность должны совпадать с именем пассажира в заявке",
     "Dashboard.setupPassword": "Сбросить пароль",
     "ClaimsTable.actionArchive": "Архивировать",
-    "ClaimsTable.actionMoveToPartner": "Назначить партнёру"
+    "ClaimsTable.actionMoveToPartner": "Назначить партнёру",
+    "UserRolesSection.partnerLabel": "Партнёр",
+    "UserRolesSection.partnerDescription": "Пользователь назначен партнёром с расширенным доступом"
 }

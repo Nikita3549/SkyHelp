@@ -3563,5 +3563,7 @@
     "DocumentsTab.guidelines.nameMatch": "Kimlik belgeleri talepteki yolcu adıyla eşleşmelidir",
     "Dashboard.setupPassword": "Şifreyi sıfırla",
     "ClaimsTable.actionArchive": "Arşivle",
-    "ClaimsTable.actionMoveToPartner": "Ortağa ata"
+    "ClaimsTable.actionMoveToPartner": "Ortağa ata",
+    "UserRolesSection.partnerLabel": "Ortak",
+    "UserRolesSection.partnerDescription": "Kullanıcı, genişletilmiş erişimle ortak olarak atandı"
 }

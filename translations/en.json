@@ -3542,5 +3542,7 @@
     "DocumentsTab.guidelines.nameMatch": "ID documents must match the passenger name in the claim",
     "Dashboard.setupPassword": "Reset password",
     "ClaimsTable.actionArchive": "Archive",
-    "ClaimsTable.actionMoveToPartner": "Assign to partner"
+    "ClaimsTable.actionMoveToPartner": "Assign to partner",
+    "UserRolesSection.partnerLabel": "Partner",
+    "UserRolesSection.partnerDescription": "User assigned as a partner with extended access"
 }
