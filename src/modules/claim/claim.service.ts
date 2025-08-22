@@ -634,13 +634,13 @@ export class ClaimService {
                             OR: [
                                 {
                                     bookingRef: {
-                                        contains: search,
+                                        contains: search.trim(),
                                         mode: 'insensitive',
                                     },
                                 },
                                 {
                                     flightNumber: {
-                                        contains: search,
+                                        contains: search.trim(),
                                         mode: 'insensitive',
                                     },
                                 },
