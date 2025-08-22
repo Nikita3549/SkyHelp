@@ -556,6 +556,7 @@ export class ClaimService {
             payment: true,
             documents: true,
             passengers: true,
+            partner: true,
         };
     }
 
