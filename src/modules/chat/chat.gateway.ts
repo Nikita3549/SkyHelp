@@ -71,7 +71,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
             client.join(`chat_${clientChats[i].id}`);
         }
 
-        // const unreadMessages = await this.chatService.getUnreadMessages(
+        // constants unreadMessages = await this.chatService.getUnreadMessages(
         // 	client.data.userUuid,
         // );
         //

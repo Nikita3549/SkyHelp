@@ -5,6 +5,7 @@ import {
     Get,
     NotFoundException,
     Param,
+    Patch,
     Post,
     Put,
     Query,

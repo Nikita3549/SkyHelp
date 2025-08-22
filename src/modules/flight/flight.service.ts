@@ -55,7 +55,7 @@ export class FlightService {
     }
 
     // async getFlightById(flightId: string) {
-    //     const flightsResponse: AxiosResponse<IFlightsResponse> =
+    //     constants flightsResponse: AxiosResponse<IFlightsResponse> =
     //         await axios.get(
     //             `${this.configService.getOrThrow('FLIGHT_RADAR_API_HOST')}/api/flight-summary/full`,
     //             {

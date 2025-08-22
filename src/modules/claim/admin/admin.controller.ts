@@ -17,11 +17,18 @@ import { INVALID_CLAIM_ID } from '../constants';
 import { UpdateClaimDto } from '../dto/update-claim.dto';
 import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
 import { ClaimService } from '../claim.service';
+import { AddPartnerDto } from './dto/add-partner.dto';
+import { UserService } from '../../user/user.service';
+import { UserRole } from '@prisma/client';
+import { INVALID_PARTNER_ID } from './constants';
 
 @Controller('claims/admin')
 @UseGuards(JwtAuthGuard, IsModeratorGuard)
 export class AdminController {
-    constructor(private readonly claimService: ClaimService) {}
+    constructor(
+        private readonly claimService: ClaimService,
+        private readonly userService: UserService,
+    ) {}
 
     @Get()
     async getClaims(@Query() query: GetClaimsQuery) {
@@ -91,5 +98,21 @@ export class AdminController {
         }
 
         return await this.claimService.updateClaim(dto, claimId);
+    }
+
+    @Patch(':claimId/partner')
+    async addPartner(
+        @Body() dto: AddPartnerDto,
+        @Param('claimId') claimId: string,
+    ) {
+        const { partnerId } = dto;
+
+        const partner = await this.userService.getUserById(partnerId);
+
+        if (!partner || partner.role != UserRole.PARTNER) {
+            throw new NotFoundException(INVALID_PARTNER_ID);
+        }
+
+        return await this.claimService.addPartner(claimId, partnerId);
     }
 }

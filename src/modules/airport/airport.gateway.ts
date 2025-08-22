@@ -21,7 +21,7 @@ export class AirportGateway {
     ) {}
     // async handleConnection(client: Socket) {
     //     try {
-    //         const token: string | undefined =
+    //         constants token: string | undefined =
     //             client.handshake.auth?.token ||
     //             client.handshake.headers.authorization?.split(' ')[1];
     //
@@ -29,7 +29,7 @@ export class AirportGateway {
     //             throw new Error();
     //         }
     //
-    //         const { id: userId } =
+    //         constants { id: userId } =
     //             this.tokenService.verifyJWT<JwtPayload>(token);
     //
     //         (client as AuthSocket).data.userId = userId;

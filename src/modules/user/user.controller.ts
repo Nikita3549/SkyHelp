@@ -8,17 +8,13 @@ import {
 import { IPublicUserData } from './interfaces/publicUserData.interface';
 import { JwtAuthGuard } from '../../guards/jwtAuth.guard';
 import { UserService } from './user.service';
-import { TokenService } from '../token/token.service';
 import { INCORRECT_USER_ID } from './constants';
 import { IsModeratorGuard } from '../../guards/isModerator.guard';
 
 @Controller('user')
 @UseGuards(JwtAuthGuard)
 export class UserController {
-    constructor(
-        private readonly userService: UserService,
-        private readonly tokenService: TokenService,
-    ) {}
+    constructor(private readonly userService: UserService) {}
 
     @Get()
     @UseGuards(IsModeratorGuard)
@@ -36,5 +32,22 @@ export class UserController {
         }
 
         return user;
+    }
+
+    @UseGuards(IsModeratorGuard)
+    @Get('partners')
+    async getPartners(): Promise<IPublicUserData[]> {
+        const partners = await this.userService.getPartners();
+
+        return partners.map((p) => ({
+            id: p.id,
+            email: p.email,
+            name: p.name,
+            secondName: p.secondName,
+            role: p.role,
+            isActive: p.isActive,
+            lastSign: p.lastSign,
+            createdAt: p.createdAt,
+        }));
     }
 }
