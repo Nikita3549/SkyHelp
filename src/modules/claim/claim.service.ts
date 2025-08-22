@@ -630,8 +630,38 @@ export class ClaimService {
                 OR: [
                     { id: search }, // exact id match
                     {
+                        details: {
+                            OR: [
+                                {
+                                    bookingRef: {
+                                        contains: search,
+                                        mode: 'insensitive',
+                                    },
+                                },
+                                {
+                                    flightNumber: {
+                                        contains: search,
+                                        mode: 'insensitive',
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                    {
                         customer: {
                             OR: [
+                                {
+                                    phone: {
+                                        contains: search,
+                                        mode: 'insensitive',
+                                    },
+                                },
+                                {
+                                    email: {
+                                        contains: search,
+                                        mode: 'insensitive',
+                                    },
+                                },
                                 {
                                     firstName: {
                                         contains: search,
@@ -649,37 +679,7 @@ export class ClaimService {
                     },
                 ],
             },
-            include: {
-                details: {
-                    include: {
-                        airlines: true,
-                        routes: {
-                            include: {
-                                ArrivalAirport: true,
-                                DepartureAirport: true,
-                            },
-                        },
-                    },
-                },
-                state: {
-                    select: {
-                        id: true,
-                        status: true,
-                        amount: true,
-                        updatedAt: true,
-                        progress: {
-                            orderBy: {
-                                order: 'asc',
-                            },
-                        },
-                    },
-                },
-                customer: true,
-                issue: true,
-                payment: true,
-                documents: true,
-                passengers: true,
-            },
+            include: this.fullClaimInclude(),
             orderBy: {
                 createdAt: 'desc',
             },
