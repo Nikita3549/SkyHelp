@@ -604,18 +604,18 @@ export class ClaimService {
         const normalized = search.replace(/\s+/g, '');
 
         const ids = await this.prisma.$queryRaw<Array<{ id: string }>>`
-            SELECT "id"
-            FROM "Claim"
-            LEFT JOIN "Customer" ON "Claim"."customerId" = "Customer"."id"
-            LEFT JOIN "ClaimDetails" ON "ClaimDetails"."claimId" = "Claim"."id"
-            WHERE REPLACE("ClaimDetails"."bookingRef", ' ', '') ILIKE ${`%${normalized}%`}
-               OR REPLACE("ClaimDetails"."flightNumber", ' ', '') ILIKE ${`%${normalized}%`}
-               OR REPLACE("Customer"."phone", ' ', '') ILIKE ${`%${normalized}%`}
-               OR REPLACE("Customer"."email", ' ', '') ILIKE ${`%${normalized}%`}
-               OR REPLACE("Customer"."firstName", ' ', '') ILIKE ${`%${normalized}%`}
-               OR REPLACE("Customer"."lastName", ' ', '') ILIKE ${`%${normalized}%`}
-               OR REPLACE("Claim"."id"::text, ' ', '') ILIKE ${`%${normalized}%`}
-            ORDER BY "Claim"."createdAt" DESC
+            SELECT "claims"."id"
+            FROM "claims"
+            LEFT JOIN "claim_customers" ON "claims"."customer_id" = "claim_customers"."id"
+            LEFT JOIN "claim_details" ON "claim_details"."id" = "claims"."details_id"
+            WHERE REPLACE("claim_details"."booking_ref", ' ', '') ILIKE ${`%${normalized}%`}
+               OR REPLACE("claim_details"."flight_number", ' ', '') ILIKE ${`%${normalized}%`}
+               OR REPLACE("claim_customers"."phone", ' ', '') ILIKE ${`%${normalized}%`}
+               OR REPLACE("claim_customers"."email", ' ', '') ILIKE ${`%${normalized}%`}
+               OR REPLACE("claim_customers"."first_name", ' ', '') ILIKE ${`%${normalized}%`}
+               OR REPLACE("claim_customers"."last_name", ' ', '') ILIKE ${`%${normalized}%`}
+               OR REPLACE("claims"."id"::text, ' ', '') ILIKE ${`%${normalized}%`}
+            ORDER BY "claims"."created_at" DESC
             LIMIT ${page}
           `;
 
