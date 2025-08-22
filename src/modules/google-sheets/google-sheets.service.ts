@@ -10,7 +10,6 @@ export class GoogleSheetsService implements OnModuleInit {
     private readonly GOOGLE_SHEETS_PRIVATE_KEY: string;
     private readonly GOOGLE_SHEETS_CLIENT_EMAIL: string;
     private readonly GOOGLE_SHEETS_UTM_LEADS_SPREAD_SHEET: string;
-    private readonly GOOGLE_SHEETS_UTM_LEADS_SHEET_NAME: string;
 
     constructor(private readonly configService: ConfigService) {
         this.GOOGLE_SHEETS_PRIVATE_KEY = this.configService.getOrThrow(
@@ -25,10 +24,6 @@ export class GoogleSheetsService implements OnModuleInit {
             this.configService.getOrThrow(
                 'GOOGLE_SHEETS_UTM_LEADS_SPREAD_SHEET',
             );
-
-        this.GOOGLE_SHEETS_UTM_LEADS_SHEET_NAME = this.configService.getOrThrow(
-            'GOOGLE_SHEETS_UTM_LEADS_SHEET_NAME',
-        );
     }
 
     async onModuleInit() {
@@ -46,8 +41,8 @@ export class GoogleSheetsService implements OnModuleInit {
     async upsertDailyUtmStats(
         date: string,
         stats: Record<string, number>,
+        sheetName: string,
         spreadSheetId: string = this.GOOGLE_SHEETS_UTM_LEADS_SPREAD_SHEET,
-        sheetName: string = this.GOOGLE_SHEETS_UTM_LEADS_SHEET_NAME,
     ) {
         const range = `${sheetName}`;
         const getRes = await this.sheetsClient.spreadsheets.values.get({

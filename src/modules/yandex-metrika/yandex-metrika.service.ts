@@ -3,7 +3,15 @@ import axios from 'axios';
 import { ConfigService } from '@nestjs/config';
 import * as console from 'node:console';
 import { Cron } from '@nestjs/schedule';
-import { EVERY_DAY_AT_FOUR_AM, EVERY_MONTH_AT_THREE_AM } from './constants';
+import {
+    EVERY_DAY_AT_FOUR_AM,
+    EVERY_MONTH_AT_THREE_AM,
+    GOOGLE_SHEETS_INSTAGRAM_SHEET_NAME,
+    GOOGLE_SHEETS_TARGET_SHEET_NAME,
+    GOOGLE_SHEETS_TIKTOK_SHEET_NAME,
+    UTM_SOURCE_INSTAGRAM,
+    UTM_SOURCE_TIKTOK,
+} from './constants';
 import { GoogleSheetsService } from '../google-sheets/google-sheets.service';
 import { YandexMetrikaRow } from './interfaces/yandex-metrika-row';
 import { getYesterdayDate } from '../../utils/getYesterdayDate';
@@ -53,18 +61,40 @@ export class YandexMetrikaService implements OnModuleInit {
     async sendReportInSheet() {
         if (!isProd()) return;
 
-        const fetchedGoalConversions = await this.fetchGoalConversionsWithUTM();
+        const conversions = await this.fetchGoalConversionsWithUTM();
 
-        const stats: Record<string, number> = {};
+        const targetConversions = conversions.filter(
+            (c) =>
+                c.utmSource != UTM_SOURCE_TIKTOK &&
+                c.utmSource != UTM_SOURCE_INSTAGRAM,
+        );
+        const tiktokConversions = conversions.filter(
+            (c) => c.utmSource == UTM_SOURCE_TIKTOK,
+        );
+        const instagramConversions = conversions.filter(
+            (c) => c.utmSource == UTM_SOURCE_INSTAGRAM,
+        );
 
-        for (const row of fetchedGoalConversions) {
-            stats[`${row.utmSource}, ${row.utmCampaign}, ${row.utmMedium}`] =
-                +row.goalReaches;
-        }
+        const targetStats = this.createStats(targetConversions);
+        const tiktokStats = this.createStats(tiktokConversions);
+        const instagramStats = this.createStats(instagramConversions);
 
         await this.googleSheetService.upsertDailyUtmStats(
             getYesterdayDate('dd-mm-yyyy'),
-            stats,
+            targetStats,
+            GOOGLE_SHEETS_TARGET_SHEET_NAME,
+        );
+
+        await this.googleSheetService.upsertDailyUtmStats(
+            getYesterdayDate('dd-mm-yyyy'),
+            tiktokStats,
+            GOOGLE_SHEETS_TIKTOK_SHEET_NAME,
+        );
+
+        await this.googleSheetService.upsertDailyUtmStats(
+            getYesterdayDate('dd-mm-yyyy'),
+            instagramStats,
+            GOOGLE_SHEETS_INSTAGRAM_SHEET_NAME,
         );
     }
 
@@ -102,6 +132,17 @@ export class YandexMetrikaService implements OnModuleInit {
                 goalReaches: row.metrics[0],
             }))
             .filter((row: YandexMetrikaRow) => !!row.utmSource);
+    }
+
+    private createStats(conversions: YandexMetrikaRow[]) {
+        const stats: Record<string, number> = {};
+
+        for (const row of conversions) {
+            stats[`${row.utmSource}, ${row.utmCampaign}, ${row.utmMedium}`] =
+                +row.goalReaches;
+        }
+
+        return stats;
     }
 
     @Cron(EVERY_MONTH_AT_THREE_AM)
