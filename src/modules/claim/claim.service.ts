@@ -557,9 +557,11 @@ export class ClaimService {
             documents: true,
             passengers: true,
             partner: {
-                email: true,
-                name: true,
-                secondName: true,
+                select: {
+                    email: true,
+                    name: true,
+                    secondName: true,
+                },
             },
         };
     }
