@@ -127,6 +127,7 @@ export class ClaimService {
                                 city: claim.customer.city,
                                 state: claim.customer.state,
                                 whatsapp: claim.customer.whatsapp,
+                                country: claim.customer.country,
                             },
                         },
                         issue: {
@@ -225,6 +226,7 @@ export class ClaimService {
                         city: newClaim.customer.city,
                         state: newClaim.customer.state,
                         whatsapp: newClaim.customer.whatsapp,
+                        country: newClaim.customer.country,
                     },
                 },
                 issue: {

@@ -92,6 +92,9 @@ class CustomerDto {
     @IsString()
     city: string;
 
+    @IsString()
+    country: string;
+
     @IsOptional()
     @IsString()
     state?: string;
