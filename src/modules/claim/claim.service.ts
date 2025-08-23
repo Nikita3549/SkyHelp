@@ -631,7 +631,7 @@ export class ClaimService {
                         OR REPLACE("claim_customers"."last_name", ' ', '') ILIKE ${`%${normalized}%`}
                         OR REPLACE("claims"."id"::text, ' ', '') ILIKE ${`%${normalized}%`}
                 )
-              AND (${partnerId ?? null} IS NULL OR "claims"."partner_id" = ${partnerId ?? null})
+              AND (${partnerId ?? null} IS NULL OR "claims"."partnerId" = ${partnerId ?? null})
             ORDER BY "claims"."created_at" DESC
                 LIMIT ${page}
         `;
