@@ -3545,5 +3545,8 @@
     "ClaimsTable.actionArchive": "Arhivează",
     "ClaimsTable.actionMoveToPartner": "Atribuie partenerului",
     "UserRolesSection.partnerLabel": "Partener",
-    "UserRolesSection.partnerDescription": "Utilizator desemnat ca partener cu acces extins"
+    "UserRolesSection.partnerDescription": "Utilizator desemnat ca partener cu acces extins",
+    "agentDescription": "Utilizator desemnat ca agent cu drepturi de gestionare a cererilor",
+    "UsersList.partner": "Partener",
+    "ClaimsTable.actionMoveToAgent": "Atribuie agentului"
 }

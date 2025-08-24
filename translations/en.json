@@ -3544,5 +3544,8 @@
     "ClaimsTable.actionArchive": "Archive",
     "ClaimsTable.actionMoveToPartner": "Assign to partner",
     "UserRolesSection.partnerLabel": "Partner",
-    "UserRolesSection.partnerDescription": "User assigned as a partner with extended access"
+    "UserRolesSection.partnerDescription": "User assigned as a partner with extended access",
+    "agentDescription": "User assigned as an agent with claim management rights",
+    "UsersList.partner": "Partner",
+    "ClaimsTable.actionMoveToAgent": "Assign to agent"
 }

@@ -3565,5 +3565,8 @@
     "ClaimsTable.actionArchive": "Arşivle",
     "ClaimsTable.actionMoveToPartner": "Ortağa ata",
     "UserRolesSection.partnerLabel": "Ortak",
-    "UserRolesSection.partnerDescription": "Kullanıcı, genişletilmiş erişimle ortak olarak atandı"
+    "UserRolesSection.partnerDescription": "Kullanıcı, genişletilmiş erişimle ortak olarak atandı",
+    "agentDescription": "Kullanıcı, talepleri yönetme yetkisine sahip bir ajan olarak atandı",
+    "UsersList.partner": "Ortak",
+    "ClaimsTable.actionMoveToAgent": "Ajana ata"
 }

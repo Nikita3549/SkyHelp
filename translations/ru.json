@@ -3544,5 +3544,8 @@
     "ClaimsTable.actionArchive": "Архивировать",
     "ClaimsTable.actionMoveToPartner": "Назначить партнёру",
     "UserRolesSection.partnerLabel": "Партнёр",
-    "UserRolesSection.partnerDescription": "Пользователь назначен партнёром с расширенным доступом"
+    "UserRolesSection.partnerDescription": "Пользователь назначен партнёром с расширенным доступом",
+    "agentDescription": "Пользователь назначен агентом с правами управления заявками",
+    "UsersList.partner": "Партнёр",
+    "ClaimsTable.actionMoveToAgent": "Назначить агенту"
 }
