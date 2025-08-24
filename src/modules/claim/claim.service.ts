@@ -582,6 +582,7 @@ export class ClaimService {
                     email: true,
                     name: true,
                     secondName: true,
+                    role: true,
                 },
             },
         };
