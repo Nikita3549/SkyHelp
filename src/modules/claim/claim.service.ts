@@ -646,7 +646,10 @@ export class ClaimService {
         });
     }
 
-    async addPartner(claimId: string, userId: string): Promise<IFullClaim> {
+    async addPartner(
+        claimId: string,
+        userId: string | null,
+    ): Promise<IFullClaim> {
         return this.prisma.claim.update({
             where: {
                 id: claimId,

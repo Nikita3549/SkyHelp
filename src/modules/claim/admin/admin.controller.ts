@@ -2,6 +2,7 @@ import {
     BadRequestException,
     Body,
     Controller,
+    Delete,
     Get,
     NotFoundException,
     Param,
@@ -127,5 +128,15 @@ export class AdminController {
         }
 
         return await this.claimService.addPartner(claimId, partnerId);
+    }
+
+    @Delete(':claimId/partner')
+    @UseGuards(IsModeratorGuard)
+    async deletePartner(@Param('claimId') claimId: string) {
+        if (!(await this.claimService.getClaim(claimId))) {
+            throw new BadRequestException(INVALID_CLAIM_ID);
+        }
+
+        return this.claimService.addPartner(claimId, null);
     }
 }
