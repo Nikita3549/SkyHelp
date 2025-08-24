@@ -27,8 +27,6 @@ export class GoogleSheetsService implements OnModuleInit {
     }
 
     async onModuleInit() {
-        if (!isProd()) return;
-
         const authClient = new JWT({
             key: this.GOOGLE_SHEETS_PRIVATE_KEY.replace(/\\n/g, '\n'),
             email: this.GOOGLE_SHEETS_CLIENT_EMAIL,

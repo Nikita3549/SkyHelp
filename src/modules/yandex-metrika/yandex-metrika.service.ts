@@ -131,7 +131,11 @@ export class YandexMetrikaService implements OnModuleInit {
                 utmCampaign: row.dimensions[3].name,
                 goalReaches: row.metrics[0],
             }))
-            .filter((row: YandexMetrikaRow) => !!row.utmSource);
+            .filter(
+                (row: YandexMetrikaRow) =>
+                    !!row.utmSource &&
+                    !row.utmSource.includes('{{adset.name}}'),
+            );
     }
 
     private createStats(conversions: YandexMetrikaRow[]) {
