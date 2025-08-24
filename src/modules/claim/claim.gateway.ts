@@ -61,7 +61,10 @@ export class ClaimGateway implements OnGatewayConnection {
 
         return this.claimService.searchClaims(
             search,
-            client.data.role == UserRole.PARTNER ? client.data.id : undefined,
+            client.data.role == UserRole.PARTNER ||
+                client.data.role == UserRole.AGENT
+                ? client.data.id
+                : undefined,
         );
     }
 }
