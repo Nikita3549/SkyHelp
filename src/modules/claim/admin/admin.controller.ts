@@ -70,9 +70,16 @@ export class AdminController {
     }
 
     @Get('stats')
-    @UseGuards(IsModeratorGuard)
-    async getAdminClaimsStats(@Query('userId') userId?: string) {
-        return this.claimService.getUserClaimsStats(userId);
+    async getAdminClaimsStats(
+        @Req() req: AuthRequest,
+        @Query('userId') userId?: string,
+    ) {
+        const partnerId =
+            req.user.role == UserRole.PARTNER || UserRole.AGENT
+                ? req.user.id
+                : undefined;
+
+        return this.claimService.getUserClaimsStats(userId, partnerId);
     }
 
     @Patch(':claimId/archive')

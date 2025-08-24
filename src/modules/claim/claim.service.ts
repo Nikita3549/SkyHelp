@@ -428,7 +428,10 @@ export class ClaimService {
         };
     }
 
-    async getUserClaimsStats(userId?: string): Promise<{
+    async getUserClaimsStats(
+        userId?: string,
+        partnerId?: string,
+    ): Promise<{
         total: number;
         successful: number;
         active: number;
@@ -445,7 +448,9 @@ export class ClaimService {
             successByMonth,
         ] = await this.prisma.$transaction([
             // total claims
-            this.prisma.claim.count({ where: { userId, archived: false } }),
+            this.prisma.claim.count({
+                where: { userId, archived: false, partnerId },
+            }),
 
             // successful claims
             this.prisma.claim.count({
@@ -455,6 +460,7 @@ export class ClaimService {
                         status: ClaimStatus.COMPLETED,
                     },
                     archived: false,
+                    partnerId,
                 },
             }),
 
@@ -468,40 +474,47 @@ export class ClaimService {
                         },
                     },
                     archived: false,
+                    partnerId,
                 },
             }),
             // sum of ClaimState.amount where state.status = COMPLETED
             this.prisma.claimState.aggregate({
                 where: {
                     status: ClaimStatus.COMPLETED,
-                    Claim: { some: { userId, archived: false } },
+                    Claim: { some: { userId, archived: false, partnerId } },
                 },
                 _sum: { amount: true },
             }),
 
             // claims/day
-            this.prisma.$queryRaw<{ date: string; count: number }[]>`SELECT
-                  TO_CHAR(c."created_at"::date, 'DD.MM.YYYY') AS date,
-            COUNT(*) AS count
-              FROM "claims" c
-              WHERE ${userId ? Prisma.sql`c."user_id" = ${userId} AND` : Prisma.empty}
-                  c."archived" = false AND
-                  c."created_at" >= NOW() - INTERVAL '1 month'
-              GROUP BY c."created_at"::date
-              ORDER BY c."created_at"::date DESC`,
+            this.prisma.$queryRaw<{ date: string; count: number }[]>`
+                SELECT
+                    TO_CHAR(c."created_at"::date, 'DD.MM.YYYY') AS date,
+    COUNT(*) AS count
+                FROM "claims" c
+                WHERE
+                    ${userId ? Prisma.sql`c."user_id" = ${userId} AND` : Prisma.empty}
+                    ${partnerId ? Prisma.sql`c."claims" = ${partnerId} AND` : Prisma.empty}
+                    c."archived" = false
+                  AND c."created_at" >= NOW() - INTERVAL '1 month'
+                GROUP BY c."created_at"::date
+                ORDER BY c."created_at"::date DESC
+            `,
 
             // success claims by month
             this.prisma.$queryRaw<{ month: string; success: number }[]>`
-            SELECT
-                TO_CHAR(c."created_at", 'Mon') AS month,
+                SELECT
+                    TO_CHAR(c."created_at", 'Mon') AS month,
     COUNT(*) AS success
-            FROM "claims" c
-                INNER JOIN "claim_states" s ON c."state_id" = s."id"
-            WHERE s."status" = 'COMPLETED'
-                ${userId ? Prisma.sql`AND c."user_id" = ${userId}` : Prisma.empty} AND archived = false
-            GROUP BY month, date_trunc('month', c."created_at")
-            ORDER BY date_trunc('month', c."created_at") DESC
-        `,
+                FROM "claims" c
+                    INNER JOIN "claim_states" s ON c."state_id" = s."id"
+                WHERE s."status" = 'COMPLETED'
+                    ${userId ? Prisma.sql`AND c."user_id" = ${userId}` : Prisma.empty}
+                    ${partnerId ? Prisma.sql`AND c."claims" = ${partnerId}` : Prisma.empty}
+                  AND c."archived" = false
+                GROUP BY month, date_trunc('month', c."created_at")
+                ORDER BY date_trunc('month', c."created_at") DESC
+            `,
         ]);
 
         const completedAmount = completedAmountAgg._sum.amount ?? 0;
