@@ -31,6 +31,7 @@ enum UserRole {
   ADMIN
   PARTNER
   MODERATOR
+  AGENT
   CLIENT
 }
 

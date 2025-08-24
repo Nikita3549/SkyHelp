@@ -23,11 +23,11 @@ import { AddPartnerDto } from './dto/add-partner.dto';
 import { UserService } from '../../user/user.service';
 import { UserRole } from '@prisma/client';
 import { INVALID_PARTNER_ID } from './constants';
-import { IsPartnerGuard } from '../../../guards/isPartner.guard';
+import { IsPartnerOrAgentGuard } from '../../../guards/isPartnerOrAgentGuard';
 import { AuthRequest } from '../../../interfaces/AuthRequest.interface';
 
 @Controller('claims/admin')
-@UseGuards(JwtAuthGuard, IsPartnerGuard)
+@UseGuards(JwtAuthGuard, IsPartnerOrAgentGuard)
 export class AdminController {
     constructor(
         private readonly claimService: ClaimService,
@@ -61,7 +61,9 @@ export class AdminController {
                 icao,
                 flightNumber,
             },
-            req.user.role == UserRole.PARTNER ? req.user.id : undefined,
+            req.user.role == UserRole.PARTNER || req.user.role == UserRole.AGENT
+                ? req.user.id
+                : undefined,
         );
     }
 
@@ -123,7 +125,10 @@ export class AdminController {
 
         const partner = await this.userService.getUserById(partnerId);
 
-        if (!partner || partner.role != UserRole.PARTNER) {
+        if (
+            !partner ||
+            (partner.role != UserRole.PARTNER && partner.role != UserRole.AGENT)
+        ) {
             throw new NotFoundException(INVALID_PARTNER_ID);
         }
 

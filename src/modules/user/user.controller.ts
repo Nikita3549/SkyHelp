@@ -39,6 +39,23 @@ export class UserController {
         }));
     }
 
+    @UseGuards(IsModeratorGuard)
+    @Get('agents')
+    async getAgents(): Promise<IPublicUserData[]> {
+        const agents = await this.userService.getAgents();
+
+        return agents.map((p) => ({
+            id: p.id,
+            email: p.email,
+            name: p.name,
+            secondName: p.secondName,
+            role: p.role,
+            isActive: p.isActive,
+            lastSign: p.lastSign,
+            createdAt: p.createdAt,
+        }));
+    }
+
     @Get(':id')
     @UseGuards(IsModeratorGuard)
     async getUser(@Param('id') id: string): Promise<IPublicUserData> {

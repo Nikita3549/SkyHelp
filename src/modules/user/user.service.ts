@@ -130,4 +130,12 @@ export class UserService {
             },
         });
     }
+
+    async getAgents(): Promise<User[]> {
+        return this.prisma.user.findMany({
+            where: {
+                role: UserRole.AGENT,
+            },
+        });
+    }
 }
