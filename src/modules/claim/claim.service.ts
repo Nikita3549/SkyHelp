@@ -359,8 +359,8 @@ export class ClaimService {
             icao?: string;
             flightNumber?: string;
             role?: UserRole;
+            partnerId?: string;
         },
-        partnerId?: string,
         pageSize: number = 20,
     ): Promise<{ claims: IFullClaim[]; total: number }> {
         const skip = (page - 1) * pageSize;
@@ -376,8 +376,8 @@ export class ClaimService {
             };
         }
 
-        if (partnerId) {
-            where.partnerId = partnerId;
+        if (searchParams?.partnerId) {
+            where.partnerId = searchParams.partnerId;
         }
 
         if (searchParams?.flightNumber) {

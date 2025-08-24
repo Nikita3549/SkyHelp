@@ -52,4 +52,8 @@ export class GetClaimsQuery {
     @IsOptional()
     @IsEnum(UserRole)
     role?: UserRole;
+
+    @IsOptional()
+    @IsString()
+    partnerId?: string;
 }

@@ -46,27 +46,27 @@ export class AdminController {
             flightNumber,
             icao,
             role,
+            partnerId,
         } = query;
 
-        return this.claimService.getUserClaims(
-            userId,
-            +page,
-            {
-                archived: archived == undefined ? undefined : archived == 'yes',
-                date: endDate &&
-                    startDate && {
-                        start: startDate,
-                        end: endDate,
-                    },
-                status,
-                icao,
-                flightNumber,
-                role,
-            },
-            req.user.role == UserRole.PARTNER || req.user.role == UserRole.AGENT
-                ? req.user.id
-                : undefined,
-        );
+        return this.claimService.getUserClaims(userId, +page, {
+            archived: archived == undefined ? undefined : archived == 'yes',
+            date: endDate &&
+                startDate && {
+                    start: startDate,
+                    end: endDate,
+                },
+            status,
+            icao,
+            flightNumber,
+            role,
+            partnerId:
+                partnerId ||
+                req.user.role == UserRole.PARTNER ||
+                req.user.role == UserRole.AGENT
+                    ? req.user.id
+                    : undefined,
+        });
     }
 
     @Get('stats')
