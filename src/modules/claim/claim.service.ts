@@ -494,7 +494,7 @@ export class ClaimService {
                 FROM "claims" c
                 WHERE
                     ${userId ? Prisma.sql`c."user_id" = ${userId} AND` : Prisma.empty}
-                    ${partnerId ? Prisma.sql`c."claims" = ${partnerId} AND` : Prisma.empty}
+                    ${partnerId ? Prisma.sql`c."partner_id" = ${partnerId} AND` : Prisma.empty}
                     c."archived" = false
                   AND c."created_at" >= NOW() - INTERVAL '1 month'
                 GROUP BY c."created_at"::date
@@ -510,7 +510,7 @@ export class ClaimService {
                     INNER JOIN "claim_states" s ON c."state_id" = s."id"
                 WHERE s."status" = 'COMPLETED'
                     ${userId ? Prisma.sql`AND c."user_id" = ${userId}` : Prisma.empty}
-                    ${partnerId ? Prisma.sql`AND c."claims" = ${partnerId}` : Prisma.empty}
+                    ${partnerId ? Prisma.sql`AND c."partner_id" = ${partnerId}` : Prisma.empty}
                   AND c."archived" = false
                 GROUP BY month, date_trunc('month', c."created_at")
                 ORDER BY date_trunc('month', c."created_at") DESC
