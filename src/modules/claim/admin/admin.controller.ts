@@ -45,6 +45,7 @@ export class AdminController {
             status,
             flightNumber,
             icao,
+            role,
         } = query;
 
         return this.claimService.getUserClaims(
@@ -60,6 +61,7 @@ export class AdminController {
                 status,
                 icao,
                 flightNumber,
+                role,
             },
             req.user.role == UserRole.PARTNER || req.user.role == UserRole.AGENT
                 ? req.user.id

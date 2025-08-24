@@ -7,7 +7,7 @@ import {
     Min,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { ClaimStatus } from '@prisma/client';
+import { ClaimStatus, UserRole } from '@prisma/client';
 enum IsArchived {
     YES = 'yes',
     NO = 'no',
@@ -48,4 +48,8 @@ export class GetClaimsQuery {
     @IsOptional()
     @IsString()
     flightNumber?: string;
+
+    @IsOptional()
+    @IsEnum(UserRole)
+    role?: UserRole;
 }

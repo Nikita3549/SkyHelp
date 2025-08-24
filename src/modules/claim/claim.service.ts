@@ -5,6 +5,7 @@ import {
     ClaimStatus,
     DelayCategory,
     Prisma,
+    UserRole,
 } from '@prisma/client';
 import { CreateClaimDto } from './dto/create-claim.dto';
 import { IGetCompensation } from './interfaces/compensation.interface';
@@ -357,6 +358,7 @@ export class ClaimService {
             status?: ClaimStatus;
             icao?: string;
             flightNumber?: string;
+            role?: UserRole;
         },
         partnerId?: string,
         pageSize: number = 20,
@@ -396,6 +398,12 @@ export class ClaimService {
             where.createdAt = {
                 gte: searchParams.date.start,
                 lt: searchParams.date.end,
+            };
+        }
+
+        if (searchParams?.role) {
+            where.partner = {
+                role: searchParams.role,
             };
         }
 
