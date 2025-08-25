@@ -75,7 +75,7 @@ export class AdminController {
         @Query('userId') userId?: string,
     ) {
         const partnerId =
-            req.user.role == UserRole.PARTNER || UserRole.AGENT
+            req.user.role == UserRole.PARTNER || req.user.role == UserRole.AGENT
                 ? req.user.id
                 : undefined;
 
