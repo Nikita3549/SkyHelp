@@ -534,6 +534,15 @@ export class ClaimService {
         };
     }
 
+    async getAirlineStats() {
+        return this.prisma.airline.groupBy({
+            by: ['name'],
+            _count: {
+                _all: true,
+            },
+        });
+    }
+
     async updateStep(claimId: string, step: number): Promise<IFullClaim> {
         return this.prisma.claim.update({
             data: {

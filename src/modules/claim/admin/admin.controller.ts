@@ -84,7 +84,14 @@ export class AdminController {
 
     @Get('stats/airlines')
     @UseGuards(IsAdminGuard)
-    async getAdminAirlineStats() {}
+    async getAdminAirlineStats() {
+        const stats = await this.claimService.getAirlineStats();
+
+        return stats.map((s) => ({
+            airline: s.name,
+            count: s._count._all,
+        }));
+    }
 
     @Patch(':claimId/archive')
     @UseGuards(IsAdminGuard)
