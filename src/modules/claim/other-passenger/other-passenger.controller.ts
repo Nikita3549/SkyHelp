@@ -12,7 +12,7 @@ import {
     UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
-import { IsModeratorGuard } from '../../../guards/isModerator.guard';
+import { IsAdminGuard } from '../../../guards/isAdminGuard';
 import { UpdatePassengerDto } from './dto/update-passenger.dto';
 import { CLAIM_NOT_FOUND, INVALID_PASSENGER_ID } from '../constants';
 import { OtherPassengerService } from './other-passenger.service';
@@ -34,7 +34,7 @@ export class OtherPassengerController {
         private readonly otherPassengerService: OtherPassengerService,
     ) {}
 
-    @UseGuards(IsModeratorGuard)
+    @UseGuards(IsAdminGuard)
     @Put('admin')
     async updateOtherPassenger(@Body() dto: UpdatePassengerDto) {
         const { passengerId } = dto;

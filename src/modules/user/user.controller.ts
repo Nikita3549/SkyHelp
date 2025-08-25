@@ -9,7 +9,7 @@ import { IPublicUserData } from './interfaces/publicUserData.interface';
 import { JwtAuthGuard } from '../../guards/jwtAuth.guard';
 import { UserService } from './user.service';
 import { INCORRECT_USER_ID } from './constants';
-import { IsModeratorGuard } from '../../guards/isModerator.guard';
+import { IsAdminGuard } from '../../guards/isAdminGuard';
 
 @Controller('user')
 @UseGuards(JwtAuthGuard)
@@ -17,12 +17,12 @@ export class UserController {
     constructor(private readonly userService: UserService) {}
 
     @Get()
-    @UseGuards(IsModeratorGuard)
+    @UseGuards(IsAdminGuard)
     async getUsers(): Promise<IPublicUserData[]> {
         return this.userService.getPublicUsers();
     }
 
-    @UseGuards(IsModeratorGuard)
+    @UseGuards(IsAdminGuard)
     @Get('partners')
     async getPartners(): Promise<IPublicUserData[]> {
         const partners = await this.userService.getPartners();
@@ -39,7 +39,7 @@ export class UserController {
         }));
     }
 
-    @UseGuards(IsModeratorGuard)
+    @UseGuards(IsAdminGuard)
     @Get('agents')
     async getAgents(): Promise<IPublicUserData[]> {
         const agents = await this.userService.getAgents();
@@ -57,7 +57,7 @@ export class UserController {
     }
 
     @Get(':id')
-    @UseGuards(IsModeratorGuard)
+    @UseGuards(IsAdminGuard)
     async getUser(@Param('id') id: string): Promise<IPublicUserData> {
         const user = await this.userService.getUserById(id);
 

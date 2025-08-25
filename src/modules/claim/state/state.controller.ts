@@ -6,7 +6,7 @@ import {
     UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
-import { IsModeratorGuard } from '../../../guards/isModerator.guard';
+import { IsAdminGuard } from '../../../guards/isAdminGuard';
 import { StateDto } from './dto/state.dto';
 import { INVALID_CLAIM_ID } from '../constants';
 import { StateService } from './state.service';
@@ -19,7 +19,7 @@ export class StateController {
         private readonly stateService: StateService,
         private readonly claimService: ClaimService,
     ) {}
-    @UseGuards(IsModeratorGuard)
+    @UseGuards(IsAdminGuard)
     @Put('admin')
     async updateState(@Body() dto: StateDto) {
         const { claimId } = dto;

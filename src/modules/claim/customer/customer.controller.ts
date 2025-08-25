@@ -10,7 +10,7 @@ import {
     UseGuards,
 } from '@nestjs/common';
 import { ClaimService } from '../claim.service';
-import { IsModeratorGuard } from '../../../guards/isModerator.guard';
+import { IsAdminGuard } from '../../../guards/isAdminGuard';
 import { CustomerDto } from './dto/customer.dto';
 import { INVALID_CLAIM_ID, INVALID_CUSTOMER_ID } from '../constants';
 import { CustomerService } from './customer.service';
@@ -29,7 +29,7 @@ export class CustomerController {
         private readonly claimService: ClaimService,
     ) {}
 
-    @UseGuards(IsModeratorGuard)
+    @UseGuards(IsAdminGuard)
     @Put('/admin/')
     async updateCustomer(@Body() dto: CustomerDto) {
         const { claimId } = dto;

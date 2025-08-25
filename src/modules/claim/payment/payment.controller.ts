@@ -5,7 +5,7 @@ import {
     Put,
     UseGuards,
 } from '@nestjs/common';
-import { IsModeratorGuard } from '../../../guards/isModerator.guard';
+import { IsAdminGuard } from '../../../guards/isAdminGuard';
 import { PaymentDto } from './dto/payment.dto';
 import { INVALID_CLAIM_ID } from '../constants';
 import { PaymentService } from './payment.service';
@@ -20,7 +20,7 @@ export class PaymentController {
         private readonly claimService: ClaimService,
     ) {}
 
-    @UseGuards(IsModeratorGuard)
+    @UseGuards(IsAdminGuard)
     @Put('admin')
     async updatePayment(@Body() dto: PaymentDto) {
         const { claimId } = dto;

@@ -14,7 +14,7 @@ import { EmailResumeClickService } from './email-resume-click.service';
 import { HttpStatusCode } from 'axios';
 import { NO_RECORD } from './constants';
 import { JwtAuthGuard } from '../../guards/jwtAuth.guard';
-import { IsModeratorGuard } from '../../guards/isModerator.guard';
+import { IsAdminGuard } from '../../guards/isAdminGuard';
 
 @Controller('track/email')
 export class EmailResumeClickController {
@@ -45,7 +45,7 @@ export class EmailResumeClickController {
     }
 
     @Get('stats')
-    @UseGuards(JwtAuthGuard, IsModeratorGuard)
+    @UseGuards(JwtAuthGuard, IsAdminGuard)
     async getStats() {
         return this.emailResumeClickService.getStats();
     }

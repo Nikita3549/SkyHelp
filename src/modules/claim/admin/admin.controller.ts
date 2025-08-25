@@ -12,7 +12,7 @@ import {
     Req,
     UseGuards,
 } from '@nestjs/common';
-import { IsModeratorGuard } from '../../../guards/isModerator.guard';
+import { IsAdminGuard } from '../../../guards/isAdminGuard';
 import { GetClaimsQuery } from './dto/get-claims.query';
 import { ArchiveClaimDto } from './dto/archive-claim.dto';
 import { INVALID_CLAIM_ID } from '../constants';
@@ -83,7 +83,7 @@ export class AdminController {
     }
 
     @Patch(':claimId/archive')
-    @UseGuards(IsModeratorGuard)
+    @UseGuards(IsAdminGuard)
     async archiveClaim(
         @Body() dto: ArchiveClaimDto,
         @Param('claimId') claimId: string,
@@ -100,7 +100,7 @@ export class AdminController {
     }
 
     @Get(':claimId')
-    @UseGuards(IsModeratorGuard)
+    @UseGuards(IsAdminGuard)
     async getAdminClaim(@Param('claimId') claimId: string) {
         const claim = await this.claimService.getClaim(claimId);
 
@@ -112,7 +112,7 @@ export class AdminController {
     }
 
     @Put(':claimId')
-    @UseGuards(IsModeratorGuard)
+    @UseGuards(IsAdminGuard)
     async updateClaim(
         @Body() dto: UpdateClaimDto,
         @Param('claimId') claimId: string,
@@ -125,7 +125,7 @@ export class AdminController {
     }
 
     @Patch(':claimId/partner')
-    @UseGuards(IsModeratorGuard)
+    @UseGuards(IsAdminGuard)
     async addPartner(
         @Body() dto: AddPartnerDto,
         @Param('claimId') claimId: string,
@@ -145,7 +145,7 @@ export class AdminController {
     }
 
     @Delete(':claimId/partner')
-    @UseGuards(IsModeratorGuard)
+    @UseGuards(IsAdminGuard)
     async deletePartner(@Param('claimId') claimId: string) {
         if (!(await this.claimService.getClaim(claimId))) {
             throw new BadRequestException(INVALID_CLAIM_ID);

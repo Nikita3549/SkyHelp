@@ -44,7 +44,7 @@ import { ResetPasswordDto } from './dto/reset-password.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { JwtAuthGuard } from '../../guards/jwtAuth.guard';
 import { UserRole } from '@prisma/client';
-import { IsModeratorGuard } from '../../guards/isModerator.guard';
+import { IsAdminGuard } from '../../guards/isAdminGuard';
 import { UpdateStatusDto } from './dto/update-status.dto';
 import { AuthRequest } from '../../interfaces/AuthRequest.interface';
 import { IClaimJwt } from '../claim/interfaces/claim-jwt.interface';
@@ -268,7 +268,7 @@ export class AuthController {
     }
 
     @Put('/role')
-    @UseGuards(JwtAuthGuard, IsModeratorGuard)
+    @UseGuards(JwtAuthGuard, IsAdminGuard)
     async updateRole(@Body() dto: UpdateRoleDto) {
         const { userUuid, newRole } = dto;
 
@@ -280,7 +280,7 @@ export class AuthController {
     }
 
     @Put('/status')
-    @UseGuards(JwtAuthGuard, IsModeratorGuard)
+    @UseGuards(JwtAuthGuard, IsAdminGuard)
     async updateStatus(@Body() dto: UpdateStatusDto) {
         const { userUuid, isActive } = dto;
 
