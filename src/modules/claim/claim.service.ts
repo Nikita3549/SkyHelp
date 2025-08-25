@@ -75,6 +75,7 @@ export class ClaimService {
 
     async createClaim(
         claim: CreateClaimDto,
+        language?: string,
         userId?: string | null,
     ): Promise<IFullClaim> {
         const maxAttempts = 5;
@@ -129,6 +130,7 @@ export class ClaimService {
                                 state: claim.customer.state,
                                 whatsapp: claim.customer.whatsapp,
                                 country: claim.customer.country,
+                                language,
                             },
                         },
                         issue: {

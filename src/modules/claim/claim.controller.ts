@@ -113,7 +113,11 @@ export class PublicClaimController {
             }
         }
 
-        const claim = await this.claimService.createClaim(dto, userId);
+        const claim = await this.claimService.createClaim(
+            dto,
+            language,
+            userId,
+        );
 
         const jwt = this.tokenService.generateJWT<IClaimJwt>(
             {
