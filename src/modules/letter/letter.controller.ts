@@ -1,6 +1,7 @@
 import {
     Body,
     Controller,
+    ForbiddenException,
     Get,
     NotFoundException,
     Param,
@@ -8,6 +9,7 @@ import {
     Post,
     Put,
     Query,
+    Req,
     Res,
     UploadedFiles,
     UseGuards,
@@ -15,7 +17,6 @@ import {
 } from '@nestjs/common';
 import { GmailService } from '../gmail/gmail.service';
 import { JwtAuthGuard } from '../../guards/jwtAuth.guard';
-import { IsModeratorGuard } from '../../guards/isModerator.guard';
 import { GetLettersQueryDto } from './dto/get-letters-query.dto';
 import { SendLetterDto } from './dto/send-letter.dto';
 import { ConfigService } from '@nestjs/config';
@@ -24,11 +25,18 @@ import { ATTACHMENT_NOT_FOUND } from '../gmail/constants';
 import { Response } from 'express';
 import { ClaimService } from '../claim/claim.service';
 import { UpdateStatusDto } from './dto/update-status.dto';
-import { INVALID_CLAIM_ID, INVALID_LETTER_ID } from './constants';
+import {
+    AGENT_MUST_HAVE_CLAIM_ID,
+    INVALID_CLAIM_ID,
+    INVALID_LETTER_ID,
+} from './constants';
 import { UpdateLetterDto } from './dto/update-letter.dto';
+import { IsAgentGuard } from '../../guards/isAgent.guard';
+import { AuthRequest } from '../../interfaces/AuthRequest.interface';
+import { UserRole } from '@prisma/client';
 
 @Controller('letters')
-@UseGuards(JwtAuthGuard, IsModeratorGuard)
+@UseGuards(JwtAuthGuard, IsAgentGuard)
 export class LetterController {
     constructor(
         private readonly gmailService: GmailService,
@@ -37,8 +45,23 @@ export class LetterController {
     ) {}
 
     @Get()
-    async getLetters(@Query() query: GetLettersQueryDto) {
+    async getLetters(
+        @Query() query: GetLettersQueryDto,
+        @Req() req: AuthRequest,
+    ) {
         const { claimId, page, type, status } = query;
+
+        if (claimId) {
+            const claim = await this.claimService.getClaim(claimId);
+
+            if (!claim) {
+                throw new NotFoundException(INVALID_CLAIM_ID);
+            }
+        }
+
+        if (req.user.role == UserRole.AGENT && !claimId) {
+            throw new ForbiddenException(AGENT_MUST_HAVE_CLAIM_ID);
+        }
 
         return this.gmailService.email.getEmails(page, claimId, type, status);
     }
@@ -46,12 +69,21 @@ export class LetterController {
     @Post()
     @UseInterceptors(FilesInterceptor('attachments'))
     async sendLetter(
+        @Req() req: AuthRequest,
         @UploadedFiles() files: Express.Multer.File[] = [],
         @Body() dto: SendLetterDto,
     ) {
         const { to, subject, content, claimId } = dto;
 
         const claim = await this.claimService.getClaim(claimId || '');
+
+        if (
+            req.user.role == UserRole.AGENT &&
+            claim &&
+            claim.partnerId != req.user.id
+        ) {
+            throw new ForbiddenException(AGENT_MUST_HAVE_CLAIM_ID);
+        }
 
         const message = await this.gmailService.office.sendEmailWithAttachments(
             to,
@@ -120,6 +152,7 @@ export class LetterController {
 
     @Get('/attachments/:attachmentId')
     async getLetterAttachment(
+        @Req() req: AuthRequest,
         @Param('attachmentId') attachmentId: string,
         @Res() res: Response,
     ) {
@@ -128,6 +161,22 @@ export class LetterController {
 
         if (!attachment) {
             throw new NotFoundException(ATTACHMENT_NOT_FOUND);
+        }
+
+        if (req.user.role == UserRole.AGENT) {
+            const email = await this.gmailService.email.getEmailById(
+                attachment.emailId,
+            );
+
+            if (!email?.claimId) {
+                throw new NotFoundException(ATTACHMENT_NOT_FOUND);
+            }
+
+            const claim = await this.claimService.getClaim(email.claimId);
+
+            if (!claim || claim.partnerId != req.user.id) {
+                throw new NotFoundException(ATTACHMENT_NOT_FOUND);
+            }
         }
 
         const data = await this.gmailService.attachment.readAttachment(
@@ -145,6 +194,7 @@ export class LetterController {
 
     @Patch(':letterId')
     async updateStatus(
+        @Req() req: AuthRequest,
         @Body() dto: UpdateStatusDto,
         @Param('letterId') letterId: string,
     ) {
@@ -156,11 +206,24 @@ export class LetterController {
             throw new NotFoundException(INVALID_LETTER_ID);
         }
 
+        if (req.user.role == UserRole.AGENT) {
+            if (!email?.claimId) {
+                throw new NotFoundException(INVALID_LETTER_ID);
+            }
+
+            const claim = await this.claimService.getClaim(email.claimId);
+
+            if (!claim || claim.partnerId != req.user.id) {
+                throw new NotFoundException(INVALID_LETTER_ID);
+            }
+        }
+
         return await this.gmailService.email.updateStatus(newStatus, letterId);
     }
 
     @Put(':letterId')
     async updateLetter(
+        @Req() req: AuthRequest,
         @Param('letterId') letterId: string,
         @Body() dto: UpdateLetterDto,
     ) {
@@ -176,6 +239,18 @@ export class LetterController {
 
         if (!email) {
             throw new NotFoundException(INVALID_LETTER_ID);
+        }
+
+        if (req.user.role == UserRole.AGENT) {
+            if (!email?.claimId) {
+                throw new NotFoundException(INVALID_LETTER_ID);
+            }
+
+            const claim = await this.claimService.getClaim(email.claimId);
+
+            if (!claim || claim.partnerId != req.user.id) {
+                throw new NotFoundException(INVALID_LETTER_ID);
+            }
         }
 
         return await this.gmailService.email.updateClaimId(claimId, letterId);
