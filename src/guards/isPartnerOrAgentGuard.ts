@@ -8,7 +8,6 @@ export class IsPartnerOrAgentGuard implements CanActivate {
         const req: AuthRequest = host.getRequest();
 
         return (
-            req.user.role == UserRole.MODERATOR ||
             req.user.role == UserRole.ADMIN ||
             req.user.role == UserRole.PARTNER ||
             req.user.role == UserRole.AGENT

@@ -8,9 +8,7 @@ export class IsAgentGuard implements CanActivate {
         const req: AuthRequest = host.getRequest();
 
         return (
-            req.user.role == UserRole.MODERATOR ||
-            req.user.role == UserRole.ADMIN ||
-            req.user.role == UserRole.AGENT
+            req.user.role == UserRole.ADMIN || req.user.role == UserRole.AGENT
         );
     }
 }

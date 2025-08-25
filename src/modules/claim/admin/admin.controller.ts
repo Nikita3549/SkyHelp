@@ -82,6 +82,10 @@ export class AdminController {
         return this.claimService.getUserClaimsStats(userId, partnerId);
     }
 
+    @Get('stats/airlines')
+    @UseGuards(IsAdminGuard)
+    async getAdminAirlineStats() {}
+
     @Patch(':claimId/archive')
     @UseGuards(IsAdminGuard)
     async archiveClaim(

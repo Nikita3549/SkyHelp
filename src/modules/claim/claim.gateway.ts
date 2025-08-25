@@ -44,10 +44,7 @@ export class ClaimGateway implements OnGatewayConnection {
 
             client.data = payload;
 
-            if (
-                payload.role != UserRole.ADMIN &&
-                payload.role != UserRole.MODERATOR
-            ) {
+            if (payload.role != UserRole.ADMIN) {
             }
         } catch (e: unknown) {
             client.emit('exception', INVALID_TOKEN);
