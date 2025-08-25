@@ -3548,5 +3548,7 @@
     "UserRolesSection.partnerDescription": "Utilizator desemnat ca partener cu acces extins",
     "agentDescription": "Utilizator desemnat ca agent cu drepturi de gestionare a cererilor",
     "UsersList.partner": "Partener",
-    "ClaimsTable.actionMoveToAgent": "Atribuie agentului"
+    "ClaimsTable.actionMoveToAgent": "Atribuie agentului",
+    "UserRolesSection.agentLabel": "Agent",
+    "UserRolesSection.agentDescription": "Utilizator desemnat ca agent cu drepturi de gestionare a cererilor"
 }

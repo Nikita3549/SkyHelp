@@ -3568,5 +3568,7 @@
     "UserRolesSection.partnerDescription": "Kullanıcı, genişletilmiş erişimle ortak olarak atandı",
     "agentDescription": "Kullanıcı, talepleri yönetme yetkisine sahip bir ajan olarak atandı",
     "UsersList.partner": "Ortak",
-    "ClaimsTable.actionMoveToAgent": "Ajana ata"
+    "ClaimsTable.actionMoveToAgent": "Ajana ata",
+    "UserRolesSection.agentLabel": "Ajan",
+    "UserRolesSection.agentDescription": "Kullanıcı, talepleri yönetme yetkisine sahip bir ajan olarak atandı"
 }

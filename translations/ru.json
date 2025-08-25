@@ -3547,5 +3547,7 @@
     "UserRolesSection.partnerDescription": "Пользователь назначен партнёром с расширенным доступом",
     "agentDescription": "Пользователь назначен агентом с правами управления заявками",
     "UsersList.partner": "Партнёр",
-    "ClaimsTable.actionMoveToAgent": "Назначить агенту"
+    "ClaimsTable.actionMoveToAgent": "Назначить агенту",
+    "UserRolesSection.agentLabel": "Агент",
+    "UserRolesSection.agentDescription": "Пользователь назначен агентом с правами управления заявками"
 }

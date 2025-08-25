@@ -3547,5 +3547,7 @@
     "UserRolesSection.partnerDescription": "User assigned as a partner with extended access",
     "agentDescription": "User assigned as an agent with claim management rights",
     "UsersList.partner": "Partner",
-    "ClaimsTable.actionMoveToAgent": "Assign to agent"
+    "ClaimsTable.actionMoveToAgent": "Assign to agent",
+    "UserRolesSection.agentLabel": "Agent",
+    "UserRolesSection.agentDescription": "User assigned as an agent with claim management rights"
 }
