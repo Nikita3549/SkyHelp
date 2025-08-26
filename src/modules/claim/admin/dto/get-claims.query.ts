@@ -13,6 +13,11 @@ enum IsArchived {
     NO = 'no',
 }
 
+enum IsDuplicated {
+    YES = 'yes',
+    NO = 'no',
+}
+
 export class GetClaimsQuery {
     @IsString()
     @IsOptional()
@@ -26,6 +31,10 @@ export class GetClaimsQuery {
     @IsOptional()
     @IsEnum(IsArchived)
     archived: IsArchived;
+
+    @IsOptional()
+    @IsEnum(IsDuplicated)
+    duplicated: IsDuplicated;
 
     @IsOptional()
     @Type(() => Date)

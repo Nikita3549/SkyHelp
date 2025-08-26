@@ -47,10 +47,13 @@ export class AdminController {
             icao,
             role,
             partnerId,
+            duplicated,
         } = query;
 
         return this.claimService.getUserClaims(userId, +page, {
             archived: archived == undefined ? undefined : archived == 'yes',
+            duplicated:
+                duplicated == undefined ? undefined : duplicated == 'yes',
             date: endDate &&
                 startDate && {
                     start: startDate,

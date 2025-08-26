@@ -364,6 +364,7 @@ export class ClaimService {
             flightNumber?: string;
             role?: UserRole;
             partnerId?: string;
+            duplicated?: boolean;
         },
         pageSize: number = 20,
     ): Promise<{ claims: IFullClaim[]; total: number }> {
@@ -373,6 +374,10 @@ export class ClaimService {
             userId,
             archived: searchParams?.archived,
         };
+
+        if (searchParams?.duplicated) {
+            where.state!.isDuplicate = searchParams.duplicated;
+        }
 
         if (searchParams?.status) {
             where.state = {
