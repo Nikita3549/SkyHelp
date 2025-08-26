@@ -34,6 +34,7 @@ import { AuthRequest } from '../../../interfaces/AuthRequest.interface';
 import { UploadDocumentsQueryDto } from './dto/upload-documents-query.dto';
 import { UpdateDocumentTypeDto } from './dto/update-document-type.dto';
 import { IsPartnerOrAgentGuard } from '../../../guards/isPartnerOrAgentGuard';
+import { MergeDocumentsDto } from './dto/merge-documents.dto';
 
 @Controller('claims/documents')
 @UseGuards(JwtAuthGuard)
@@ -42,6 +43,26 @@ export class DocumentController {
         private readonly documentService: DocumentService,
         private readonly claimService: ClaimService,
     ) {}
+    @Post('merge')
+    async mergeDocuments(@Res() res: Response, @Body() dto: MergeDocumentsDto) {
+        const { documentIds } = dto;
+
+        const documents =
+            await this.documentService.getDocumentByIds(documentIds);
+
+        const files = await this.documentService.getExpressMulterFilesFromPaths(
+            documents.map((d) => d.path),
+        );
+
+        const newFile = await this.documentService.mergeFiles(files);
+
+        res.set({
+            'Content-Type': 'application/pdf',
+            'Content-Disposition': 'attachment; filename=merged.pdf',
+        });
+        res.send(newFile);
+    }
+
     @Post('admin')
     @UseGuards(IsPartnerOrAgentGuard)
     @DocumentsUploadInterceptor()

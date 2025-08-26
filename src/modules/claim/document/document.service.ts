@@ -5,6 +5,8 @@ import * as fs from 'fs/promises';
 import * as path from 'path';
 import { PDFDocument, rgb } from 'pdf-lib';
 import { UPLOAD_DIRECTORY_PATH } from '../../../constants/UploadsDirectoryPath';
+import { spawn } from 'child_process';
+import { Readable } from 'stream';
 const fontkit = require('fontkit'); // fix fonkit bug
 
 @Injectable()
@@ -188,6 +190,123 @@ export class DocumentService {
             },
             where: {
                 id: documentId,
+            },
+        });
+    }
+
+    private async convertDocToPdf(inputPath: string, outputPath: string) {
+        return new Promise<void>((resolve, reject) => {
+            const libre = spawn('soffice', [
+                '--headless',
+                '--convert-to',
+                'pdf',
+                '--outdir',
+                path.dirname(outputPath),
+                inputPath,
+            ]);
+
+            libre.on('exit', (code: number) => {
+                if (code === 0) resolve();
+                else
+                    reject(
+                        new Error(
+                            `LibreOffice conversion failed with code ${code}`,
+                        ),
+                    );
+            });
+        });
+    }
+
+    async mergeFiles(files: Express.Multer.File[]): Promise<Buffer> {
+        const mergedPdf = await PDFDocument.create();
+
+        for (const file of files) {
+            const ext = path.extname(file.originalname).toLowerCase();
+
+            if (ext === '.pdf') {
+                const pdf = await PDFDocument.load(file.buffer);
+                const copiedPages = await mergedPdf.copyPages(
+                    pdf,
+                    pdf.getPageIndices(),
+                );
+                copiedPages.forEach((p) => mergedPdf.addPage(p));
+            } else if (ext === '.jpg' || ext === '.jpeg') {
+                const img = await mergedPdf.embedJpg(file.buffer);
+                const page = mergedPdf.addPage([img.width, img.height]);
+                page.drawImage(img, {
+                    x: 0,
+                    y: 0,
+                    width: img.width,
+                    height: img.height,
+                });
+            } else if (ext === '.png') {
+                const img = await mergedPdf.embedPng(file.buffer);
+                const page = mergedPdf.addPage([img.width, img.height]);
+                page.drawImage(img, {
+                    x: 0,
+                    y: 0,
+                    width: img.width,
+                    height: img.height,
+                });
+            } else if (ext === '.doc' || ext === '.docx') {
+                const tempInput = path.join('/tmp', file.originalname);
+                const tempOutput = tempInput.replace(ext, '.pdf');
+                await fs.writeFile(tempInput, file.buffer);
+                await this.convertDocToPdf(tempInput, tempOutput);
+
+                const pdfBuffer = await fs.readFile(tempOutput);
+                const pdf = await PDFDocument.load(pdfBuffer);
+                const copiedPages = await mergedPdf.copyPages(
+                    pdf,
+                    pdf.getPageIndices(),
+                );
+                copiedPages.forEach((p) => mergedPdf.addPage(p));
+
+                await fs.unlink(tempInput).catch(() => null);
+                await fs.unlink(tempOutput).catch(() => null);
+            }
+        }
+
+        return Buffer.from(await mergedPdf.save());
+    }
+
+    async getExpressMulterFilesFromPaths(filePaths: string[]) {
+        const files: Express.Multer.File[] = [];
+
+        for (const filePath of filePaths) {
+            const buffer = await fs.readFile(filePath);
+            const ext = path.extname(filePath).toLowerCase();
+
+            let mimetype = 'application/octet-stream';
+            if (ext === '.pdf') mimetype = 'application/pdf';
+            else if (ext === '.jpg' || ext === '.jpeg') mimetype = 'image/jpeg';
+            else if (ext === '.png') mimetype = 'image/png';
+            else if (ext === '.doc') mimetype = 'application/msword';
+            else if (ext === '.docx')
+                mimetype =
+                    'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+
+            files.push({
+                fieldname: 'files',
+                originalname: path.basename(filePath),
+                encoding: '7bit',
+                mimetype,
+                buffer,
+                size: buffer.length,
+                path: filePath,
+                stream: Readable.from(buffer),
+                destination: filePath,
+                filename: path.basename(filePath),
+            });
+        }
+
+        return files;
+    }
+
+    async getDocumentByIds(ids: string[]) {
+        return this.prisma.document.findMany({
+            where: {
+                id: { in: ids },
             },
         });
     }
