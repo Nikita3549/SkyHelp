@@ -77,6 +77,7 @@ export class ClaimService {
         claim: CreateClaimDto,
         language?: string,
         userId?: string | null,
+        isDuplicate?: boolean,
     ): Promise<IFullClaim> {
         const maxAttempts = 5;
         for (let attempt = 0; attempt < maxAttempts; attempt++) {
@@ -114,6 +115,7 @@ export class ClaimService {
                         state: {
                             create: {
                                 amount: claim.state.amount,
+                                isDuplicate,
                                 progress: {
                                     create: defaultProgress,
                                 },
@@ -576,6 +578,7 @@ export class ClaimService {
                     status: true,
                     amount: true,
                     updatedAt: true,
+                    isDuplicate: true,
                     progress: {
                         orderBy: {
                             order: 'asc' as const,
@@ -691,6 +694,26 @@ export class ClaimService {
                 partnerId: userId,
             },
             include: this.fullClaimInclude(),
+        });
+    }
+
+    async findDuplicate(claimData: {
+        firstName: string;
+        lastName: string;
+        email: string;
+        flightNumber: string;
+    }) {
+        return this.prisma.claim.findFirst({
+            where: {
+                customer: {
+                    firstName: claimData.firstName,
+                    lastName: claimData.lastName,
+                    email: claimData.email,
+                },
+                details: {
+                    flightNumber: claimData.flightNumber,
+                },
+            },
         });
     }
 }

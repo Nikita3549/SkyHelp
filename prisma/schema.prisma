@@ -123,12 +123,13 @@ model DepartureAirport {
 }
 
 model ClaimState {
-  id        String      @id @default(cuid()) @map("id")
-  status    ClaimStatus @default(PENDING) @map("status")
-  amount    Int?        @map("amount")
-  updatedAt DateTime    @updatedAt @map("updated_at")
-  progress  Progress[]
-  Claim     Claim[]
+  id          String      @id @default(cuid()) @map("id")
+  status      ClaimStatus @default(PENDING) @map("status")
+  amount      Int?        @map("amount")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
+  progress    Progress[]
+  isDuplicate Boolean     @default(false) @map("is_duplicate")
+  Claim       Claim[]
 
   @@map("claim_states")
 }

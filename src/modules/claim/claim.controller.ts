@@ -113,10 +113,18 @@ export class PublicClaimController {
             }
         }
 
+        const duplicate = await this.claimService.findDuplicate({
+            email: dto.customer.email,
+            firstName: dto.customer.firstName,
+            lastName: dto.customer.lastName,
+            flightNumber: dto.details.flightNumber,
+        });
+
         const claim = await this.claimService.createClaim(
             dto,
             language,
             userId,
+            !!duplicate,
         );
 
         const jwt = this.tokenService.generateJWT<IClaimJwt>(
