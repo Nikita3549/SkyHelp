@@ -6145,7 +6145,7 @@ id,name,alias,iata_code,icao_code,callsign,country,active
 20994,"Aruba Airlines","","","ARU","","Aruba","Y"
 20995,"BudgetAir","BudgetAir","1K","BG1","","Germany","Y"
 20996,"Dynamic Airways","","","DYA","","United States","Y"
-21012,"Fly One","Fly One",5F,FIA,"","Moldova","Y"
+21012,FlyOne,FlyOne,5F,FIA,"","Moldova","Y"
 21021,"Nordica","","EE",\N,"REVAL","Estonia","Y"
 21036,"Tez Jet Airlines","","","TEZ","","Kyrgyzstan","Y"
 21043,"Kush Air","","","KUH","","South Sudan","Y"
