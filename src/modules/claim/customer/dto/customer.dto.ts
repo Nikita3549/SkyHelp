@@ -22,21 +22,9 @@ export class CustomerDto {
 
     @IsOptional()
     @IsString()
-    postalCode?: string;
-
-    @IsOptional()
-    @IsString()
-    secondAddress?: string;
-
-    @IsOptional()
-    @IsString()
     country?: string;
 
     @IsOptional()
     @IsString()
     city?: string;
-
-    @IsOptional()
-    @IsString()
-    state?: string;
 }
