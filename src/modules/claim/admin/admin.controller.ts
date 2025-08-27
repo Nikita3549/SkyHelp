@@ -70,6 +70,7 @@ export class AdminController {
                 req.user.role == UserRole.AGENT
                     ? req.user.id
                     : undefined,
+            isOrderByAssignedAt: req.user.role != UserRole.ADMIN,
         });
     }
 

@@ -365,6 +365,7 @@ export class ClaimService {
             role?: UserRole;
             partnerId?: string;
             duplicated?: boolean;
+            isOrderByAssignedAt: boolean;
         },
         pageSize: number = 20,
     ): Promise<{ claims: IFullClaim[]; total: number }> {
@@ -420,9 +421,13 @@ export class ClaimService {
         const [claims, total] = await this.prisma.$transaction([
             this.prisma.claim.findMany({
                 where,
-                orderBy: {
-                    createdAt: 'desc',
-                },
+                orderBy: searchParams?.isOrderByAssignedAt
+                    ? {
+                          assignedAt: 'desc',
+                      }
+                    : {
+                          createdAt: 'desc',
+                      },
                 include: this.fullClaimInclude(),
                 skip,
                 take: pageSize,
@@ -697,6 +702,7 @@ export class ClaimService {
                 id: claimId,
             },
             data: {
+                assignedAt: new Date(),
                 partnerId: userId,
             },
             include: this.fullClaimInclude(),

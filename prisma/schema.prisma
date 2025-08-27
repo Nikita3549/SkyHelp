@@ -42,6 +42,7 @@ model Claim {
   user             User?              @relation("UserClaims", fields: [userId], references: [id], onDelete: Cascade)
   partnerId        String?
   partner          User?              @relation("PartnerClaims", fields: [partnerId], references: [id], onDelete: Cascade)
+  assignedAt       DateTime           @default(now()) @map("assigned_at")
   detailsId        String             @map("details_id")
   details          ClaimDetails       @relation(fields: [detailsId], references: [id], onDelete: Cascade)
   stateId          String             @map("state_id")
