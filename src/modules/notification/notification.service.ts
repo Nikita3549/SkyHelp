@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import * as fs from 'fs/promises';
 import * as path from 'node:path';
 import { Languages } from '../language/enums/languages.enums';
@@ -11,13 +11,42 @@ import {
     GENERATE_NEW_ACCOUNT_FILENAME,
 } from './constants';
 import { LETTERS_DIRECTORY_PATH } from '../../constants/LettersDirectoryPath';
+import { EmailCategory } from '../gmail/enums/email-type.enum';
+import { TokenService } from '../token/token.service';
+import { UnsubscribeJwt } from '../unsubscribe-email/interfaces/unsubscribe-jwt';
+import { UnsubscribeEmailService } from '../unsubscribe-email/unsubscribe-email.service';
 
 @Injectable()
-export class NotificationService {
+export class NotificationService implements OnModuleInit {
     constructor(
         private readonly configService: ConfigService,
         private readonly gmailService: GmailService,
+        private readonly tokenService: TokenService,
+        private readonly unsubscribeEmailService: UnsubscribeEmailService,
     ) {}
+
+    onModuleInit() {
+        // this.sendClaimCreated(
+        //     'nikitatsarenko7@gmail.com',
+        //     {
+        //         id: '123456',
+        //         link: 'localhost:3000',
+        //         airlineName: 'FlyOne',
+        //     },
+        //     true,
+        //     'en' as Languages,
+        // );
+        this.sendFinishClaim(
+            'nikitasnitko44@gmail.com',
+            {
+                id: '123456',
+                clientFirstName: 'Nikita',
+                compensation: 600,
+                continueClaimLink: 'https://skyhelp.md',
+            },
+            'en' as Languages,
+        );
+    }
 
     async sendRegisterCode(to: string, code: number) {
         !isProd() && console.log(`Send register code: ${code} on ${to}`);
@@ -41,6 +70,7 @@ export class NotificationService {
             console.log(
                 `User data send: ${userData.email}, ${userData.password} on ${to}`,
             );
+        const emailCategory = EmailCategory.TRANSACTIONAL;
 
         const letterContentHtml = (
             await this.getLetterContent(GENERATE_NEW_ACCOUNT_FILENAME, language)
@@ -52,7 +82,7 @@ export class NotificationService {
                 `${this.configService.getOrThrow('FRONTEND_HOST')}/forgot`,
             );
 
-        const layoutHtml = await this.getLayout(language);
+        const layoutHtml = await this.getLayout(to, language, emailCategory);
 
         const letterHtml = this.setContentInLayout(
             letterContentHtml,
@@ -63,6 +93,7 @@ export class NotificationService {
             to,
             'Your SkyHelp account details',
             letterHtml,
+            emailCategory,
         );
     }
 
@@ -120,6 +151,10 @@ This message was automatically generated.
         isRegistered: boolean, // deprecated param
         language: Languages = Languages.EN,
     ) {
+        const emailCategory = EmailCategory.TRANSACTIONAL;
+
+        const layoutHtml = await this.getLayout(to, language, emailCategory);
+
         const letterTemplateHtml = await this.getLetterContent(
             CREATE_CLAIM_FILENAME,
             language,
@@ -135,8 +170,6 @@ This message was automatically generated.
             .replace('{{registered}}', isRegistered ? '' : 'display: none;')
             .replace('{{notRegistered}}', isRegistered ? 'display: none;' : '');
 
-        const layoutHtml = await this.getLayout(language);
-
         const letterHtml = this.setContentInLayout(
             letterContentHtml,
             layoutHtml,
@@ -146,6 +179,7 @@ This message was automatically generated.
             to,
             `Your claim successfully submitted #${claimData.id}`,
             letterHtml,
+            emailCategory,
         );
     }
 
@@ -160,6 +194,12 @@ This message was automatically generated.
         language: Languages = Languages.EN,
     ) {
         if (!isProd()) return;
+
+        if (await this.isUnsubscribed(to)) {
+            return;
+        }
+
+        const emailCategory = EmailCategory.MARKETING;
 
         const letterTemplateHtml = await this.getLetterContent(
             FINISH_CLAIM_FILENAME,
@@ -183,7 +223,7 @@ This message was automatically generated.
                 claimData.compensation == 0 ? 'display: none;' : '',
             );
 
-        const layoutHtml = await this.getLayout(language);
+        const layoutHtml = await this.getLayout(to, language, emailCategory);
 
         const letterHtml = this.setContentInLayout(
             letterContentHtml,
@@ -194,6 +234,7 @@ This message was automatically generated.
             to,
             'Just one step away from your compensation',
             letterHtml,
+            emailCategory,
         );
     }
 
@@ -209,16 +250,39 @@ This message was automatically generated.
     }
 
     private async getLayout(
+        to: string,
         language: Languages = Languages.EN,
+        emailCategory: EmailCategory = EmailCategory.TRANSACTIONAL,
     ): Promise<string> {
-        return (
+        const layout = (
             await fs.readFile(
-                path.join(LETTERS_DIRECTORY_PATH, `layout/${language}.html`),
+                path.join(
+                    LETTERS_DIRECTORY_PATH,
+                    `layout/${emailCategory == EmailCategory.MARKETING ? '/unsubscribe/' : ''}${language}.html`,
+                ),
             )
-        ).toString();
+        )
+            .toString()
+            .replaceAll('{{domain}}', this.configService.getOrThrow('DOMAIN'));
+
+        if (emailCategory == EmailCategory.TRANSACTIONAL) {
+            return layout;
+        }
+
+        const jwt = this.tokenService.generateJWT<UnsubscribeJwt>({
+            email: to,
+        });
+
+        return layout.replaceAll('{{email}}', to).replace('{{jwt}}', jwt);
     }
 
     private setContentInLayout(content: string, layout: string): string {
         return layout.replace('{{{content}}}', content);
+    }
+
+    private async isUnsubscribed(email: string): Promise<boolean> {
+        return !!(await this.unsubscribeEmailService.getUnsubscribeEmail(
+            email,
+        ));
     }
 }

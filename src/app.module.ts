@@ -26,6 +26,7 @@ import { GoogleSheetsModule } from './modules/google-sheets/google-sheets.module
 import { YandexMetrikaModule } from './modules/yandex-metrika/yandex-metrika.module';
 import { GenerateJwtModule } from './modules/generate-jwt/generate-jwt.module';
 import { EmailResumeClickModule } from './modules/email-resume-click/email-resume-click.module';
+import { UnsubscribeEmailModule } from './modules/unsubscribe-email/unsubscribe-email.module';
 
 @Module({
     imports: [
@@ -62,6 +63,7 @@ import { EmailResumeClickModule } from './modules/email-resume-click/email-resum
         YandexMetrikaModule,
         GenerateJwtModule,
         EmailResumeClickModule,
+        UnsubscribeEmailModule,
     ],
     controllers: [AppController],
     providers: [AppService],

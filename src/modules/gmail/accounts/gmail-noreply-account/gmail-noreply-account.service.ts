@@ -2,10 +2,11 @@ import { forwardRef, Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { OAuth2Client } from 'google-auth-library';
 import { gmail_v1, google } from 'googleapis';
 import { ConfigService } from '@nestjs/config';
-import Gmail = gmail_v1.Gmail;
 import { Interval } from '@nestjs/schedule';
 import { FIFTY_FIVE_MINUTES } from '../../constants';
 import { GmailService } from '../../gmail.service';
+import { EmailCategory } from '../../enums/email-type.enum';
+import Gmail = gmail_v1.Gmail;
 
 @Injectable()
 export class GmailNoreplyAccountService implements OnModuleInit {
@@ -37,22 +38,34 @@ export class GmailNoreplyAccountService implements OnModuleInit {
         this.gmail = google.gmail({ version: 'v1', auth: this.oauth2Client });
     }
 
-    async sendEmailHtml(to: string, subject: string, htmlContent: string) {
+    async sendEmailHtml(
+        to: string,
+        subject: string,
+        htmlContent: string,
+        emailCategory: EmailCategory = EmailCategory.TRANSACTIONAL,
+    ) {
         await this.gmailService.sendEmailHtml(
             to,
             subject,
             htmlContent,
             this.configService.getOrThrow('GMAIL_NOREPLY_SENDER_NAME'),
             this.gmail,
+            emailCategory,
         );
     }
-    async sendEmail(to: string, subject: string, content: string) {
+    async sendEmail(
+        to: string,
+        subject: string,
+        content: string,
+        emailCategory: EmailCategory = EmailCategory.TRANSACTIONAL,
+    ) {
         await this.gmailService.sendEmail(
             to,
             subject,
             content,
             this.configService.getOrThrow('GMAIL_NOREPLY_SENDER_NAME'),
             this.gmail,
+            emailCategory,
         );
     }
 

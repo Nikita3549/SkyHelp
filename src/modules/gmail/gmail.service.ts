@@ -4,7 +4,6 @@ import { OAuth2Client } from 'google-auth-library';
 import { ConfigService } from '@nestjs/config';
 import { Interval } from '@nestjs/schedule';
 import { ATTACHMENT_NOT_FOUND, FIFTY_FIVE_MINUTES } from './constants';
-import Gmail = gmail_v1.Gmail;
 import { IAttachment } from './interfaces/attachment.interface';
 import { AttachmentNotFoundError } from './errors/attachment-not-found.error';
 import { ParsedMailbox, parseOneAddress } from 'email-addresses';
@@ -16,12 +15,15 @@ import { AttachmentService } from './attachment/attachment.service';
 import { EmailService } from './email/email.service';
 import { GmailNoreplyAccountService } from './accounts/gmail-noreply-account/gmail-noreply-account.service';
 import { UPLOAD_DIRECTORY_PATH } from '../../constants/UploadsDirectoryPath';
+import { EmailCategory } from './enums/email-type.enum';
+import Gmail = gmail_v1.Gmail;
 
 @Injectable()
 export class GmailService implements OnModuleInit {
     private oauth2Client: OAuth2Client;
     private _accessToken: string;
     private gmail: Gmail;
+    private readonly FRONTEND_HOST: string;
 
     constructor(
         private readonly configService: ConfigService,
@@ -32,7 +34,9 @@ export class GmailService implements OnModuleInit {
         readonly noreply: GmailNoreplyAccountService,
         readonly attachment: AttachmentService,
         readonly email: EmailService,
-    ) {}
+    ) {
+        this.FRONTEND_HOST = this.configService.getOrThrow('FRONTEND_HOST');
+    }
 
     async onModuleInit() {
         this.oauth2Client = new google.auth.OAuth2(
@@ -134,17 +138,26 @@ export class GmailService implements OnModuleInit {
         htmlContent: string,
         from: string,
         gmail: gmail_v1.Gmail = this.gmail,
+        emailCategory: EmailCategory = EmailCategory.TRANSACTIONAL,
     ) {
         try {
             const boundary = '__BOUNDARY__';
 
+            const headers = [
+                `From: ${from}`,
+                `To: ${to}`,
+                `Subject: ${subject}`,
+                'MIME-Version: 1.0',
+                `Content-Type: multipart/alternative; boundary="${boundary}"`,
+            ];
+
+            if (emailCategory == EmailCategory.MARKETING) {
+                headers.push(this.generateUnsubscribeHeader(to));
+            }
+
             const rawMessage = Buffer.from(
                 [
-                    `From: ${from}`,
-                    `To: ${to}`,
-                    `Subject: ${subject}`,
-                    'MIME-Version: 1.0',
-                    `Content-Type: multipart/alternative; boundary="${boundary}"`,
+                    ...headers,
                     '',
                     `--${boundary}`,
                     'Content-Type: text/html; charset="UTF-8"',
@@ -236,17 +249,20 @@ export class GmailService implements OnModuleInit {
         content: string,
         from: string,
         gmail: gmail_v1.Gmail = this.gmail,
+        emailCategory: EmailCategory = EmailCategory.TRANSACTIONAL,
     ) {
         try {
-            const rawMessage = Buffer.from(
-                [
-                    `From: ${from}`,
-                    `To: ${to}`,
-                    `Subject: ${subject}`,
-                    '',
-                    `${content}`,
-                ].join('\n'),
-            )
+            const headers = [
+                `From: ${from}`,
+                `To: ${to}`,
+                `Subject: ${subject}`,
+            ];
+
+            if (emailCategory == EmailCategory.MARKETING) {
+                headers.push(this.generateUnsubscribeHeader(to));
+            }
+
+            const rawMessage = Buffer.from([...headers, '', content].join('\n'))
                 .toString('base64')
                 .replace(/\+/g, '-')
                 .replace(/\//g, '_')
@@ -261,6 +277,12 @@ export class GmailService implements OnModuleInit {
         } catch (error) {
             console.error('[Gmail]', error);
         }
+    }
+
+    private generateUnsubscribeHeader(to: string) {
+        return `List-Unsubscribe: <https://${this.FRONTEND_HOST}/unsubscribe?email=${encodeURIComponent(
+            to,
+        )}>`;
     }
 
     @Interval(FIFTY_FIVE_MINUTES)
