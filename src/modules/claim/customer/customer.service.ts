@@ -23,11 +23,8 @@ export class CustomerService {
                 email: dto.email,
                 phone: dto.phone,
                 address: dto.address,
-                postalCode: dto.postalCode,
-                secondAddress: dto.secondAddress,
                 country: dto.country,
                 city: dto.city,
-                state: dto.state,
             },
         });
     }
