@@ -20,6 +20,7 @@ import { DocumentService } from '../document/document.service';
 import { DocumentType } from '@prisma/client';
 import { validateClaimJwt } from '../../../utils/validate-claim-jwt';
 import { TokenService } from '../../token/token.service';
+import { IsAgentGuard } from '../../../guards/isAgent.guard';
 
 @Controller('claims/customer')
 @UseGuards(JwtAuthGuard)
@@ -29,7 +30,7 @@ export class CustomerController {
         private readonly claimService: ClaimService,
     ) {}
 
-    @UseGuards(IsAdminGuard)
+    @UseGuards(IsAgentGuard)
     @Put('/admin/')
     async updateCustomer(@Body() dto: CustomerDto) {
         const { claimId } = dto;

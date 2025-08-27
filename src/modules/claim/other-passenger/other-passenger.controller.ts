@@ -26,6 +26,7 @@ import { TokenService } from '../../token/token.service';
 import { DocumentType } from '@prisma/client';
 import { DocumentsUploadInterceptor } from '../../../interceptors/documents/documents-upload.interceptor';
 import { UploadOtherPassengerDto } from './dto/upload-other-passenger.dto';
+import { IsAgentGuard } from '../../../guards/isAgent.guard';
 
 @Controller('claims/passengers')
 @UseGuards(JwtAuthGuard)
@@ -34,7 +35,7 @@ export class OtherPassengerController {
         private readonly otherPassengerService: OtherPassengerService,
     ) {}
 
-    @UseGuards(IsAdminGuard)
+    @UseGuards(IsAgentGuard)
     @Put('admin')
     async updateOtherPassenger(@Body() dto: UpdatePassengerDto) {
         const { passengerId } = dto;

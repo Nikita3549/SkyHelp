@@ -11,6 +11,7 @@ import { INVALID_CLAIM_ID } from '../constants';
 import { PaymentService } from './payment.service';
 import { ClaimService } from '../claim.service';
 import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
+import { IsAgentGuard } from '../../../guards/isAgent.guard';
 
 @Controller('claims/payment')
 @UseGuards(JwtAuthGuard)
@@ -20,7 +21,7 @@ export class PaymentController {
         private readonly claimService: ClaimService,
     ) {}
 
-    @UseGuards(IsAdminGuard)
+    @UseGuards(IsAgentGuard)
     @Put('admin')
     async updatePayment(@Body() dto: PaymentDto) {
         const { claimId } = dto;

@@ -25,6 +25,7 @@ import { UserRole } from '@prisma/client';
 import { INVALID_PARTNER_ID } from './constants';
 import { IsPartnerOrAgentGuard } from '../../../guards/isPartnerOrAgentGuard';
 import { AuthRequest } from '../../../interfaces/AuthRequest.interface';
+import { IsAgentGuard } from '../../../guards/isAgent.guard';
 
 @Controller('claims/admin')
 @UseGuards(JwtAuthGuard, IsPartnerOrAgentGuard)
@@ -126,7 +127,7 @@ export class AdminController {
     }
 
     @Put(':claimId')
-    @UseGuards(IsAdminGuard)
+    @UseGuards(IsAgentGuard)
     async updateClaim(
         @Body() dto: UpdateClaimDto,
         @Param('claimId') claimId: string,

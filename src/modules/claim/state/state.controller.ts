@@ -11,6 +11,7 @@ import { StateDto } from './dto/state.dto';
 import { INVALID_CLAIM_ID } from '../constants';
 import { StateService } from './state.service';
 import { ClaimService } from '../claim.service';
+import { IsAgentGuard } from '../../../guards/isAgent.guard';
 
 @Controller('claims/state')
 @UseGuards(JwtAuthGuard)
@@ -19,7 +20,7 @@ export class StateController {
         private readonly stateService: StateService,
         private readonly claimService: ClaimService,
     ) {}
-    @UseGuards(IsAdminGuard)
+    @UseGuards(IsAgentGuard)
     @Put('admin')
     async updateState(@Body() dto: StateDto) {
         const { claimId } = dto;

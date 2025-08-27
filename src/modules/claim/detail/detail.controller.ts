@@ -11,6 +11,7 @@ import { FlightDto } from './dto/flight.dto';
 import { INVALID_CLAIM_ID } from '../constants';
 import { DetailService } from './detail.service';
 import { ClaimService } from '../claim.service';
+import { IsAgentGuard } from '../../../guards/isAgent.guard';
 
 @Controller('claims/details')
 @UseGuards(JwtAuthGuard)
@@ -19,7 +20,7 @@ export class DetailController {
         private readonly detailService: DetailService,
         private readonly claimService: ClaimService,
     ) {}
-    @UseGuards(IsAdminGuard)
+    @UseGuards(IsAgentGuard)
     @Put('admin')
     async updateFlight(@Body() dto: FlightDto) {
         const { claimId } = dto;
