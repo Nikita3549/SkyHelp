@@ -373,6 +373,7 @@ export class ClaimService {
         const where: Prisma.ClaimWhereInput = {
             userId,
             archived: searchParams?.archived,
+            state: {},
         };
 
         if (searchParams?.duplicated) {
