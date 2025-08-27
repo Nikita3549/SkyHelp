@@ -3549,5 +3549,15 @@
     "UsersList.partner": "Partner",
     "ClaimsTable.actionMoveToAgent": "Assign to agent",
     "UserRolesSection.agentLabel": "Agent",
-    "UserRolesSection.agentDescription": "User assigned as an agent with claim management rights"
+    "UserRolesSection.agentDescription": "User assigned as an agent with claim management rights",
+    "UnsubscribePage.missing-email-or-token": "Missing email or token in URL",
+    "UnsubscribePage.failed-to-unsubscribe": "Failed to unsubscribe. Please try again.",
+    "UnsubscribePage.generic-error": "An error occurred while unsubscribing",
+    "UnsubscribePage.processing-your-request": "Processing your request...",
+    "UnsubscribePage.please-wait-unsubscribe": "Please wait while we unsubscribe you from our emails.",
+    "UnsubscribePage.success-title": "Successfully Unsubscribed",
+    "UnsubscribePage.success-description": "You have been successfully unsubscribed from our email list.",
+    "UnsubscribePage.email-label": "Email:",
+    "UnsubscribePage.unsubscribe-failed-title": "Unsubscribe Failed",
+    "UnsubscribePage.try-again-btn": "Try Again"
 }

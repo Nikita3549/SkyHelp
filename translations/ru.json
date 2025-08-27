@@ -3549,5 +3549,15 @@
     "UsersList.partner": "Партнёр",
     "ClaimsTable.actionMoveToAgent": "Назначить агенту",
     "UserRolesSection.agentLabel": "Агент",
-    "UserRolesSection.agentDescription": "Пользователь назначен агентом с правами управления заявками"
+    "UserRolesSection.agentDescription": "Пользователь назначен агентом с правами управления заявками",
+    "UnsubscribePage.missing-email-or-token": "В URL отсутствует адрес электронной почты или токен",
+    "UnsubscribePage.failed-to-unsubscribe": "Не удалось отписаться. Пожалуйста, попробуйте снова.",
+    "UnsubscribePage.generic-error": "Произошла ошибка при отписке",
+    "UnsubscribePage.processing-your-request": "Обрабатываем ваш запрос...",
+    "UnsubscribePage.please-wait-unsubscribe": "Пожалуйста, подождите, пока мы отпишем вас от наших писем.",
+    "UnsubscribePage.success-title": "Вы успешно отписались",
+    "UnsubscribePage.success-description": "Вы успешно отписались от нашей рассылки.",
+    "UnsubscribePage.email-label": "Эл. почта:",
+    "UnsubscribePage.unsubscribe-failed-title": "Отписка не удалась",
+    "UnsubscribePage.try-again-btn": "Попробовать снова"
 }

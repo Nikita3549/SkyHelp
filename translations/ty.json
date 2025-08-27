@@ -3570,5 +3570,15 @@
     "UsersList.partner": "Ortak",
     "ClaimsTable.actionMoveToAgent": "Ajana ata",
     "UserRolesSection.agentLabel": "Ajan",
-    "UserRolesSection.agentDescription": "Kullanıcı, talepleri yönetme yetkisine sahip bir ajan olarak atandı"
+    "UserRolesSection.agentDescription": "Kullanıcı, talepleri yönetme yetkisine sahip bir ajan olarak atandı",
+    "UnsubscribePage.missing-email-or-token": "URL'de e-posta veya belirteç eksik",
+    "UnsubscribePage.failed-to-unsubscribe": "Abonelikten çıkma başarısız oldu. Lütfen tekrar deneyin.",
+    "UnsubscribePage.generic-error": "Abonelikten çıkma sırasında bir hata oluştu",
+    "UnsubscribePage.processing-your-request": "İsteğiniz işleniyor...",
+    "UnsubscribePage.please-wait-unsubscribe": "E-postalarımızdan aboneliğinizi kaldırırken lütfen bekleyin.",
+    "UnsubscribePage.success-title": "Başarıyla abonelikten çıktınız",
+    "UnsubscribePage.success-description": "E-posta listemizden başarıyla abonelikten çıktınız.",
+    "UnsubscribePage.email-label": "E-posta:",
+    "UnsubscribePage.unsubscribe-failed-title": "Abonelikten çıkma başarısız",
+    "UnsubscribePage.try-again-btn": "Tekrar dene"
 }

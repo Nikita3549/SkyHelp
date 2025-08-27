@@ -3550,5 +3550,15 @@
     "UsersList.partner": "Partener",
     "ClaimsTable.actionMoveToAgent": "Atribuie agentului",
     "UserRolesSection.agentLabel": "Agent",
-    "UserRolesSection.agentDescription": "Utilizator desemnat ca agent cu drepturi de gestionare a cererilor"
+    "UserRolesSection.agentDescription": "Utilizator desemnat ca agent cu drepturi de gestionare a cererilor",
+    "UnsubscribePage.missing-email-or-token": "Lipsește adresa de email sau tokenul din URL",
+    "UnsubscribePage.failed-to-unsubscribe": "Dezabonarea a eșuat. Te rugăm să încerci din nou.",
+    "UnsubscribePage.generic-error": "A apărut o eroare în timpul dezabonării",
+    "UnsubscribePage.processing-your-request": "Îți procesăm solicitarea...",
+    "UnsubscribePage.please-wait-unsubscribe": "Te rugăm să aștepți cât timp te dezabonăm de la emailurile noastre.",
+    "UnsubscribePage.success-title": "Te-ai dezabonat cu succes",
+    "UnsubscribePage.success-description": "Te-ai dezabonat cu succes de la lista noastră de email.",
+    "UnsubscribePage.email-label": "Email:",
+    "UnsubscribePage.unsubscribe-failed-title": "Dezabonarea a eșuat",
+    "UnsubscribePage.try-again-btn": "Încearcă din nou"
 }
