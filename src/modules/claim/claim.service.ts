@@ -728,4 +728,13 @@ export class ClaimService {
             },
         });
     }
+
+    async getClaimByStateId(stateId: string) {
+        return this.prisma.claim.findFirst({
+            where: {
+                stateId,
+            },
+            include: this.fullClaimInclude(),
+        });
+    }
 }

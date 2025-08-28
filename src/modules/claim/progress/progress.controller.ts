@@ -1,6 +1,7 @@
 import {
     Body,
     Controller,
+    InternalServerErrorException,
     NotFoundException,
     Param,
     Put,
@@ -14,6 +15,10 @@ import { INVALID_PROGRESS_ID } from './constants';
 import { ClaimStatus, ProgressStatus } from '@prisma/client';
 import { StateService } from '../state/state.service';
 import { Progresses } from './constants/progresses';
+import { ClaimService } from '../claim.service';
+import { NotificationService } from '../../notification/notification.service';
+import { Languages } from '../../language/enums/languages.enums';
+import { isLanguage } from '../../../utils/isLanguage';
 
 @Controller('claims/progresses')
 @UseGuards(JwtAuthGuard)
@@ -21,6 +26,8 @@ export class ProgressController {
     constructor(
         private readonly progressesService: ProgressService,
         private readonly stateService: StateService,
+        private readonly claimService: ClaimService,
+        private readonly notificationService: NotificationService,
     ) {}
 
     @UseGuards(IsPartnerOrAgentGuard)
@@ -64,6 +71,29 @@ export class ProgressController {
                     progress.claimStateId,
                 );
             }
+
+            const claim = await this.claimService.getClaimByStateId(
+                newProgress.claimStateId,
+            );
+
+            if (!claim) {
+                throw new InternalServerErrorException();
+            }
+
+            const customerLanguage = isLanguage(claim.customer.language)
+                ? claim.customer.language
+                : Languages.EN;
+
+            this.notificationService.sendNewStatus(
+                claim.customer.email,
+                {
+                    title: newProgress.title,
+                    description: newProgress.description,
+                    clientName: claim.customer.firstName,
+                    claimId: claim.id,
+                },
+                customerLanguage,
+            );
         }
 
         return newProgress;

@@ -1,4 +1,4 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import * as fs from 'fs/promises';
 import * as path from 'node:path';
 import { Languages } from '../language/enums/languages.enums';
@@ -9,6 +9,7 @@ import {
     CREATE_CLAIM_FILENAME,
     FINISH_CLAIM_FILENAME,
     GENERATE_NEW_ACCOUNT_FILENAME,
+    NEW_STATUS_FILENAME,
 } from './constants';
 import { LETTERS_DIRECTORY_PATH } from '../../constants/LettersDirectoryPath';
 import { EmailCategory } from '../gmail/enums/email-type.enum';
@@ -17,36 +18,13 @@ import { UnsubscribeJwt } from '../unsubscribe-email/interfaces/unsubscribe-jwt'
 import { UnsubscribeEmailService } from '../unsubscribe-email/unsubscribe-email.service';
 
 @Injectable()
-export class NotificationService implements OnModuleInit {
+export class NotificationService {
     constructor(
         private readonly configService: ConfigService,
         private readonly gmailService: GmailService,
         private readonly tokenService: TokenService,
         private readonly unsubscribeEmailService: UnsubscribeEmailService,
     ) {}
-
-    onModuleInit() {
-        // this.sendClaimCreated(
-        //     'nikitatsarenko7@gmail.com',
-        //     {
-        //         id: '123456',
-        //         link: 'localhost:3000',
-        //         airlineName: 'FlyOne',
-        //     },
-        //     true,
-        //     'en' as Languages,
-        // );
-        this.sendFinishClaim(
-            'nikitasnitko44@gmail.com',
-            {
-                id: '123456',
-                clientFirstName: 'Nikita',
-                compensation: 600,
-                continueClaimLink: 'https://skyhelp.md',
-            },
-            'en' as Languages,
-        );
-    }
 
     async sendRegisterCode(to: string, code: number) {
         !isProd() && console.log(`Send register code: ${code} on ${to}`);
@@ -178,6 +156,48 @@ This message was automatically generated.
         await this.gmailService.noreply.sendEmailHtml(
             to,
             `Your claim successfully submitted #${claimData.id}`,
+            letterHtml,
+            emailCategory,
+        );
+    }
+
+    async sendNewStatus(
+        to: string,
+        newStatusData: {
+            title: string;
+            description: string;
+            clientName: string;
+            claimId: string;
+        },
+        language: Languages = Languages.EN,
+    ) {
+        const emailCategory = EmailCategory.TRANSACTIONAL;
+
+        const layoutHtml = await this.getLayout(to, language, emailCategory);
+
+        const letterTemplateHtml = await this.getLetterContent(
+            NEW_STATUS_FILENAME,
+            language,
+        );
+
+        const letterContentHtml = letterTemplateHtml
+            .replace('{{clientName}}', newStatusData.clientName)
+            .replace('{{claimId}}', newStatusData.claimId)
+            .replace('{{currentStep.title}}', newStatusData.title)
+            .replace('{{currentStep.description}}', newStatusData.description)
+            .replace(
+                '{{claimLink}}',
+                `https://${this.configService.getOrThrow('DOMAIN')}/dashboard`,
+            );
+
+        const letterHtml = this.setContentInLayout(
+            letterContentHtml,
+            layoutHtml,
+        );
+
+        await this.gmailService.noreply.sendEmailHtml(
+            to,
+            `Update on your claim #${newStatusData.claimId}`,
             letterHtml,
             emailCategory,
         );
