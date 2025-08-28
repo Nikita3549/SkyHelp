@@ -18,4 +18,12 @@ export class ProgressService {
             },
         });
     }
+
+    async getProgressById(progressId: string): Promise<Progress | null> {
+        return this.prisma.progress.findFirst({
+            where: {
+                id: progressId,
+            },
+        });
+    }
 }

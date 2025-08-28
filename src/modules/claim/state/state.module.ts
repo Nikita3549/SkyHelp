@@ -7,5 +7,6 @@ import { ClaimModule } from '../claim.module';
     imports: [forwardRef(() => ClaimModule)],
     controllers: [StateController],
     providers: [StateService],
+    exports: [StateService],
 })
 export class StateModule {}
