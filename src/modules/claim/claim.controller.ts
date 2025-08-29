@@ -38,7 +38,7 @@ import { DocumentService } from './document/document.service';
 import { CustomerService } from './customer/customer.service';
 import { validateClaimJwt } from '../../utils/validate-claim-jwt';
 import { IFullClaim } from './interfaces/full-claim.interface';
-import { DocumentType } from '@prisma/client';
+import { DocumentType, UserRole } from '@prisma/client';
 import { UploadFormSignDto } from './dto/upload-form-sign-dto';
 import { UserService } from '../user/user.service';
 import { AuthService } from '../auth/auth.service';
@@ -77,6 +77,7 @@ export class PublicClaimController {
     ): Promise<IClaimWithJwt> {
         const { language } = query;
         let userId: string | null | undefined;
+        let userToken: string | undefined | null;
 
         const jwtPayload = getAuthJwt(req);
         if (jwtPayload) {
@@ -101,6 +102,15 @@ export class PublicClaimController {
                     secondName: dto.customer.lastName,
                 });
                 userId = newUser.id;
+
+                userToken = this.tokenService.generateJWT({
+                    id: newUser.id,
+                    email: newUser.email,
+                    name: newUser.name,
+                    secondName: newUser.secondName,
+                    role: UserRole.CLIENT,
+                    isActive: true,
+                });
 
                 this.notificationService.sendNewGeneratedAccount(
                     dto.customer.email,
@@ -150,6 +160,7 @@ export class PublicClaimController {
         return {
             claimData: claim,
             jwt,
+            userToken: userToken ? userToken : null,
         };
     }
     @Get('/:claimId/formState')
