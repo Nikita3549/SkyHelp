@@ -14,9 +14,6 @@ export class CreateProgressDto {
     @IsValidProgress()
     validatePair: boolean;
 
-    @IsString()
-    status: ProgressStatus;
-
     @IsNumber()
     order: number;
 }
