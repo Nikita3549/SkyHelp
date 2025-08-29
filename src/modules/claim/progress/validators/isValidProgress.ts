@@ -3,14 +3,14 @@ import {
     ValidationArguments,
     ValidationOptions,
 } from 'class-validator';
-import { Progresses } from '../constants/progresses';
+import { ProgressVariants } from '../constants/progressVariants';
 
 export function IsValidProgress(validationOptions?: ValidationOptions) {
     return function (object: Object, propertyName: string) {
         registerDecorator({
             name: 'isValidProgress',
             target: object.constructor,
-            propertyName: propertyName,
+            propertyName,
             options: validationOptions,
             validator: {
                 validate(_value: unknown, args: ValidationArguments) {
@@ -23,10 +23,10 @@ export function IsValidProgress(validationOptions?: ValidationOptions) {
                         return false;
                     }
 
-                    return (
-                        obj.title in Progresses &&
-                        Progresses[obj.title as keyof typeof Progresses]
-                            .description == obj.description
+                    return Object.values(ProgressVariants).some(
+                        (progress) =>
+                            progress.title == obj.title &&
+                            progress.description == obj.description,
                     );
                 },
                 defaultMessage() {

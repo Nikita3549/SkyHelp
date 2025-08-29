@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { IProgress } from '../interfaces/progress.interface';
-import { Progress } from '@prisma/client';
+import { Progress, ProgressStatus } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { CreateProgressDto } from './dto/create-progress.dto';
+import { omit } from '../../../utils/omit';
 
 @Injectable()
 export class ProgressService {
@@ -23,6 +25,20 @@ export class ProgressService {
         return this.prisma.progress.findFirst({
             where: {
                 id: progressId,
+            },
+        });
+    }
+
+    async createProgressByClaimId(
+        progress: CreateProgressDto,
+        claimStateId: string,
+    ) {
+        return this.prisma.progress.create({
+            data: {
+                ...omit(progress, 'validatePair'),
+                claimStateId,
+                endAt: new Date(),
+                status: ProgressStatus.COMPLETED,
             },
         });
     }

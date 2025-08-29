@@ -125,7 +125,7 @@ model DepartureAirport {
 
 model ClaimState {
   id          String      @id @default(cuid()) @map("id")
-  status      ClaimStatus @default(PENDING) @map("status")
+  status      ClaimStatus @default(CLAIM_RECEIVED) @map("status")
   amount      Int?        @map("amount")
   updatedAt   DateTime    @updatedAt @map("updated_at")
   progress    Progress[]
@@ -141,7 +141,7 @@ model Progress {
   description  String         @map("description")
   endAt        DateTime?      @map("end_at")
   order        Int            @default(1)
-  status       ProgressStatus @map("status")
+  status       ProgressStatus @default(COMPLETED) @map("status")
   claimStateId String         @map("claim_state_id")
   claimState   ClaimState     @relation(fields: [claimStateId], references: [id], onDelete: Cascade)
 
@@ -153,8 +153,17 @@ enum ClaimStatus {
   PENDING
   IN_PROGRESS
   ESCALATED
-  REJECTED
-  NOT_ELIGIBLE
+  CLAIM_RECEIVED  @map("Claim Received")
+  MISSING_INFO    @map("Missing Info")
+  DOCS_REQUESTED  @map("Docs Requested")
+  SENT_TO_AIRLINE @map("Sent to Airline")
+  WAITING_AIRLINE @map("Waiting Airline")
+  APPROVED        @map("Approved")
+  PAID            @map("Paid")
+  REJECTED        @map("Rejected")
+  LEGAL_PROCESS   @map("Legal Process")
+  CLOSED          @map("Closed")
+  NOT_ELIGIBLE    @map("Not Eligible")
 }
 
 enum ProgressStatus {
