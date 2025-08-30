@@ -30,12 +30,16 @@ export class ProgressService {
     }
 
     async createProgressByClaimId(
-        progress: CreateProgressDto,
+        progress: {
+            title: string;
+            description: string;
+            order: number;
+        },
         claimStateId: string,
     ) {
         return this.prisma.progress.create({
             data: {
-                ...omit(progress, 'validatePair'),
+                ...progress,
                 claimStateId,
                 endAt: new Date(),
                 status: ProgressStatus.COMPLETED,
