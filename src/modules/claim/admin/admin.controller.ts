@@ -3,6 +3,7 @@ import {
     Body,
     Controller,
     Delete,
+    ForbiddenException,
     Get,
     NotFoundException,
     Param,
@@ -15,7 +16,7 @@ import {
 import { IsAdminGuard } from '../../../guards/isAdminGuard';
 import { GetClaimsQuery } from './dto/get-claims.query';
 import { ArchiveClaimDto } from './dto/archive-claim.dto';
-import { INVALID_CLAIM_ID } from '../constants';
+import { DONT_HAVE_RIGHTS_ON_CLAIM, INVALID_CLAIM_ID } from '../constants';
 import { UpdateClaimDto } from '../dto/update-claim.dto';
 import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
 import { ClaimService } from '../claim.service';
@@ -103,6 +104,7 @@ export class AdminController {
     async archiveClaim(
         @Body() dto: ArchiveClaimDto,
         @Param('claimId') claimId: string,
+        @Req() req: AuthRequest,
     ) {
         const { archived } = dto;
 
@@ -112,11 +114,14 @@ export class AdminController {
             throw new NotFoundException(INVALID_CLAIM_ID);
         }
 
+        if (req.user.role != UserRole.ADMIN && req.user.id != claim.partnerId) {
+            throw new ForbiddenException(DONT_HAVE_RIGHTS_ON_CLAIM);
+        }
+
         await this.claimService.setArchived(claimId, archived);
     }
 
     @Get(':claimId')
-    @UseGuards(IsAdminGuard)
     async getAdminClaim(@Param('claimId') claimId: string) {
         const claim = await this.claimService.getClaim(claimId);
 
