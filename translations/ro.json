@@ -3582,5 +3582,7 @@
     "closedWithoutResolution.title": "Închis fără rezolvare",
     "closedWithoutResolution.description": "Caz închis din cauza lipsei de documente, eligibilității sau la cererea dvs.",
     "notEligible.title": "Neeligibil",
-    "notEligible.description": "Cazul dvs. nu se califică conform Regulamentului UE 261/2004."
+    "notEligible.description": "Cazul dvs. nu se califică conform Regulamentului UE 261/2004.",
+    "ClaimProgressTimeline.nextStep": "Următorii pași urmează...",
+    "ClaimProgressTimeline.nextStepDescription": "Lucrăm la cererea ta și te vom actualiza în curând."
 }

@@ -3602,5 +3602,7 @@
     "closedWithoutResolution.title": "Çözüm Olmadan Kapatıldı",
     "closedWithoutResolution.description": "Dosya eksik belgeler, uygun olmama durumu veya talebiniz üzerine kapatıldı.",
     "notEligible.title": "Uygun Değil",
-    "notEligible.description": "Dosyanız AB Yönetmeliği 261/2004 kapsamında uygun değildir."
+    "notEligible.description": "Dosyanız AB Yönetmeliği 261/2004 kapsamında uygun değildir.",
+    "ClaimProgressTimeline.nextStep": "Sonraki adımlar yakında...",
+    "ClaimProgressTimeline.nextStepDescription": "Talebiniz üzerinde çalışıyoruz ve yakında sizi bilgilendireceğiz."
 }

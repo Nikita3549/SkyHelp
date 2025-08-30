@@ -3581,5 +3581,6 @@
     "closedWithoutResolution.title": "Закрыто без решения",
     "closedWithoutResolution.description": "Дело закрыто из-за отсутствующих документов, неподходящих условий или по вашему запросу.",
     "notEligible.title": "Не подходит",
-    "notEligible.description": "Ваше дело не подпадает под действие Регламента ЕС 261/2004."
+    "notEligible.description": "Ваше дело не подпадает под действие Регламента ЕС 261/2004.",
+    "ClaimProgressTimeline.nextStep": "Следующие шаги скоро...", "ClaimProgressTimeline.nextStepDescription": "Мы работаем над вашей заявкой и скоро обновим информацию."
 }

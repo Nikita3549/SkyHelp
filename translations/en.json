@@ -3581,5 +3581,7 @@
     "closedWithoutResolution.title": "Closed Without Resolution",
     "closedWithoutResolution.description": "Case closed due to missing documents, eligibility, or by your request.",
     "notEligible.title": "Not Eligible",
-    "notEligible.description": "Your case does not qualify under EU Regulation 261/2004."
+    "notEligible.description": "Your case does not qualify under EU Regulation 261/2004.",
+    "ClaimProgressTimeline.nextStep": "Next steps coming...",
+    "ClaimProgressTimeline.nextStepDescription": "We're working on your claim and will update you soon."
 }
