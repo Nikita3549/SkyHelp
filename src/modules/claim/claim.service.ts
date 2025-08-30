@@ -9,7 +9,7 @@ import {
 } from '@prisma/client';
 import { CreateClaimDto } from './dto/create-claim.dto';
 import { IGetCompensation } from './interfaces/compensation.interface';
-import { defaultProgress } from './progress/constants/default-progress';
+import { defaultProgress } from './progress/constants/progresses/default-progress';
 import { UpdateClaimDto } from './dto/update-claim.dto';
 import { IFullClaim } from './interfaces/full-claim.interface';
 import { InjectQueue } from '@nestjs/bullmq';

@@ -19,8 +19,9 @@ import { Languages } from '../../language/enums/languages.enums';
 import { isLanguage } from '../../../utils/isLanguage';
 import { CreateProgressDto } from './dto/create-progress.dto';
 import { INVALID_CLAIM_ID } from '../constants';
-import { ProgressVariants } from './constants/progressVariants';
+import { ProgressVariants } from './constants/progresses/progressVariants';
 import { ClaimStatus } from '@prisma/client';
+import { enProgresses } from './constants/progresses/translations/en.json';
 
 @Controller('claims/progresses')
 @UseGuards(JwtAuthGuard, IsPartnerOrAgentGuard)
@@ -125,8 +126,8 @@ export class ProgressController {
         this.notificationService.sendNewStatus(
             claim.customer.email,
             {
-                title: progress.title,
-                description: progress.description,
+                title: enProgresses[progress.title],
+                description: enProgresses[progress.description],
                 clientName: claim.customer.firstName,
                 claimId: claim.id,
             },
