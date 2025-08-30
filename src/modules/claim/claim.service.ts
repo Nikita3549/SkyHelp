@@ -472,7 +472,7 @@ export class ClaimService {
                 where: {
                     userId,
                     state: {
-                        status: ClaimStatus.COMPLETED,
+                        status: ClaimStatus.PAID,
                     },
                     archived: false,
                     partnerId,
@@ -485,7 +485,11 @@ export class ClaimService {
                     userId,
                     state: {
                         status: {
-                            in: [ClaimStatus.PENDING, ClaimStatus.IN_PROGRESS],
+                            notIn: [
+                                ClaimStatus.PAID,
+                                ClaimStatus.CLOSED,
+                                ClaimStatus.NOT_ELIGIBLE,
+                            ],
                         },
                     },
                     archived: false,
@@ -495,7 +499,7 @@ export class ClaimService {
             // sum of ClaimState.amount where state.status = COMPLETED
             this.prisma.claimState.aggregate({
                 where: {
-                    status: ClaimStatus.COMPLETED,
+                    status: ClaimStatus.PAID,
                     Claim: { some: { userId, archived: false, partnerId } },
                 },
                 _sum: { amount: true },
