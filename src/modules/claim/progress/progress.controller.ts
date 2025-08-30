@@ -21,7 +21,10 @@ import { CreateProgressDto } from './dto/create-progress.dto';
 import { INVALID_CLAIM_ID } from '../constants';
 import { ProgressVariants } from './constants/progresses/progressVariants';
 import { ClaimStatus } from '@prisma/client';
-import { enProgresses } from './constants/progresses/translations/en.json';
+import { enProgresses } from './constants/progresses/translations/en';
+import { ruProgresses } from './constants/progresses/translations/ru';
+import { tyProgresses } from './constants/progresses/translations/ty';
+import { roProgresses } from './constants/progresses/translations/ro';
 
 @Controller('claims/progresses')
 @UseGuards(JwtAuthGuard, IsPartnerOrAgentGuard)
@@ -123,11 +126,33 @@ export class ProgressController {
             ? claim.customer.language
             : Languages.EN;
 
+        let translatedTitle: string;
+        let translatedDescription: string;
+
+        switch (customerLanguage) {
+            case Languages.RU:
+                translatedTitle = ruProgresses[progress.title];
+                translatedDescription = ruProgresses[progress.description];
+                break;
+            case Languages.RO:
+                translatedTitle = roProgresses[progress.title];
+                translatedDescription = roProgresses[progress.description];
+                break;
+            case Languages.TY:
+                translatedTitle = tyProgresses[progress.title];
+                translatedDescription = tyProgresses[progress.description];
+                break;
+            default:
+                translatedTitle = enProgresses[progress.title];
+                translatedDescription = enProgresses[progress.description];
+                break;
+        }
+
         this.notificationService.sendNewStatus(
             claim.customer.email,
             {
-                title: enProgresses[progress.title],
-                description: enProgresses[progress.description],
+                title: translatedTitle,
+                description: translatedDescription,
                 clientName: claim.customer.firstName,
                 claimId: claim.id,
             },
