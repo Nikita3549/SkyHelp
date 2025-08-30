@@ -3582,5 +3582,14 @@
     "closedWithoutResolution.description": "Дело закрыто из-за отсутствующих документов, неподходящих условий или по вашему запросу.",
     "notEligible.title": "Не подходит",
     "notEligible.description": "Ваше дело не подпадает под действие Регламента ЕС 261/2004.",
-    "ClaimProgressTimeline.nextStep": "Следующие шаги скоро...", "ClaimProgressTimeline.nextStepDescription": "Мы работаем над вашей заявкой и скоро обновим информацию."
+    "ClaimProgressTimeline.nextStep": "Следующие шаги скоро...", "ClaimProgressTimeline.nextStepDescription": "Мы работаем над вашей заявкой и скоро обновим информацию.",
+    "StatusBadge.claimReceived": "Заявка получена",
+    "StatusBadge.missingInfo": "Отсутствует информация",
+    "StatusBadge.docsRequested": "Запрошены документы",
+    "StatusBadge.sentToAirline": "Отправлено в авиакомпанию",
+    "StatusBadge.waitingAirline": "Ожидание ответа авиакомпании",
+    "StatusBadge.approved": "Одобрено",
+    "StatusBadge.paid": "Оплачено",
+    "StatusBadge.legalProcess": "Юридический процесс",
+    "StatusBadge.closed": "Закрыто"
 }

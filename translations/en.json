@@ -3583,5 +3583,14 @@
     "notEligible.title": "Not Eligible",
     "notEligible.description": "Your case does not qualify under EU Regulation 261/2004.",
     "ClaimProgressTimeline.nextStep": "Next steps coming...",
-    "ClaimProgressTimeline.nextStepDescription": "We're working on your claim and will update you soon."
+    "ClaimProgressTimeline.nextStepDescription": "We're working on your claim and will update you soon.",
+    "StatusBadge.claimReceived": "Claim Received",
+    "StatusBadge.missingInfo": "Missing Information",
+    "StatusBadge.docsRequested": "Documents Requested",
+    "StatusBadge.sentToAirline": "Sent to Airline",
+    "StatusBadge.waitingAirline": "Waiting for Airline",
+    "StatusBadge.approved": "Approved",
+    "StatusBadge.paid": "Paid",
+    "StatusBadge.legalProcess": "Legal Process",
+    "StatusBadge.closed": "Closed"
 }

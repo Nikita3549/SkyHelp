@@ -3604,5 +3604,14 @@
     "notEligible.title": "Uygun Değil",
     "notEligible.description": "Dosyanız AB Yönetmeliği 261/2004 kapsamında uygun değildir.",
     "ClaimProgressTimeline.nextStep": "Sonraki adımlar yakında...",
-    "ClaimProgressTimeline.nextStepDescription": "Talebiniz üzerinde çalışıyoruz ve yakında sizi bilgilendireceğiz."
+    "ClaimProgressTimeline.nextStepDescription": "Talebiniz üzerinde çalışıyoruz ve yakında sizi bilgilendireceğiz.",
+    "StatusBadge.claimReceived": "Talep alındı",
+    "StatusBadge.missingInfo": "Eksik bilgi",
+    "StatusBadge.docsRequested": "Belgeler istendi",
+    "StatusBadge.sentToAirline": "Havayoluna gönderildi",
+    "StatusBadge.waitingAirline": "Havayolu yanıtı bekleniyor",
+    "StatusBadge.approved": "Onaylandı",
+    "StatusBadge.paid": "Ödendi",
+    "StatusBadge.legalProcess": "Hukuki süreç",
+    "StatusBadge.closed": "Kapatıldı"
 }

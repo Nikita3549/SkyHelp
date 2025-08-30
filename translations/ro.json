@@ -3584,5 +3584,14 @@
     "notEligible.title": "Neeligibil",
     "notEligible.description": "Cazul dvs. nu se califică conform Regulamentului UE 261/2004.",
     "ClaimProgressTimeline.nextStep": "Următorii pași urmează...",
-    "ClaimProgressTimeline.nextStepDescription": "Lucrăm la cererea ta și te vom actualiza în curând."
+    "ClaimProgressTimeline.nextStepDescription": "Lucrăm la cererea ta și te vom actualiza în curând.",
+    "StatusBadge.claimReceived": "Cerere primită",
+    "StatusBadge.missingInfo": "Informații lipsă",
+    "StatusBadge.docsRequested": "Documente solicitate",
+    "StatusBadge.sentToAirline": "Trimis către compania aeriană",
+    "StatusBadge.waitingAirline": "Se așteaptă răspunsul companiei aeriene",
+    "StatusBadge.approved": "Aprobat",
+    "StatusBadge.paid": "Plătit",
+    "StatusBadge.legalProcess": "Proces legal",
+    "StatusBadge.closed": "Închis"
 }
