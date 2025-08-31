@@ -3593,5 +3593,8 @@
     "StatusBadge.approved": "Aprobat",
     "StatusBadge.paid": "Plătit",
     "StatusBadge.legalProcess": "Proces legal",
-    "StatusBadge.closed": "Închis"
+    "StatusBadge.closed": "Închis",
+    "DashboardClient.overview": "Prezentare generală",
+    "DashboardClient.documents": "Documente",
+    "DashboardClient.claim": "Cerere"
 }

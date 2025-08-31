@@ -3613,5 +3613,8 @@
     "StatusBadge.approved": "Onaylandı",
     "StatusBadge.paid": "Ödendi",
     "StatusBadge.legalProcess": "Hukuki süreç",
-    "StatusBadge.closed": "Kapatıldı"
+    "StatusBadge.closed": "Kapatıldı",
+    "DashboardClient.overview": "Genel Bakış",
+    "DashboardClient.documents": "Belgeler",
+    "DashboardClient.claim": "Talep"
 }

@@ -3591,5 +3591,8 @@
     "StatusBadge.approved": "Одобрено",
     "StatusBadge.paid": "Оплачено",
     "StatusBadge.legalProcess": "Юридический процесс",
-    "StatusBadge.closed": "Закрыто"
+    "StatusBadge.closed": "Закрыто",
+    "DashboardClient.overview": "Обзор",
+    "DashboardClient.documents": "Документы",
+    "DashboardClient.claim": "Заявка"
 }

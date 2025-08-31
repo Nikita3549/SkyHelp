@@ -3592,5 +3592,8 @@
     "StatusBadge.approved": "Approved",
     "StatusBadge.paid": "Paid",
     "StatusBadge.legalProcess": "Legal Process",
-    "StatusBadge.closed": "Closed"
+    "StatusBadge.closed": "Closed",
+    "DashboardClient.overview": "Overview",
+    "DashboardClient.documents": "Documents",
+    "DashboardClient.claim": "Claim"
 }
