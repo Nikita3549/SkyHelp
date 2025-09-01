@@ -3596,5 +3596,6 @@
     "StatusBadge.closed": "Închis",
     "DashboardClient.overview": "Prezentare generală",
     "DashboardClient.documents": "Documente",
-    "DashboardClient.claim": "Cerere"
+    "DashboardClient.claim": "Cerere",
+    "DashboardClient.issue": "Problematic"
 }

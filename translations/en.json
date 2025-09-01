@@ -3595,5 +3595,6 @@
     "StatusBadge.closed": "Closed",
     "DashboardClient.overview": "Overview",
     "DashboardClient.documents": "Documents",
-    "DashboardClient.claim": "Claim"
+    "DashboardClient.claim": "Claim",
+    "DashboardClient.issue": "Issue"
 }

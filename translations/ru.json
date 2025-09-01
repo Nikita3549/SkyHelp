@@ -3594,5 +3594,6 @@
     "StatusBadge.closed": "Закрыто",
     "DashboardClient.overview": "Обзор",
     "DashboardClient.documents": "Документы",
-    "DashboardClient.claim": "Заявка"
+    "DashboardClient.claim": "Заявка",
+    "DashboardClient.issue": "Проблемный"
 }
