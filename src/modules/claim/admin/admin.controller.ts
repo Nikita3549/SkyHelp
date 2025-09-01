@@ -67,10 +67,10 @@ export class AdminController {
             role,
             partnerId:
                 partnerId ||
-                req.user.role == UserRole.PARTNER ||
+                (req.user.role == UserRole.PARTNER ||
                 req.user.role == UserRole.AGENT
                     ? req.user.id
-                    : undefined,
+                    : undefined),
             isOrderByAssignedAt: req.user.role != UserRole.ADMIN,
         });
     }
