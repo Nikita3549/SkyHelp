@@ -2,7 +2,7 @@ import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
 import { CLAIM_QUEUE_KEY, FINAL_STEP, INVALID_CLAIM_ID } from '../constants';
 import { NotificationService } from '../../notification/notification.service';
-import { IJobData } from '../interfaces/job-data.interface';
+import { IJobClaimFollowupData } from '../interfaces/job-data.interface';
 import { ClaimService } from '../claim.service';
 import { EmailResumeClickService } from '../../email-resume-click/email-resume-click.service';
 
@@ -15,7 +15,7 @@ export class ClaimFollowupProcessor extends WorkerHost {
     ) {
         super();
     }
-    async process(job: Job<IJobData>) {
+    async process(job: Job<IJobClaimFollowupData>) {
         const {
             email,
             claimId,

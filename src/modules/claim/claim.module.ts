@@ -22,6 +22,7 @@ import { ClaimGateway } from './claim.gateway';
 import { EmailResumeClickModule } from '../email-resume-click/email-resume-click.module';
 import { UserModule } from '../user/user.module';
 import { AuthModule } from '../auth/auth.module';
+import { SEND_NEW_PROGRESS_EMAIL_QUEUE_KEY } from './progress/constants';
 
 @Module({
     imports: [

@@ -29,6 +29,14 @@ export class ProgressService {
         });
     }
 
+    async deleteProgress(progressId: string) {
+        return this.prisma.progress.delete({
+            where: {
+                id: progressId,
+            },
+        });
+    }
+
     async createProgressByClaimId(
         progress: {
             title: string;

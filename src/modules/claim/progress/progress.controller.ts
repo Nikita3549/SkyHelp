@@ -1,20 +1,25 @@
 import {
     Body,
     Controller,
+    Delete,
+    HttpCode,
     InternalServerErrorException,
     NotFoundException,
     Param,
     Post,
-    Put,
     UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
 import { ProgressService } from './progress.service';
 import { IsPartnerOrAgentGuard } from '../../../guards/isPartnerOrAgentGuard';
-import { UNKNOWN_PROGRESS_VARIANT } from './constants';
+import {
+    INVALID_PROGRESS_ID,
+    SEND_NEW_PROGRESS_EMAIL_QUEUE_DELAY,
+    SEND_NEW_PROGRESS_EMAIL_QUEUE_KEY,
+    UNKNOWN_PROGRESS_VARIANT,
+} from './constants';
 import { StateService } from '../state/state.service';
 import { ClaimService } from '../claim.service';
-import { NotificationService } from '../../notification/notification.service';
 import { Languages } from '../../language/enums/languages.enums';
 import { isLanguage } from '../../../utils/isLanguage';
 import { CreateProgressDto } from './dto/create-progress.dto';
@@ -25,6 +30,10 @@ import { enProgresses } from './constants/progresses/translations/en';
 import { ruProgresses } from './constants/progresses/translations/ru';
 import { tyProgresses } from './constants/progresses/translations/ty';
 import { roProgresses } from './constants/progresses/translations/ro';
+import { InjectQueue } from '@nestjs/bullmq';
+import { Queue } from 'bullmq';
+import { ISendNewProgressEmailJobData } from './interfaces/send-new-progress-email-job-data.interface';
+import { HttpStatusCode } from 'axios';
 
 @Controller('claims/progresses')
 @UseGuards(JwtAuthGuard, IsPartnerOrAgentGuard)
@@ -33,63 +42,9 @@ export class ProgressController {
         private readonly progressesService: ProgressService,
         private readonly stateService: StateService,
         private readonly claimService: ClaimService,
-        private readonly notificationService: NotificationService,
+        @InjectQueue(SEND_NEW_PROGRESS_EMAIL_QUEUE_KEY)
+        private readonly sendNewProgressEmailQueue: Queue,
     ) {}
-
-    // @UseGuards(IsPartnerOrAgentGuard)
-    // @Put(':progressId')
-    // async updateProgress(
-    //     @Body() dto: UpdateProgressDto,
-    //     @Param('progressId') progressId: string,
-    // ) {
-    //     const progress =
-    //         await this.progressesService.getProgressById(progressId);
-    //
-    //     if (!progress) {
-    //         throw new NotFoundException(INVALID_PROGRESS_ID);
-    //     }
-    //
-    //     const newProgress = await this.progressesService.updateProgress(
-    //         {
-    //             title: dto.title,
-    //             description: dto.description,
-    //             endAt: dto.endAt ? new Date(dto.endAt) : null,
-    //             status: dto.status,
-    //             order: dto.order,
-    //         },
-    //         progressId,
-    //     );
-    //
-    //     if (
-    //         progress.status != newProgress.status &&
-    //         newProgress.status == ProgressStatus.COMPLETED
-    //     ) {
-    //         const claim = await this.claimService.getClaimByStateId(
-    //             newProgress.claimStateId,
-    //         );
-    //
-    //         if (!claim) {
-    //             throw new InternalServerErrorException();
-    //         }
-    //
-    //         const customerLanguage = isLanguage(claim.customer.language)
-    //             ? claim.customer.language
-    //             : Languages.EN;
-    //
-    //         this.notificationService.sendNewStatus(
-    //             claim.customer.email,
-    //             {
-    //                 title: newProgress.title,
-    //                 description: newProgress.description,
-    //                 clientName: claim.customer.firstName,
-    //                 claimId: claim.id,
-    //             },
-    //             customerLanguage,
-    //         );
-    //     }
-    //
-    //     return newProgress;
-    // }
 
     @Post(':claimId')
     async createProgress(
@@ -148,18 +103,41 @@ export class ProgressController {
                 break;
         }
 
-        this.notificationService.sendNewStatus(
-            claim.customer.email,
-            {
+        const jobData: ISendNewProgressEmailJobData = {
+            progressId: progress.id,
+            emailData: {
+                to: claim.customer.email,
                 title: translatedTitle,
                 description: translatedDescription,
                 clientName: claim.customer.firstName,
                 claimId: claim.id,
+                language: customerLanguage,
             },
-            customerLanguage,
+        };
+
+        await this.sendNewProgressEmailQueue.add(
+            'sendNewProgressEmail',
+            jobData,
+            {
+                delay: SEND_NEW_PROGRESS_EMAIL_QUEUE_DELAY,
+                attempts: 1,
+            },
         );
 
         return progress;
+    }
+
+    @Delete(':progressId')
+    @HttpCode(HttpStatusCode.NoContent)
+    async deleteProgress(@Param('progressId') progressId: string) {
+        const progress =
+            await this.progressesService.getProgressById(progressId);
+
+        if (!progress) {
+            throw new NotFoundException(INVALID_PROGRESS_ID);
+        }
+
+        await this.progressesService.deleteProgress(progressId);
     }
 
     private getProgressVariantByStatus(

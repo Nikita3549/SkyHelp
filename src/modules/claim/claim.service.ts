@@ -24,7 +24,7 @@ import {
     TWO_DAYS_MILLISECONDS,
 } from './constants';
 import { Queue } from 'bullmq';
-import { IJobData } from './interfaces/job-data.interface';
+import { IJobClaimFollowupData } from './interfaces/job-data.interface';
 
 @Injectable()
 export class ClaimService {
@@ -34,7 +34,7 @@ export class ClaimService {
         private readonly claimFollowupQueue: Queue,
     ) {}
 
-    scheduleClaimFollowUpEmails(jobData: IJobData) {
+    scheduleClaimFollowUpEmails(jobData: IJobClaimFollowupData) {
         const delays = [
             ONE_HOUR_MILLISECONDS,
             ONE_DAY_MILLISECONDS,
