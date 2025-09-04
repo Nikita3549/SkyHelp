@@ -3595,5 +3595,8 @@
     "DashboardClient.overview": "Обзор",
     "DashboardClient.documents": "Документы",
     "DashboardClient.claim": "Заявка",
-    "DashboardClient.issue": "Проблемный"
+    "DashboardClient.issue": "Проблемный",
+    "DocumentsSection.title": "Загрузите любые документы",
+    "DocumentsTab.toastAgreementLinkCopiedTitle": "Ссылка на договор скопирована",
+    "DocumentsTab.toastAgreementLinkCopiedDescription": "Ссылка на договор была скопирована в буфер обмена."
 }

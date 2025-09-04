@@ -3596,5 +3596,8 @@
     "DashboardClient.overview": "Overview",
     "DashboardClient.documents": "Documents",
     "DashboardClient.claim": "Claim",
-    "DashboardClient.issue": "Issue"
+    "DashboardClient.issue": "Issue",
+    "DocumentsSection.title": "Upload any documents",
+    "DocumentsTab.toastAgreementLinkCopiedTitle": "Agreement link copied",
+    "DocumentsTab.toastAgreementLinkCopiedDescription": "The agreement link has been copied to your clipboard."
 }

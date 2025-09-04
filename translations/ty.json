@@ -3617,5 +3617,8 @@
     "DashboardClient.overview": "Genel Bakış",
     "DashboardClient.documents": "Belgeler",
     "DashboardClient.claim": "Talep",
-    "DashboardClient.issue": "Sorun"
+    "DashboardClient.issue": "Sorun",
+    "DocumentsSection.title": "Herhangi bir belge yükleyin",
+    "DocumentsTab.toastAgreementLinkCopiedTitle": "Sözleşme bağlantısı kopyalandı",
+    "DocumentsTab.toastAgreementLinkCopiedDescription": "Sözleşme bağlantısı panoya kopyalandı."
 }
