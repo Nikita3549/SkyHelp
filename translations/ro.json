@@ -3600,5 +3600,6 @@
     "DashboardClient.issue": "Problematic",
     "DocumentsSection.title": "Încarcă orice documente",
     "DocumentsTab.toastAgreementLinkCopiedTitle": "Link-ul către contract a fost copiat",
-    "DocumentsTab.toastAgreementLinkCopiedDescription": "Link-ul către contract a fost copiat în clipboard."
+    "DocumentsTab.toastAgreementLinkCopiedDescription": "Link-ul către contract a fost copiat în clipboard.",
+    "ClaimStatusCard.created_at": "Data creării"
 }

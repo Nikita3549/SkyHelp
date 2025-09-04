@@ -3598,5 +3598,6 @@
     "DashboardClient.issue": "Проблемный",
     "DocumentsSection.title": "Загрузите любые документы",
     "DocumentsTab.toastAgreementLinkCopiedTitle": "Ссылка на договор скопирована",
-    "DocumentsTab.toastAgreementLinkCopiedDescription": "Ссылка на договор была скопирована в буфер обмена."
+    "DocumentsTab.toastAgreementLinkCopiedDescription": "Ссылка на договор была скопирована в буфер обмена.",
+    "ClaimStatusCard.created_at": "Дата создания"
 }

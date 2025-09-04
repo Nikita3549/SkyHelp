@@ -3599,5 +3599,6 @@
     "DashboardClient.issue": "Issue",
     "DocumentsSection.title": "Upload any documents",
     "DocumentsTab.toastAgreementLinkCopiedTitle": "Agreement link copied",
-    "DocumentsTab.toastAgreementLinkCopiedDescription": "The agreement link has been copied to your clipboard."
+    "DocumentsTab.toastAgreementLinkCopiedDescription": "The agreement link has been copied to your clipboard.",
+    "ClaimStatusCard.created_at": "Creation date"
 }
