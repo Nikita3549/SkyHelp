@@ -94,10 +94,6 @@ export class PublicOtherPassengerController {
             throw new NotFoundException(INVALID_PASSENGER_ID);
         }
 
-        if (passenger.isSigned) {
-            return;
-        }
-
         const claim = await this.claimService.getClaim(passenger.claimId);
 
         if (!claim) {
