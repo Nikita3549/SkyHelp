@@ -42,6 +42,7 @@ import { DocumentType, UserRole } from '@prisma/client';
 import { UploadFormSignDto } from './dto/upload-form-sign-dto';
 import { UserService } from '../user/user.service';
 import { AuthService } from '../auth/auth.service';
+import { generateAssignmentName } from '../../utils/generate-assignment-name';
 
 @Controller('claims')
 @UseGuards(JwtAuthGuard)
@@ -221,7 +222,10 @@ export class PublicClaimController {
             [
                 {
                     path,
-                    name: `${claim.customer.firstName}_${claim.customer.lastName}-assignment_agreement.pdf`,
+                    name: generateAssignmentName(
+                        claim.customer.firstName,
+                        claim.customer.lastName,
+                    ),
                 },
             ],
             claimId,

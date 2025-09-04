@@ -31,6 +31,7 @@ import { OtherPassengerService } from '../claim/other-passenger/other-passenger.
 import { ALREADY_SIGNED_EXCEPTION } from './constants';
 import { IFullClaim } from '../claim/interfaces/full-claim.interface';
 import { IAssignmentData } from './interfaces/assignment-data.interface';
+import { generateAssignmentName } from '../../utils/generate-assignment-name';
 
 @Controller('zoho')
 export class ZohoController {
@@ -112,7 +113,10 @@ export class ZohoController {
             [
                 {
                     path,
-                    name: `${claim.customer.firstName}_${claim.customer.lastName}-assignment_agreement.pdf`,
+                    name: generateAssignmentName(
+                        claim.customer.firstName,
+                        claim.customer.lastName,
+                    ),
                 },
             ],
             claim.id,
@@ -151,7 +155,10 @@ export class ZohoController {
             [
                 {
                     path,
-                    name: `${claim.customer.firstName}_${claim.customer.lastName}-assignment_agreement.pdf`,
+                    name: generateAssignmentName(
+                        claim.customer.firstName,
+                        claim.customer.lastName,
+                    ),
                 },
             ],
             claim.id,
@@ -188,7 +195,10 @@ export class ZohoController {
             [
                 {
                     path,
-                    name: `${passenger.firstName}_${passenger.lastName}-assignment_agreement.pdf`,
+                    name: generateAssignmentName(
+                        passenger.firstName,
+                        passenger.lastName,
+                    ),
                 },
             ],
             claim.id,

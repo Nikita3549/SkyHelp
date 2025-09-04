@@ -12,7 +12,6 @@ import {
     UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
-import { IsAdminGuard } from '../../../guards/isAdminGuard';
 import { UpdatePassengerDto } from './dto/update-passenger.dto';
 import { CLAIM_NOT_FOUND, INVALID_PASSENGER_ID } from '../constants';
 import { OtherPassengerService } from './other-passenger.service';
@@ -27,6 +26,7 @@ import { DocumentType } from '@prisma/client';
 import { DocumentsUploadInterceptor } from '../../../interceptors/documents/documents-upload.interceptor';
 import { UploadOtherPassengerDto } from './dto/upload-other-passenger.dto';
 import { IsAgentGuard } from '../../../guards/isAgent.guard';
+import { generateAssignmentName } from '../../../utils/generate-assignment-name';
 
 @Controller('claims/passengers')
 @UseGuards(JwtAuthGuard)
@@ -114,7 +114,10 @@ export class PublicOtherPassengerController {
             [
                 {
                     path,
-                    name: `${passenger.firstName}_${passenger.lastName}-assignment_agreement.pdf`,
+                    name: generateAssignmentName(
+                        passenger.firstName,
+                        passenger.lastName,
+                    ),
                 },
             ],
             claimId,

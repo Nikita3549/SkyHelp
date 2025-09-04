@@ -20,6 +20,7 @@ import { DocumentType } from '@prisma/client';
 import { validateClaimJwt } from '../../../utils/validate-claim-jwt';
 import { TokenService } from '../../token/token.service';
 import { IsAgentGuard } from '../../../guards/isAgent.guard';
+import { generateAssignmentName } from '../../../utils/generate-assignment-name';
 
 @Controller('claims/customer')
 @UseGuards(JwtAuthGuard)
@@ -103,7 +104,10 @@ export class PublicCustomerController {
             [
                 {
                     path,
-                    name: `${customer.firstName}_${customer.lastName}-assignment_agreement.pdf`,
+                    name: generateAssignmentName(
+                        customer.firstName,
+                        customer.lastName,
+                    ),
                 },
             ],
             claimId,

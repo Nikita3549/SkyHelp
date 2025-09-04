@@ -7,7 +7,8 @@ import { PDFDocument, rgb } from 'pdf-lib';
 import { UPLOAD_DIRECTORY_PATH } from '../../../constants/UploadsDirectoryPath';
 import { spawn } from 'child_process';
 import { Readable } from 'stream';
-const fontkit = require('fontkit'); // fix fonkit bug
+import { formatDate } from '../../../utils/formatDate';
+import * as fontkit from 'fontkit';
 
 @Injectable()
 export class DocumentService {
@@ -39,15 +40,6 @@ export class DocumentService {
         );
     }
 
-    async doesAssignmentAgreementExist(claimId: string) {
-        return this.prisma.document.count({
-            where: {
-                claimId,
-                name: 'assignment_agreement.pdf',
-            },
-        });
-    }
-
     async saveSignaturePdf(
         signatureDataUrl: string,
         documentData: {
@@ -60,7 +52,7 @@ export class DocumentService {
             airlineName: string;
         },
     ) {
-        const today = this.formatDatePdf(new Date());
+        const today = formatDate(new Date(), 'dd.mm.yyyy');
 
         const fontBoldBuffer = await fs.readFile(
             path.resolve(__dirname, '../../../../fonts/Inter', 'bold.ttf'),
@@ -143,7 +135,7 @@ export class DocumentService {
             font: fontRegular,
         });
 
-        firstPage.drawText(this.formatDatePdf(documentData.date), {
+        firstPage.drawText(formatDate(documentData.date, 'dd.mm.yyyy'), {
             x: 180,
             y: 405,
             size: 10.5,
@@ -309,14 +301,5 @@ export class DocumentService {
                 id: { in: ids },
             },
         });
-    }
-
-    private formatDatePdf(date: Date): string {
-        const d = date;
-        const day = String(d.getDate()).padStart(2, '0');
-        const month = String(d.getMonth() + 1).padStart(2, '0');
-        const year = d.getFullYear();
-
-        return `${day}.${month}.${year}`;
     }
 }
