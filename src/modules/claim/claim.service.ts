@@ -614,6 +614,7 @@ export class ClaimService {
                     role: true,
                 },
             },
+            documentRequest: true,
         };
     }
 

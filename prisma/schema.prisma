@@ -61,6 +61,7 @@ model Claim {
   createdAt        DateTime           @default(now()) @map("created_at")
   updatedAt        DateTime           @updatedAt @map("updated_at")
   signScenarios    SignScenario[]
+  documentRequest  DocumentRequest[]
   email            Email[]
   emailResumeClick EmailResumeClick[]
 
@@ -432,4 +433,27 @@ model EmailUnsubscribe {
 
   @@index([email])
   @@map("email_unsubscribes")
+}
+
+model DocumentRequest {
+  id           String                @id @default(cuid())
+  type         DocumentRequestType
+  status       DocumentRequestStatus @default(ACTIVE)
+  passenger    String
+  documentType DocumentType          @default(DOCUMENT) @map("document_type")
+  claimId      String                @map("claim_id")
+  claim        Claim                 @relation(fields: [claimId], references: [id])
+
+  @@map("document_requests")
+}
+
+enum DocumentRequestStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum DocumentRequestType {
+  ETICKET
+  PASSPORT
+  BOARDING_PASS
 }

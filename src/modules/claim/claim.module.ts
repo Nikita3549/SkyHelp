@@ -23,6 +23,7 @@ import { EmailResumeClickModule } from '../email-resume-click/email-resume-click
 import { UserModule } from '../user/user.module';
 import { AuthModule } from '../auth/auth.module';
 import { SEND_NEW_PROGRESS_EMAIL_QUEUE_KEY } from './progress/constants';
+import { DocumentRequestModule } from './document-request/document-request.module';
 
 @Module({
     imports: [
@@ -46,6 +47,7 @@ import { SEND_NEW_PROGRESS_EMAIL_QUEUE_KEY } from './progress/constants';
         forwardRef(() => OtherPassengerModule),
         forwardRef(() => AdminModule),
         EmailResumeClickModule,
+        DocumentRequestModule,
     ],
     controllers: [ClaimController, AdminController, PublicClaimController],
     providers: [ClaimService, ClaimFollowupProcessor, ClaimGateway],

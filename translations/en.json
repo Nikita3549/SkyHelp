@@ -3600,5 +3600,12 @@
     "DocumentsSection.title": "Upload any documents",
     "DocumentsTab.toastAgreementLinkCopiedTitle": "Agreement link copied",
     "DocumentsTab.toastAgreementLinkCopiedDescription": "The agreement link has been copied to your clipboard.",
-    "ClaimStatusCard.created_at": "Creation date"
+    "ClaimStatusCard.created_at": "Creation date",
+    "PassportSection.processingFiles": "Processing files...",
+    "PassportSection.validatingFiles": "Validating files...",
+    "PassportSection.filesReady": "Files ready",
+    "PassportSection.uploading": "Uploading...",
+    "PassportSection.uploadingFiles": "Uploading files...",
+    "PassportSection.uploadComplete": "Upload complete",
+    "PassportSection.errors.fileProcessingFailed": "File processing failed"
 }

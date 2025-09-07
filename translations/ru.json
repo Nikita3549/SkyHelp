@@ -3599,5 +3599,12 @@
     "DocumentsSection.title": "Загрузите любые документы",
     "DocumentsTab.toastAgreementLinkCopiedTitle": "Ссылка на договор скопирована",
     "DocumentsTab.toastAgreementLinkCopiedDescription": "Ссылка на договор была скопирована в буфер обмена.",
-    "ClaimStatusCard.created_at": "Дата создания"
+    "ClaimStatusCard.created_at": "Дата создания",
+    "PassportSection.processingFiles": "Обработка файлов...",
+    "PassportSection.validatingFiles": "Проверка файлов...",
+    "PassportSection.filesReady": "Файлы готовы",
+    "PassportSection.uploading": "Загрузка...",
+    "PassportSection.uploadingFiles": "Загрузка файлов...",
+    "PassportSection.uploadComplete": "Загрузка завершена",
+    "PassportSection.errors.fileProcessingFailed": "Ошибка обработки файла"
 }
