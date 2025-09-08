@@ -75,6 +75,17 @@ export class AdminController {
         });
     }
 
+    @Patch(':claimId/recent-updates')
+    async patchHasRecentUpdates(@Param('claimId') claimId: string) {
+        const claim = await this.claimService.getClaim(claimId);
+
+        if (!claim) {
+            throw new NotFoundException(INVALID_CLAIM_ID);
+        }
+
+        this.claimService.updateHasRecentUpdate(false, claimId);
+    }
+
     @Get('stats')
     async getAdminClaimsStats(
         @Req() req: AuthRequest,

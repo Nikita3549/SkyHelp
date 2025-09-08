@@ -744,4 +744,19 @@ export class ClaimService {
             include: this.fullClaimInclude(),
         });
     }
+
+    async updateHasRecentUpdate(hasRecentUpdate: boolean, claimId: string) {
+        return this.prisma.claim.update({
+            data: {
+                state: {
+                    update: {
+                        hasRecentUpdate,
+                    },
+                },
+            },
+            where: {
+                id: claimId,
+            },
+        });
+    }
 }

@@ -1,10 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { ClaimRecentUpdatesType } from '@prisma/client';
+import { ClaimService } from '../claim.service';
 
 @Injectable()
 export class RecentUpdatesService {
-    constructor(private readonly prisma: PrismaService) {}
+    constructor(
+        private readonly prisma: PrismaService,
+        private readonly claimService: ClaimService,
+    ) {}
 
     async saveRecentUpdate(
         recentUpdateData: {
@@ -13,6 +17,8 @@ export class RecentUpdatesService {
         },
         claimId: string,
     ) {
+        await this.claimService.updateHasRecentUpdate(true, claimId);
+
         return this.prisma.claimRecentUpdates.create({
             data: {
                 claimId,

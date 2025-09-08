@@ -49,7 +49,7 @@ import { RecentUpdatesModule } from './recent-updates/recent-updates.module';
         forwardRef(() => AdminModule),
         EmailResumeClickModule,
         DocumentRequestModule,
-        RecentUpdatesModule,
+        forwardRef(() => RecentUpdatesModule),
     ],
     controllers: [ClaimController, AdminController, PublicClaimController],
     providers: [ClaimService, ClaimFollowupProcessor, ClaimGateway],
