@@ -166,7 +166,7 @@ export class AdminController {
     }
 
     @Delete(':claimId/partner')
-    @UseGuards(IsAdminGuard)
+    @UseGuards(IsPartnerOrAgentGuard)
     async deletePartner(@Param('claimId') claimId: string) {
         if (!(await this.claimService.getClaim(claimId))) {
             throw new BadRequestException(INVALID_CLAIM_ID);

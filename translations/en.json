@@ -3607,5 +3607,6 @@
     "PassportSection.uploading": "Uploading...",
     "PassportSection.uploadingFiles": "Uploading files...",
     "PassportSection.uploadComplete": "Upload complete",
-    "PassportSection.errors.fileProcessingFailed": "File processing failed"
+    "PassportSection.errors.fileProcessingFailed": "File processing failed",
+    "SignatureStep.passengers.signed": "Signed"
 }
