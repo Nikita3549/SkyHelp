@@ -35,31 +35,32 @@ enum UserRole {
 }
 
 model Claim {
-  id               String             @id @default(cuid()) @map("id")
-  step             Int                @default(5)
-  formState        String?            @default("") @map("form_state")
-  userId           String?            @map("user_id")
-  user             User?              @relation("UserClaims", fields: [userId], references: [id], onDelete: Cascade)
+  id               String               @id @default(cuid()) @map("id")
+  step             Int                  @default(5)
+  formState        String?              @default("") @map("form_state")
+  userId           String?              @map("user_id")
+  user             User?                @relation("UserClaims", fields: [userId], references: [id], onDelete: Cascade)
   partnerId        String?
-  partner          User?              @relation("PartnerClaims", fields: [partnerId], references: [id], onDelete: Cascade)
-  assignedAt       DateTime           @default(now()) @map("assigned_at")
-  detailsId        String             @map("details_id")
-  details          ClaimDetails       @relation(fields: [detailsId], references: [id], onDelete: Cascade)
-  stateId          String             @map("state_id")
-  state            ClaimState         @relation(fields: [stateId], references: [id], onDelete: Cascade)
-  customerId       String             @map("customer_id")
-  customer         ClaimCustomer      @relation(fields: [customerId], references: [id], onDelete: Cascade)
-  issueId          String             @map("issue_id")
-  issue            ClaimIssue         @relation(fields: [issueId], references: [id], onDelete: Cascade)
-  envelopeId       String?            @map("envelope_id")
-  archived         Boolean            @default(false)
-  continueLink     String?            @map("continue_link")
+  partner          User?                @relation("PartnerClaims", fields: [partnerId], references: [id], onDelete: Cascade)
+  assignedAt       DateTime             @default(now()) @map("assigned_at")
+  detailsId        String               @map("details_id")
+  details          ClaimDetails         @relation(fields: [detailsId], references: [id], onDelete: Cascade)
+  stateId          String               @map("state_id")
+  state            ClaimState           @relation(fields: [stateId], references: [id], onDelete: Cascade)
+  customerId       String               @map("customer_id")
+  customer         ClaimCustomer        @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  issueId          String               @map("issue_id")
+  issue            ClaimIssue           @relation(fields: [issueId], references: [id], onDelete: Cascade)
+  envelopeId       String?              @map("envelope_id")
+  archived         Boolean              @default(false)
+  continueLink     String?              @map("continue_link")
   documents        Document[]
   passengers       OtherPassenger[]
-  paymentId        String?            @map("payment_id")
-  payment          ClaimPayment?      @relation(fields: [paymentId], references: [id], onDelete: Cascade)
-  createdAt        DateTime           @default(now()) @map("created_at")
-  updatedAt        DateTime           @updatedAt @map("updated_at")
+  paymentId        String?              @map("payment_id")
+  payment          ClaimPayment?        @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+  createdAt        DateTime             @default(now()) @map("created_at")
+  updatedAt        DateTime             @updatedAt @map("updated_at")
+  recentUpdates    ClaimRecentUpdates[]
   signScenarios    SignScenario[]
   documentRequest  DocumentRequest[]
   email            Email[]
@@ -125,13 +126,14 @@ model DepartureAirport {
 }
 
 model ClaimState {
-  id          String      @id @default(cuid()) @map("id")
-  status      ClaimStatus @default(CLAIM_RECEIVED) @map("status")
-  amount      Int?        @map("amount")
-  updatedAt   DateTime    @updatedAt @map("updated_at")
-  progress    Progress[]
-  isDuplicate Boolean     @default(false) @map("is_duplicate")
-  Claim       Claim[]
+  id              String      @id @default(cuid()) @map("id")
+  status          ClaimStatus @default(CLAIM_RECEIVED) @map("status")
+  amount          Int?        @map("amount")
+  hasRecentUpdate Boolean     @default(false) @map("has_recent_update")
+  updatedAt       DateTime    @updatedAt @map("updated_at")
+  progress        Progress[]
+  isDuplicate     Boolean     @default(false) @map("is_duplicate")
+  Claim           Claim[]
 
   @@map("claim_states")
 }
@@ -456,4 +458,23 @@ enum DocumentRequestType {
   ETICKET
   PASSPORT
   BOARDING_PASS
+}
+
+model ClaimRecentUpdates {
+  id              String                   @id @default(cuid())
+  type            ClaimRecentUpdatesType
+  status          ClaimRecentUpdatesStatus @default(UNVIEWED)
+  updatedEntityId String                   @map("updated_entity_id")
+  claimId         String                   @map("claim_id")
+  claim           Claim                    @relation(fields: [claimId], references: [id])
+}
+
+enum ClaimRecentUpdatesStatus {
+  VIEWED
+  UNVIEWED
+}
+
+enum ClaimRecentUpdatesType {
+  DOCUMENT
+  EMAIL
 }

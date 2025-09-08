@@ -6,9 +6,10 @@ import {
 } from './document.controller';
 import { ClaimModule } from '../claim.module';
 import { TokenModule } from '../../token/token.module';
+import { RecentUpdatesModule } from '../recent-updates/recent-updates.module';
 
 @Module({
-    imports: [forwardRef(() => ClaimModule), TokenModule],
+    imports: [forwardRef(() => ClaimModule), TokenModule, RecentUpdatesModule],
     providers: [DocumentService],
     exports: [DocumentService],
     controllers: [DocumentController, PublicDocumentController],

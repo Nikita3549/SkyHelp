@@ -35,6 +35,8 @@ import { UploadDocumentsQueryDto } from './dto/upload-documents-query.dto';
 import { UpdateDocumentTypeDto } from './dto/update-document-type.dto';
 import { IsPartnerOrAgentGuard } from '../../../guards/isPartnerOrAgentGuard';
 import { MergeDocumentsDto } from './dto/merge-documents.dto';
+import { RecentUpdatesService } from '../recent-updates/recent-updates.service';
+import { ClaimRecentUpdatesType } from '@prisma/client';
 
 @Controller('claims/documents')
 @UseGuards(JwtAuthGuard)
@@ -42,6 +44,7 @@ export class DocumentController {
     constructor(
         private readonly documentService: DocumentService,
         private readonly claimService: ClaimService,
+        private readonly recentUpdatesService: RecentUpdatesService,
     ) {}
     @Post('merge')
     async mergeDocuments(@Res() res: Response, @Body() dto: MergeDocumentsDto) {
@@ -146,7 +149,7 @@ export class DocumentController {
             throw new NotFoundException(CLAIM_NOT_FOUND);
         }
 
-        return await this.documentService.saveDocuments(
+        const documents = await this.documentService.saveDocuments(
             files.map((doc) => {
                 return {
                     name: doc.originalname,
@@ -156,6 +159,18 @@ export class DocumentController {
             claimId,
             documentType,
         );
+
+        documents.forEach((doc) => {
+            this.recentUpdatesService.saveRecentUpdate(
+                {
+                    type: ClaimRecentUpdatesType.DOCUMENT,
+                    updatedEntityId: doc.id,
+                },
+                claimId,
+            );
+        });
+
+        return documents;
     }
 }
 

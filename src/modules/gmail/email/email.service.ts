@@ -1,11 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
-import { Email, EmailStatus, EmailType, Prisma } from '@prisma/client';
+import {
+    ClaimRecentUpdatesType,
+    Email,
+    EmailStatus,
+    EmailType,
+    Prisma,
+} from '@prisma/client';
 import { GmailEmailPayload } from '../interfaces/gmail-email-payload.interface';
+import { RecentUpdatesService } from '../../claim/recent-updates/recent-updates.service';
 
 @Injectable()
 export class EmailService {
-    constructor(private readonly prisma: PrismaService) {}
+    constructor(
+        private readonly prisma: PrismaService,
+        private readonly recentUpdatesService: RecentUpdatesService,
+    ) {}
 
     async getEmailById(emailId: string) {
         return this.prisma.email.findFirst({
@@ -27,6 +37,14 @@ export class EmailService {
     }
 
     async updateClaimId(newClaimId: string, emailId: string) {
+        await this.recentUpdatesService.saveRecentUpdate(
+            {
+                type: ClaimRecentUpdatesType.EMAIL,
+                updatedEntityId: emailId,
+            },
+            newClaimId,
+        );
+
         return this.prisma.email.update({
             data: {
                 claimId: newClaimId,
@@ -44,7 +62,7 @@ export class EmailService {
                 : new Date(Number(data.internalDate))
             : undefined;
 
-        return this.prisma.email.create({
+        const email = await this.prisma.email.create({
             data: {
                 id: data.id,
                 gmailThreadId: data.threadId,
@@ -68,6 +86,18 @@ export class EmailService {
                 status: data.isInbox ? EmailStatus.UNREAD : EmailStatus.READ,
             },
         });
+
+        if (data.claimId) {
+            await this.recentUpdatesService.saveRecentUpdate(
+                {
+                    type: ClaimRecentUpdatesType.EMAIL,
+                    updatedEntityId: email.id,
+                },
+                data.claimId,
+            );
+        }
+
+        return email;
     }
 
     async getEmails(

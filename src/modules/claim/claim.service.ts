@@ -594,6 +594,7 @@ export class ClaimService {
                     amount: true,
                     updatedAt: true,
                     isDuplicate: true,
+                    hasRecentUpdate: true,
                     progress: {
                         orderBy: {
                             order: 'asc' as const,
@@ -615,6 +616,7 @@ export class ClaimService {
                 },
             },
             documentRequest: true,
+            recentUpdates: true,
         };
     }
 

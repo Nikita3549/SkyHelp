@@ -16,11 +16,12 @@ import { CustomerService } from './customer.service';
 import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
 import { UploadSignDto } from './dto/upload-sign.dto';
 import { DocumentService } from '../document/document.service';
-import { DocumentType } from '@prisma/client';
+import { ClaimRecentUpdatesType, DocumentType } from '@prisma/client';
 import { validateClaimJwt } from '../../../utils/validate-claim-jwt';
 import { TokenService } from '../../token/token.service';
 import { IsAgentGuard } from '../../../guards/isAgent.guard';
 import { generateAssignmentName } from '../../../utils/generate-assignment-name';
+import { RecentUpdatesService } from '../recent-updates/recent-updates.service';
 
 @Controller('claims/customer')
 @UseGuards(JwtAuthGuard)
@@ -52,6 +53,7 @@ export class PublicCustomerController {
         private readonly claimService: ClaimService,
         private readonly documentService: DocumentService,
         private readonly tokenService: TokenService,
+        private readonly recentUpdatesService: RecentUpdatesService,
     ) {}
 
     @Get(':customerId')
@@ -100,7 +102,7 @@ export class PublicCustomerController {
             airlineName: claim.details.airlines.name,
         });
 
-        await this.documentService.saveDocuments(
+        const documents = await this.documentService.saveDocuments(
             [
                 {
                     path,
@@ -113,6 +115,16 @@ export class PublicCustomerController {
             claimId,
             DocumentType.ASSIGNMENT,
         );
+
+        documents.forEach((doc) => {
+            this.recentUpdatesService.saveRecentUpdate(
+                {
+                    type: ClaimRecentUpdatesType.DOCUMENT,
+                    updatedEntityId: doc.id,
+                },
+                claimId,
+            );
+        });
 
         await this.customerService.setIsSignedCustomer(customerId, true);
     }

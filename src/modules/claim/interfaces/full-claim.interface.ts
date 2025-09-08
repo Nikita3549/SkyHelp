@@ -6,6 +6,7 @@ import {
     ClaimDetails,
     ClaimIssue,
     ClaimPayment,
+    ClaimRecentUpdates,
     ClaimState,
     DepartureAirport,
     Document,
@@ -21,6 +22,7 @@ export interface IFullClaim extends Claim {
     payment: ClaimPayment | null;
     documents: Document[];
     partner: IPartner | null;
+    recentUpdates: ClaimRecentUpdates[];
 }
 
 interface IClaimDetails extends ClaimDetails {

@@ -22,11 +22,12 @@ import { JwtQueryDto } from '../dto/jwt-query.dto';
 import { CreateOtherPassengersDto } from './dto/create-other-passengers.dto';
 import { validateClaimJwt } from '../../../utils/validate-claim-jwt';
 import { TokenService } from '../../token/token.service';
-import { DocumentType } from '@prisma/client';
+import { ClaimRecentUpdatesType, DocumentType } from '@prisma/client';
 import { DocumentsUploadInterceptor } from '../../../interceptors/documents/documents-upload.interceptor';
 import { UploadOtherPassengerDto } from './dto/upload-other-passenger.dto';
 import { IsAgentGuard } from '../../../guards/isAgent.guard';
 import { generateAssignmentName } from '../../../utils/generate-assignment-name';
+import { RecentUpdatesService } from '../recent-updates/recent-updates.service';
 
 @Controller('claims/passengers')
 @UseGuards(JwtAuthGuard)
@@ -60,6 +61,7 @@ export class PublicOtherPassengerController {
         private readonly documentService: DocumentService,
         private readonly claimService: ClaimService,
         private readonly tokenService: TokenService,
+        private readonly recentUpdatesService: RecentUpdatesService,
     ) {}
 
     @Get(':passengerId')
@@ -110,7 +112,7 @@ export class PublicOtherPassengerController {
             airlineName: claim.details.airlines.name,
         });
 
-        await this.documentService.saveDocuments(
+        const documents = await this.documentService.saveDocuments(
             [
                 {
                     path,
@@ -123,6 +125,16 @@ export class PublicOtherPassengerController {
             claimId,
             DocumentType.ASSIGNMENT,
         );
+
+        documents.forEach((doc) => {
+            this.recentUpdatesService.saveRecentUpdate(
+                {
+                    type: ClaimRecentUpdatesType.DOCUMENT,
+                    updatedEntityId: doc.id,
+                },
+                claimId,
+            );
+        });
 
         await this.otherPassengerService.setIsSignedPassenger(
             passengerId,
@@ -172,7 +184,7 @@ export class PublicOtherPassengerController {
             throw new NotFoundException(CLAIM_NOT_FOUND);
         }
 
-        await this.documentService.saveDocuments(
+        const documents = await this.documentService.saveDocuments(
             files.map((doc) => {
                 return {
                     name: doc.originalname,
@@ -182,5 +194,17 @@ export class PublicOtherPassengerController {
             claimId,
             documentType,
         );
+
+        documents.forEach((doc) => {
+            this.recentUpdatesService.saveRecentUpdate(
+                {
+                    type: ClaimRecentUpdatesType.DOCUMENT,
+                    updatedEntityId: doc.id,
+                },
+                claimId,
+            );
+        });
+
+        return documents;
     }
 }
