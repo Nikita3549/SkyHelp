@@ -8,12 +8,8 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ClaimStatus, UserRole } from '@prisma/client';
-enum IsArchived {
-    YES = 'yes',
-    NO = 'no',
-}
 
-enum IsDuplicated {
+export enum IsYesOrNo {
     YES = 'yes',
     NO = 'no',
 }
@@ -29,12 +25,12 @@ export class GetClaimsQuery {
     page: number;
 
     @IsOptional()
-    @IsEnum(IsArchived)
-    archived: IsArchived;
+    @IsEnum(IsYesOrNo)
+    archived: IsYesOrNo;
 
     @IsOptional()
-    @IsEnum(IsDuplicated)
-    duplicated: IsDuplicated;
+    @IsEnum(IsYesOrNo)
+    duplicated: IsYesOrNo;
 
     @IsOptional()
     @Type(() => Date)
@@ -65,4 +61,8 @@ export class GetClaimsQuery {
     @IsOptional()
     @IsString()
     partnerId?: string;
+
+    @IsOptional()
+    @IsEnum(IsYesOrNo)
+    onlyRecentlyUpdates: IsYesOrNo;
 }

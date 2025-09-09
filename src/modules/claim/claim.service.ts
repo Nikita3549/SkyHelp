@@ -365,7 +365,8 @@ export class ClaimService {
             role?: UserRole;
             partnerId?: string;
             duplicated?: boolean;
-            isOrderByAssignedAt: boolean;
+            isOrderByAssignedAt?: boolean;
+            onlyRecentlyUpdates?: boolean;
         },
         pageSize: number = 20,
     ): Promise<{ claims: IFullClaim[]; total: number }> {
@@ -379,6 +380,10 @@ export class ClaimService {
 
         if (searchParams?.duplicated) {
             where.state!.isDuplicate = searchParams.duplicated;
+        }
+
+        if (searchParams?.onlyRecentlyUpdates) {
+            where.state!.hasRecentUpdate = searchParams.onlyRecentlyUpdates;
         }
 
         if (searchParams?.status) {

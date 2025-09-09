@@ -14,7 +14,7 @@ import {
     UseGuards,
 } from '@nestjs/common';
 import { IsAdminGuard } from '../../../guards/isAdminGuard';
-import { GetClaimsQuery } from './dto/get-claims.query';
+import { GetClaimsQuery, IsYesOrNo } from './dto/get-claims.query';
 import { ArchiveClaimDto } from './dto/archive-claim.dto';
 import { DONT_HAVE_RIGHTS_ON_CLAIM, INVALID_CLAIM_ID } from '../constants';
 import { UpdateClaimDto } from '../dto/update-claim.dto';
@@ -52,12 +52,20 @@ export class AdminController {
             role,
             partnerId,
             duplicated,
+            onlyRecentlyUpdates,
         } = query;
 
         return this.claimService.getUserClaims(userId, +page, {
-            archived: archived == undefined ? undefined : archived == 'yes',
+            archived:
+                archived == undefined ? undefined : archived == IsYesOrNo.YES,
             duplicated:
-                duplicated == undefined ? undefined : duplicated == 'yes',
+                duplicated == undefined
+                    ? undefined
+                    : duplicated == IsYesOrNo.YES,
+            onlyRecentlyUpdates:
+                onlyRecentlyUpdates == undefined
+                    ? undefined
+                    : onlyRecentlyUpdates == IsYesOrNo.YES,
             date: endDate &&
                 startDate && {
                     start: startDate,

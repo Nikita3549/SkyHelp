@@ -33,7 +33,7 @@ export class RecentUpdatesService {
     async unviewRecentUpdatesByClaimId(claimId: string) {
         return this.prisma.claimRecentUpdates.updateMany({
             data: {
-                status: ClaimRecentUpdatesStatus.UNVIEWED,
+                status: ClaimRecentUpdatesStatus.VIEWED,
             },
             where: {
                 claimId,
