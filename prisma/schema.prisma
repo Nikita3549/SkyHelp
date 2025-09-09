@@ -283,7 +283,7 @@ model OtherPassenger {
   city         String
   country      String
   address      String
-  birthday     DateTime
+  birthday     DateTime?
   isSigned     Boolean        @default(false)
   email        String?
   SignScenario SignScenario[]

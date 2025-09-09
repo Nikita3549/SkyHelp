@@ -752,6 +752,7 @@ export class ClaimService {
             where: {
                 id: claimId,
             },
+            include: this.fullClaimInclude(),
         });
     }
 }

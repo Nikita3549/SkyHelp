@@ -27,6 +27,7 @@ import { INVALID_PARTNER_ID } from './constants';
 import { IsPartnerOrAgentGuard } from '../../../guards/isPartnerOrAgentGuard';
 import { AuthRequest } from '../../../interfaces/AuthRequest.interface';
 import { IsAgentGuard } from '../../../guards/isAgent.guard';
+import { RecentUpdatesService } from '../recent-updates/recent-updates.service';
 
 @Controller('claims/admin')
 @UseGuards(JwtAuthGuard, IsPartnerOrAgentGuard)
@@ -34,6 +35,7 @@ export class AdminController {
     constructor(
         private readonly claimService: ClaimService,
         private readonly userService: UserService,
+        private readonly recentUpdatesService: RecentUpdatesService,
     ) {}
 
     @Get()
@@ -83,7 +85,9 @@ export class AdminController {
             throw new NotFoundException(INVALID_CLAIM_ID);
         }
 
-        this.claimService.updateHasRecentUpdate(false, claimId);
+        await this.recentUpdatesService.unviewRecentUpdatesByClaimId(claimId);
+
+        return this.claimService.updateHasRecentUpdate(false, claimId);
     }
 
     @Get('stats')

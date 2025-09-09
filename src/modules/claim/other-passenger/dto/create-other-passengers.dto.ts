@@ -23,6 +23,7 @@ class OtherPassengerDto {
     @IsString()
     country: string;
 
+    @IsOptional()
     @IsDate()
     @Type(() => Date)
     birthday: Date;

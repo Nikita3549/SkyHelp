@@ -62,7 +62,7 @@ export class EmailService {
                 : new Date(Number(data.internalDate))
             : undefined;
 
-        const email = await this.prisma.email.create({
+        return this.prisma.email.create({
             data: {
                 id: data.id,
                 gmailThreadId: data.threadId,
@@ -86,18 +86,6 @@ export class EmailService {
                 status: data.isInbox ? EmailStatus.UNREAD : EmailStatus.READ,
             },
         });
-
-        if (data.claimId) {
-            await this.recentUpdatesService.saveRecentUpdate(
-                {
-                    type: ClaimRecentUpdatesType.EMAIL,
-                    updatedEntityId: email.id,
-                },
-                data.claimId,
-            );
-        }
-
-        return email;
     }
 
     async getEmails(

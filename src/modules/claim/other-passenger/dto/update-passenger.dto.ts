@@ -20,6 +20,7 @@ export class UpdatePassengerDto {
     @IsString()
     country: string;
 
+    @IsOptional()
     @Type(() => Date)
     @IsDate()
     birthday: Date;

@@ -14,6 +14,8 @@ import { PubSub } from '@google-cloud/pubsub';
 import { GmailService } from '../../gmail.service';
 import { GmailOfficeAccountLogger } from './gmail-office-account.logger';
 import { isProd } from '../../../../utils/isProd';
+import { ClaimRecentUpdatesType } from '@prisma/client';
+import { RecentUpdatesService } from '../../../claim/recent-updates/recent-updates.service';
 
 @Injectable()
 export class GmailOfficeAccountService implements OnModuleInit {
@@ -29,6 +31,7 @@ export class GmailOfficeAccountService implements OnModuleInit {
         private readonly configService: ConfigService,
         @Inject(forwardRef(() => GmailService))
         private readonly gmailService: GmailService,
+        private readonly recentUpdatesService: RecentUpdatesService,
     ) {
         this.logger = new GmailOfficeAccountLogger();
         if (!isProd()) return;
@@ -135,6 +138,15 @@ export class GmailOfficeAccountService implements OnModuleInit {
         });
         if (!email) {
             return;
+        }
+        if (claimId) {
+            await this.recentUpdatesService.saveRecentUpdate(
+                {
+                    type: ClaimRecentUpdatesType.EMAIL,
+                    updatedEntityId: email.id,
+                },
+                claimId,
+            );
         }
         attachments.forEach((attachment) => {
             (async () => {
