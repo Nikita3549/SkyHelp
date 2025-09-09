@@ -114,6 +114,7 @@ export class PublicCustomerController {
             ],
             claimId,
             DocumentType.ASSIGNMENT,
+            true,
         );
 
         documents.forEach((doc) => {

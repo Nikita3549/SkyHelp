@@ -605,7 +605,11 @@ export class ClaimService {
             customer: true,
             issue: true,
             payment: true,
-            documents: true,
+            documents: {
+                omit: {
+                    path: true,
+                },
+            },
             passengers: true,
             partner: {
                 select: {
@@ -733,15 +737,6 @@ export class ClaimService {
                     flightNumber: claimData.flightNumber,
                 },
             },
-        });
-    }
-
-    async getClaimByStateId(stateId: string) {
-        return this.prisma.claim.findFirst({
-            where: {
-                stateId,
-            },
-            include: this.fullClaimInclude(),
         });
     }
 

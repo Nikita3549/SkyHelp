@@ -90,6 +90,7 @@ export class DocumentController {
             }),
             claimId,
             documentType,
+            true,
         );
     }
 
@@ -101,7 +102,7 @@ export class DocumentController {
     ) {
         const { type } = dto;
 
-        return await this.documentService.updateType(type, documentId);
+        return await this.documentService.updateType(type, documentId, true);
     }
 
     @Get('admin')
@@ -158,6 +159,7 @@ export class DocumentController {
             }),
             claimId,
             documentType,
+            true,
         );
 
         documents.forEach((doc) => {
@@ -210,6 +212,7 @@ export class PublicDocumentController {
             }),
             claimId,
             documentType,
+            true,
         );
     }
 }

@@ -26,6 +26,7 @@ export class DocumentService {
         documents: Omit<Omit<Omit<Document, 'id'>, 'claimId'>, 'type'>[],
         claimId: string,
         documentType: DocumentType,
+        isPublicData: boolean = false,
     ): Promise<Document[]> {
         return Promise.all(
             documents.map((doc) =>
@@ -35,6 +36,9 @@ export class DocumentService {
                         claimId,
                         type: documentType,
                     },
+                    select: isPublicData
+                        ? this.getPublicDataSelect()
+                        : undefined,
                 }),
             ),
         );
@@ -175,6 +179,7 @@ export class DocumentService {
     async updateType(
         newType: DocumentType,
         documentId: string,
+        isPublicData: boolean = false,
     ): Promise<Document> {
         return this.prisma.document.update({
             data: {
@@ -183,6 +188,7 @@ export class DocumentService {
             where: {
                 id: documentId,
             },
+            select: isPublicData ? this.getPublicDataSelect() : undefined,
         });
     }
 
@@ -301,5 +307,14 @@ export class DocumentService {
                 id: { in: ids },
             },
         });
+    }
+
+    getPublicDataSelect() {
+        return {
+            id: true,
+            name: true,
+            type: true,
+            claimId: true,
+        };
     }
 }

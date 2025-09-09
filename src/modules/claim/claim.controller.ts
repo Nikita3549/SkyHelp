@@ -230,6 +230,7 @@ export class PublicClaimController {
             ],
             claimId,
             DocumentType.ASSIGNMENT,
+            true,
         );
 
         await this.claimService.updateStep(claimId, 7);

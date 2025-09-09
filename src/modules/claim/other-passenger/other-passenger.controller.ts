@@ -124,6 +124,7 @@ export class PublicOtherPassengerController {
             ],
             claimId,
             DocumentType.ASSIGNMENT,
+            true,
         );
 
         documents.forEach((doc) => {
@@ -193,6 +194,7 @@ export class PublicOtherPassengerController {
             }),
             claimId,
             documentType,
+            true,
         );
 
         documents.forEach((doc) => {
