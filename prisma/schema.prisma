@@ -65,6 +65,7 @@ model Claim {
   documentRequest  DocumentRequest[]
   email            Email[]
   emailResumeClick EmailResumeClick[]
+  activities       ClaimActivity[]
 
   @@map("claims")
 }
@@ -475,6 +476,22 @@ enum ClaimRecentUpdatesStatus {
 }
 
 enum ClaimRecentUpdatesType {
+  DOCUMENT
+  EMAIL
+}
+
+model ClaimActivity {
+  id          String            @id @default(cuid())
+  type        ClaimActivityType
+  title       String
+  description String
+  claimId     String            @map("claim_id")
+  claim       Claim             @relation(fields: [claimId], references: [id])
+
+  @@map("claim_activities")
+}
+
+enum ClaimActivityType {
   DOCUMENT
   EMAIL
 }

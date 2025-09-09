@@ -37,15 +37,7 @@ export class EmailService {
     }
 
     async updateClaimId(newClaimId: string, emailId: string) {
-        await this.recentUpdatesService.saveRecentUpdate(
-            {
-                type: ClaimRecentUpdatesType.EMAIL,
-                updatedEntityId: emailId,
-            },
-            newClaimId,
-        );
-
-        return this.prisma.email.update({
+        const email = await this.prisma.email.update({
             data: {
                 claimId: newClaimId,
             },
@@ -53,6 +45,16 @@ export class EmailService {
                 id: emailId,
             },
         });
+        await this.recentUpdatesService.saveRecentUpdate(
+            {
+                type: ClaimRecentUpdatesType.EMAIL,
+                updatedEntityId: emailId,
+                entityData: `${email.fromEmail}`,
+            },
+            newClaimId,
+        );
+
+        return email;
     }
 
     async saveEmail(data: GmailEmailPayload) {

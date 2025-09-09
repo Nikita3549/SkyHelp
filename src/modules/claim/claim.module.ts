@@ -25,6 +25,7 @@ import { AuthModule } from '../auth/auth.module';
 import { SEND_NEW_PROGRESS_EMAIL_QUEUE_KEY } from './progress/constants';
 import { DocumentRequestModule } from './document-request/document-request.module';
 import { RecentUpdatesModule } from './recent-updates/recent-updates.module';
+import { ActivityModule } from './activity/activity.module';
 
 @Module({
     imports: [
@@ -50,6 +51,7 @@ import { RecentUpdatesModule } from './recent-updates/recent-updates.module';
         EmailResumeClickModule,
         DocumentRequestModule,
         forwardRef(() => RecentUpdatesModule),
+        ActivityModule,
     ],
     controllers: [ClaimController, AdminController, PublicClaimController],
     providers: [ClaimService, ClaimFollowupProcessor, ClaimGateway],

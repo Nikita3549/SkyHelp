@@ -167,6 +167,7 @@ export class DocumentController {
                 {
                     type: ClaimRecentUpdatesType.DOCUMENT,
                     updatedEntityId: doc.id,
+                    entityData: doc.name,
                 },
                 claimId,
             );

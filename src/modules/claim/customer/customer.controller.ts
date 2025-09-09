@@ -122,6 +122,7 @@ export class PublicCustomerController {
                 {
                     type: ClaimRecentUpdatesType.DOCUMENT,
                     updatedEntityId: doc.id,
+                    entityData: doc.name,
                 },
                 claimId,
             );

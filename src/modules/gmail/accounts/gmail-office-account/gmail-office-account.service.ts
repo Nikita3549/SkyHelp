@@ -144,6 +144,7 @@ export class GmailOfficeAccountService implements OnModuleInit {
                 {
                     type: ClaimRecentUpdatesType.EMAIL,
                     updatedEntityId: email.id,
+                    entityData: `${email.fromName}`,
                 },
                 claimId,
             );
