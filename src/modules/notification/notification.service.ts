@@ -16,6 +16,7 @@ import { EmailCategory } from '../gmail/enums/email-type.enum';
 import { TokenService } from '../token/token.service';
 import { UnsubscribeJwt } from '../unsubscribe-email/interfaces/unsubscribe-jwt';
 import { UnsubscribeEmailService } from '../unsubscribe-email/unsubscribe-email.service';
+import { gmail_v1 } from 'googleapis';
 
 @Injectable()
 export class NotificationService {
@@ -153,12 +154,21 @@ This message was automatically generated.
             layoutHtml,
         );
 
-        await this.gmailService.noreply.sendEmailHtml(
+        const subject = `Your claim successfully submitted #${claimData.id}`;
+        const email = await this.gmailService.noreply.sendEmailHtml(
             to,
-            `Your claim successfully submitted #${claimData.id}`,
+            subject,
             letterHtml,
             emailCategory,
         );
+
+        await this.saveHtmlEmail({
+            email,
+            subject,
+            claimId: claimData.id,
+            contentHtml: letterHtml,
+            to,
+        });
     }
 
     async sendNewStatus(
@@ -195,12 +205,21 @@ This message was automatically generated.
             layoutHtml,
         );
 
-        await this.gmailService.noreply.sendEmailHtml(
+        const subject = `Update on your claim #${newStatusData.claimId}`;
+        const email = await this.gmailService.noreply.sendEmailHtml(
             to,
-            `Update on your claim #${newStatusData.claimId}`,
+            subject,
             letterHtml,
             emailCategory,
         );
+
+        await this.saveHtmlEmail({
+            email,
+            subject,
+            claimId: newStatusData.claimId,
+            contentHtml: letterHtml,
+            to,
+        });
     }
 
     async sendFinishClaim(
@@ -250,12 +269,21 @@ This message was automatically generated.
             layoutHtml,
         );
 
-        await this.gmailService.noreply.sendEmailHtml(
+        const subject = 'Just one step away from your compensation';
+        const email = await this.gmailService.noreply.sendEmailHtml(
             to,
-            'Just one step away from your compensation',
+            subject,
             letterHtml,
             emailCategory,
         );
+
+        await this.saveHtmlEmail({
+            email,
+            subject,
+            claimId: claimData.id,
+            contentHtml: letterHtml,
+            to,
+        });
     }
 
     private async getLetterContent(
@@ -304,5 +332,31 @@ This message was automatically generated.
         return !!(await this.unsubscribeEmailService.getUnsubscribeEmail(
             email,
         ));
+    }
+
+    private async saveHtmlEmail(data: {
+        email: gmail_v1.Schema$Message | undefined;
+        subject: string;
+        contentHtml: string;
+        to: string;
+        claimId: string;
+    }) {
+        const { email, subject, contentHtml, to, claimId } = data;
+
+        if (email) {
+            await this.gmailService.email.saveEmail({
+                id: email.id!,
+                threadId: email.threadId!,
+                subject,
+                normalizedSubject: subject,
+                messageId: email.id,
+                fromName: 'SkyHelp',
+                fromEmail: this.configService.getOrThrow('GMAIL_NOREPLY_EMAIL'),
+                toEmail: to,
+                bodyHtml: contentHtml,
+                claimId: claimId,
+                isInbox: false,
+            });
+        }
     }
 }

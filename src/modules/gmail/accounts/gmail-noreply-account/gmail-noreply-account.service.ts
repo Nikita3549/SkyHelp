@@ -44,7 +44,7 @@ export class GmailNoreplyAccountService implements OnModuleInit {
         htmlContent: string,
         emailCategory: EmailCategory = EmailCategory.TRANSACTIONAL,
     ) {
-        await this.gmailService.sendEmailHtml(
+        return await this.gmailService.sendEmailHtml(
             to,
             subject,
             htmlContent,

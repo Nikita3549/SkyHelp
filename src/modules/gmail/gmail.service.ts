@@ -172,12 +172,14 @@ export class GmailService implements OnModuleInit {
                 .replace(/\//g, '_')
                 .replace(/=+$/, '');
 
-            await gmail.users.messages.send({
+            const res = await gmail.users.messages.send({
                 userId: 'me',
                 requestBody: {
                     raw: rawMessage,
                 },
             });
+
+            return res.data;
         } catch (error) {
             console.error('[Gmail]', error);
         }
