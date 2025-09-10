@@ -6,6 +6,7 @@ import {
 } from '@prisma/client';
 import { ClaimService } from '../claim.service';
 import { ActivityService } from '../activity/activity.service';
+import { omit } from '../../../utils/omit';
 
 @Injectable()
 export class RecentUpdatesService {
@@ -35,7 +36,7 @@ export class RecentUpdatesService {
         return this.prisma.claimRecentUpdates.create({
             data: {
                 claimId,
-                ...recentUpdateData,
+                ...omit(recentUpdateData, 'entityData'),
             },
         });
     }
