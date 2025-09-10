@@ -10,7 +10,6 @@ import { SendNewProgressEmailProcessor } from './processors/send-new-progress-em
 
 @Module({
     imports: [
-        StateModule,
         forwardRef(() => NotificationModule),
         forwardRef(() => ClaimModule),
         BullModule.registerQueue({

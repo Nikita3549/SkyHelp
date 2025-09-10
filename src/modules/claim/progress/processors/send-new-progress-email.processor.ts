@@ -4,17 +4,19 @@ import { SEND_NEW_PROGRESS_EMAIL_QUEUE_KEY } from '../constants';
 import { NotificationService } from '../../../notification/notification.service';
 import { ISendNewProgressEmailJobData } from '../interfaces/send-new-progress-email-job-data.interface';
 import { ProgressService } from '../progress.service';
+import { ClaimService } from '../../claim.service';
 
 @Processor(SEND_NEW_PROGRESS_EMAIL_QUEUE_KEY)
 export class SendNewProgressEmailProcessor extends WorkerHost {
     constructor(
         private readonly notificationService: NotificationService,
         private readonly progressService: ProgressService,
+        private readonly claimService: ClaimService,
     ) {
         super();
     }
     async process(job: Job<ISendNewProgressEmailJobData>) {
-        const { progressId, emailData } = job.data;
+        const { progressId, emailData, newClaimStatus } = job.data;
 
         const progress = await this.progressService.getProgressById(progressId);
 
@@ -33,6 +35,6 @@ export class SendNewProgressEmailProcessor extends WorkerHost {
             emailData.language,
         );
 
-        console.log('done');
+        await this.claimService.updateStatus(newClaimStatus, emailData.claimId);
     }
 }

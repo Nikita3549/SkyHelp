@@ -9,18 +9,6 @@ import { omit } from '../../../utils/omit';
 export class ProgressService {
     constructor(private readonly prisma: PrismaService) {}
 
-    async updateProgress(
-        progress: IProgress,
-        progressId: string,
-    ): Promise<Progress> {
-        return this.prisma.progress.update({
-            data: progress,
-            where: {
-                id: progressId,
-            },
-        });
-    }
-
     async getProgressById(progressId: string): Promise<Progress | null> {
         return this.prisma.progress.findFirst({
             where: {

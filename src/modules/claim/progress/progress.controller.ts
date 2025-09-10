@@ -40,7 +40,6 @@ import { HttpStatusCode } from 'axios';
 export class ProgressController {
     constructor(
         private readonly progressesService: ProgressService,
-        private readonly stateService: StateService,
         private readonly claimService: ClaimService,
         @InjectQueue(SEND_NEW_PROGRESS_EMAIL_QUEUE_KEY)
         private readonly sendNewProgressEmailQueue: Queue,
@@ -70,11 +69,6 @@ export class ProgressController {
                 order,
             },
             claim.stateId,
-        );
-
-        await this.stateService.updateStatus(
-            progressVariant.status,
-            progress.claimStateId,
         );
 
         const customerLanguage = isLanguage(claim.customer.language)
@@ -113,6 +107,7 @@ export class ProgressController {
                 claimId: claim.id,
                 language: customerLanguage,
             },
+            newClaimStatus: status,
         };
 
         await this.sendNewProgressEmailQueue.add(

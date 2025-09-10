@@ -1,3 +1,4 @@
+import { ClaimStatus } from '@prisma/client';
 import { Languages } from '../../../language/enums/languages.enums';
 
 export interface ISendNewProgressEmailJobData {
@@ -10,4 +11,5 @@ export interface ISendNewProgressEmailJobData {
         claimId: string;
         language: Languages;
     };
+    newClaimStatus: ClaimStatus;
 }

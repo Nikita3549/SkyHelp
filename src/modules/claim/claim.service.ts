@@ -752,4 +752,19 @@ export class ClaimService {
             include: this.fullClaimInclude(),
         });
     }
+
+    async updateStatus(newStatus: ClaimStatus, claimId: string) {
+        return this.prisma.claim.update({
+            data: {
+                state: {
+                    update: {
+                        status: newStatus,
+                    },
+                },
+            },
+            where: {
+                id: claimId,
+            },
+        });
+    }
 }
