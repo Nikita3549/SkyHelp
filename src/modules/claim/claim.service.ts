@@ -387,9 +387,7 @@ export class ClaimService {
         }
 
         if (searchParams?.status) {
-            where.state = {
-                status: searchParams.status,
-            };
+            where.state!.status = searchParams.status;
         }
 
         if (searchParams?.partnerId) {
@@ -397,17 +395,11 @@ export class ClaimService {
         }
 
         if (searchParams?.flightNumber) {
-            where.details = {
-                flightNumber: searchParams.flightNumber,
-            };
+            where.details!.flightNumber = searchParams.flightNumber;
         }
 
         if (searchParams?.icao) {
-            where.details = {
-                airlines: {
-                    icao: searchParams.icao,
-                },
-            };
+            where.details!.airlines!.icao = searchParams.icao;
         }
 
         if (searchParams?.date) {
