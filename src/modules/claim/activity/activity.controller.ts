@@ -7,9 +7,10 @@ import { ForbiddenException } from '@nestjs/common/exceptions/forbidden.exceptio
 import { DONT_HAVE_RIGHTS_ON_CLAIM, INVALID_CLAIM_ID } from '../constants';
 import { BadRequestException } from '@nestjs/common/exceptions/bad-request.exception';
 import { ActivityService } from './activity.service';
+import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
 
 @Controller('activities')
-@UseGuards()
+@UseGuards(JwtAuthGuard)
 export class ActivityController {
     constructor(
         private readonly claimService: ClaimService,
