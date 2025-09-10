@@ -376,6 +376,7 @@ export class ClaimService {
             userId,
             archived: searchParams?.archived,
             state: {},
+            details: {},
         };
 
         if (searchParams?.duplicated) {
