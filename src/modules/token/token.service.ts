@@ -19,27 +19,24 @@ export class TokenService {
         this.JWT_SECRET = this.config.getOrThrow<string>('JWT_SECRET');
     }
 
-    generateJWT<T extends JwtPayload | string>(
+    generateJWT<T extends JwtPayload>(
         payload: T,
         options?: SignOptions,
     ): string {
-        const jwtPayload: string | JwtPayload =
-            typeof payload == 'string'
-                ? payload
-                : {
-                      ...payload,
-                      jti: crypto.randomUUID(),
-                  };
-
-        return jwt.sign(jwtPayload, this.JWT_SECRET, options);
+        return jwt.sign(
+            {
+                ...payload,
+                jti: crypto.randomUUID(),
+            },
+            this.JWT_SECRET,
+            options,
+        );
     }
 
-    async verifyJWT<T extends JwtPayload | string>(JWT: string): Promise<T> {
+    async verifyJWT<T extends JwtPayload>(JWT: string): Promise<T> {
         const token = jwt.verify(JWT, this.JWT_SECRET) as T;
 
-        if (typeof token != 'string') {
-            await this.verifyIsRevoked(token);
-        }
+        await this.verifyIsRevoked(token);
 
         return token;
     }
@@ -47,14 +44,16 @@ export class TokenService {
     async revokeJwt(token: JwtPayload) {
         const now = Math.floor(Date.now() / 1000);
 
-        if (!token?.jti || !token?.exp) {
+        const expireIn = token?.exp || token.iat; // compatability on each version and OS
+
+        if (!token?.jti || !expireIn) {
             console.warn(
                 "Token doesn't have jti or exp, while saving a token as revoked",
                 token,
             );
             return;
         }
-        const ttl = token.exp - now;
+        const ttl = expireIn - now;
 
         if (ttl > 0) {
             await this.redis.set(`revoked:${token.jti}`, '1', 'EX', ttl);
@@ -64,7 +63,9 @@ export class TokenService {
     }
 
     private async verifyIsRevoked(token: JwtPayload) {
-        if (!token?.jti || !token?.exp) {
+        const expireIn = token?.exp || token.iat; // compatability on each version and OS
+
+        if (!token?.jti || !expireIn) {
             console.warn(
                 "Token doesn't have jti or exp while verifying is token revoked",
                 token,

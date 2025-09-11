@@ -6,7 +6,7 @@ import { JwtPayload } from 'jsonwebtoken';
 export const validateClaimJwt = async (
     jwt: string,
     expectedClaimId: string,
-    verify: <I extends JwtPayload | string>(jwt: string) => Promise<I>,
+    verify: <I extends JwtPayload>(jwt: string) => Promise<I>,
 ) => {
     try {
         const token = await verify<IClaimJwt>(jwt);
