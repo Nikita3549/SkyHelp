@@ -28,7 +28,7 @@ export class EmailResumeClickController {
     async saveClick(@Body() dto: SaveClickDto) {
         const { claimId, jwt } = dto;
 
-        validateClaimJwt(
+        await validateClaimJwt(
             jwt,
             claimId,
             this.tokenService.verifyJWT.bind(this.tokenService),

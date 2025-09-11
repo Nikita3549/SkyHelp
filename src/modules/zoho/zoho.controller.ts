@@ -221,7 +221,7 @@ export class ZohoController {
             throw new NotFoundException(INVALID_CLAIM_ID);
         }
 
-        validateClaimJwt(
+        await validateClaimJwt(
             jwt,
             claimId,
             this.tokenService.verifyJWT.bind(this.tokenService),

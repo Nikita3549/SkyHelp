@@ -74,11 +74,13 @@ export class PublicCustomerController {
     ) {
         const { signature, claimId, jwt } = dto;
 
-        validateClaimJwt(
+        const token = await validateClaimJwt(
             jwt,
             claimId,
             this.tokenService.verifyJWT.bind(this.tokenService),
         );
+
+        await this.tokenService.revokeJwt(token);
 
         const customer = await this.customerService.getCustomer(customerId);
 

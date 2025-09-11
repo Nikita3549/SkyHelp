@@ -24,7 +24,7 @@ export class UnsubscribeEmailController {
     async unsubscribeEmail(@Body() dto: UnsubscribeEmailDto) {
         const { email, jwt } = dto;
 
-        const jwtPayload = this.tokenService.verifyJWT(jwt);
+        const jwtPayload = await this.tokenService.verifyJWT(jwt);
 
         if (!this.isUnsubscribeJwt(jwtPayload) || jwtPayload.email != email) {
             throw new UnauthorizedException(INVALID_JWT);

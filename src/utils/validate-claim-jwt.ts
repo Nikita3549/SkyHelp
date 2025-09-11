@@ -3,17 +3,19 @@ import { UnauthorizedException } from '@nestjs/common';
 import { INVALID_JWT } from '../modules/claim/constants';
 import { JwtPayload } from 'jsonwebtoken';
 
-export const validateClaimJwt = (
+export const validateClaimJwt = async (
     jwt: string,
     expectedClaimId: string,
-    verify: <I extends JwtPayload | string>(jwt: string) => I,
+    verify: <I extends JwtPayload | string>(jwt: string) => Promise<I>,
 ) => {
     try {
-        const { claimId } = verify<IClaimJwt>(jwt);
+        const token = await verify<IClaimJwt>(jwt);
 
-        if (claimId != expectedClaimId) {
+        if (token.claimId != expectedClaimId) {
             throw new UnauthorizedException(INVALID_JWT);
         }
+
+        return token;
     } catch (e: unknown) {
         throw new UnauthorizedException(INVALID_JWT);
     }

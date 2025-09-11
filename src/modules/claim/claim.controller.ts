@@ -14,7 +14,12 @@ import {
 } from '@nestjs/common';
 import { CreateClaimDto } from './dto/create-claim.dto';
 import { ClaimService } from './claim.service';
-import { FINAL_STEP, INVALID_CLAIM_ID, INVALID_ICAO } from './constants';
+import {
+    CONTINUE_LINKS_EXP,
+    FINAL_STEP,
+    INVALID_CLAIM_ID,
+    INVALID_ICAO,
+} from './constants';
 import { JwtAuthGuard } from '../../guards/jwtAuth.guard';
 import { AuthRequest } from '../../interfaces/AuthRequest.interface';
 import { GetCompensationDto } from './dto/get-compensation.dto';
@@ -82,7 +87,9 @@ export class PublicClaimController {
 
         const jwtPayload = getAuthJwt(req);
         if (jwtPayload) {
-            userId = this.tokenService.verifyJWT<IJwtPayload>(jwtPayload).id;
+            userId = (
+                await this.tokenService.verifyJWT<IJwtPayload>(jwtPayload)
+            ).id;
         }
 
         if (!userId) {
@@ -142,7 +149,7 @@ export class PublicClaimController {
             {
                 claimId: claim.id,
             },
-            { expiresIn: '30days' },
+            { expiresIn: CONTINUE_LINKS_EXP },
         );
 
         const continueClaimLink = `${this.configService.getOrThrow('FRONTEND_HOST')}/claim?claimId=${claim.id}&jwt=${jwt}`;
@@ -171,7 +178,7 @@ export class PublicClaimController {
     ) {
         const { jwt } = query;
 
-        validateClaimJwt(
+        await validateClaimJwt(
             jwt,
             claimId,
             this.tokenService.verifyJWT.bind(this.tokenService),
@@ -196,7 +203,7 @@ export class PublicClaimController {
         const { jwt } = query;
         const { signature, claimId } = dto;
 
-        validateClaimJwt(
+        await validateClaimJwt(
             jwt,
             claimId,
             this.tokenService.verifyJWT.bind(this.tokenService),
@@ -255,7 +262,7 @@ export class PublicClaimController {
     ) {
         const { jwt } = query;
 
-        validateClaimJwt(
+        await validateClaimJwt(
             jwt,
             claimId,
             this.tokenService.verifyJWT.bind(this.tokenService),
@@ -283,7 +290,7 @@ export class PublicClaimController {
     ) {
         const { jwt, step, language } = query;
 
-        validateClaimJwt(
+        await validateClaimJwt(
             jwt,
             claimId,
             this.tokenService.verifyJWT.bind(this.tokenService),

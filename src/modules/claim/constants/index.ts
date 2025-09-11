@@ -28,3 +28,5 @@ export const FIVE_DAYS_MILLISECONDS = 5 * ONE_DAY_MILLISECONDS;
 export const SIX_DAYS_MILLISECONDS = 6 * ONE_DAY_MILLISECONDS;
 
 export const FINAL_STEP = 10;
+
+export const CONTINUE_LINKS_EXP = '30days';

@@ -30,7 +30,7 @@ export class ClaimGateway implements OnGatewayConnection {
     ) {}
     @WebSocketServer() server: Server;
 
-    handleConnection(client: Socket) {
+    async handleConnection(client: Socket) {
         try {
             const token: string | undefined =
                 client.handshake.auth?.token ||
@@ -40,7 +40,8 @@ export class ClaimGateway implements OnGatewayConnection {
                 throw new Error();
             }
 
-            const payload = this.tokenService.verifyJWT<IJwtPayload>(token);
+            const payload =
+                await this.tokenService.verifyJWT<IJwtPayload>(token);
 
             client.data = payload;
 

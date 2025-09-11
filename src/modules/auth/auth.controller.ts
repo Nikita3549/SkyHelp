@@ -320,7 +320,7 @@ export class AuthController {
         if (claimToken) {
             try {
                 const payload =
-                    this.tokenService.verifyJWT<IClaimJwt>(claimToken);
+                    await this.tokenService.verifyJWT<IClaimJwt>(claimToken);
 
                 await this.claimService.connectWithUser(
                     payload.claimId,

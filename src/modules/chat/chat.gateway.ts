@@ -50,7 +50,8 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
                 throw new Error();
             }
 
-            const payload = this.tokenService.verifyJWT<IJwtPayload>(token);
+            const payload =
+                await this.tokenService.verifyJWT<IJwtPayload>(token);
 
             client.data = payload;
 

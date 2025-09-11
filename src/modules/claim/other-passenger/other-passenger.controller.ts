@@ -83,11 +83,13 @@ export class PublicOtherPassengerController {
     ) {
         const { signature, claimId, jwt } = dto;
 
-        validateClaimJwt(
+        const token = await validateClaimJwt(
             jwt,
             claimId,
             this.tokenService.verifyJWT.bind(this.tokenService),
         );
+
+        await this.tokenService.revokeJwt(token);
 
         const passenger =
             await this.otherPassengerService.getOtherPassenger(passengerId);
@@ -152,7 +154,7 @@ export class PublicOtherPassengerController {
         const { jwt } = query;
         const { claimId } = dto;
 
-        validateClaimJwt(
+        await validateClaimJwt(
             jwt,
             claimId,
             this.tokenService.verifyJWT.bind(this.tokenService),
@@ -174,11 +176,13 @@ export class PublicOtherPassengerController {
     ) {
         const { claimId, documentType, jwt } = dto;
 
-        validateClaimJwt(
+        const token = await validateClaimJwt(
             jwt,
             claimId,
             this.tokenService.verifyJWT.bind(this.tokenService),
         );
+
+        await this.tokenService.revokeJwt(token);
 
         const claim = await this.claimService.getClaim(claimId);
 
