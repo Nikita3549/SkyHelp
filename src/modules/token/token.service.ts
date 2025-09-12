@@ -34,11 +34,15 @@ export class TokenService {
     }
 
     async verifyJWT<T extends JwtPayload>(JWT: string): Promise<T> {
-        const token = jwt.verify(JWT, this.JWT_SECRET) as T;
+        try {
+            const token = jwt.verify(JWT, this.JWT_SECRET) as T;
 
-        await this.verifyIsRevoked(token);
+            await this.verifyIsRevoked(token);
 
-        return token;
+            return token;
+        } catch (e: unknown) {
+            throw new UnauthorizedException('Invalid jwt');
+        }
     }
 
     async revokeJwt(token: JwtPayload) {
@@ -77,7 +81,7 @@ export class TokenService {
         const isRevoked = await this.redis.get(`revoked:${jti}`);
 
         if (isRevoked) {
-            throw new UnauthorizedException('Expired jwt token');
+            throw new Error('Revoked jwt token');
         }
     }
 }

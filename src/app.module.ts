@@ -24,9 +24,9 @@ import { ZohoModule } from './modules/zoho/zoho.module';
 import { LogModule } from './modules/log/log.module';
 import { GoogleSheetsModule } from './modules/google-sheets/google-sheets.module';
 import { YandexMetrikaModule } from './modules/yandex-metrika/yandex-metrika.module';
-import { GenerateJwtModule } from './modules/generate-jwt/generate-jwt.module';
 import { EmailResumeClickModule } from './modules/email-resume-click/email-resume-click.module';
 import { UnsubscribeEmailModule } from './modules/unsubscribe-email/unsubscribe-email.module';
+import { GenerateLinksModule } from './modules/generate-links/generate-links.module';
 
 @Module({
     imports: [
@@ -61,9 +61,9 @@ import { UnsubscribeEmailModule } from './modules/unsubscribe-email/unsubscribe-
         LogModule,
         GoogleSheetsModule,
         YandexMetrikaModule,
-        GenerateJwtModule,
         EmailResumeClickModule,
         UnsubscribeEmailModule,
+        GenerateLinksModule,
     ],
     controllers: [AppController],
     providers: [AppService],

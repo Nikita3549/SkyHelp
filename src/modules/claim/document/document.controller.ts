@@ -205,13 +205,11 @@ export class PublicDocumentController {
     ) {
         const { jwt, claimId, step, documentType } = query;
 
-        const token = await validateClaimJwt(
+        await validateClaimJwt(
             jwt,
             claimId,
             this.tokenService.verifyJWT.bind(this.tokenService),
         );
-
-        await this.tokenService.revokeJwt(token);
 
         if (!(await this.claimService.getClaim(claimId))) {
             throw new NotFoundException(CLAIM_NOT_FOUND);
