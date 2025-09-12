@@ -23,7 +23,7 @@ export class GmailService implements OnModuleInit {
     private oauth2Client: OAuth2Client;
     private _accessToken: string;
     private gmail: Gmail;
-    private readonly FRONTEND_HOST: string;
+    private readonly FRONTEND_URL: string;
 
     constructor(
         private readonly configService: ConfigService,
@@ -35,7 +35,7 @@ export class GmailService implements OnModuleInit {
         readonly attachment: AttachmentService,
         readonly email: EmailService,
     ) {
-        this.FRONTEND_HOST = this.configService.getOrThrow('FRONTEND_HOST');
+        this.FRONTEND_URL = this.configService.getOrThrow('FRONTEND_URL');
     }
 
     async onModuleInit() {
@@ -282,7 +282,7 @@ export class GmailService implements OnModuleInit {
     }
 
     private generateUnsubscribeHeader(to: string) {
-        return `List-Unsubscribe: <https://${this.FRONTEND_HOST}/unsubscribe?email=${encodeURIComponent(
+        return `List-Unsubscribe: <https://${this.FRONTEND_URL}/unsubscribe?email=${encodeURIComponent(
             to,
         )}>`;
     }

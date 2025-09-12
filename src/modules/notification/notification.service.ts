@@ -58,7 +58,7 @@ export class NotificationService {
             .replace('{{password}}', userData.password)
             .replace(
                 '{{resetPasswordLink}}',
-                `${this.configService.getOrThrow('FRONTEND_HOST')}/forgot`,
+                `${this.configService.getOrThrow('FRONTEND_URL')}/forgot`,
             );
 
         const layoutHtml = await this.getLayout(to, language, emailCategory);

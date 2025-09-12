@@ -195,7 +195,7 @@ export class ZohoService implements OnModuleInit {
             null,
             {
                 params: {
-                    host: this.configService.getOrThrow('FRONTEND_HOST'),
+                    host: this.configService.getOrThrow('FRONTEND_URL'),
                 },
                 headers: {
                     Authorization: `Zoho-oauthtoken ${await this.getAccessToken()}`,

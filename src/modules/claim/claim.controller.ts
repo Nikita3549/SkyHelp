@@ -152,7 +152,7 @@ export class PublicClaimController {
             { expiresIn: CONTINUE_LINKS_EXP },
         );
 
-        const continueClaimLink = `${this.configService.getOrThrow('FRONTEND_HOST')}/claim?claimId=${claim.id}&jwt=${jwt}`;
+        const continueClaimLink = `${this.configService.getOrThrow('FRONTEND_URL')}/claim?claimId=${claim.id}&jwt=${jwt}`;
 
         this.claimService.scheduleClaimFollowUpEmails({
             email: claim.customer.email,
@@ -303,7 +303,7 @@ export class PublicClaimController {
                 claim.customer.email,
                 {
                     id: claim.id,
-                    link: `${this.configService.getOrThrow('FRONTEND_HOST')}/dashboard}`,
+                    link: `${this.configService.getOrThrow('FRONTEND_URL')}/dashboard}`,
                     airlineName: claim.details.airlines.name,
                 },
                 true, // deprecated param
