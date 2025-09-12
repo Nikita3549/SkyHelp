@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import {
     ClaimRecentUpdatesStatus,
@@ -7,6 +7,7 @@ import {
 import { ClaimService } from '../claim.service';
 import { ActivityService } from '../activity/activity.service';
 import { omit } from '../../../utils/omit';
+import { FINAL_STEP, PASSPORT_STEP } from '../constants';
 
 @Injectable()
 export class RecentUpdatesService {
@@ -24,6 +25,17 @@ export class RecentUpdatesService {
         },
         claimId: string,
     ) {
+        const claim = await this.claimService.getClaim(claimId);
+
+        if (!claim) {
+            throw new InternalServerErrorException(
+                'Invalid claimId while saving recent update',
+            );
+        }
+
+        if (claim.step < PASSPORT_STEP) {
+            return;
+        }
         await this.saveActivity(
             {
                 type: recentUpdateData.type,
