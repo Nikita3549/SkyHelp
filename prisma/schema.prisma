@@ -62,7 +62,7 @@ model Claim {
   updatedAt        DateTime             @updatedAt @map("updated_at")
   recentUpdates    ClaimRecentUpdates[]
   signScenarios    SignScenario[]
-  documentRequest  DocumentRequest[]
+  documentRequests DocumentRequest[]
   email            Email[]
   emailResumeClick EmailResumeClick[]
   activities       ClaimActivity[]

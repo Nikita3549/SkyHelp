@@ -619,7 +619,7 @@ export class ClaimService {
                     role: true,
                 },
             },
-            documentRequest: true,
+            documentRequests: true,
             recentUpdates: true,
         };
     }
