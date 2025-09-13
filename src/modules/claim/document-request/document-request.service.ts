@@ -1,7 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { CreateDocumentRequestDto } from './dto/create-document-request.dto';
 import { PrismaService } from '../../prisma/prisma.service';
-import { DocumentRequest, DocumentRequestStatus } from '@prisma/client';
+import {
+    DocumentRequest,
+    DocumentRequestStatus,
+    DocumentRequestType,
+    DocumentType,
+} from '@prisma/client';
 
 @Injectable()
 export class DocumentRequestService {
@@ -9,8 +14,29 @@ export class DocumentRequestService {
 
     async create(data: CreateDocumentRequestDto): Promise<DocumentRequest> {
         return this.prisma.documentRequest.create({
-            data,
+            data: {
+                ...data,
+                documentType: this.getDocumentTypeByRequestType(data.type),
+            },
         });
+    }
+
+    private getDocumentTypeByRequestType(
+        requestType: DocumentRequestType,
+    ): DocumentType {
+        switch (requestType) {
+            case DocumentRequestType.ASSIGNMENT:
+                return DocumentType.ASSIGNMENT;
+
+            case DocumentRequestType.PASSPORT:
+                return DocumentType.PASSPORT;
+
+            case DocumentRequestType.ETICKET:
+                return DocumentType.DOCUMENT;
+
+            case DocumentRequestType.BOARDING_PASS:
+                return DocumentType.DOCUMENT;
+        }
     }
 
     async getByClaimId(claimId: string): Promise<DocumentRequest[]> {
@@ -29,6 +55,22 @@ export class DocumentRequestService {
             data: {
                 status,
             },
+            where: {
+                id: documentRequestId,
+            },
+        });
+    }
+
+    async getById(documentRequestId: string): Promise<DocumentRequest | null> {
+        return this.prisma.documentRequest.findFirst({
+            where: {
+                id: documentRequestId,
+            },
+        });
+    }
+
+    async delete(documentRequestId: string) {
+        return this.prisma.documentRequest.delete({
             where: {
                 id: documentRequestId,
             },

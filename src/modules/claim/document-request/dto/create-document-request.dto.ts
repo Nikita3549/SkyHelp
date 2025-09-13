@@ -6,11 +6,8 @@ export class CreateDocumentRequestDto {
     type: DocumentRequestType;
 
     @IsString()
-    passenger: string;
+    passengerId: string;
 
     @IsString()
     claimId: string;
-
-    @IsEnum(DocumentType)
-    documentType: DocumentType;
 }

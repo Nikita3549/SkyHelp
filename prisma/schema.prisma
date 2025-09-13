@@ -442,13 +442,12 @@ model DocumentRequest {
   id           String                @id @default(cuid())
   type         DocumentRequestType
   status       DocumentRequestStatus @default(ACTIVE)
-  passenger    String
+  passengerId  String
   documentType DocumentType          @default(DOCUMENT) @map("document_type")
   claimId      String                @map("claim_id")
   claim        Claim                 @relation(fields: [claimId], references: [id])
-  createdAt   DateTime          @default(now()) @map("created_at")
-  updatedAt   DateTime          @default(now()) @updatedAt @map("updated_at")
-
+  createdAt    DateTime              @default(now()) @map("created_at")
+  updatedAt    DateTime              @default(now()) @updatedAt @map("updated_at")
 
   @@map("document_requests")
 }
@@ -462,6 +461,7 @@ enum DocumentRequestType {
   ETICKET
   PASSPORT
   BOARDING_PASS
+  ASSIGNMENT
 }
 
 model ClaimRecentUpdates {

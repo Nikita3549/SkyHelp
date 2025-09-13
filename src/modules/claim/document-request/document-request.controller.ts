@@ -1,9 +1,12 @@
 import {
     Body,
     Controller,
+    Delete,
     ForbiddenException,
     Get,
+    HttpCode,
     NotFoundException,
+    Param,
     Post,
     Query,
     Req,
@@ -18,6 +21,9 @@ import { DONT_HAVE_RIGHTS_ON_CLAIM, INVALID_CLAIM_ID } from '../constants';
 import { IsPartnerOrAgentGuard } from '../../../guards/isPartnerOrAgentGuard';
 import { AuthRequest } from '../../../interfaces/AuthRequest.interface';
 import { UserRole } from '@prisma/client';
+import { INVALID_DOCUMENT_REQUEST } from './constants';
+import { IFullClaim } from '../interfaces/full-claim.interface';
+import { HttpStatusCode } from 'axios';
 
 @Controller('claims/document-requests')
 @UseGuards(JwtAuthGuard)
@@ -29,11 +35,18 @@ export class DocumentRequestController {
 
     @Post()
     @UseGuards(IsPartnerOrAgentGuard)
-    async create(@Body() dto: CreateDocumentRequestDto) {
+    async create(
+        @Body() dto: CreateDocumentRequestDto,
+        @Req() req: AuthRequest,
+    ) {
         const claim = await this.claimService.getClaim(dto.claimId);
 
         if (!claim) {
             throw new NotFoundException(INVALID_CLAIM_ID);
+        }
+
+        if (req.user.role != UserRole.ADMIN && claim.partnerId != req.user.id) {
+            throw new ForbiddenException(DONT_HAVE_RIGHTS_ON_CLAIM);
         }
 
         return this.documentRequestService.create(dto);
@@ -52,10 +65,38 @@ export class DocumentRequestController {
             throw new NotFoundException(INVALID_CLAIM_ID);
         }
 
-        if (req.user.role == UserRole.CLIENT && claim.userId != req.user.id) {
+        if (
+            (req.user.role == UserRole.CLIENT && claim.userId != req.user.id) ||
+            (req.user.role != UserRole.ADMIN && claim.partnerId != req.user.id)
+        ) {
             throw new ForbiddenException(DONT_HAVE_RIGHTS_ON_CLAIM);
         }
 
         return this.documentRequestService.getByClaimId(claimId);
+    }
+
+    @Delete(':documentRequestId')
+    @HttpCode(HttpStatusCode.NoContent)
+    @UseGuards(IsPartnerOrAgentGuard)
+    async delete(
+        @Req() req: AuthRequest,
+        @Param('documentRequestId') documentRequestId: string,
+    ) {
+        const documentRequest =
+            await this.documentRequestService.getById(documentRequestId);
+
+        if (!documentRequest) {
+            throw new NotFoundException(INVALID_DOCUMENT_REQUEST);
+        }
+
+        const claim = (await this.claimService.getClaim(
+            documentRequest.claimId,
+        )) as IFullClaim;
+
+        if (req.user.role != UserRole.ADMIN && claim.partnerId != req.user.id) {
+            throw new ForbiddenException(DONT_HAVE_RIGHTS_ON_CLAIM);
+        }
+
+        await this.documentRequestService.delete(documentRequestId);
     }
 }
