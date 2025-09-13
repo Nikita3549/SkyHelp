@@ -8,6 +8,7 @@ import { ClaimModule } from '../claim.module';
 import { DocumentModule } from '../document/document.module';
 import { TokenModule } from '../../token/token.module';
 import { RecentUpdatesModule } from '../recent-updates/recent-updates.module';
+import { DocumentRequestModule } from '../document-request/document-request.module';
 
 @Module({
     imports: [
@@ -15,6 +16,7 @@ import { RecentUpdatesModule } from '../recent-updates/recent-updates.module';
         DocumentModule,
         TokenModule,
         RecentUpdatesModule,
+        DocumentRequestModule,
     ],
     controllers: [CustomerController, PublicCustomerController],
     providers: [CustomerService],

@@ -36,7 +36,8 @@ import { UpdateDocumentTypeDto } from './dto/update-document-type.dto';
 import { IsPartnerOrAgentGuard } from '../../../guards/isPartnerOrAgentGuard';
 import { MergeDocumentsDto } from './dto/merge-documents.dto';
 import { RecentUpdatesService } from '../recent-updates/recent-updates.service';
-import { ClaimRecentUpdatesType } from '@prisma/client';
+import { ClaimRecentUpdatesType, DocumentRequestStatus } from '@prisma/client';
+import { DocumentRequestService } from '../document-request/document-request.service';
 
 @Controller('claims/documents')
 @UseGuards(JwtAuthGuard)
@@ -45,6 +46,7 @@ export class DocumentController {
         private readonly documentService: DocumentService,
         private readonly claimService: ClaimService,
         private readonly recentUpdatesService: RecentUpdatesService,
+        private readonly documentRequestService: DocumentRequestService,
     ) {}
     @Post('merge')
     async mergeDocuments(@Res() res: Response, @Body() dto: MergeDocumentsDto) {
@@ -155,7 +157,7 @@ export class DocumentController {
         @Req() req: AuthRequest,
         @Query() query: UploadDocumentsQueryDto,
     ) {
-        const { claimId, documentType } = query;
+        const { claimId, documentType, documentRequestId } = query;
 
         const claim = await this.claimService.getClaim(claimId);
 
@@ -174,6 +176,18 @@ export class DocumentController {
             documentType,
             true,
         );
+
+        if (documentRequestId) {
+            const documentRequest =
+                await this.documentRequestService.getById(documentRequestId);
+
+            if (documentRequest) {
+                await this.documentRequestService.updateStatus(
+                    documentRequestId,
+                    DocumentRequestStatus.INACTIVE,
+                );
+            }
+        }
 
         documents.forEach((doc) => {
             this.recentUpdatesService.saveRecentUpdate(

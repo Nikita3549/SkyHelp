@@ -1,7 +1,10 @@
 import {
     Controller,
+    ForbiddenException,
     Get,
+    NotFoundException,
     Query,
+    Req,
     UnauthorizedException,
     UseGuards,
 } from '@nestjs/common';
@@ -15,19 +18,44 @@ import {
     PublicSignOtherPassengerDto,
     PublicUploadPassportDto,
 } from './dto/generate-links.dto';
-import { CONTINUE_LINKS_EXP, INVALID_JWT } from '../claim/constants';
+import {
+    CONTINUE_LINKS_EXP,
+    HAVE_NO_RIGHTS_ON_CLAIM,
+    INVALID_CLAIM_ID,
+    INVALID_JWT,
+} from '../claim/constants';
 import { VerifyJwtDto } from './dto/verify-jwt.dto';
+import { ClaimService } from '../claim/claim.service';
+import { AuthRequest } from '../../interfaces/AuthRequest.interface';
+import { UserRole } from '@prisma/client';
 
 @Controller('links')
-@UseGuards(JwtAuthGuard, IsPartnerOrAgentGuard)
+@UseGuards(JwtAuthGuard)
 export class GenerateLinksController {
     constructor(
         private readonly tokenService: TokenService,
         private readonly generateLinksService: GenerateLinksService,
+        private readonly claimService: ClaimService,
     ) {}
 
+    @UseGuards(IsPartnerOrAgentGuard)
     @Get('upload-documents')
-    async copyUploadDocuments(@Query() query: CustomerClaimDto) {
+    async copyUploadDocuments(
+        @Query() query: CustomerClaimDto,
+        @Req() req: AuthRequest,
+    ) {
+        if (req.user.role == UserRole.CLIENT) {
+            const claim = await this.claimService.getClaim(query.claimId);
+
+            if (!claim) {
+                throw new NotFoundException(INVALID_CLAIM_ID);
+            }
+
+            if (claim.userId != req.user.id) {
+                throw new ForbiddenException(HAVE_NO_RIGHTS_ON_CLAIM);
+            }
+        }
+
         const jwt = await this.generateLinkJwt(query.claimId);
         const link = await this.generateLinksService.generateUploadDocuments(
             query.customerId,
@@ -37,8 +65,24 @@ export class GenerateLinksController {
         return { link };
     }
 
+    @UseGuards(IsPartnerOrAgentGuard)
     @Get('upload-passport')
-    async copyUploadPassport(@Query() query: CustomerClaimDto) {
+    async copyUploadPassport(
+        @Query() query: CustomerClaimDto,
+        @Req() req: AuthRequest,
+    ) {
+        if (req.user.role == UserRole.CLIENT) {
+            const claim = await this.claimService.getClaim(query.claimId);
+
+            if (!claim) {
+                throw new NotFoundException(INVALID_CLAIM_ID);
+            }
+
+            if (claim.userId != req.user.id) {
+                throw new ForbiddenException(HAVE_NO_RIGHTS_ON_CLAIM);
+            }
+        }
+
         const jwt = await this.generateLinkJwt(query.claimId);
         const link = await this.generateLinksService.generateUploadPassport(
             query.customerId,

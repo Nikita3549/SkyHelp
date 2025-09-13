@@ -1,15 +1,11 @@
 import { IsEnum, IsOptional, IsString } from 'class-validator';
 import { DocumentType } from '@prisma/client';
 
-export class UploadDocumentsQueryDto {
+export class UploadDocumentRequestQuery {
     @IsString()
     claimId: string;
 
     @IsOptional()
     @IsEnum(DocumentType)
     documentType: DocumentType;
-
-    @IsOptional()
-    @IsString()
-    documentRequestId: string;
 }

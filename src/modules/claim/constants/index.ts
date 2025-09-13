@@ -2,7 +2,7 @@ export const CLAIM_NOT_FOUND = "Claim with this id doesn't exist";
 
 export const INVALID_CLAIM_ID = 'Claim id is invalid';
 
-export const DONT_HAVE_RIGHTS_ON_CLAIM =
+export const HAVE_NO_RIGHTS_ON_CLAIM =
     'You dont have rights to get info about this claim';
 
 export const INVALID_JWT = 'Invalid jwt';

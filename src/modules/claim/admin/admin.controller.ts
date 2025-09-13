@@ -16,7 +16,7 @@ import {
 import { IsAdminGuard } from '../../../guards/isAdminGuard';
 import { GetClaimsQuery, IsYesOrNo } from './dto/get-claims.query';
 import { ArchiveClaimDto } from './dto/archive-claim.dto';
-import { DONT_HAVE_RIGHTS_ON_CLAIM, INVALID_CLAIM_ID } from '../constants';
+import { HAVE_NO_RIGHTS_ON_CLAIM, INVALID_CLAIM_ID } from '../constants';
 import { UpdateClaimDto } from '../dto/update-claim.dto';
 import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
 import { ClaimService } from '../claim.service';
@@ -138,7 +138,7 @@ export class AdminController {
         }
 
         if (req.user.role != UserRole.ADMIN && req.user.id != claim.partnerId) {
-            throw new ForbiddenException(DONT_HAVE_RIGHTS_ON_CLAIM);
+            throw new ForbiddenException(HAVE_NO_RIGHTS_ON_CLAIM);
         }
 
         await this.claimService.setArchived(claimId, archived);

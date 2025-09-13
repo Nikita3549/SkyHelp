@@ -22,12 +22,17 @@ import { JwtQueryDto } from '../dto/jwt-query.dto';
 import { CreateOtherPassengersDto } from './dto/create-other-passengers.dto';
 import { validateClaimJwt } from '../../../utils/validate-claim-jwt';
 import { TokenService } from '../../token/token.service';
-import { ClaimRecentUpdatesType, DocumentType } from '@prisma/client';
+import {
+    ClaimRecentUpdatesType,
+    DocumentRequestStatus,
+    DocumentType,
+} from '@prisma/client';
 import { DocumentsUploadInterceptor } from '../../../interceptors/documents/documents-upload.interceptor';
 import { UploadOtherPassengerDto } from './dto/upload-other-passenger.dto';
 import { IsAgentGuard } from '../../../guards/isAgent.guard';
 import { generateAssignmentName } from '../../../utils/generate-assignment-name';
 import { RecentUpdatesService } from '../recent-updates/recent-updates.service';
+import { DocumentRequestService } from '../document-request/document-request.service';
 
 @Controller('claims/passengers')
 @UseGuards(JwtAuthGuard)
@@ -62,6 +67,7 @@ export class PublicOtherPassengerController {
         private readonly claimService: ClaimService,
         private readonly tokenService: TokenService,
         private readonly recentUpdatesService: RecentUpdatesService,
+        private readonly documentRequestService: DocumentRequestService,
     ) {}
 
     @Get(':passengerId')
@@ -81,7 +87,7 @@ export class PublicOtherPassengerController {
         @Body() dto: UploadSignDto,
         @Param('passengerId') passengerId: string,
     ) {
-        const { signature, claimId, jwt } = dto;
+        const { signature, claimId, jwt, documentRequestId } = dto;
 
         const token = await validateClaimJwt(
             jwt,
@@ -102,6 +108,18 @@ export class PublicOtherPassengerController {
 
         if (!claim) {
             return;
+        }
+
+        if (documentRequestId) {
+            const documentRequest =
+                await this.documentRequestService.getById(documentRequestId);
+
+            if (documentRequest) {
+                await this.documentRequestService.updateStatus(
+                    documentRequestId,
+                    DocumentRequestStatus.INACTIVE,
+                );
+            }
         }
 
         const path = await this.documentService.saveSignaturePdf(signature, {

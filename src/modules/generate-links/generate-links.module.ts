@@ -5,9 +5,10 @@ import {
 } from './generate-links.controller';
 import { GenerateLinksService } from './generate-links.service';
 import { TokenModule } from '../token/token.module';
+import { ClaimModule } from '../claim/claim.module';
 
 @Module({
-    imports: [TokenModule],
+    imports: [TokenModule, ClaimModule],
     controllers: [GenerateLinksController, PublicGenerateLinksController],
     providers: [GenerateLinksService],
 })

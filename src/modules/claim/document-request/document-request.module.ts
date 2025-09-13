@@ -7,6 +7,6 @@ import { ClaimModule } from '../claim.module';
     imports: [forwardRef(() => ClaimModule)],
     controllers: [DocumentRequestController],
     providers: [DocumentRequestService],
-    exports: [DocumentRequestService],
+    exports: [DocumentRequestService, DocumentRequestService],
 })
 export class DocumentRequestModule {}
