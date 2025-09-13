@@ -3608,5 +3608,21 @@
     "PassportSection.uploading": "Se încarcă...",
     "PassportSection.uploadingFiles": "Se încarcă fișierele...",
     "PassportSection.uploadComplete": "Încărcarea a fost finalizată",
-    "PassportSection.errors.fileProcessingFailed": "Procesarea fișierului a eșuat"
+    "PassportSection.errors.fileProcessingFailed": "Procesarea fișierului a eșuat",
+    "DocsRequired.eticket": "Bilet electronic",
+    "DocsRequired.passport": "Pașaport",
+    "DocsRequired.boarding_pass": "Card de îmbarcare",
+    "DocsRequired.sign": "Semnătură",
+    "DocsRequired.toast_success_title": "Succes",
+    "DocsRequired.toast_success_desc": "Documentele au fost încărcate cu succes",
+    "DocsRequired.toast_error_title": "Eroare",
+    "DocsRequired.toast_error_desc": "Eroare la încărcarea documentelor",
+    "DocsRequired.toast_sign_link_error": "Linkul pentru semnătură nu a fost primit",
+    "DocsRequired.toast_copied_title": "Copiat",
+    "DocsRequired.toast_copied_desc": "Linkul pentru semnătură a fost copiat în clipboard",
+    "DocsRequired.document_required": "document necesar:",
+    "DocsRequired.upload_prompt": "Vă rugăm să încărcați acest document pentru a continua procesarea cererii dvs.",
+    "DocsRequired.upload_button": "Încărcați",
+    "DocsRequired.sign_now": "Semnați acum",
+    "DocsRequired.copy_link": "Copiați linkul"
 }

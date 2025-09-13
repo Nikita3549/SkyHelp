@@ -3628,5 +3628,21 @@
     "PassportSection.uploading": "Yükleniyor...",
     "PassportSection.uploadingFiles": "Dosyalar yükleniyor...",
     "PassportSection.uploadComplete": "Yükleme tamamlandı",
-    "PassportSection.errors.fileProcessingFailed": "Dosya işleme başarısız oldu"
+    "PassportSection.errors.fileProcessingFailed": "Dosya işleme başarısız oldu",
+    "DocsRequired.eticket": "Elektronik bilet",
+    "DocsRequired.passport": "Pasaport",
+    "DocsRequired.boarding_pass": "Biniş kartı",
+    "DocsRequired.sign": "İmza",
+    "DocsRequired.toast_success_title": "Başarılı",
+    "DocsRequired.toast_success_desc": "Belgeler başarıyla yüklendi",
+    "DocsRequired.toast_error_title": "Hata",
+    "DocsRequired.toast_error_desc": "Belgeler yüklenirken hata oluştu",
+    "DocsRequired.toast_sign_link_error": "İmza bağlantısı alınamadı",
+    "DocsRequired.toast_copied_title": "Kopyalandı",
+    "DocsRequired.toast_copied_desc": "İmza bağlantısı panoya kopyalandı",
+    "DocsRequired.document_required": "gerekli belge:",
+    "DocsRequired.upload_prompt": "Talebinizin işlenmeye devam etmesi için lütfen bu belgeyi yükleyin.",
+    "DocsRequired.upload_button": "Yükle",
+    "DocsRequired.sign_now": "Hemen imzala",
+    "DocsRequired.copy_link": "Bağlantıyı kopyala"
 }

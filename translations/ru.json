@@ -3606,5 +3606,21 @@
     "PassportSection.uploading": "Загрузка...",
     "PassportSection.uploadingFiles": "Загрузка файлов...",
     "PassportSection.uploadComplete": "Загрузка завершена",
-    "PassportSection.errors.fileProcessingFailed": "Ошибка обработки файла"
+    "PassportSection.errors.fileProcessingFailed": "Ошибка обработки файла",
+    "DocsRequired.eticket": "Электронный билет",
+    "DocsRequired.passport": "Паспорт",
+    "DocsRequired.boarding_pass": "Посадочный талон",
+    "DocsRequired.sign": "Подпись",
+    "DocsRequired.toast_success_title": "Успешно",
+    "DocsRequired.toast_success_desc": "Документы успешно загружены",
+    "DocsRequired.toast_error_title": "Ошибка",
+    "DocsRequired.toast_error_desc": "Ошибка при загрузке документов",
+    "DocsRequired.toast_sign_link_error": "Ссылка для подписи не получена",
+    "DocsRequired.toast_copied_title": "Скопировано",
+    "DocsRequired.toast_copied_desc": "Ссылка для подписи скопирована в буфер",
+    "DocsRequired.document_required": "требуется документ:",
+    "DocsRequired.upload_prompt": "Пожалуйста, загрузите этот документ, чтобы продолжить обработку вашей заявки.",
+    "DocsRequired.upload_button": "Загрузить",
+    "DocsRequired.sign_now": "Подписать сейчас",
+    "DocsRequired.copy_link": "Скопировать ссылку"
 }

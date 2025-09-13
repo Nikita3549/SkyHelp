@@ -3608,5 +3608,21 @@
     "PassportSection.uploadingFiles": "Uploading files...",
     "PassportSection.uploadComplete": "Upload complete",
     "PassportSection.errors.fileProcessingFailed": "File processing failed",
-    "SignatureStep.passengers.signed": "Signed"
+    "SignatureStep.passengers.signed": "Signed",
+    "DocsRequired.eticket": "E-ticket",
+    "DocsRequired.passport": "Passport",
+    "DocsRequired.boarding_pass": "Boarding Pass",
+    "DocsRequired.sign": "Sign",
+    "DocsRequired.toast_success_title": "Success",
+    "DocsRequired.toast_success_desc": "Documents successfully uploaded",
+    "DocsRequired.toast_error_title": "Error",
+    "DocsRequired.toast_error_desc": "Error while uploading documents",
+    "DocsRequired.toast_sign_link_error": "Sign link not received",
+    "DocsRequired.toast_copied_title": "Copied",
+    "DocsRequired.toast_copied_desc": "Sign link copied to clipboard",
+    "DocsRequired.document_required": "document required:",
+    "DocsRequired.upload_prompt": "Please upload this document to continue processing your claim.",
+    "DocsRequired.upload_button": "Upload",
+    "DocsRequired.sign_now": "Sign now",
+    "DocsRequired.copy_link": "Copy link"
 }
