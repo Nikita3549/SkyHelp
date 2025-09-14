@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { OtherPassenger } from '@prisma/client';
 import { UpdatePassengerDto } from './dto/update-passenger.dto';
+import { OtherPassengerDto } from './dto/create-other-passengers.dto';
 
 @Injectable()
 export class OtherPassengerService {
@@ -19,10 +20,7 @@ export class OtherPassengerService {
     }
 
     async createOtherPassengers(
-        passengers: Omit<
-            Omit<Omit<OtherPassenger, 'id'>, 'claimId'>,
-            'isSigned'
-        >[],
+        passengers: OtherPassengerDto[],
         claimId: string,
     ) {
         return Promise.all(

@@ -446,10 +446,7 @@ export class ClaimService {
     async getUserClaimsStats(
         userId?: string,
         partnerId?: string,
-        claimsDayFilter?: {
-            dateFrom: Date;
-            dateTo: Date;
-        },
+        dateFilter?: { dateFrom: Date; dateTo: Date },
     ): Promise<{
         total: number;
         successful: number;
@@ -457,7 +454,12 @@ export class ClaimService {
         completedAmount: number;
         claimsByDay: { date: string; count: number }[];
         successByMonth: { month: string; success: string }[];
+        airlines: { count: number; name: string }[];
     }> {
+        const dateWhere = dateFilter
+            ? { gte: dateFilter.dateFrom, lte: dateFilter.dateTo }
+            : undefined;
+
         const [
             total,
             successful,
@@ -468,18 +470,22 @@ export class ClaimService {
         ] = await this.prisma.$transaction([
             // total claims
             this.prisma.claim.count({
-                where: { userId, archived: false, partnerId },
+                where: {
+                    userId,
+                    partnerId,
+                    archived: false,
+                    ...(dateWhere ? { created_at: dateWhere } : {}),
+                },
             }),
 
             // successful claims
             this.prisma.claim.count({
                 where: {
                     userId,
-                    state: {
-                        status: ClaimStatus.PAID,
-                    },
-                    archived: false,
                     partnerId,
+                    archived: false,
+                    state: { status: ClaimStatus.PAID },
+                    ...(dateWhere ? { created_at: dateWhere } : {}),
                 },
             }),
 
@@ -487,6 +493,8 @@ export class ClaimService {
             this.prisma.claim.count({
                 where: {
                     userId,
+                    partnerId,
+                    archived: false,
                     state: {
                         status: {
                             notIn: [
@@ -496,51 +504,72 @@ export class ClaimService {
                             ],
                         },
                     },
-                    archived: false,
-                    partnerId,
+                    ...(dateWhere ? { created_at: dateWhere } : {}),
                 },
             }),
-            // sum of ClaimState.amount where state.status = COMPLETED
+
+            // sum of ClaimState.amount where state.status = PAID
             this.prisma.claimState.aggregate({
                 where: {
                     status: ClaimStatus.PAID,
-                    Claim: { some: { userId, archived: false, partnerId } },
+                    Claim: {
+                        some: {
+                            userId,
+                            partnerId,
+                            archived: false,
+                            ...(dateWhere ? { created_at: dateWhere } : {}),
+                        },
+                    },
                 },
                 _sum: { amount: true },
             }),
 
             // claims/day
             this.prisma.$queryRaw<{ date: string; count: number }[]>`
-                SELECT
-                    TO_CHAR(c."created_at"::date, 'DD.MM.YYYY') AS date,
-        COUNT(*) AS count
-                FROM "claims" c
-                WHERE
-                    ${userId ? Prisma.sql`c."user_id" = ${userId} AND` : Prisma.empty}
-                    ${partnerId ? Prisma.sql`c."partnerId" = ${partnerId} AND` : Prisma.empty}
-                    c."archived" = false
-                    ${claimsDayFilter ? Prisma.sql`AND c."created_at" >= ${claimsDayFilter.dateFrom} AND c."created_at" <= ${claimsDayFilter.dateTo}` : Prisma.empty}
-                GROUP BY c."created_at"::date
-                ORDER BY c."created_at"::date DESC
-            `,
+            SELECT TO_CHAR(c."created_at"::date, 'DD.MM.YYYY') AS date, COUNT(*) AS count
+            FROM "claims" c
+            WHERE
+                ${userId ? Prisma.sql`c."user_id" = ${userId} AND` : Prisma.empty}
+                ${partnerId ? Prisma.sql`c."partnerId" = ${partnerId} AND` : Prisma.empty}
+                c."archived" = false
+                ${dateFilter ? Prisma.sql`AND c."created_at" >= ${dateFilter.dateFrom} AND c."created_at" <= ${dateFilter.dateTo}` : Prisma.empty}
+            GROUP BY c."created_at"::date
+            ORDER BY c."created_at"::date DESC
+        `,
 
             // success claims by month
             this.prisma.$queryRaw<{ month: string; success: number }[]>`
-                SELECT
-                    TO_CHAR(c."created_at", 'Mon') AS month,
-    COUNT(*) AS success
-                FROM "claims" c
-                    INNER JOIN "claim_states" s ON c."state_id" = s."id"
-                WHERE s."status" = 'COMPLETED'
-                    ${userId ? Prisma.sql`AND c."user_id" = ${userId}` : Prisma.empty}
-                    ${partnerId ? Prisma.sql`AND c."partnerId" = ${partnerId}` : Prisma.empty}
-                  AND c."archived" = false
-                GROUP BY month, date_trunc('month', c."created_at")
-                ORDER BY date_trunc('month', c."created_at") DESC
-            `,
+            SELECT TO_CHAR(c."created_at", 'Mon') AS month, COUNT(*) AS success
+            FROM "claims" c
+            INNER JOIN "claim_states" s ON c."state_id" = s."id"
+            WHERE s."status" = 'COMPLETED'
+                ${userId ? Prisma.sql`AND c."user_id" = ${userId}` : Prisma.empty}
+                ${partnerId ? Prisma.sql`AND c."partnerId" = ${partnerId}` : Prisma.empty}
+                AND c."archived" = false
+                ${dateFilter ? Prisma.sql`AND c."created_at" >= ${dateFilter.dateFrom} AND c."created_at" <= ${dateFilter.dateTo}` : Prisma.empty}
+            GROUP BY month, date_trunc('month', c."created_at")
+            ORDER BY date_trunc('month', c."created_at") DESC
+        `,
         ]);
 
+        // airlines
+        const airlines = await this.prisma.$queryRaw<
+            { name: string; count: number }[]
+        >`
+  SELECT a.name, COUNT(*) AS count
+  FROM "claims" c
+  JOIN "airlines" a ON a.id = c."airlineId"
+  WHERE
+    c."archived" = false
+    ${userId ? Prisma.sql`AND c."user_id" = ${userId}` : Prisma.empty}
+    ${partnerId ? Prisma.sql`AND c."partnerId" = ${partnerId}` : Prisma.empty}
+    ${dateFilter ? Prisma.sql`AND c."created_at" >= ${dateFilter.dateFrom} AND c."created_at" <= ${dateFilter.dateTo}` : Prisma.empty}
+  GROUP BY a.name
+  ORDER BY count DESC
+`;
+
         const completedAmount = completedAmountAgg._sum.amount ?? 0;
+
         return {
             total,
             successful,
@@ -554,16 +583,11 @@ export class ClaimService {
                 month,
                 success: success.toString(), // <- BIGINT FIX
             })),
+            airlines: airlines.map(({ name, count }) => ({
+                name,
+                count: Number(count), // <- BIGINT FIX
+            })),
         };
-    }
-
-    async getAirlineStats() {
-        return this.prisma.airline.groupBy({
-            by: ['name'],
-            _count: {
-                _all: true,
-            },
-        });
     }
 
     async updateStep(claimId: string, step: number): Promise<IFullClaim> {

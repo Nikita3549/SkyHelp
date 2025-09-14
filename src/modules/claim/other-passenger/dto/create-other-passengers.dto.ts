@@ -1,5 +1,6 @@
 import {
     IsArray,
+    IsBoolean,
     IsDate,
     IsOptional,
     IsString,
@@ -7,7 +8,7 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
-class OtherPassengerDto {
+export class OtherPassengerDto {
     @IsString()
     firstName: string;
 
@@ -30,7 +31,19 @@ class OtherPassengerDto {
 
     @IsOptional()
     @IsString()
-    email: string | null;
+    email: string;
+
+    @IsOptional()
+    @IsBoolean()
+    isMinor: boolean = false;
+
+    @IsOptional()
+    @IsString()
+    parentFirstName: string;
+
+    @IsOptional()
+    @IsString()
+    parentLastName: string;
 }
 
 export class CreateOtherPassengersDto {

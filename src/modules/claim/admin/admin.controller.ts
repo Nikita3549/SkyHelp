@@ -111,7 +111,7 @@ export class AdminController {
                 ? req.user.id
                 : undefined;
 
-        return this.claimService.getUserClaimsStats(
+        const stats = await this.claimService.getUserClaimsStats(
             userId,
             partnerId,
             dateFrom && dateTo
@@ -121,17 +121,16 @@ export class AdminController {
                   }
                 : undefined,
         );
-    }
 
-    @Get('stats/airlines')
-    @UseGuards(IsAdminGuard)
-    async getAdminAirlineStats() {
-        const stats = await this.claimService.getAirlineStats();
-
-        return stats.map((s) => ({
-            airline: s.name,
-            count: s._count._all,
-        }));
+        return {
+            ...stats,
+            airlines: stats.airlines.map(
+                (s: { count: number; name: string }) => ({
+                    airline: s.name,
+                    count: s.count,
+                }),
+            ),
+        };
     }
 
     @Patch(':claimId/archive')
