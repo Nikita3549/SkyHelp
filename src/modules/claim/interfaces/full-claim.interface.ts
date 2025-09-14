@@ -10,6 +10,7 @@ import {
     ClaimState,
     DepartureAirport,
     Document,
+    OtherPassenger,
     Progress,
     Route,
 } from '@prisma/client';
@@ -23,6 +24,7 @@ export interface IFullClaim extends Claim {
     documents: Document[];
     partner: IPartner | null;
     recentUpdates: ClaimRecentUpdates[];
+    passengers: OtherPassenger[];
 }
 
 interface IClaimDetails extends ClaimDetails {
