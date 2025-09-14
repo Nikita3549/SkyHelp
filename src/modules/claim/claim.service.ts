@@ -553,20 +553,10 @@ export class ClaimService {
         ]);
 
         // airlines
-        const airlines = await this.prisma.$queryRaw<
-            { name: string; count: number }[]
-        >`
-  SELECT a.name, COUNT(*) AS count
-  FROM "claims" c
-  JOIN "airlines" a ON a.id = c."airlineId"
-  WHERE
-    c."archived" = false
-    ${userId ? Prisma.sql`AND c."user_id" = ${userId}` : Prisma.empty}
-    ${partnerId ? Prisma.sql`AND c."partnerId" = ${partnerId}` : Prisma.empty}
-    ${dateFilter ? Prisma.sql`AND c."created_at" >= ${dateFilter.dateFrom} AND c."created_at" <= ${dateFilter.dateTo}` : Prisma.empty}
-  GROUP BY a.name
-  ORDER BY count DESC
-`;
+        const airlines = await this.prisma.airline.groupBy({
+            by: ['name'],
+            _count: { _all: true },
+        });
 
         const completedAmount = completedAmountAgg._sum.amount ?? 0;
 
@@ -583,9 +573,9 @@ export class ClaimService {
                 month,
                 success: success.toString(), // <- BIGINT FIX
             })),
-            airlines: airlines.map(({ name, count }) => ({
-                name,
-                count: Number(count), // <- BIGINT FIX
+            airlines: airlines.map((s) => ({
+                name: s.name,
+                count: Number(s._count._all), // <- BIGINT FIX
             })),
         };
     }
