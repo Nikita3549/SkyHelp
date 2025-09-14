@@ -380,6 +380,9 @@ export class ClaimService {
                 airlines: {},
             },
         };
+        let orderBy: Prisma.ClaimOrderByWithRelationInput = {
+            createdAt: 'desc',
+        };
 
         if (searchParams?.duplicated) {
             where.state!.isDuplicate = searchParams.duplicated;
@@ -418,16 +421,21 @@ export class ClaimService {
             };
         }
 
+        if (searchParams?.onlyRecentlyUpdates) {
+            orderBy = {
+                recentUpdatedAt: 'desc',
+            };
+        }
+        if (searchParams?.isOrderByAssignedAt) {
+            orderBy = {
+                assignedAt: 'desc',
+            };
+        }
+
         const [claims, total] = await this.prisma.$transaction([
             this.prisma.claim.findMany({
                 where,
-                orderBy: searchParams?.isOrderByAssignedAt
-                    ? {
-                          assignedAt: 'desc',
-                      }
-                    : {
-                          createdAt: 'desc',
-                      },
+                orderBy,
                 include: this.fullClaimInclude(),
                 skip,
                 take: pageSize,

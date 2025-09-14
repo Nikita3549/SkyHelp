@@ -48,7 +48,6 @@ import { UploadFormSignDto } from './dto/upload-form-sign-dto';
 import { UserService } from '../user/user.service';
 import { AuthService } from '../auth/auth.service';
 import { generateAssignmentName } from '../../utils/generate-assignment-name';
-import { OtherPassengerService } from './other-passenger/other-passenger.service';
 
 @Controller('claims')
 @UseGuards(JwtAuthGuard)
@@ -74,7 +73,6 @@ export class PublicClaimController {
         private readonly customerService: CustomerService,
         private readonly userService: UserService,
         private readonly authService: AuthService,
-        private readonly otherPassengerService: OtherPassengerService,
     ) {}
 
     @Post()
@@ -217,66 +215,26 @@ export class PublicClaimController {
             throw new NotFoundException(INVALID_CLAIM_ID);
         }
 
-        const documentPaths: { passengerName: string; documentPath: string }[] =
-            [];
-
-        const minorPassengers = claim.passengers.filter(
-            (p) =>
-                p.isMinor &&
-                p.parentFirstName &&
-                p.parentLastName &&
-                p.birthday,
-        );
-
-        for (const minorPassenger of minorPassengers) {
-            const path = await this.documentService.saveParentalSignaturePdf(
-                signature,
-                {
-                    firstName: minorPassenger.firstName,
-                    lastName: minorPassenger.lastName,
-                    flightNumber: claim.details.flightNumber,
-                    date: claim.details.date,
-                    address: minorPassenger.address,
-                    claimId: claim.id,
-                    airlineName: claim.details.airlines.name,
-                    parentFirstName: minorPassenger.parentFirstName!,
-                    parentLastName: minorPassenger.parentLastName!,
-                    minorBirthday: minorPassenger.birthday!,
-                },
-            );
-
-            documentPaths.push({
-                passengerName: `${minorPassenger.firstName} ${minorPassenger.lastName}`,
-                documentPath: path,
-            });
-
-            await this.otherPassengerService.setIsSignedPassenger(
-                minorPassenger.id,
-                true,
-            );
-        }
-
-        const customerDocumentPath =
-            await this.documentService.saveSignaturePdf(signature, {
-                firstName: claim.customer.firstName,
-                lastName: claim.customer.lastName,
-                flightNumber: claim.details.flightNumber,
-                date: claim.details.date,
-                address: claim.customer.address,
-                claimId: claim.id,
-                airlineName: claim.details.airlines.name,
-            });
-
-        documentPaths.push({
-            passengerName: `${claim.customer.firstName} ${claim.customer.lastName}`,
-            documentPath: customerDocumentPath,
+        const path = await this.documentService.saveSignaturePdf(signature, {
+            firstName: claim.customer.firstName,
+            lastName: claim.customer.lastName,
+            flightNumber: claim.details.flightNumber,
+            date: claim.details.date,
+            address: claim.customer.address,
+            claimId: claim.id,
+            airlineName: claim.details.airlines.name,
         });
 
         const documents = await this.documentService.saveDocuments(
-            documentPaths.map((doc) => ({
-                name: doc.passengerName,
-                path: doc.documentPath,
-            })),
+            [
+                {
+                    path,
+                    name: generateAssignmentName(
+                        claim.customer.firstName,
+                        claim.customer.lastName,
+                    ),
+                },
+            ],
             claimId,
             DocumentType.ASSIGNMENT,
             true,
