@@ -446,6 +446,10 @@ export class ClaimService {
     async getUserClaimsStats(
         userId?: string,
         partnerId?: string,
+        claimsDayFilter?: {
+            dateFrom: Date;
+            dateTo: Date;
+        },
     ): Promise<{
         total: number;
         successful: number;
@@ -509,13 +513,13 @@ export class ClaimService {
             this.prisma.$queryRaw<{ date: string; count: number }[]>`
                 SELECT
                     TO_CHAR(c."created_at"::date, 'DD.MM.YYYY') AS date,
-    COUNT(*) AS count
+        COUNT(*) AS count
                 FROM "claims" c
                 WHERE
                     ${userId ? Prisma.sql`c."user_id" = ${userId} AND` : Prisma.empty}
                     ${partnerId ? Prisma.sql`c."partnerId" = ${partnerId} AND` : Prisma.empty}
                     c."archived" = false
-                  AND c."created_at" >= NOW() - INTERVAL '1 month'
+                    ${claimsDayFilter ? Prisma.sql`AND c."created_at" >= ${claimsDayFilter.dateFrom} AND c."created_at" <= ${claimsDayFilter.dateTo}` : Prisma.empty}
                 GROUP BY c."created_at"::date
                 ORDER BY c."created_at"::date DESC
             `,

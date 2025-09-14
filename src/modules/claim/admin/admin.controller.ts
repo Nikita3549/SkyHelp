@@ -28,6 +28,7 @@ import { IsPartnerOrAgentGuard } from '../../../guards/isPartnerOrAgentGuard';
 import { AuthRequest } from '../../../interfaces/AuthRequest.interface';
 import { IsAgentGuard } from '../../../guards/isAgent.guard';
 import { RecentUpdatesService } from '../recent-updates/recent-updates.service';
+import { GetAdminClaimsStatsQuery } from './dto/get-admin-claims-stats.query';
 
 @Controller('claims/admin')
 @UseGuards(JwtAuthGuard, IsPartnerOrAgentGuard)
@@ -101,14 +102,25 @@ export class AdminController {
     @Get('stats')
     async getAdminClaimsStats(
         @Req() req: AuthRequest,
-        @Query('userId') userId?: string,
+        @Query() query: GetAdminClaimsStatsQuery,
     ) {
+        const { userId, dateTo, dateFrom } = query;
+
         const partnerId =
             req.user.role == UserRole.PARTNER || req.user.role == UserRole.AGENT
                 ? req.user.id
                 : undefined;
 
-        return this.claimService.getUserClaimsStats(userId, partnerId);
+        return this.claimService.getUserClaimsStats(
+            userId,
+            partnerId,
+            dateFrom && dateTo
+                ? {
+                      dateFrom,
+                      dateTo,
+                  }
+                : undefined,
+        );
     }
 
     @Get('stats/airlines')
