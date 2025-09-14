@@ -474,7 +474,7 @@ export class ClaimService {
                     userId,
                     partnerId,
                     archived: false,
-                    ...(dateWhere ? { created_at: dateWhere } : {}),
+                    ...(dateWhere ? { createdAt: dateWhere } : {}),
                 },
             }),
 
@@ -485,7 +485,7 @@ export class ClaimService {
                     partnerId,
                     archived: false,
                     state: { status: ClaimStatus.PAID },
-                    ...(dateWhere ? { created_at: dateWhere } : {}),
+                    ...(dateWhere ? { createdAt: dateWhere } : {}),
                 },
             }),
 
@@ -504,7 +504,7 @@ export class ClaimService {
                             ],
                         },
                     },
-                    ...(dateWhere ? { created_at: dateWhere } : {}),
+                    ...(dateWhere ? { createdAt: dateWhere } : {}),
                 },
             }),
 
@@ -517,7 +517,7 @@ export class ClaimService {
                             userId,
                             partnerId,
                             archived: false,
-                            ...(dateWhere ? { created_at: dateWhere } : {}),
+                            ...(dateWhere ? { createdAt: dateWhere } : {}),
                         },
                     },
                 },
