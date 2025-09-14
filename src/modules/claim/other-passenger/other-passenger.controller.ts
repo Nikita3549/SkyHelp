@@ -122,15 +122,40 @@ export class PublicOtherPassengerController {
             }
         }
 
-        const path = await this.documentService.saveSignaturePdf(signature, {
-            firstName: passenger.firstName,
-            lastName: passenger.lastName,
-            flightNumber: claim.details.flightNumber,
-            date: claim.details.date,
-            address: passenger.address,
-            claimId: claim.id,
-            airlineName: claim.details.airlines.name,
-        });
+        let path: string;
+
+        if (
+            passenger.isMinor &&
+            passenger.parentFirstName &&
+            passenger.parentLastName &&
+            passenger.birthday
+        ) {
+            path = await this.documentService.saveParentalSignaturePdf(
+                signature,
+                {
+                    firstName: passenger.firstName,
+                    lastName: passenger.lastName,
+                    flightNumber: claim.details.flightNumber,
+                    date: claim.details.date,
+                    address: passenger.address,
+                    claimId: claim.id,
+                    airlineName: claim.details.airlines.name,
+                    parentFirstName: passenger.parentFirstName,
+                    parentLastName: passenger.parentLastName,
+                    minorBirthday: passenger.birthday,
+                },
+            );
+        } else {
+            path = await this.documentService.saveSignaturePdf(signature, {
+                firstName: passenger.firstName,
+                lastName: passenger.lastName,
+                flightNumber: claim.details.flightNumber,
+                date: claim.details.date,
+                address: passenger.address,
+                claimId: claim.id,
+                airlineName: claim.details.airlines.name,
+            });
+        }
 
         const documents = await this.documentService.saveDocuments(
             [
