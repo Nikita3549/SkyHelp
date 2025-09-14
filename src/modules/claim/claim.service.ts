@@ -670,6 +670,17 @@ export class ClaimService {
         });
     }
 
+    async changeRecentUpdatedAt(claimId: string) {
+        return this.prisma.claim.update({
+            data: {
+                recentUpdatedAt: new Date(),
+            },
+            where: {
+                id: claimId,
+            },
+        });
+    }
+
     async setArchived(claimId: string, archived: boolean) {
         return this.prisma.claim.update({
             data: { archived },

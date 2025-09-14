@@ -60,6 +60,7 @@ model Claim {
   payment          ClaimPayment?        @relation(fields: [paymentId], references: [id], onDelete: Cascade)
   createdAt        DateTime             @default(now()) @map("created_at")
   updatedAt        DateTime             @updatedAt @map("updated_at")
+  recentUpdatedAt  DateTime             @default(now()) @map("recent_updated_at")
   recentUpdates    ClaimRecentUpdates[]
   signScenarios    SignScenario[]
   documentRequests DocumentRequest[]

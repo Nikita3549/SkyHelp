@@ -45,6 +45,8 @@ export class RecentUpdatesService {
         );
         await this.claimService.updateHasRecentUpdate(true, claimId);
 
+        await this.claimService.changeRecentUpdatedAt(claimId);
+
         return this.prisma.claimRecentUpdates.create({
             data: {
                 claimId,
