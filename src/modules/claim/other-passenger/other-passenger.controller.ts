@@ -205,6 +205,24 @@ export class PublicOtherPassengerController {
 
         const passengers = dto.passengers;
 
+        const today = new Date();
+        passengers.map((p) => {
+            let age = today.getFullYear() - p.birthday.getFullYear();
+            const m = today.getMonth() - p.birthday.getMonth();
+
+            if (m < 0 || (m === 0 && today.getDate() < p.birthday.getDate())) {
+                age--;
+            }
+            if (age < 18) {
+                return {
+                    ...p,
+                    isMinor: true,
+                };
+            }
+
+            return p;
+        });
+
         return this.otherPassengerService.createOtherPassengers(
             passengers,
             claimId,
