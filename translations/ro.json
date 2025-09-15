@@ -3624,5 +3624,17 @@
     "DocsRequired.upload_prompt": "Vă rugăm să încărcați acest document pentru a continua procesarea cererii dvs.",
     "DocsRequired.upload_button": "Încărcați",
     "DocsRequired.sign_now": "Semnați acum",
-    "DocsRequired.copy_link": "Copiați linkul"
+    "DocsRequired.copy_link": "Copiați linkul",
+    "PassengerDetailsStep.validation.adultPassengerRequired": "Prenumele, numele și emailul sunt obligatorii pentru pasagerii adulți",
+    "PassengerDetailsStep.validation.invalidPhone": "Număr de telefon invalid",
+    "PassengerDetailsStep.toast.passengerSaved.title": "Pasager salvat",
+    "PassengerDetailsStep.toast.passengerSaved.description": "Detaliile pasagerului au fost salvate cu succes",
+    "PassengerDetailsStep.toast.error.title": "Ups...",
+    "PassengerDetailsStep.toast.error.description": "Ceva nu a mers bine. Încearcă din nou mai târziu",
+    "PassengerDetailsStep.minorFirstNameLabel": "Prenumele minorului",
+    "PassengerDetailsStep.minorLastNameLabel": "Numele minorului",
+    "PassengerDetailsStep.optional": "Opțional",
+    "PassengerDetailsStep.minorNote": "Acest pasager este minor",
+    "PassengerDetailsStep.parentFirstNameLabel": "Prenumele părintelui",
+    "PassengerDetailsStep.parentLastNameLabel": "Numele părintelui"
 }

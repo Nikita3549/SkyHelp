@@ -3624,5 +3624,17 @@
     "DocsRequired.upload_prompt": "Please upload this document to continue processing your claim.",
     "DocsRequired.upload_button": "Upload",
     "DocsRequired.sign_now": "Sign now",
-    "DocsRequired.copy_link": "Copy link"
+    "DocsRequired.copy_link": "Copy link",
+    "PassengerDetailsStep.validation.adultPassengerRequired": "First name, last name, and email are required for adult passengers",
+    "PassengerDetailsStep.validation.invalidPhone": "Invalid phone",
+    "PassengerDetailsStep.toast.passengerSaved.title": "Passenger Saved",
+    "PassengerDetailsStep.toast.passengerSaved.description": "Passenger details have been saved successfully",
+    "PassengerDetailsStep.toast.error.title": "Oops...",
+    "PassengerDetailsStep.toast.error.description": "Something went wrong. Try again later",
+    "PassengerDetailsStep.minorFirstNameLabel": "Minor First Name",
+    "PassengerDetailsStep.minorLastNameLabel": "Minor Last Name",
+    "PassengerDetailsStep.optional": "Optional",
+    "PassengerDetailsStep.minorNote": "This passenger is Minor",
+    "PassengerDetailsStep.parentFirstNameLabel": "Parent First Name",
+    "PassengerDetailsStep.parentLastNameLabel": "Parent Last Name"
 }

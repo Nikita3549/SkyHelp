@@ -3622,5 +3622,17 @@
     "DocsRequired.upload_prompt": "Пожалуйста, загрузите этот документ, чтобы продолжить обработку вашей заявки.",
     "DocsRequired.upload_button": "Загрузить",
     "DocsRequired.sign_now": "Подписать сейчас",
-    "DocsRequired.copy_link": "Скопировать ссылку"
+    "DocsRequired.copy_link": "Скопировать ссылку",
+    "PassengerDetailsStep.validation.adultPassengerRequired": "Имя, фамилия и email обязательны для взрослых пассажиров",
+    "PassengerDetailsStep.validation.invalidPhone": "Неверный номер телефона",
+    "PassengerDetailsStep.toast.passengerSaved.title": "Пассажир сохранён",
+    "PassengerDetailsStep.toast.passengerSaved.description": "Данные пассажира успешно сохранены",
+    "PassengerDetailsStep.toast.error.title": "Упс...",
+    "PassengerDetailsStep.toast.error.description": "Что-то пошло не так. Попробуйте позже",
+    "PassengerDetailsStep.minorFirstNameLabel": "Имя несовершеннолетнего",
+    "PassengerDetailsStep.minorLastNameLabel": "Фамилия несовершеннолетнего",
+    "PassengerDetailsStep.optional": "Необязательно",
+    "PassengerDetailsStep.minorNote": "Этот пассажир несовершеннолетний",
+    "PassengerDetailsStep.parentFirstNameLabel": "Имя родителя",
+    "PassengerDetailsStep.parentLastNameLabel": "Фамилия родителя"
 }

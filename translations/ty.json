@@ -3644,5 +3644,17 @@
     "DocsRequired.upload_prompt": "Talebinizin işlenmeye devam etmesi için lütfen bu belgeyi yükleyin.",
     "DocsRequired.upload_button": "Yükle",
     "DocsRequired.sign_now": "Hemen imzala",
-    "DocsRequired.copy_link": "Bağlantıyı kopyala"
+    "DocsRequired.copy_link": "Bağlantıyı kopyala",
+    "PassengerDetailsStep.validation.adultPassengerRequired": "Yetişkin yolcular için ad, soyad ve e-posta gereklidir",
+    "PassengerDetailsStep.validation.invalidPhone": "Geçersiz telefon",
+    "PassengerDetailsStep.toast.passengerSaved.title": "Yolcu kaydedildi",
+    "PassengerDetailsStep.toast.passengerSaved.description": "Yolcu bilgileri başarıyla kaydedildi",
+    "PassengerDetailsStep.toast.error.title": "Hata...",
+    "PassengerDetailsStep.toast.error.description": "Bir şeyler yanlış gitti. Daha sonra tekrar deneyin",
+    "PassengerDetailsStep.minorFirstNameLabel": "Reşit olmayanın adı",
+    "PassengerDetailsStep.minorLastNameLabel": "Reşit olmayanın soyadı",
+    "PassengerDetailsStep.optional": "İsteğe bağlı",
+    "PassengerDetailsStep.minorNote": "Bu yolcu reşit değildir",
+    "PassengerDetailsStep.parentFirstNameLabel": "Ebeveynin adı",
+    "PassengerDetailsStep.parentLastNameLabel": "Ebeveynin soyadı"
 }
