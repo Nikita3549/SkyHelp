@@ -3636,5 +3636,6 @@
     "PassengerDetailsStep.optional": "Opțional",
     "PassengerDetailsStep.minorNote": "Acest pasager este minor",
     "PassengerDetailsStep.parentFirstNameLabel": "Prenumele părintelui",
-    "PassengerDetailsStep.parentLastNameLabel": "Numele părintelui"
+    "PassengerDetailsStep.parentLastNameLabel": "Numele părintelui",
+    "LegalLinks.minorAgreement": "Acord pentru minori"
 }

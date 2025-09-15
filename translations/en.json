@@ -3636,5 +3636,6 @@
     "PassengerDetailsStep.optional": "Optional",
     "PassengerDetailsStep.minorNote": "This passenger is Minor",
     "PassengerDetailsStep.parentFirstNameLabel": "Parent First Name",
-    "PassengerDetailsStep.parentLastNameLabel": "Parent Last Name"
+    "PassengerDetailsStep.parentLastNameLabel": "Parent Last Name",
+    "LegalLinks.minorAgreement": "Minor Agreement"
 }

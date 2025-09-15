@@ -3634,5 +3634,6 @@
     "PassengerDetailsStep.optional": "Необязательно",
     "PassengerDetailsStep.minorNote": "Этот пассажир несовершеннолетний",
     "PassengerDetailsStep.parentFirstNameLabel": "Имя родителя",
-    "PassengerDetailsStep.parentLastNameLabel": "Фамилия родителя"
+    "PassengerDetailsStep.parentLastNameLabel": "Фамилия родителя",
+    "LegalLinks.minorAgreement": "Соглашение для несовершеннолетних"
 }

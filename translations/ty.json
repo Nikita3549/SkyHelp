@@ -3656,5 +3656,6 @@
     "PassengerDetailsStep.optional": "İsteğe bağlı",
     "PassengerDetailsStep.minorNote": "Bu yolcu reşit değildir",
     "PassengerDetailsStep.parentFirstNameLabel": "Ebeveynin adı",
-    "PassengerDetailsStep.parentLastNameLabel": "Ebeveynin soyadı"
+    "PassengerDetailsStep.parentLastNameLabel": "Ebeveynin soyadı",
+    "LegalLinks.minorAgreement": "Reşit Olmayanlar İçin Sözleşme"
 }
