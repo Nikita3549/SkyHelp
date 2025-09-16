@@ -3629,6 +3629,7 @@
     "PassportSection.uploadingFiles": "Dosyalar yükleniyor...",
     "PassportSection.uploadComplete": "Yükleme tamamlandı",
     "PassportSection.errors.fileProcessingFailed": "Dosya işleme başarısız oldu",
+    "SignatureStep.passengers.signed": "İmzalandı",
     "DocsRequired.eticket": "Elektronik bilet",
     "DocsRequired.passport": "Pasaport",
     "DocsRequired.boarding_pass": "Biniş kartı",

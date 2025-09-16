@@ -3607,6 +3607,7 @@
     "PassportSection.uploadingFiles": "Загрузка файлов...",
     "PassportSection.uploadComplete": "Загрузка завершена",
     "PassportSection.errors.fileProcessingFailed": "Ошибка обработки файла",
+    "SignatureStep.passengers.signed": "Подписано",
     "DocsRequired.eticket": "Электронный билет",
     "DocsRequired.passport": "Паспорт",
     "DocsRequired.boarding_pass": "Посадочный талон",

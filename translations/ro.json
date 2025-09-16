@@ -3609,6 +3609,7 @@
     "PassportSection.uploadingFiles": "Se încarcă fișierele...",
     "PassportSection.uploadComplete": "Încărcarea a fost finalizată",
     "PassportSection.errors.fileProcessingFailed": "Procesarea fișierului a eșuat",
+    "SignatureStep.passengers.signed": "Semnat",
     "DocsRequired.eticket": "Bilet electronic",
     "DocsRequired.passport": "Pașaport",
     "DocsRequired.boarding_pass": "Card de îmbarcare",
