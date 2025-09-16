@@ -110,19 +110,21 @@ model Route {
 }
 
 model ArrivalAirport {
-  id    String @id @default(cuid()) @map("id")
-  icao  String
-  name  String
-  Route Route?
+  id      String  @id @default(cuid()) @map("id")
+  icao    String
+  name    String
+  country String?
+  Route   Route?
 
   @@map("arrival_airports")
 }
 
 model DepartureAirport {
-  id    String @id @default(cuid()) @map("id")
-  icao  String
-  name  String
-  Route Route?
+  id      String  @id @default(cuid()) @map("id")
+  icao    String
+  name    String
+  country String?
+  Route   Route?
 
   @@map("departure_airports")
 }

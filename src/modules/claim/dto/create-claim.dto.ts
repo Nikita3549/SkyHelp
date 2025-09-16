@@ -44,6 +44,10 @@ class AirlineDto {
 
     @IsString()
     name: string;
+
+    @IsOptional()
+    @IsString()
+    country: string;
 }
 
 class DetailsDto {
