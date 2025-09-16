@@ -97,7 +97,7 @@ jobs:
             git pull origin master || { echo "❌ Git pull failed"; exit 1; }
 
             echo "🔧 Building and restarting DEV containers"
-            docker compose -f docker-compose.yml -f docker-compose.dev.yml -p dev --profile api up --build --remove-orphans
+            docker compose -f docker-compose.yml -f docker-compose.dev.yml -p dev --profile api up --build -d --remove-orphans
 
 
             echo "🧹 Cleaning up dangling images"
