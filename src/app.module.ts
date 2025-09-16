@@ -37,7 +37,6 @@ import { GenerateLinksModule } from './modules/generate-links/generate-links.mod
             connection: {
                 host: process.env.REDIS_HOST,
                 password: process.env.REDIS_PASSWORD,
-                port: +process.env.REDIS_PORT!,
             },
         }),
         AuthModule,
