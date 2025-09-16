@@ -3657,5 +3657,14 @@
     "PassengerDetailsStep.minorNote": "Bu yolcu reşit değildir",
     "PassengerDetailsStep.parentFirstNameLabel": "Ebeveynin adı",
     "PassengerDetailsStep.parentLastNameLabel": "Ebeveynin soyadı",
-    "LegalLinks.minorAgreement": "Reşit Olmayanlar İçin Sözleşme"
+    "LegalLinks.minorAgreement": "Reşit Olmayanlar İçin Sözleşme",
+    "PassengerDetailsStep.passengerCategory": "Uçuş günündeki yolcu kategorisi:",
+    "PassengerDetailsStep.minor": "Reşit olmayan",
+    "PassengerDetailsStep.yearsOld": "yaşında",
+    "PassengerDetailsStep.legalGuardianFirstName": "Yasal vasinin adı",
+    "PassengerDetailsStep.legalGuardianLastName": "Yasal vasinin soyadı",
+    "PassengerDetailsStep.addAnotherPassenger": "Başka bir yolcu ekle",
+    "PassengerDetailsStep.validation.passengerRequired": "Yolcular için ad, soyad ve e-posta gereklidir",
+    "PassengerDetailsStep.validation.parentFirstNameRequired": "Reşit olmayan yolcular için ebeveynin adı gereklidir",
+    "PassengerDetailsStep.validation.parentLastNameRequired": "Reşit olmayan yolcular için ebeveynin soyadı gereklidir"
 }

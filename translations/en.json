@@ -3637,5 +3637,14 @@
     "PassengerDetailsStep.minorNote": "This passenger is Minor",
     "PassengerDetailsStep.parentFirstNameLabel": "Parent First Name",
     "PassengerDetailsStep.parentLastNameLabel": "Parent Last Name",
-    "LegalLinks.minorAgreement": "Minor Agreement"
+    "LegalLinks.minorAgreement": "Minor Agreement",
+    "PassengerDetailsStep.passengerCategory": "Passenger category on the day of flight:",
+    "PassengerDetailsStep.minor": "Minor",
+    "PassengerDetailsStep.yearsOld": "years old",
+    "PassengerDetailsStep.legalGuardianFirstName": "Legal guardian's first name",
+    "PassengerDetailsStep.legalGuardianLastName": "Legal guardian's last name",
+    "PassengerDetailsStep.addAnotherPassenger": "Add Another Passenger",
+    "PassengerDetailsStep.validation.passengerRequired": "First name, last name, and email are required for passengers",
+    "PassengerDetailsStep.validation.parentFirstNameRequired": "Parent's first name is required for minor passengers",
+    "PassengerDetailsStep.validation.parentLastNameRequired": "Parent's last name is required for minor passengers"
 }

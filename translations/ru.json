@@ -3635,5 +3635,14 @@
     "PassengerDetailsStep.minorNote": "Этот пассажир несовершеннолетний",
     "PassengerDetailsStep.parentFirstNameLabel": "Имя родителя",
     "PassengerDetailsStep.parentLastNameLabel": "Фамилия родителя",
-    "LegalLinks.minorAgreement": "Соглашение для несовершеннолетних"
+    "LegalLinks.minorAgreement": "Соглашение для несовершеннолетних",
+    "PassengerDetailsStep.passengerCategory": "Категория пассажира на день вылета:",
+    "PassengerDetailsStep.minor": "Несовершеннолетний",
+    "PassengerDetailsStep.yearsOld": "лет",
+    "PassengerDetailsStep.legalGuardianFirstName": "Имя законного представителя",
+    "PassengerDetailsStep.legalGuardianLastName": "Фамилия законного представителя",
+    "PassengerDetailsStep.addAnotherPassenger": "Добавить еще одного пассажира",
+    "PassengerDetailsStep.validation.passengerRequired": "Имя, фамилия и email обязательны для пассажиров",
+    "PassengerDetailsStep.validation.parentFirstNameRequired": "Имя родителя обязательно для несовершеннолетних пассажиров",
+    "PassengerDetailsStep.validation.parentLastNameRequired": "Фамилия родителя обязательна для несовершеннолетних пассажиров"
 }

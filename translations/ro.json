@@ -3637,5 +3637,14 @@
     "PassengerDetailsStep.minorNote": "Acest pasager este minor",
     "PassengerDetailsStep.parentFirstNameLabel": "Prenumele părintelui",
     "PassengerDetailsStep.parentLastNameLabel": "Numele părintelui",
-    "LegalLinks.minorAgreement": "Acord pentru minori"
+    "LegalLinks.minorAgreement": "Acord pentru minori",
+    "PassengerDetailsStep.passengerCategory": "Categoria pasagerului în ziua zborului:",
+    "PassengerDetailsStep.minor": "Minor",
+    "PassengerDetailsStep.yearsOld": "ani",
+    "PassengerDetailsStep.legalGuardianFirstName": "Prenumele tutorelui legal",
+    "PassengerDetailsStep.legalGuardianLastName": "Numele tutorelui legal",
+    "PassengerDetailsStep.addAnotherPassenger": "Adaugă un alt pasager",
+    "PassengerDetailsStep.validation.passengerRequired": "Prenumele, numele și emailul sunt obligatorii pentru pasageri",
+    "PassengerDetailsStep.validation.parentFirstNameRequired": "Prenumele părintelui este obligatoriu pentru pasagerii minori",
+    "PassengerDetailsStep.validation.parentLastNameRequired": "Numele părintelui este obligatoriu pentru pasagerii minori"
 }
