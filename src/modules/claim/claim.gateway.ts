@@ -28,6 +28,7 @@ export class ClaimGateway implements OnGatewayConnection {
         private readonly tokenService: TokenService,
         private readonly claimService: ClaimService,
     ) {}
+
     @WebSocketServer() server: Server;
 
     async handleConnection(client: Socket) {

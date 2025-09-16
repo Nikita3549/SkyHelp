@@ -7,6 +7,7 @@ import { IDbAirline } from './interfaces/db-airline.interface';
 @Injectable()
 export class AirlineService implements OnModuleInit {
     private pool: Pool;
+
     constructor(private readonly configService: ConfigService) {}
 
     async onModuleInit() {

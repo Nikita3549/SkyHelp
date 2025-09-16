@@ -85,6 +85,7 @@ export class NotificationService {
             `Verify your identity to log in to SkyHelp.`,
         );
     }
+
     async sendPasswordChanged(to: string) {
         await this.gmailService.noreply.sendEmail(
             to,

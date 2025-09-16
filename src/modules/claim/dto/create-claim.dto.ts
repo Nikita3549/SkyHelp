@@ -1,13 +1,13 @@
 import {
-    IsString,
-    IsEmail,
-    IsOptional,
-    IsEnum,
-    IsBoolean,
     IsArray,
-    ValidateNested,
+    IsBoolean,
     IsDate,
+    IsEmail,
+    IsEnum,
     IsNumber,
+    IsOptional,
+    IsString,
+    ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import {
@@ -38,6 +38,7 @@ class RouteDto {
     @IsBoolean()
     troubled?: boolean = false;
 }
+
 class AirlineDto {
     @IsString()
     icao: string;

@@ -5,6 +5,7 @@ import { NotificationService } from '../notification/notification.service';
 @Controller('contact-us')
 export class ContactUsController {
     constructor(private readonly notificationsService: NotificationService) {}
+
     @Post()
     async sendContactUsData(@Body() body: SendContactUsDataDto) {
         const { email, subject, name, message, phone } = body;

@@ -395,6 +395,7 @@ export class GmailService implements OnModuleInit {
         return headers.find((h) => h.name?.toLowerCase() == name.toLowerCase())
             ?.value;
     }
+
     normalizeMessageIds(refs?: string | null): string[] {
         return (
             refs
@@ -403,6 +404,7 @@ export class GmailService implements OnModuleInit {
                 .filter(Boolean) || []
         );
     }
+
     async uploadFileBuffer(file: { filename: string; data: Buffer }) {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
         const ext = path.extname(file.filename);
@@ -432,6 +434,7 @@ export class GmailService implements OnModuleInit {
     private get accessToken() {
         return this._accessToken;
     }
+
     private set accessToken(accessToken: string) {
         this._accessToken = accessToken;
     }

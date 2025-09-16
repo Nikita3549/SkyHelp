@@ -19,6 +19,7 @@ export class AirportGateway {
         private readonly airportsService: AirportService,
         private readonly cacheService: CacheService,
     ) {}
+
     // async handleConnection(client: Socket) {
     //     try {
     //         constants token: string | undefined =

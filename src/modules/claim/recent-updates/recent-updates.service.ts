@@ -7,7 +7,7 @@ import {
 import { ClaimService } from '../claim.service';
 import { ActivityService } from '../activity/activity.service';
 import { omit } from '../../../utils/omit';
-import { FINAL_STEP, PASSPORT_STEP } from '../constants';
+import { PASSPORT_STEP } from '../constants';
 
 @Injectable()
 export class RecentUpdatesService {

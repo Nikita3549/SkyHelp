@@ -29,7 +29,6 @@ import { DocumentService } from '../claim/document/document.service';
 import { CustomerService } from '../claim/customer/customer.service';
 import { OtherPassengerService } from '../claim/other-passenger/other-passenger.service';
 import { ALREADY_SIGNED_EXCEPTION } from './constants';
-import { IFullClaim } from '../claim/interfaces/full-claim.interface';
 import { IAssignmentData } from './interfaces/assignment-data.interface';
 import { generateAssignmentName } from '../../utils/generate-assignment-name';
 

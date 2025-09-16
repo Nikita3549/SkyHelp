@@ -536,30 +536,25 @@ export class ClaimService {
 
             // claims/day
             this.prisma.$queryRaw<{ date: string; count: number }[]>`
-            SELECT TO_CHAR(c."created_at"::date, 'DD.MM.YYYY') AS date, COUNT(*) AS count
-            FROM "claims" c
-            WHERE
-                ${userId ? Prisma.sql`c."user_id" = ${userId} AND` : Prisma.empty}
-                ${partnerId ? Prisma.sql`c."partnerId" = ${partnerId} AND` : Prisma.empty}
-                c."archived" = false
-                ${dateFilter ? Prisma.sql`AND c."created_at" >= ${dateFilter.dateFrom} AND c."created_at" <= ${dateFilter.dateTo}` : Prisma.empty}
-            GROUP BY c."created_at"::date
-            ORDER BY c."created_at"::date DESC
-        `,
+          SELECT TO_CHAR(c."created_at"::date, 'DD.MM.YYYY') AS date, COUNT(*) AS count
+          FROM "claims" c
+          WHERE ${userId ? Prisma.sql`c."user_id" = ${userId} AND` : Prisma.empty} ${partnerId ? Prisma.sql`c."partnerId" = ${partnerId} AND` : Prisma.empty}
+              c."archived" = false ${dateFilter ? Prisma.sql`AND c."created_at" >= ${dateFilter.dateFrom} AND c."created_at" <= ${dateFilter.dateTo}` : Prisma.empty}
+          GROUP BY c."created_at":: date
+          ORDER BY c."created_at":: date DESC
+      `,
 
             // success claims by month
             this.prisma.$queryRaw<{ month: string; success: number }[]>`
-            SELECT TO_CHAR(c."created_at", 'Mon') AS month, COUNT(*) AS success
-            FROM "claims" c
-            INNER JOIN "claim_states" s ON c."state_id" = s."id"
-            WHERE s."status" = 'COMPLETED'
-                ${userId ? Prisma.sql`AND c."user_id" = ${userId}` : Prisma.empty}
-                ${partnerId ? Prisma.sql`AND c."partnerId" = ${partnerId}` : Prisma.empty}
-                AND c."archived" = false
-                ${dateFilter ? Prisma.sql`AND c."created_at" >= ${dateFilter.dateFrom} AND c."created_at" <= ${dateFilter.dateTo}` : Prisma.empty}
-            GROUP BY month, date_trunc('month', c."created_at")
-            ORDER BY date_trunc('month', c."created_at") DESC
-        `,
+          SELECT TO_CHAR(c."created_at", 'Mon') AS month, COUNT(*) AS success
+          FROM "claims" c
+              INNER JOIN "claim_states" s
+          ON c."state_id" = s."id"
+          WHERE s."status" = 'COMPLETED' ${userId ? Prisma.sql`AND c."user_id" = ${userId}` : Prisma.empty} ${partnerId ? Prisma.sql`AND c."partnerId" = ${partnerId}` : Prisma.empty}
+            AND c."archived" = false ${dateFilter ? Prisma.sql`AND c."created_at" >= ${dateFilter.dateFrom} AND c."created_at" <= ${dateFilter.dateTo}` : Prisma.empty}
+          GROUP BY month, date_trunc('month', c."created_at")
+          ORDER BY date_trunc('month', c."created_at") DESC
+      `,
         ]);
 
         // airlines
@@ -715,23 +710,23 @@ export class ClaimService {
         const normalized = search.replace(/\s+/g, '');
 
         const ids = await this.prisma.$queryRaw<Array<{ id: string }>>`
-            SELECT "claims"."id"
-            FROM "claims"
-                     LEFT JOIN "claim_customers" ON "claims"."customer_id" = "claim_customers"."id"
-                     LEFT JOIN "claim_details" ON "claim_details"."id" = "claims"."details_id"
-            WHERE (
-                REPLACE("claim_details"."booking_ref", ' ', '') ILIKE ${`%${normalized}%`}
-                        OR REPLACE("claim_details"."flight_number", ' ', '') ILIKE ${`%${normalized}%`}
-                        OR REPLACE("claim_customers"."phone", ' ', '') ILIKE ${`%${normalized}%`}
-                        OR REPLACE("claim_customers"."email", ' ', '') ILIKE ${`%${normalized}%`}
-                        OR REPLACE("claim_customers"."first_name", ' ', '') ILIKE ${`%${normalized}%`}
-                        OR REPLACE("claim_customers"."last_name", ' ', '') ILIKE ${`%${normalized}%`}
-                        OR REPLACE("claims"."id"::text, ' ', '') ILIKE ${`%${normalized}%`}
-                )
-              AND (${partnerId ?? null}::text IS NULL OR "claims"."partnerId" = ${partnerId ?? null}::text)
-            ORDER BY "claims"."created_at" DESC
-                LIMIT ${page}
-        `;
+        SELECT "claims"."id"
+        FROM "claims"
+                 LEFT JOIN "claim_customers" ON "claims"."customer_id" = "claim_customers"."id"
+                 LEFT JOIN "claim_details" ON "claim_details"."id" = "claims"."details_id"
+        WHERE (
+            REPLACE("claim_details"."booking_ref", ' ', '') ILIKE ${`%${normalized}%`}
+                    OR REPLACE("claim_details"."flight_number", ' ', '') ILIKE ${`%${normalized}%`}
+                    OR REPLACE("claim_customers"."phone", ' ', '') ILIKE ${`%${normalized}%`}
+                    OR REPLACE("claim_customers"."email", ' ', '') ILIKE ${`%${normalized}%`}
+                    OR REPLACE("claim_customers"."first_name", ' ', '') ILIKE ${`%${normalized}%`}
+                    OR REPLACE("claim_customers"."last_name", ' ', '') ILIKE ${`%${normalized}%`}
+                    OR REPLACE("claims"."id" : : text, ' ', '') ILIKE ${`%${normalized}%`}
+            )
+          AND (${partnerId ?? null}::text IS NULL OR "claims"."partnerId" = ${partnerId ?? null}::text)
+        ORDER BY "claims"."created_at" DESC
+            LIMIT ${page}
+    `;
 
         return this.prisma.claim.findMany({
             where: { id: { in: ids.map((i) => i.id) } },

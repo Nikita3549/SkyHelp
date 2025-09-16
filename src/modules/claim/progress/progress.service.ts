@@ -1,9 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { IProgress } from '../interfaces/progress.interface';
 import { Progress, ProgressStatus } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
-import { CreateProgressDto } from './dto/create-progress.dto';
-import { omit } from '../../../utils/omit';
 
 @Injectable()
 export class ProgressService {

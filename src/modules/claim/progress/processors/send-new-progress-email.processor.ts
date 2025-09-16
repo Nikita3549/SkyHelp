@@ -15,6 +15,7 @@ export class SendNewProgressEmailProcessor extends WorkerHost {
     ) {
         super();
     }
+
     async process(job: Job<ISendNewProgressEmailJobData>) {
         const { progressId, emailData, newClaimStatus } = job.data;
 

@@ -38,6 +38,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         private readonly tokenService: TokenService,
         private readonly chatService: ChatService,
     ) {}
+
     @WebSocketServer() server: Server;
 
     async handleConnection(client: Socket) {
@@ -105,6 +106,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
         client.emit('new_chat', 'Successful created');
     }
+
     @SubscribeMessage('message_send')
     async handleSendMessage(client: AuthSocket, dto: SendMessageDto) {
         const { chatId, content } = dto;
@@ -119,6 +121,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
         client.broadcast.to(`chat_${chatId}`).emit('message_receive', message);
     }
+
     @SubscribeMessage('message_read')
     async handleMessageRead(client: AuthSocket, dto: MessageReadDto) {
         const { messageId } = dto;

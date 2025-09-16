@@ -15,6 +15,7 @@ export class ClaimFollowupProcessor extends WorkerHost {
     ) {
         super();
     }
+
     async process(job: Job<IJobClaimFollowupData>) {
         const {
             email,

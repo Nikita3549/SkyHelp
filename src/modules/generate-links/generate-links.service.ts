@@ -4,6 +4,7 @@ import { ConfigService } from '@nestjs/config';
 @Injectable()
 export class GenerateLinksService {
     private readonly FRONTEND_URL: string;
+
     constructor(private readonly configService: ConfigService) {
         this.FRONTEND_URL = this.configService.getOrThrow('FRONTEND_URL');
     }

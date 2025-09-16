@@ -6,7 +6,6 @@ import {
     UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
-import { IsAdminGuard } from '../../../guards/isAdminGuard';
 import { IssueDto } from './dto/issue.dto';
 import { INVALID_CLAIM_ID } from '../constants';
 import { IssueService } from './issue.service';

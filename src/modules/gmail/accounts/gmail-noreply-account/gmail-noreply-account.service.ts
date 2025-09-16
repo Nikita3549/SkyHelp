@@ -53,6 +53,7 @@ export class GmailNoreplyAccountService implements OnModuleInit {
             emailCategory,
         );
     }
+
     async sendEmail(
         to: string,
         subject: string,
@@ -90,6 +91,7 @@ export class GmailNoreplyAccountService implements OnModuleInit {
     private get accessToken() {
         return this._accessToken;
     }
+
     private set accessToken(accessToken: string) {
         this._accessToken = accessToken;
     }

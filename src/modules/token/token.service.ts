@@ -1,11 +1,7 @@
-import {
-    Injectable,
-    InternalServerErrorException,
-    UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import * as jwt from 'jsonwebtoken';
-import { ConfigService } from '@nestjs/config';
 import { JwtPayload, SignOptions } from 'jsonwebtoken';
+import { ConfigService } from '@nestjs/config';
 import { RedisService } from '../redis/redis.service';
 
 @Injectable()

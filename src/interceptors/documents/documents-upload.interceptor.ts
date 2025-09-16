@@ -1,4 +1,4 @@
-import { UseInterceptors, BadRequestException } from '@nestjs/common';
+import { BadRequestException, UseInterceptors } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import * as path from 'path';

@@ -2,7 +2,6 @@ import { forwardRef, Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { OAuth2Client } from 'google-auth-library';
 import { gmail_v1, google } from 'googleapis';
-import Gmail = gmail_v1.Gmail;
 import { Interval } from '@nestjs/schedule';
 import {
     FIFTY_FIVE_MINUTES,
@@ -16,6 +15,7 @@ import { GmailOfficeAccountLogger } from './gmail-office-account.logger';
 import { isProd } from '../../../../utils/isProd';
 import { ClaimRecentUpdatesType } from '@prisma/client';
 import { RecentUpdatesService } from '../../../claim/recent-updates/recent-updates.service';
+import Gmail = gmail_v1.Gmail;
 
 @Injectable()
 export class GmailOfficeAccountService implements OnModuleInit {

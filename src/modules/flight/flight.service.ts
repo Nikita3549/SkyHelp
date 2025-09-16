@@ -8,6 +8,7 @@ import { EARTH_RADIUS, KM, RADIAN } from './constants';
 @Injectable()
 export class FlightService {
     constructor(private readonly configService: ConfigService) {}
+
     async getFlightsByDateAirportsCompany(dto: GetFlightsDto) {
         const { date: isoDate, company, departure, arrival } = dto;
         const date = new Date(isoDate);

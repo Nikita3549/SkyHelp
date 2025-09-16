@@ -18,7 +18,6 @@ import {
     SEND_NEW_PROGRESS_EMAIL_QUEUE_KEY,
     UNKNOWN_PROGRESS_VARIANT,
 } from './constants';
-import { StateService } from '../state/state.service';
 import { ClaimService } from '../claim.service';
 import { Languages } from '../../language/enums/languages.enums';
 import { isLanguage } from '../../../utils/isLanguage';

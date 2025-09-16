@@ -1,20 +1,20 @@
 import {
     BadRequestException,
-    UnauthorizedException,
     Body,
     ConflictException,
     Controller,
+    Get,
     HttpCode,
     HttpStatus,
+    InternalServerErrorException,
+    NotFoundException,
+    Patch,
     Post,
     Put,
-    UseGuards,
-    NotFoundException,
-    Get,
-    Req,
     Query,
-    InternalServerErrorException,
-    Patch,
+    Req,
+    UnauthorizedException,
+    UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';

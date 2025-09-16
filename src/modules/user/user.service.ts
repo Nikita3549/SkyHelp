@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { UserRole, User } from '@prisma/client';
+import { User, UserRole } from '@prisma/client';
 import { ISaveUserData } from './interfaces/saveUserData.interface';
 import { IPublicUserData } from './interfaces/publicUserData.interface';
 import { IUpdateData } from './interfaces/update-data.interface';
@@ -16,6 +16,7 @@ export class UserService {
             },
         });
     }
+
     async getUserById(id: string): Promise<IPublicUserData | null> {
         return this.prisma.user.findFirst({
             where: {
@@ -33,6 +34,7 @@ export class UserService {
             },
         });
     }
+
     async getPublicUsers(): Promise<IPublicUserData[]> {
         return this.prisma.user.findMany({
             select: {
@@ -92,6 +94,7 @@ export class UserService {
             },
         });
     }
+
     async updateRole(newRole: UserRole, userId: string): Promise<User> {
         return this.prisma.user.update({
             data: {
@@ -102,6 +105,7 @@ export class UserService {
             },
         });
     }
+
     async updateStatus(newStatus: boolean, userId: string): Promise<User> {
         return this.prisma.user.update({
             data: {
@@ -112,6 +116,7 @@ export class UserService {
             },
         });
     }
+
     async updateLastSign(email: string): Promise<User> {
         return this.prisma.user.update({
             data: {

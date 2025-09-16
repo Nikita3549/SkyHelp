@@ -6,7 +6,6 @@ import {
     UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
-import { IsAdminGuard } from '../../../guards/isAdminGuard';
 import { FlightDto } from './dto/flight.dto';
 import { INVALID_CLAIM_ID } from '../constants';
 import { DetailService } from './detail.service';
@@ -20,6 +19,7 @@ export class DetailController {
         private readonly detailService: DetailService,
         private readonly claimService: ClaimService,
     ) {}
+
     @UseGuards(IsAgentGuard)
     @Put('admin')
     async updateFlight(@Body() dto: FlightDto) {

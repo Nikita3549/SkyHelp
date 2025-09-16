@@ -7,6 +7,7 @@ import { IDbAirport } from './interfaces/db-airport.interface';
 @Injectable()
 export class AirportService implements OnModuleInit {
     private pool: Pool;
+
     constructor(private readonly configService: ConfigService) {}
 
     onModuleInit() {

@@ -5,7 +5,6 @@ import {
     Put,
     UseGuards,
 } from '@nestjs/common';
-import { IsAdminGuard } from '../../../guards/isAdminGuard';
 import { PaymentDto } from './dto/payment.dto';
 import { INVALID_CLAIM_ID } from '../constants';
 import { PaymentService } from './payment.service';

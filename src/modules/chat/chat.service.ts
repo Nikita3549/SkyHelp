@@ -10,6 +10,7 @@ export class ChatService {
         private readonly prisma: PrismaService,
         private readonly redis: RedisService,
     ) {}
+
     async createChat(firstUserId: string, secondUserId: string): Promise<Chat> {
         return this.prisma.chat.create({
             data: {
@@ -50,6 +51,7 @@ export class ChatService {
             },
         });
     }
+
     async readMessage(messageId: string): Promise<Message> {
         return this.prisma.message.update({
             data: {
@@ -60,6 +62,7 @@ export class ChatService {
             },
         });
     }
+
     async getAllChatsWithMessages(
         userId: string,
     ): Promise<IUserChatsWithMessages[]> {
@@ -93,9 +96,11 @@ export class ChatService {
     async saveOnlineStatus(userId: string) {
         await this.redis.set(`online_${userId}`, 'online');
     }
+
     async deleteOnlineStatus(userId: string) {
         await this.redis.del(`online_${userId}`);
     }
+
     async isOnline(userId: string): Promise<boolean> {
         return !!(await this.redis.get(`online_${userId}`));
     }

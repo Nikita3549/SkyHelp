@@ -1,8 +1,7 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
-import { sheets_v4, google } from 'googleapis';
+import { google, sheets_v4 } from 'googleapis';
 import { ConfigService } from '@nestjs/config';
 import { JWT } from 'google-auth-library';
-import { isProd } from '../../utils/isProd';
 
 @Injectable()
 export class GoogleSheetsService implements OnModuleInit {

@@ -1,13 +1,13 @@
 import {
-    IsString,
-    IsEmail,
-    IsOptional,
-    IsEnum,
-    IsBoolean,
     IsArray,
-    ValidateNested,
+    IsBoolean,
     IsDate,
+    IsEmail,
+    IsEnum,
     IsNumber,
+    IsOptional,
+    IsString,
+    ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import {
@@ -19,6 +19,7 @@ import {
     PaymentMethod,
     ProgressStatus,
 } from '@prisma/client';
+
 class AirportDto {
     @IsString()
     icao: string;
@@ -99,6 +100,7 @@ class StateDto {
     @IsEnum(ClaimStatus)
     status: ClaimStatus;
 }
+
 class CustomerDto {
     @IsString()
     firstName: string;

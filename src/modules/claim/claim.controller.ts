@@ -5,7 +5,6 @@ import {
     Get,
     NotFoundException,
     Param,
-    Patch,
     Post,
     Put,
     Query,
@@ -171,6 +170,7 @@ export class PublicClaimController {
             userToken: userToken ? userToken : null,
         };
     }
+
     @Get('/:claimId/formState')
     async getFormState(
         @Param('claimId') claimId: string,

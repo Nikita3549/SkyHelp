@@ -17,19 +17,13 @@ import { CreateDocumentRequestDto } from './dto/create-document-request.dto';
 import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
 import { GetDocumentRequestsQuery } from './dto/get-document-requests.query';
 import { ClaimService } from '../claim.service';
-import {
-    CLAIM_NOT_FOUND,
-    HAVE_NO_RIGHTS_ON_CLAIM,
-    INVALID_CLAIM_ID,
-} from '../constants';
+import { HAVE_NO_RIGHTS_ON_CLAIM, INVALID_CLAIM_ID } from '../constants';
 import { IsPartnerOrAgentGuard } from '../../../guards/isPartnerOrAgentGuard';
 import { AuthRequest } from '../../../interfaces/AuthRequest.interface';
 import { UserRole } from '@prisma/client';
 import { INVALID_DOCUMENT_REQUEST } from './constants';
 import { IFullClaim } from '../interfaces/full-claim.interface';
 import { HttpStatusCode } from 'axios';
-import { DocumentsUploadInterceptor } from '../../../interceptors/documents/documents-upload.interceptor';
-import { UploadDocumentRequestQuery } from './dto/upload-document-request.query';
 
 @Controller('claims/document-requests')
 @UseGuards(JwtAuthGuard)

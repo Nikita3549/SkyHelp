@@ -48,6 +48,7 @@ export class DocumentController {
         private readonly recentUpdatesService: RecentUpdatesService,
         private readonly documentRequestService: DocumentRequestService,
     ) {}
+
     @Post('merge')
     async mergeDocuments(@Res() res: Response, @Body() dto: MergeDocumentsDto) {
         const { documentIds } = dto;
@@ -211,6 +212,7 @@ export class PublicDocumentController {
         private readonly claimService: ClaimService,
         private readonly tokenService: TokenService,
     ) {}
+
     @Post()
     @DocumentsUploadInterceptor()
     async uploadDocuments(

@@ -2,11 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { RedisService } from '../redis/redis.service';
 import { IRegisterDataWithCode } from './interfaces/registerDataWithCode.interface';
 import {
-    REGISTER_DATA_TTL,
+    DEFAULT_GENERATED_PASSWORD_LENGTH,
     FORGOT_PASSWORD_CODE_TTL,
     REDIS_REGISTER_DATA_KEY_POSTFIX,
     REDIS_RESET_PASSWORD_CODE_KEY_POSTFIX,
-    DEFAULT_GENERATED_PASSWORD_LENGTH,
+    REGISTER_DATA_TTL,
 } from './constants';
 import * as bcrypt from 'bcryptjs';
 import * as crypto from 'crypto';
@@ -18,6 +18,7 @@ export class AuthService {
     async deleteRegisterDataFromRedis(email: string) {
         await this.redis.del(`${email}:${REDIS_REGISTER_DATA_KEY_POSTFIX}`);
     }
+
     public async getRegisterDataFromRedis(
         email: string,
     ): Promise<IRegisterDataWithCode | null> {
@@ -35,6 +36,7 @@ export class AuthService {
 
         return registerDataWithCodeParsed;
     }
+
     public async saveRegisterDataInRedis(
         registerDataWithCode: IRegisterDataWithCode,
     ) {
@@ -44,6 +46,7 @@ export class AuthService {
             JSON.stringify(registerDataWithCode),
         );
     }
+
     async saveForgotPasswordCode(email: string, code: number) {
         await this.redis.setex(
             `${email}:${REDIS_RESET_PASSWORD_CODE_KEY_POSTFIX}`,
@@ -51,16 +54,19 @@ export class AuthService {
             code,
         );
     }
+
     async getForgotPasswordCode(email: string): Promise<string | null> {
         return this.redis.get(
             `${email}:${REDIS_RESET_PASSWORD_CODE_KEY_POSTFIX}`,
         );
     }
+
     async deleteForgotPasswordCode(email: string) {
         await this.redis.del(
             `${email}:${REDIS_RESET_PASSWORD_CODE_KEY_POSTFIX}`,
         );
     }
+
     public generateCode(): number {
         return Math.floor(100000 + Math.random() * 900000);
     }
@@ -68,6 +74,7 @@ export class AuthService {
     public async hashPassword(password: string): Promise<string> {
         return await bcrypt.hash(password, 10);
     }
+
     public async comparePasswords(
         password: string,
         hashedPassword: string,
