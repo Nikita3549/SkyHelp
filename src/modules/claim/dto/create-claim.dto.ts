@@ -130,6 +130,10 @@ class IssueDto {
     @IsOptional()
     @IsString()
     additionalInfo: string;
+
+    @IsOptional()
+    @IsBoolean()
+    hasContactedAirline: boolean = false;
 }
 
 export class CreateClaimDto {

@@ -149,6 +149,8 @@ export class ClaimService {
                                     claim.issue
                                         .arrivalTimeDelayOfAlternativeHours,
                                 additionalInfo: claim.issue.additionalInfo,
+                                hasContactedAirline:
+                                    claim.issue.hasContactedAirline,
                             },
                         },
                         payment: {
