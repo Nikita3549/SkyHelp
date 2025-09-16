@@ -14,6 +14,7 @@ import {
     Req,
     Query,
     InternalServerErrorException,
+    Patch,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
@@ -279,7 +280,7 @@ export class AuthController {
         await this.userService.updateRole(newRole, userUuid);
     }
 
-    @Put('/status')
+    @Patch('/status')
     @UseGuards(JwtAuthGuard, IsAdminGuard)
     async updateStatus(@Body() dto: UpdateStatusDto) {
         const { userUuid, isActive } = dto;
