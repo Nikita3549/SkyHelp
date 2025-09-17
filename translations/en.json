@@ -3650,5 +3650,6 @@
     "AirlineContactQuestion.title": "Have you contacted the airline?",
     "AirlineContactQuestion.yes": "Yes",
     "AirlineContactQuestion.no": "No",
-    "IssueDetailsCard.contacted_airline": "Contacted airline"
+    "IssueDetailsCard.contacted_airline": "Contacted airline",
+    "PassengerDetailsStep.validation.invalidLastName": "Invalid last name"
 }

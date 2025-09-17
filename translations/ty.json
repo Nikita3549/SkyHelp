@@ -3671,5 +3671,6 @@
     "AirlineContactQuestion.title": "Havayoluyla iletişime geçtiniz mi?",
     "AirlineContactQuestion.yes": "Evet",
     "AirlineContactQuestion.no": "Hayır",
-    "IssueDetailsCard.contacted_airline": "Havayolu ile iletişime geçildi"
+    "IssueDetailsCard.contacted_airline": "Havayolu ile iletişime geçildi",
+    "PassengerDetailsStep.validation.invalidLastName": "Geçersiz soyadı"
 }

@@ -3651,5 +3651,6 @@
     "AirlineContactQuestion.title": "Ai contactat compania aeriană?",
     "AirlineContactQuestion.yes": "Da",
     "AirlineContactQuestion.no": "Nu",
-    "IssueDetailsCard.contacted_airline": "Contactat compania aeriană"
+    "IssueDetailsCard.contacted_airline": "Contactat compania aeriană",
+    "PassengerDetailsStep.validation.invalidLastName": "Nume invalid"
 }
