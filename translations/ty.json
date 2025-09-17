@@ -3667,5 +3667,9 @@
     "PassengerDetailsStep.addAnotherPassenger": "Başka bir yolcu ekle",
     "PassengerDetailsStep.validation.passengerRequired": "Yolcular için ad, soyad ve e-posta gereklidir",
     "PassengerDetailsStep.validation.parentFirstNameRequired": "Reşit olmayan yolcular için ebeveynin adı gereklidir",
-    "PassengerDetailsStep.validation.parentLastNameRequired": "Reşit olmayan yolcular için ebeveynin soyadı gereklidir"
+    "PassengerDetailsStep.validation.parentLastNameRequired": "Reşit olmayan yolcular için ebeveynin soyadı gereklidir",
+    "AirlineContactQuestion.title": "Havayoluyla iletişime geçtiniz mi?",
+    "AirlineContactQuestion.yes": "Evet",
+    "AirlineContactQuestion.no": "Hayır",
+    "IssueDetailsCard.contacted_airline": "Havayolu ile iletişime geçildi"
 }

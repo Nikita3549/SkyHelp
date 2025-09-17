@@ -3646,5 +3646,9 @@
     "PassengerDetailsStep.addAnotherPassenger": "Add Another Passenger",
     "PassengerDetailsStep.validation.passengerRequired": "First name, last name, and email are required for passengers",
     "PassengerDetailsStep.validation.parentFirstNameRequired": "Parent's first name is required for minor passengers",
-    "PassengerDetailsStep.validation.parentLastNameRequired": "Parent's last name is required for minor passengers"
+    "PassengerDetailsStep.validation.parentLastNameRequired": "Parent's last name is required for minor passengers",
+    "AirlineContactQuestion.title": "Have you contacted the airline?",
+    "AirlineContactQuestion.yes": "Yes",
+    "AirlineContactQuestion.no": "No",
+    "IssueDetailsCard.contacted_airline": "Contacted airline"
 }

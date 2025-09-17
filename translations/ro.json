@@ -3647,5 +3647,9 @@
     "PassengerDetailsStep.addAnotherPassenger": "Adaugă un alt pasager",
     "PassengerDetailsStep.validation.passengerRequired": "Prenumele, numele și emailul sunt obligatorii pentru pasageri",
     "PassengerDetailsStep.validation.parentFirstNameRequired": "Prenumele părintelui este obligatoriu pentru pasagerii minori",
-    "PassengerDetailsStep.validation.parentLastNameRequired": "Numele părintelui este obligatoriu pentru pasagerii minori"
+    "PassengerDetailsStep.validation.parentLastNameRequired": "Numele părintelui este obligatoriu pentru pasagerii minori",
+    "AirlineContactQuestion.title": "Ai contactat compania aeriană?",
+    "AirlineContactQuestion.yes": "Da",
+    "AirlineContactQuestion.no": "Nu",
+    "IssueDetailsCard.contacted_airline": "Contactat compania aeriană"
 }
