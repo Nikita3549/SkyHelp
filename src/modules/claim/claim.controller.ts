@@ -16,8 +16,10 @@ import { ClaimService } from './claim.service';
 import {
     CONTINUE_LINKS_EXP,
     FINAL_STEP,
+    HOUR,
     INVALID_CLAIM_ID,
     INVALID_ICAO,
+    MINUTE,
 } from './constants';
 import { JwtAuthGuard } from '../../guards/jwtAuth.guard';
 import { AuthRequest } from '../../interfaces/AuthRequest.interface';
@@ -42,7 +44,12 @@ import { DocumentService } from './document/document.service';
 import { CustomerService } from './customer/customer.service';
 import { validateClaimJwt } from '../../utils/validate-claim-jwt';
 import { IFullClaim } from './interfaces/full-claim.interface';
-import { DocumentType, UserRole } from '@prisma/client';
+import {
+    DelayCategory,
+    DisruptionType,
+    DocumentType,
+    UserRole,
+} from '@prisma/client';
 import { UploadFormSignDto } from './dto/upload-form-sign-dto';
 import { UserService } from '../user/user.service';
 import { AuthService } from '../auth/auth.service';
@@ -83,6 +90,24 @@ export class PublicClaimController {
         const { language } = query;
         let userId: string | null | undefined;
         let userToken: string | undefined | null;
+        const troubledRoute = dto.details.routes.find((r) => r.troubled);
+        if (!troubledRoute) {
+            throw new BadRequestException(
+                'There is no troubled route in request',
+            );
+        }
+        const departureAirport = await this.airportService.getAirportByIcao(
+            troubledRoute.departureAirport.icao,
+        );
+        const arrivalAirport = await this.airportService.getAirportByIcao(
+            troubledRoute.arrivalAirport.icao,
+        );
+        if (!departureAirport || !arrivalAirport) {
+            throw new BadRequestException(
+                'Invalid departure or arrival airport ICAO',
+            );
+        }
+        // if user account doesn't exist generate new one
 
         const jwtPayload = getAuthJwt(req);
         if (jwtPayload) {
@@ -137,12 +162,59 @@ export class PublicClaimController {
             flightNumber: dto.details.flightNumber,
         });
 
-        const claim = await this.claimService.createClaim(
-            dto,
+        // Calculate flight status
+
+        const flightStatus = await this.flightService.getFlightByFlightCode(
+            +dto.details.flightNumber.replace(dto.details.airline.iata, ''),
+            dto.details.airline.icao,
+            dto.details.date,
+        );
+        const actualDistance =
+            this.flightService.calculateDistanceBetweenAirports(
+                departureAirport.latitude,
+                departureAirport.longitude,
+                departureAirport.altitude,
+                arrivalAirport.latitude,
+                arrivalAirport.longitude,
+                arrivalAirport.altitude,
+            );
+        console.log('dto: ', dto.details);
+        console.log(flightStatus);
+        const actualCompensation = this.claimService.calculateCompensation({
+            flightDistanceKm: actualDistance,
+            delayHours:
+                (flightStatus?.arrival_delay
+                    ? Math.floor(flightStatus.arrival_delay / HOUR)
+                    : 0) > 3
+                    ? DelayCategory.threehours_or_more
+                    : DelayCategory.less_than_3hours,
+            cancellationNoticeDays: dto.issue.cancellationNoticeDays,
+            wasDeniedBoarding:
+                dto.issue.disruptionType == DisruptionType.denied_boarding,
+            wasAlternativeFlightOffered:
+                !!dto.issue.wasAlternativeFlightOffered,
+            arrivalTimeDelayOfAlternative:
+                dto.issue.arrivalTimeDelayOfAlternativeHours || 0,
+            wasDisruptionDuoExtraordinaryCircumstances: false, // deprecated param, extraordinary circumstances always aren't proved
+        });
+
+        // Create claim
+
+        const claim = await this.claimService.createClaim(dto, {
             language,
             userId,
-            !!duplicate,
-        );
+            isDuplicate: !!duplicate,
+            flightNumber: dto.details.flightNumber,
+            flightStatusData: flightStatus
+                ? {
+                      isCancelled: flightStatus?.cancelled,
+                      delayMinutes: flightStatus?.arrival_delay
+                          ? flightStatus.arrival_delay / MINUTE
+                          : 0,
+                      actualCompensation,
+                  }
+                : undefined,
+        });
 
         const jwt = this.tokenService.generateJWT<IClaimJwt>(
             {

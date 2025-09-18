@@ -32,3 +32,7 @@ export const PASSPORT_STEP = 9;
 export const FINAL_STEP = 10;
 
 export const CONTINUE_LINKS_EXP = '30days';
+
+export const MINUTE = 60;
+
+export const HOUR = 60 * 60;

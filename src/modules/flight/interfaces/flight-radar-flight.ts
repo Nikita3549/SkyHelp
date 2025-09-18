@@ -1,4 +1,4 @@
-export interface IFlight {
+export interface IFlightRadarFlight {
     fr24_id: string;
     flight: string;
     callsign: string;
@@ -27,5 +27,5 @@ export interface IFlight {
 }
 
 export interface IFlightsResponse {
-    data: IFlight[];
+    data: IFlightRadarFlight[];
 }

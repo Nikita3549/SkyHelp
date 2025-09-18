@@ -46,6 +46,8 @@ model Claim {
   detailsId        String               @map("details_id")
   details          ClaimDetails         @relation(fields: [detailsId], references: [id], onDelete: Cascade)
   stateId          String               @map("state_id")
+  flightStatusId   String?              @map("flight_status_id")
+  flightStatus     ClaimFlightStatus?   @relation(fields: [flightStatusId], references: [id], onDelete: Cascade)
   state            ClaimState           @relation(fields: [stateId], references: [id], onDelete: Cascade)
   customerId       String               @map("customer_id")
   customer         ClaimCustomer        @relation(fields: [customerId], references: [id], onDelete: Cascade)
@@ -171,6 +173,17 @@ enum ClaimStatus {
   LEGAL_PROCESS   @map("Legal Process")
   CLOSED          @map("Closed")
   NOT_ELIGIBLE    @map("Not Eligible")
+}
+
+model ClaimFlightStatus {
+  id                 String  @id @default(cuid()) @map("id")
+  isCancelled        Boolean @default(false) @map("is_cancelled")
+  delayMinutes       Int     @map("delay_minutes")
+  actualCompensation Int     @map("actual_compensation")
+
+  Claim Claim[]
+
+  @@map("claim_flight_statuses")
 }
 
 enum ProgressStatus {

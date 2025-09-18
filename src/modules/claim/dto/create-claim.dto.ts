@@ -49,6 +49,9 @@ class AirlineDto {
     @IsOptional()
     @IsString()
     country: string;
+
+    @IsString()
+    iata: string;
 }
 
 class DetailsDto {
@@ -57,7 +60,7 @@ class DetailsDto {
     date: Date;
 
     @ValidateNested()
-    @Type(() => AirportDto)
+    @Type(() => AirlineDto)
     airline: AirlineDto;
 
     @IsOptional()

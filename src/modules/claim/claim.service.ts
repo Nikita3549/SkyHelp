@@ -75,10 +75,26 @@ export class ClaimService {
 
     async createClaim(
         claim: CreateClaimDto,
-        language?: string,
-        userId?: string | null,
-        isDuplicate?: boolean,
+        extraData: {
+            language?: string;
+            userId?: string | null;
+            isDuplicate?: boolean;
+            flightNumber: string;
+            flightStatusData?: {
+                isCancelled: boolean;
+                delayMinutes: number;
+                actualCompensation: number;
+            };
+        },
     ): Promise<IFullClaim> {
+        const {
+            language,
+            userId,
+            flightNumber,
+            isDuplicate,
+            flightStatusData,
+        } = extraData;
+
         const maxAttempts = 5;
         for (let attempt = 0; attempt < maxAttempts; attempt++) {
             const numericId = this.generateNumericId();
@@ -90,7 +106,7 @@ export class ClaimService {
                         user: userId ? { connect: { id: userId } } : undefined,
                         details: {
                             create: {
-                                flightNumber: claim.details.flightNumber,
+                                flightNumber: flightNumber,
                                 date: claim.details.date,
                                 airlines: {
                                     create: {
@@ -153,6 +169,17 @@ export class ClaimService {
                                     claim.issue.hasContactedAirline,
                             },
                         },
+                        flightStatus: flightStatusData
+                            ? {
+                                  create: {
+                                      isCancelled: flightStatusData.isCancelled,
+                                      actualCompensation:
+                                          flightStatusData.actualCompensation,
+                                      delayMinutes:
+                                          flightStatusData.delayMinutes,
+                                  },
+                              }
+                            : undefined,
                         payment: {
                             create: {},
                         },
@@ -640,6 +667,11 @@ export class ClaimService {
                     name: true,
                     secondName: true,
                     role: true,
+                },
+            },
+            flightStatus: {
+                omit: {
+                    id: true,
                 },
             },
             documentRequests: true,

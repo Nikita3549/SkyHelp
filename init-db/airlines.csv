@@ -1,5 +1,5 @@
 id,name,alias,iata_code,icao_code,callsign,country,active
-1,"Private flight",\N,"-","N/A","","","Y"
+21319,"Private flight",\N,"-","N/A","","","Y"
 2,"135 Airways",\N,"","GNL","GENERAL","United States","N"
 3,"1Time Airline",\N,"1T","RNX","NEXTIME","South Africa","Y"
 4,"2 Sqn No 1 Elementary Flying Training School",\N,"","WYT","","United Kingdom","N"
@@ -6162,3 +6162,4 @@ id,name,alias,iata_code,icao_code,callsign,country,active
 21317,"Svyaz Rossiya","Russian Commuter ","7R","SJM","RussianConnecty","Russia","Y"
 21318,HiSky Europe,\N,H4,HYS,SKY EUROPE,Romania,Y
 21319,SkyUp Airlines,\N,PQ,SQP,SKYUP,Ukraine,Y
+21320,HiSky,HiSky,H7,HYM,SKY MOLDOVA,Moldova,Y
