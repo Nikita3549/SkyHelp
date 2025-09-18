@@ -3646,7 +3646,7 @@
     "PassengerDetailsStep.validation.passengerRequired": "Имя, фамилия и email обязательны для пассажиров",
     "PassengerDetailsStep.validation.parentFirstNameRequired": "Имя родителя обязательно для несовершеннолетних пассажиров",
     "PassengerDetailsStep.validation.parentLastNameRequired": "Фамилия родителя обязательна для несовершеннолетних пассажиров",
-    "AirlineContactQuestion.title": "Вы связывались с авиакомпанией?",
+    "AirlineContactQuestion.title": "Вы уже обращались в авиакомпанию?",
     "AirlineContactQuestion.yes": "Да",
     "AirlineContactQuestion.no": "Нет",
     "IssueDetailsCard.contacted_airline": "Связались с авиакомпанией",
