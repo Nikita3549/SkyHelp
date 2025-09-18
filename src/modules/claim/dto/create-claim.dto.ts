@@ -50,8 +50,9 @@ class AirlineDto {
     @IsString()
     country: string;
 
+    @IsOptional()
     @IsString()
-    iata: string;
+    iata?: string;
 }
 
 class DetailsDto {

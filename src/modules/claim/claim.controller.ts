@@ -165,7 +165,10 @@ export class PublicClaimController {
         // Calculate flight status
         const flightStatus = await this.flightService
             .getFlightByFlightCode(
-                dto.details.flightNumber.replace(dto.details.airline.iata, ''),
+                dto.details.flightNumber.replace(
+                    dto.details.airline.iata || '',
+                    '',
+                ),
                 dto.details.airline.icao,
                 dto.details.date,
             )
