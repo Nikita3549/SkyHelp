@@ -59,6 +59,7 @@ export class AirlineService implements OnModuleInit {
             return [
                 {
                     icao: a.icao_code,
+                    iata: a.iata_code,
                     name: a.name,
                 },
             ];
