@@ -13,7 +13,7 @@ import {
 export class FlightService {
     constructor(private readonly configService: ConfigService) {}
     async getFlightByFlightCode(
-        flightCode: number,
+        flightCode: string,
         airlineIcao: string,
         date: Date,
     ) {
@@ -21,6 +21,11 @@ export class FlightService {
 
         const { end: flightDateEnd, start: flightDateStart } =
             this.getFlightDateRange(date);
+
+        console.log(`flightCode: ${flightCode}
+        airlineIcao: ${airlineIcao}
+        dateStart: ${flightDateStart.toISOString().replace(/\.\d{3}Z$/, 'Z')}
+        dateEnd: ${flightDateEnd.toISOString().replace(/\.\d{3}Z$/, 'Z')}`);
 
         const res = await axios.get<FlightAwareFlightsResponse>(
             `${this.configService.getOrThrow('FLIGHTAWARE_BASE_URL')}/history/flights/${flightIdent}`,
@@ -39,16 +44,12 @@ export class FlightService {
             },
         );
 
-        return this.filterByDateFlights(res.data.flights, date)[0];
-    }
-    private filterByDateFlights(flights: FlightAwareFlight[], date: Date) {
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
+        console.log(res.request);
+        console.log('data', res.data.flights.length);
 
-        const formattedDate = `${year}-${month}-${day}`;
+        console.log(res.data.flights[0]);
 
-        return flights.filter((f) => f.scheduled_out?.includes(formattedDate));
+        return res.data.flights[0];
     }
 
     async getFlightsByDateAirportsCompany(dto: GetFlightsDto) {

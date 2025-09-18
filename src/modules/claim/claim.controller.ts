@@ -163,12 +163,13 @@ export class PublicClaimController {
         });
 
         // Calculate flight status
-
-        const flightStatus = await this.flightService.getFlightByFlightCode(
-            +dto.details.flightNumber.replace(dto.details.airline.iata, ''),
-            dto.details.airline.icao,
-            dto.details.date,
-        );
+        const flightStatus = await this.flightService
+            .getFlightByFlightCode(
+                dto.details.flightNumber.replace(dto.details.airline.iata, ''),
+                dto.details.airline.icao,
+                dto.details.date,
+            )
+            .catch();
         const actualDistance =
             this.flightService.calculateDistanceBetweenAirports(
                 departureAirport.latitude,
@@ -178,8 +179,6 @@ export class PublicClaimController {
                 arrivalAirport.longitude,
                 arrivalAirport.altitude,
             );
-        console.log('dto: ', dto.details);
-        console.log(flightStatus);
         const actualCompensation = this.claimService.calculateCompensation({
             flightDistanceKm: actualDistance,
             delayHours:
