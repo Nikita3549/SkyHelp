@@ -22,11 +22,6 @@ export class FlightService {
         const { end: flightDateEnd, start: flightDateStart } =
             this.getFlightDateRange(date);
 
-        console.log(`flightCode: ${flightCode}
-        airlineIcao: ${airlineIcao}
-        dateStart: ${flightDateStart.toISOString().replace(/\.\d{3}Z$/, 'Z')}
-        dateEnd: ${flightDateEnd.toISOString().replace(/\.\d{3}Z$/, 'Z')}`);
-
         const res = await axios.get<FlightAwareFlightsResponse>(
             `${this.configService.getOrThrow('FLIGHTAWARE_BASE_URL')}/history/flights/${flightIdent}`,
             {
@@ -43,11 +38,6 @@ export class FlightService {
                 },
             },
         );
-
-        console.log(res.request);
-        console.log('data', res.data.flights.length);
-
-        console.log(res.data.flights[0]);
 
         return res.data.flights[0];
     }
