@@ -3635,7 +3635,7 @@
     "PassengerDetailsStep.minorFirstNameLabel": "Prenumele minorului",
     "PassengerDetailsStep.minorLastNameLabel": "Numele minorului",
     "PassengerDetailsStep.optional": "Opțional",
-    "PassengerDetailsStep.minorNote": "Acest pasager este minor",
+    "PassengerDetailsStep.minorNote": "Acest pasager este minor — trebuie semnat de un părinte sau tutore legal",
     "PassengerDetailsStep.parentFirstNameLabel": "Prenumele părintelui",
     "PassengerDetailsStep.parentLastNameLabel": "Numele părintelui",
     "LegalLinks.minorAgreement": "Acord pentru minori",

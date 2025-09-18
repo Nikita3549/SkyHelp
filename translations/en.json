@@ -3634,7 +3634,7 @@
     "PassengerDetailsStep.minorFirstNameLabel": "Minor First Name",
     "PassengerDetailsStep.minorLastNameLabel": "Minor Last Name",
     "PassengerDetailsStep.optional": "Optional",
-    "PassengerDetailsStep.minorNote": "This passenger is Minor",
+    "PassengerDetailsStep.minorNote": "This passenger is a minor — must be signed by a parent or legal guardian",
     "PassengerDetailsStep.parentFirstNameLabel": "Parent First Name",
     "PassengerDetailsStep.parentLastNameLabel": "Parent Last Name",
     "LegalLinks.minorAgreement": "Minor Agreement",

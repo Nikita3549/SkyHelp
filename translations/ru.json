@@ -3633,7 +3633,7 @@
     "PassengerDetailsStep.minorFirstNameLabel": "Имя несовершеннолетнего",
     "PassengerDetailsStep.minorLastNameLabel": "Фамилия несовершеннолетнего",
     "PassengerDetailsStep.optional": "Необязательно",
-    "PassengerDetailsStep.minorNote": "Этот пассажир несовершеннолетний",
+    "PassengerDetailsStep.minorNote": "Этот пассажир несовершеннолетний — подписать должен родитель либо официальный представитель",
     "PassengerDetailsStep.parentFirstNameLabel": "Имя родителя",
     "PassengerDetailsStep.parentLastNameLabel": "Фамилия родителя",
     "LegalLinks.minorAgreement": "Соглашение для несовершеннолетних",
