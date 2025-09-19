@@ -1,5 +1,4 @@
 id,name,alias,iata_code,icao_code,callsign,country,active
-21319,"Private flight",\N,"-","N/A","","","Y"
 2,"135 Airways",\N,"","GNL","GENERAL","United States","N"
 3,"1Time Airline",\N,"1T","RNX","NEXTIME","South Africa","Y"
 4,"2 Sqn No 1 Elementary Flying Training School",\N,"","WYT","","United Kingdom","N"
