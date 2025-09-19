@@ -1,13 +1,14 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios, { AxiosResponse } from 'axios';
 import { GetFlightsDto } from './dto/get-flights.dto';
 import { EARTH_RADIUS, KM, RADIAN } from './constants';
-import { IFlightsResponse } from './interfaces/flight-radar-flight';
 import {
-    FlightAwareFlight,
-    FlightAwareFlightsResponse,
-} from './interfaces/flight-aware-flight';
+    IFlightRadarFlight,
+    IFlightsResponse,
+} from './interfaces/flight-radar-flight';
+import { FlightAwareFlightsResponse } from './interfaces/flight-aware-flight';
+import { IFlight } from './interfaces/flight';
 
 @Injectable()
 export class FlightService {
@@ -42,13 +43,51 @@ export class FlightService {
         return res.data.flights[0];
     }
 
-    async getFlightsByDateAirportsCompany(dto: GetFlightsDto) {
+    async getFlightsByDateAirportsCompany(
+        dto: GetFlightsDto,
+    ): Promise<IFlight[]> {
         const { date: isoDate, company, departure, arrival } = dto;
         const date = new Date(isoDate);
 
         const { start: flightDateStart, end: flightDateEnd } =
             this.getFlightDateRange(date);
 
+        // --- 1. FlightAware ---
+        const flightAwareResponse: AxiosResponse<any> = await axios
+            .get(
+                `${this.configService.getOrThrow('FLIGHTAWARE_BASE_URL')}/schedules/${flightDateStart.toISOString().split('T')[0]}/${flightDateEnd.toISOString().split('T')[0]}`,
+                {
+                    params: {
+                        origin: departure,
+                        destination: arrival,
+                        airline: company,
+                    },
+                    headers: {
+                        'x-apikey': this.configService.getOrThrow(
+                            'FLIGHTAWARE_API_KEY',
+                        ),
+                        Accept: 'application/json',
+                    },
+                },
+            )
+            .catch();
+
+        const scheduled = flightAwareResponse.data?.scheduled ?? [];
+
+        if (scheduled.length > 0) {
+            return scheduled.map((f: any): IFlight => {
+                return {
+                    id: f.fa_flight_id,
+                    flightNumber: f.ident_iata || f.ident || '',
+                    departureTime: f.scheduled_out,
+                    arrivalTime: f.scheduled_in,
+                    departureAirport: f.origin_icao,
+                    arrivalAirport: f.destination_icao,
+                };
+            });
+        }
+
+        // --- 2. FlightRadar (fallback) ---
         const flightsResponse: AxiosResponse<IFlightsResponse> =
             await axios.get(
                 `${this.configService.getOrThrow('FLIGHT_RADAR_API_HOST')}/api/flight-summary/full`,
@@ -70,14 +109,26 @@ export class FlightService {
                     },
                 },
             );
+
         const flights = flightsResponse.data.data;
 
-        return flights.filter((flight) => {
-            return (
-                flight.flight_ended &&
-                new Date(flight.datetime_takeoff).getDay() == date.getDay()
-            );
-        });
+        return flights
+            .filter((flight) => {
+                return (
+                    flight.flight_ended &&
+                    new Date(flight.datetime_takeoff).getDay() === date.getDay()
+                );
+            })
+            .map((f: IFlightRadarFlight): IFlight => {
+                return {
+                    id: f.fr24_id,
+                    flightNumber: f.flight,
+                    departureTime: f.datetime_takeoff,
+                    arrivalTime: f.datetime_landed!,
+                    departureAirport: f.orig_icao,
+                    arrivalAirport: f.dest_icao,
+                };
+            });
     }
 
     calculateDistanceBetweenAirports(

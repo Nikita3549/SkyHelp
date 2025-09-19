@@ -28,6 +28,7 @@ export class FlightController {
                         e.response!.data,
                     );
                 }
+                console.log(e);
                 throw new BadRequestException(INVALID_FLIGHT_DATA);
             });
 
