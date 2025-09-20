@@ -2700,7 +2700,7 @@
     "ClaimsList.compensation": "Compensation",
     "ClaimsList.progress": "Progress",
     "CompensationDetailsCard.title": "Compensation Details",
-    "CompensationDetailsCard.amount": "Amount",
+    "CompensationDetailsCard.amount": "Amount per passenger",
     "CompensationDetailsCard.fee": "Our Fee (35%)",
     "CompensationDetailsCard.youReceive": "You Receive",
     "CompensationDetailsCard.calculated": "Calculated on settlement",

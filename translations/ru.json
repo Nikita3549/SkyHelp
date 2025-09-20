@@ -2700,7 +2700,7 @@
     "ClaimsList.compensation": "Компенсация",
     "ClaimsList.progress": "Статус",
     "CompensationDetailsCard.title": "Детали компенсации",
-    "CompensationDetailsCard.amount": "Сумма",
+    "CompensationDetailsCard.amount": "Сумма за пассажира",
     "CompensationDetailsCard.fee": "Наша комиссия (35%)",
     "CompensationDetailsCard.youReceive": "Вы получите",
     "CompensationDetailsCard.calculated": "Рассчитывается при урегулировании",
