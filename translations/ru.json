@@ -3320,7 +3320,6 @@
     "IssueDetailsCard.issues": "Другие проблемы авиакомпании",
     "IssueDetailsCard.other": "Другое",
     "IssueDetailsCard.dont_remember": "Не помню",
-    "cookieBanner.acceptAll": "Принять все",
     "cookieBanner.onlyEssential": "Только необходимые",
     "cookieBanner.description": "Мы используем файлы cookie, чтобы улучшить ваш опыт и проанализировать использование сайта. Вы можете принять все файлы cookie или выбрать только необходимые.",
     "PassengerDetailsStep.passenger": "Пассажир",
@@ -3650,6 +3649,22 @@
     "AirlineContactQuestion.yes": "Да",
     "AirlineContactQuestion.no": "Нет",
     "IssueDetailsCard.contacted_airline": "Связались с авиакомпанией",
-    "PassengerDetailsStep.validation.invalidLastName": "Неверная фамилия"
-
+    "PassengerDetailsStep.validation.invalidLastName": "Неверная фамилия",
+    "cookieBanner.title": "Мы используем файлы cookie, чтобы улучшить ваш опыт на нашем сайте.",
+    "cookieBanner.body": "Некоторые файлы cookie необходимы для работы сайта. Другие помогают нам понять, как вы используете сайт, и персонализировать ваш опыт. Вы можете выбрать, какие файлы cookie разрешить.",
+    "cookieBanner.essential": "Необходимые",
+    "cookieBanner.essentialDesc": "Требуются для работы сайта. Всегда активны.",
+    "cookieBanner.analytics": "Аналитика",
+    "cookieBanner.analyticsDesc": "Помогают понять использование сайта. Можно отключить.",
+    "cookieBanner.marketing": "Маркетинг",
+    "cookieBanner.marketingDesc": "Используются для показа персонализированной рекламы. Можно отключить.",
+    "cookieBanner.save": "Сохранить настройки",
+    "cookieBanner.acceptAll": "Принять все",
+    "cookieBanner.rejectAll": "Отклонить все",
+    "cookieBanner.privacyLink": "Политика конфиденциальности и файлов cookie",
+    "cookieBanner.manageTitle": "Настройки файлов cookie",
+    "cookieBanner.manage": "Управление настройками",
+    "cookieBanner.always-active": "Всегда активно",
+    "cookieBanner.learnMore": "Подробнее в нашей",
+    "cookieBanner.privacyLinkText": "Политике конфиденциальности и файлов cookie"
 }
