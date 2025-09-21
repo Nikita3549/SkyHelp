@@ -11,7 +11,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
         const request = ctx.switchToHttp().getRequest<AuthRequest>();
         const user = request.user;
 
-        if (typeof user.id != 'string') {
+        if (typeof user.id != 'string' || !user.isActive) {
             return false;
         }
 
