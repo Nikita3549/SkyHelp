@@ -122,7 +122,7 @@ export class DocumentController {
         return await this.documentService.updateType(type, documentId, true);
     }
 
-    @Get()
+    @Get('download')
     async getDocument(
         @Query() query: GetDocumentDto,
         @Req() req: AuthRequest,
