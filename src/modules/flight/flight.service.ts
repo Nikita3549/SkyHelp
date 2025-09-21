@@ -77,7 +77,7 @@ export class FlightService {
         if (scheduled.length > 0) {
             return scheduled.map((f: any): IFlight => {
                 return {
-                    id: f.fa_flight_id,
+                    id: f.ident_iata || f.ident || '',
                     flightNumber: f.ident_iata || f.ident || '',
                     departureTime: f.scheduled_out,
                     arrivalTime: f.scheduled_in,

@@ -1,6 +1,7 @@
 import {
     Body,
     Controller,
+    ForbiddenException,
     Get,
     NotFoundException,
     Param,
@@ -22,7 +23,7 @@ import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
 import { ClaimService } from '../claim.service';
 import { UploadAdminDocumentsDto } from './dto/upload-admin-documents.dto';
 import { DocumentService } from './document.service';
-import { GetDocumentAdminDto } from './dto/get-document-admin.dto';
+import { GetDocumentDto } from './dto/get-document.dto';
 import { Response } from 'express';
 import * as path from 'path';
 import * as fs from 'fs';
@@ -121,10 +122,47 @@ export class DocumentController {
         return await this.documentService.updateType(type, documentId, true);
     }
 
+    @Get()
+    async getDocument(
+        @Query() query: GetDocumentDto,
+        @Req() req: AuthRequest,
+        @Res() res: Response,
+    ) {
+        const { documentId } = query;
+
+        const document = await this.documentService.getDocument(documentId);
+
+        if (!document) {
+            throw new NotFoundException(INVALID_DOCUMENT_ID);
+        }
+
+        const claim = await this.claimService.getClaim(document.claimId);
+
+        if (!claim || claim.userId != req.user.id) {
+            throw new ForbiddenException('You have no rights on this document');
+        }
+
+        const filePath = path.resolve(document.path);
+
+        if (!fs.existsSync(filePath)) {
+            throw new NotFoundException(FILE_DOESNT_ON_DISK);
+        }
+        const fileName = path.basename(filePath);
+        const mimeType = mimeLookup(filePath) || 'application/octet-stream';
+
+        res.setHeader('Content-Type', mimeType);
+        res.setHeader(
+            'Content-Disposition',
+            `attachment; filename="${encodeURIComponent(fileName)}"`,
+        );
+
+        return res.download(filePath);
+    }
+
     @Get('admin')
     @UseGuards(IsPartnerOrAgentGuard)
     async getDocumentAdmin(
-        @Query() query: GetDocumentAdminDto,
+        @Query() query: GetDocumentDto,
         @Res() res: Response,
     ) {
         const { documentId } = query;

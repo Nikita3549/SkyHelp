@@ -1,6 +1,6 @@
 import { IsString } from 'class-validator';
 
-export class GetDocumentAdminDto {
+export class GetDocumentDto {
     @IsString()
     documentId: string;
 }
