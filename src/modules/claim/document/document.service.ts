@@ -160,7 +160,7 @@ export class DocumentService implements OnModuleInit {
 
         firstPage.drawText(documentData.claimId, {
             x: 130,
-            y: 441,
+            y: 459,
             size: 10.5,
             color: rgb(0, 0, 0),
             font: fontRegular,
@@ -168,7 +168,7 @@ export class DocumentService implements OnModuleInit {
 
         firstPage.drawText(documentData.airlineName, {
             x: 130,
-            y: 405,
+            y: 423,
             size: 10.5,
             color: rgb(0, 0, 0),
             font: fontRegular,
@@ -176,7 +176,7 @@ export class DocumentService implements OnModuleInit {
 
         firstPage.drawText(documentData.flightNumber, {
             x: 130,
-            y: 374,
+            y: 392,
             size: 10.5,
             color: rgb(0, 0, 0),
             font: fontRegular,
@@ -184,7 +184,7 @@ export class DocumentService implements OnModuleInit {
 
         firstPage.drawText(formatDate(documentData.date, 'dd.mm.yyyy'), {
             x: 130,
-            y: 343,
+            y: 361,
             size: 10.5,
             color: rgb(0, 0, 0),
             font: fontRegular,
