@@ -270,7 +270,7 @@ This message was automatically generated.
             layoutHtml,
         );
 
-        const subject = 'Just one step away from your compensation';
+        const subject = `Just one step away from your compensation ${claimData.id}`;
         const email = await this.gmailService.noreply.sendEmailHtml(
             to,
             subject,
