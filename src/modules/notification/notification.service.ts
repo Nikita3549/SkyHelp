@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import * as fs from 'fs/promises';
 import * as path from 'node:path';
 import { Languages } from '../language/enums/languages.enums';
@@ -7,6 +7,7 @@ import { isProd } from '../../utils/isProd';
 import { GmailService } from '../gmail/gmail.service';
 import {
     CREATE_CLAIM_FILENAME,
+    DOCUMENT_REQUEST_FILENAME,
     FINISH_CLAIM_FILENAME,
     GENERATE_NEW_ACCOUNT_FILENAME,
     NEW_STATUS_FILENAME,
@@ -17,6 +18,8 @@ import { TokenService } from '../token/token.service';
 import { UnsubscribeJwt } from '../unsubscribe-email/interfaces/unsubscribe-jwt';
 import { UnsubscribeEmailService } from '../unsubscribe-email/unsubscribe-email.service';
 import { gmail_v1 } from 'googleapis';
+import { DocumentType } from '@prisma/client';
+import Handlebars from 'handlebars';
 
 @Injectable()
 export class NotificationService {
@@ -218,6 +221,61 @@ This message was automatically generated.
             email,
             subject,
             claimId: newStatusData.claimId,
+            contentHtml: letterHtml,
+            to,
+        });
+    }
+
+    async sendDocumentRequest(
+        to: string,
+        letterData: {
+            documentRequestsData: {
+                documentType: DocumentType;
+                client: string;
+            }[];
+            customerName: string;
+            claimId: string;
+        },
+        language: Languages = Languages.EN,
+    ) {
+        const emailCategory = EmailCategory.TRANSACTIONAL;
+
+        const layoutHtml = await this.getLayout(to, language, emailCategory);
+
+        const letterTemplateHtmlRaw = await this.getLetterContent(
+            DOCUMENT_REQUEST_FILENAME,
+            language,
+        );
+
+        Handlebars.registerHelper('eq', (a: string, b: string) => a === b);
+
+        const template = Handlebars.compile(letterTemplateHtmlRaw);
+
+        const letterHtmlContent = template({
+            customerName: letterData.customerName,
+            claimId: letterData.claimId,
+            dashboardLink: `${this.configService.getOrThrow('FRONTEND_URL')}/dashboard`,
+            documentRequestsData: letterData.documentRequestsData,
+        });
+
+        const letterHtml = this.setContentInLayout(
+            letterHtmlContent,
+            layoutHtml,
+        );
+
+        const subject = `Action required: upload missing documents for claim #${letterData.claimId}`;
+
+        const email = await this.gmailService.noreply.sendEmailHtml(
+            to,
+            subject,
+            letterHtml,
+            emailCategory,
+        );
+
+        await this.saveHtmlEmail({
+            email,
+            subject,
+            claimId: letterData.claimId,
             contentHtml: letterHtml,
             to,
         });

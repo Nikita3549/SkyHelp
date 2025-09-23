@@ -7,6 +7,7 @@ import {
     DocumentRequestType,
     DocumentType,
 } from '@prisma/client';
+import { omit } from '../../../utils/omit';
 
 @Injectable()
 export class DocumentRequestService {
@@ -16,6 +17,7 @@ export class DocumentRequestService {
         return this.prisma.documentRequest.create({
             data: {
                 ...data,
+                isSent: false,
                 documentType: this.getDocumentTypeByRequestType(data.type),
             },
         });
@@ -73,6 +75,27 @@ export class DocumentRequestService {
         return this.prisma.documentRequest.delete({
             where: {
                 id: documentRequestId,
+            },
+        });
+    }
+
+    async getNotSentByClaimId(claimId: string) {
+        return this.prisma.documentRequest.findMany({
+            where: {
+                claimId,
+                isSent: false,
+            },
+        });
+    }
+
+    async markDocumentRequestsAsSent(claimId: string) {
+        return this.prisma.documentRequest.updateMany({
+            where: {
+                claimId,
+                isSent: false,
+            },
+            data: {
+                isSent: true,
             },
         });
     }

@@ -21,9 +21,17 @@ import { HAVE_NO_RIGHTS_ON_CLAIM, INVALID_CLAIM_ID } from '../constants';
 import { IsPartnerOrAgentGuard } from '../../../guards/isPartnerOrAgentGuard';
 import { AuthRequest } from '../../../interfaces/AuthRequest.interface';
 import { UserRole } from '@prisma/client';
-import { INVALID_DOCUMENT_REQUEST } from './constants';
+import {
+    INVALID_DOCUMENT_REQUEST,
+    SEND_NEW_DOCUMENT_REQUEST_QUEUE_DELAY,
+    SEND_NEW_DOCUMENT_REQUEST_QUEUE_KEY,
+} from './constants';
 import { IFullClaim } from '../interfaces/full-claim.interface';
 import { HttpStatusCode } from 'axios';
+import { InjectQueue } from '@nestjs/bullmq';
+import { Queue } from 'bullmq';
+import { SendNewDocumentRequestJobDataInterface } from './interfaces/send-new-document-request-job-data.interface';
+import { Languages } from '../../language/enums/languages.enums';
 
 @Controller('claims/document-requests')
 @UseGuards(JwtAuthGuard)
@@ -31,6 +39,8 @@ export class DocumentRequestController {
     constructor(
         private readonly documentRequestService: DocumentRequestService,
         private readonly claimService: ClaimService,
+        @InjectQueue(SEND_NEW_DOCUMENT_REQUEST_QUEUE_KEY)
+        private readonly sendNewDocumentRequestQueue: Queue,
     ) {}
 
     @Post()
@@ -48,6 +58,22 @@ export class DocumentRequestController {
         if (req.user.role != UserRole.ADMIN && claim.partnerId != req.user.id) {
             throw new ForbiddenException(HAVE_NO_RIGHTS_ON_CLAIM);
         }
+
+        const jobData: SendNewDocumentRequestJobDataInterface = {
+            claimId: claim.id,
+            customerName: claim.customer.firstName,
+            to: claim.customer.email,
+            language: (claim.customer.language as Languages) || Languages.EN,
+        };
+
+        await this.sendNewDocumentRequestQueue.add(
+            'sendNewDocumentRequestEmail',
+            jobData,
+            {
+                delay: SEND_NEW_DOCUMENT_REQUEST_QUEUE_DELAY,
+                attempts: 1,
+            },
+        );
 
         return this.documentRequestService.create(dto);
     }

@@ -25,6 +25,7 @@ import {
 } from './constants';
 import { Queue } from 'bullmq';
 import { IJobClaimFollowupData } from './interfaces/job-data.interface';
+import { BasePassenger } from './interfaces/base-passenger.interface';
 
 @Injectable()
 export class ClaimService {
@@ -836,5 +837,47 @@ export class ClaimService {
                 id: claimId,
             },
         });
+    }
+
+    async getCustomerOrOtherPassengerById(
+        passengerId: string,
+    ): Promise<BasePassenger | null> {
+        const customer = await this.prisma.claimCustomer.findFirst({
+            where: {
+                id: passengerId,
+            },
+        });
+
+        if (customer) {
+            return {
+                id: customer.id,
+                firstName: customer.firstName,
+                lastName: customer.lastName,
+                city: customer.city,
+                country: customer.country,
+                address: customer.address,
+                email: customer.email,
+                isSigned: !!customer.isSigned,
+            };
+        }
+
+        const otherPassenger = await this.prisma.otherPassenger.findFirst({
+            where: {
+                id: passengerId,
+            },
+        });
+
+        return !otherPassenger
+            ? null
+            : {
+                  id: otherPassenger.id,
+                  firstName: otherPassenger.firstName,
+                  lastName: otherPassenger.lastName,
+                  city: otherPassenger.city,
+                  country: otherPassenger.country,
+                  address: otherPassenger.address,
+                  email: otherPassenger.email,
+                  isSigned: !!otherPassenger.isSigned,
+              };
     }
 }
