@@ -22,7 +22,7 @@ export class SendNewDocumentRequestProcessor extends WorkerHost {
         const documentRequests =
             await this.documentRequestService.getNotSentByClaimId(claimId);
 
-        if (!documentRequests) {
+        if (documentRequests.length == 0) {
             return;
         }
 
