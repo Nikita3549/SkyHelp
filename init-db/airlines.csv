@@ -2091,7 +2091,6 @@ id,name,alias,iata_code,icao_code,callsign,country,active
 2091,"EVA Air",\N,"BR","EVA","EVA","Taiwan","Y"
 2092,"Eagle Aero",\N,"","ICR","ICARUS FLIGHTS","United States","N"
 2093,"Eagle Air",\N,"","EGR","EAGLE SIERRA","Sierra Leone","N"
-2094,"Eagle Air",\N,"H7","","","Uganda","Y"
 2095,"Eagle Air Company",\N,"","EGX","THAI EAGLE","Thailand","N"
 2096,"Eagle Air Iceland",\N,"","FEI","ARCTIC EAGLE","Iceland","N"
 2097,"Eagle Aviation",\N,"","EGU","AFRICAN EAGLE","Uganda","N"
@@ -5443,7 +5442,6 @@ id,name,alias,iata_code,icao_code,callsign,country,active
 5459,"Wisconsin Air National Guard",\N,"","WAG","","United States","N"
 5460,"Wisman Aviation",\N,"","WSM","WISMAN","United States","N"
 5461,"Wizz Air",\N,"W6","WZZ","WIZZ AIR","Hungary","Y"
-5462,"Wizz Air Hungary",\N,"8Z","WVL","WIZZBUL","Bulgaria","Y"
 5463,"Wondair on Demand Aviation",\N,"","WNR","WONDAIR","Spain","N"
 5464,"Woodgate Executive Air Charter",\N,"","CWY","CAUSEWAY","United Kingdom","N"
 5465,"World Airways",\N,"WO","WOA","WORLD","United States","Y"
@@ -5715,7 +5713,6 @@ id,name,alias,iata_code,icao_code,callsign,country,active
 13704,"KSY","Kreta Sky","KY","KSY","KSY","Greece","Y"
 13732,"Buquebus Líneas Aéreas","","BQ","BQB","","Uruguay","Y"
 13734,"SOCHI AIR","SOCHI","CQ","KOL","SLOW FROG","Russia","Y"
-13757,"Wizz Air Ukraine","","WU","WAU","WIZZAIR UKRAINE","Ukraine","Y"
 13781,"88","","47","VVN","","Cyprus","Y"
 13815,"LCM AIRLINES","","LQ","LMM","","Russia","Y"
 13838,"Aero Brazil","","BZ","BZL","","Brazil","N"
@@ -6162,3 +6159,8 @@ id,name,alias,iata_code,icao_code,callsign,country,active
 21317,"Svyaz Rossiya","Russian Commuter ","7R","SJM","RussianConnecty","Russia","Y"
 21318,HiSky Europe,\N,H4,HYS,SKY EUROPE,Romania,Y
 21319,SkyUp Airlines,\N,PQ,SQP,SKYUP,Ukraine,Y
+21320,Wizz Air UK,Wizz Air UK,W9,WUK,WIZZ GO,United United Kingdom,Y
+21321,Wizz Air Malta,Wizz Air Malta,W4,WMT,WIZZ MALTA,Malta,Y
+21322,Wizz Air Abu Dhabi,Wizz Air Abu Dhabi,5W,WAZ,WIZZ SKY,United Arab Emirates,Y
+21323,HiSky,HiSky,H4,HYS,HiSky,Moldova,Y
+21324,FlyOne Armenia,FlyOne Armenia,3F,FIE,ARMRIDER,Armenia,Y
