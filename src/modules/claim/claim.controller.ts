@@ -59,7 +59,7 @@ import { UploadFormSignDto } from './dto/upload-form-sign-dto';
 import { UserService } from '../user/user.service';
 import { AuthService } from '../auth/auth.service';
 import { generateAssignmentName } from '../../utils/generate-assignment-name';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import * as FormData from 'form-data';
 import { BoardingPassData } from './interfaces/boarding-pass-api.response';
 import { BoardingPassUploadMultiInterceptor } from '../../interceptors/boarding-pass/boarding-pass-upload.interceptor';
@@ -436,32 +436,45 @@ export class PublicClaimController {
     @Post('/boarding-pass')
     @BoardingPassUploadMultiInterceptor()
     async boardingPass(@UploadedFiles() files: Express.Multer.File[]) {
-        const results: BoardingPassData[] = [];
+        const form = new FormData();
+
+        for (const file of files) {
+            form.append('files', file.buffer, {
+                filename: file.originalname,
+                contentType: file.mimetype,
+            });
+        }
+
+        let results: BoardingPassData[];
+
         try {
-            for (const file of files) {
-                const form = new FormData();
-                form.append('file', file.buffer, {
-                    filename: file.originalname,
-                    contentType: file.mimetype,
-                });
+            const { data } = await axios.post<BoardingPassData[]>(
+                this.configService.getOrThrow('BOARDING_PASS_API_URL'),
+                form,
+                {
+                    headers: form.getHeaders(),
+                    maxBodyLength: MEGABYTE,
+                    maxContentLength: MEGABYTE,
+                },
+            );
 
-                const { data } = await axios.post<BoardingPassData[]>(
-                    this.configService.getOrThrow('BOARDING_PASS_API_URL'),
-                    form,
-                    {
-                        headers: form.getHeaders(),
-                        maxBodyLength: MEGABYTE,
-                        maxContentLength: MEGABYTE,
-                    },
+            results = data;
+        } catch (e) {
+            if (e instanceof AxiosError) {
+                console.error(
+                    'error while fetching boarding pass data: ',
+                    e?.response?.data,
                 );
-
-                results.push(data[0]);
+            } else {
+                console.error(
+                    'unkwnon error while fetching boarding pass data: ',
+                    e,
+                );
             }
-            console.log(results);
-        } catch (e: unknown) {
-            console.error('error while fetching boarding pass data: ', e);
             throw new BadRequestException(INVALID_BOARDING_PASS);
         }
+
+        console.log(results);
 
         const boardingPassData = results[0];
 

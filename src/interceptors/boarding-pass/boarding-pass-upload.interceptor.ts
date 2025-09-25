@@ -27,6 +27,10 @@ export class MultiFileProcessingInterceptor implements NestInterceptor {
         try {
             if (req.files && req.files.length > 0) {
                 for (const file of req.files) {
+                    console.log(file);
+                    if (file?.mimetype && file.mimetype != '*/*') {
+                        continue;
+                    }
                     if (file.buffer) {
                         const ext = path
                             .extname(file.originalname)
