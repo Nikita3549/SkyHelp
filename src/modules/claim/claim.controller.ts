@@ -460,21 +460,16 @@ export class PublicClaimController {
 
             results = data;
         } catch (e) {
-            if (e instanceof AxiosError) {
-                console.error(
-                    'error while fetching boarding pass data: ',
-                    e?.response?.data,
-                );
-            } else {
+            if (!(e instanceof AxiosError)) {
                 console.error(
                     'unkwnon error while fetching boarding pass data: ',
                     e,
                 );
             }
-            throw new BadRequestException(INVALID_BOARDING_PASS);
+            throw new BadRequestException(
+                `${INVALID_BOARDING_PASS}: error while fetching reader`,
+            );
         }
-
-        console.log(results);
 
         const boardingPassData = results[0];
 
@@ -483,7 +478,9 @@ export class PublicClaimController {
             !boardingPassData?.From ||
             !boardingPassData?.To
         ) {
-            throw new BadRequestException(INVALID_BOARDING_PASS);
+            throw new BadRequestException(
+                `${INVALID_BOARDING_PASS}: invalid flightnumber or airport from or airport to`,
+            );
         }
 
         const airlineIata = boardingPassData.Flight_number.split(' ')[0];
@@ -491,7 +488,9 @@ export class PublicClaimController {
         const flightCode = boardingPassData.Flight_number.split(' ')[1];
 
         if (!airlineIata || !flightCode) {
-            throw new BadRequestException(INVALID_BOARDING_PASS);
+            throw new BadRequestException(
+                `${INVALID_BOARDING_PASS}: invalid airlineIata or flightCode from reader`,
+            );
         }
 
         const airline = await this.airlineService.getAirlineByIata(airlineIata);
@@ -507,6 +506,15 @@ export class PublicClaimController {
             throw new BadRequestException(INVALID_BOARDING_PASS);
         }
 
+        const departureIso = this.toIso(
+            boardingPassData.Departure_Date,
+            boardingPassData.Departure_Time,
+        );
+        const arrivalIso = this.toIso(
+            boardingPassData.Arrival_Date,
+            boardingPassData.Arrival_Time,
+        );
+
         return {
             passengers: results.map((r) => ({
                 passengerName: r.Passenger_Name,
@@ -516,6 +524,15 @@ export class PublicClaimController {
             arrivalAirport,
             departureAirport,
             airline,
+            departureDate: departureIso,
+            arrivalDate: arrivalIso,
         };
+    }
+
+    private toIso(date?: string | null, time?: string | null): string | null {
+        if (!date || !time) return null;
+
+        const d = new Date(`${date}T${time}`);
+        return d.toISOString();
     }
 }
