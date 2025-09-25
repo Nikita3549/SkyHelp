@@ -9,7 +9,10 @@ import {
     Put,
     Query,
     Req,
+    UploadedFile,
+    UploadedFiles,
     UseGuards,
+    UseInterceptors,
 } from '@nestjs/common';
 import { CreateClaimDto } from './dto/create-claim.dto';
 import { ClaimService } from './claim.service';
@@ -17,8 +20,10 @@ import {
     CONTINUE_LINKS_EXP,
     FINAL_STEP,
     HOUR,
+    INVALID_BOARDING_PASS,
     INVALID_CLAIM_ID,
     INVALID_ICAO,
+    MEGABYTE,
     MINUTE,
 } from './constants';
 import { JwtAuthGuard } from '../../guards/jwtAuth.guard';
@@ -54,6 +59,11 @@ import { UploadFormSignDto } from './dto/upload-form-sign-dto';
 import { UserService } from '../user/user.service';
 import { AuthService } from '../auth/auth.service';
 import { generateAssignmentName } from '../../utils/generate-assignment-name';
+import axios from 'axios';
+import * as FormData from 'form-data';
+import { BoardingPassData } from './interfaces/boarding-pass-api.response';
+import { BoardingPassUploadMultiInterceptor } from '../../interceptors/boarding-pass/boarding-pass-upload.interceptor';
+import { AirlineService } from '../airline/airline.service';
 
 @Controller('claims')
 @UseGuards(JwtAuthGuard)
@@ -79,6 +89,7 @@ export class PublicClaimController {
         private readonly customerService: CustomerService,
         private readonly userService: UserService,
         private readonly authService: AuthService,
+        private readonly airlineService: AirlineService,
     ) {}
 
     @Post()
@@ -419,6 +430,78 @@ export class PublicClaimController {
 
         return {
             compensation,
+        };
+    }
+
+    @Post('/boarding-pass')
+    @BoardingPassUploadMultiInterceptor()
+    async boardingPass(@UploadedFiles() files: Express.Multer.File[]) {
+        const results: BoardingPassData[] = [];
+        try {
+            for (const file of files) {
+                const form = new FormData();
+                form.append('file', file.buffer, {
+                    filename: file.originalname,
+                    contentType: file.mimetype,
+                });
+
+                const { data } = await axios.post<BoardingPassData[]>(
+                    this.configService.getOrThrow('BOARDING_PASS_API_URL'),
+                    form,
+                    {
+                        headers: form.getHeaders(),
+                        maxBodyLength: MEGABYTE,
+                        maxContentLength: MEGABYTE,
+                    },
+                );
+
+                results.push(data[0]);
+            }
+            console.log(results);
+        } catch (e: unknown) {
+            console.error('error while fetching boarding pass data: ', e);
+            throw new BadRequestException(INVALID_BOARDING_PASS);
+        }
+
+        const boardingPassData = results[0];
+
+        if (
+            !boardingPassData?.Flight_number ||
+            !boardingPassData?.From ||
+            !boardingPassData?.To
+        ) {
+            throw new BadRequestException(INVALID_BOARDING_PASS);
+        }
+
+        const airlineIata = boardingPassData.Flight_number.split(' ')[0];
+
+        const flightCode = boardingPassData.Flight_number.split(' ')[1];
+
+        if (!airlineIata || !flightCode) {
+            throw new BadRequestException(INVALID_BOARDING_PASS);
+        }
+
+        const airline = await this.airlineService.getAirlineByIata(airlineIata);
+
+        const departureAirport = await this.airportService.getAirportByIata(
+            boardingPassData.From,
+        );
+        const arrivalAirport = await this.airportService.getAirportByIata(
+            boardingPassData.To,
+        );
+
+        if (!departureAirport || !arrivalAirport || !airline) {
+            throw new BadRequestException(INVALID_BOARDING_PASS);
+        }
+
+        return {
+            passengers: results.map((r) => ({
+                passengerName: r.Passenger_Name,
+            })),
+            flightNumber: boardingPassData.Flight_number.replace(' ', ''),
+            arrivalAirport,
+            departureAirport,
+            airline,
         };
     }
 }

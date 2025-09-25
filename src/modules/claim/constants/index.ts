@@ -36,3 +36,7 @@ export const CONTINUE_LINKS_EXP = '30days';
 export const MINUTE = 60;
 
 export const HOUR = 60 * 60;
+
+export const MEGABYTE = 1024 * 1024;
+
+export const INVALID_BOARDING_PASS = 'Invalid boarding pass';

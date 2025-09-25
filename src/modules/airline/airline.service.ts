@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { IAirline } from './interfaces/airline.interface';
 import { Pool } from 'pg';
 import { IDbAirline } from './interfaces/db-airline.interface';
+import * as process from 'process';
 
 @Injectable()
 export class AirlineService implements OnModuleInit {
@@ -16,7 +17,41 @@ export class AirlineService implements OnModuleInit {
             database: this.configService.getOrThrow('DATABASE_STATIC_DBNAME'),
             password: this.configService.getOrThrow('DATABASE_STATIC_PASSWORD'),
             host: this.configService.getOrThrow('DATABASE_STATIC_HOST'),
+            port:
+                process.env.NODE_ENV == 'LOCAL_DEV'
+                    ? this.configService.getOrThrow('DATABASE_STATIC_PORT')
+                    : 5432,
         });
+    }
+
+    async getAirlineByIata(iata: string): Promise<IAirline | null> {
+        const result = await this.pool.query<IDbAirline>(
+            `SELECT
+            id,
+            name,
+            alias,
+            iata_code,
+            icao_code,
+            callsign,
+            country,
+            active
+         FROM airlines
+         WHERE active = true
+           AND iata_code = $1
+         LIMIT 1;`,
+            [iata.toUpperCase()],
+        );
+
+        const row = result.rows[0];
+        if (!row || !row?.icao_code || !row?.iata_code) {
+            return null;
+        }
+
+        return {
+            icao: row.icao_code,
+            iata: row.iata_code,
+            name: row.name,
+        };
     }
 
     public async getAirlinesByName(name: string): Promise<IAirline[]> {
@@ -52,7 +87,7 @@ export class AirlineService implements OnModuleInit {
         );
 
         return dbAirlines.rows.flatMap((a) => {
-            if (!a.icao_code || !a.name) {
+            if (!a.icao_code || !a.name || !a.iata_code) {
                 return [];
             }
 

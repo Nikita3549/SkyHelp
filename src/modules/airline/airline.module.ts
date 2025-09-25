@@ -6,5 +6,6 @@ import { CacheModule } from '../cache/cache.module';
 @Module({
     imports: [CacheModule],
     providers: [AirlineService, AirlineGateway],
+    exports: [AirlineService],
 })
 export class AirlineModule {}
