@@ -453,13 +453,13 @@ export class PublicClaimController {
                 form,
                 {
                     headers: form.getHeaders(),
-                    maxBodyLength: MEGABYTE,
                     maxContentLength: MEGABYTE,
                 },
             );
 
             results = data;
         } catch (e) {
+            console.log(e);
             if (!(e instanceof AxiosError)) {
                 console.error(
                     'unkwnon error while fetching boarding pass data: ',
