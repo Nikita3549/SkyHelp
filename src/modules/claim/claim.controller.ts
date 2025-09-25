@@ -503,7 +503,9 @@ export class PublicClaimController {
         );
 
         if (!departureAirport || !arrivalAirport || !airline) {
-            throw new BadRequestException(INVALID_BOARDING_PASS);
+            throw new BadRequestException(
+                `${INVALID_BOARDING_PASS}: invalid departureAirport or arrivalAirport or airline from reader`,
+            );
         }
 
         const departureIso = this.toIso(
