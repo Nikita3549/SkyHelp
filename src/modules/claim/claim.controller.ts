@@ -498,6 +498,7 @@ export class PublicClaimController {
             passengers: results.map((r) => ({
                 passengerName: r.Passenger_Name,
             })),
+            bookingRef: boardingPassData.Booking_reference,
             flightNumber: boardingPassData.Flight_number.replace(' ', ''),
             arrivalAirport,
             departureAirport,
