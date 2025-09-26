@@ -47,7 +47,7 @@ model Claim {
   details          ClaimDetails         @relation(fields: [detailsId], references: [id], onDelete: Cascade)
   stateId          String               @map("state_id")
   flightStatusId   String?              @map("flight_status_id")
-  flightStatus     ClaimFlightStatus?   @relation(fields: [flightStatusId], references: [id], onDelete: Cascade)
+  flightStatus     ClaimFlightStatus?   @relation(fields: [flightStatusId], references: [id], onDelete: SetNull)
   state            ClaimState           @relation(fields: [stateId], references: [id], onDelete: Cascade)
   customerId       String               @map("customer_id")
   customer         ClaimCustomer        @relation(fields: [customerId], references: [id], onDelete: Cascade)
