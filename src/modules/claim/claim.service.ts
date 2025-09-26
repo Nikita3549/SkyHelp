@@ -45,6 +45,7 @@ export class ClaimService implements OnModuleInit {
     ) {}
 
     async onModuleInit() {
+        return;
         if (!isProd()) return;
         const claims = await this.prisma.claim.findMany({
             include: this.fullClaimInclude(),
