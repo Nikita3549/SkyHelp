@@ -32,6 +32,7 @@ import { BasePassenger } from './interfaces/base-passenger.interface';
 import { FlightService } from '../flight/flight.service';
 import { AirportService } from '../airport/airport.service';
 import { isProd } from '../../utils/isProd';
+import { sleep } from '../../utils/sleep';
 
 @Injectable()
 export class ClaimService implements OnModuleInit {
@@ -96,6 +97,8 @@ export class ClaimService implements OnModuleInit {
                     claim.details.date,
                 )
                 .catch();
+
+            await sleep(1000);
 
             if (flightStatus) {
                 const actualDistance =
