@@ -184,32 +184,37 @@ export class PublicClaimController {
                 dto.details.date,
             )
             .catch();
-        const actualDistance =
-            this.flightService.calculateDistanceBetweenAirports(
-                departureAirport.latitude,
-                departureAirport.longitude,
-                departureAirport.altitude,
-                arrivalAirport.latitude,
-                arrivalAirport.longitude,
-                arrivalAirport.altitude,
-            );
-        const actualCompensation = this.claimService.calculateCompensation({
-            flightDistanceKm: actualDistance,
-            delayHours:
-                (flightStatus?.arrival_delay
-                    ? Math.floor(flightStatus.arrival_delay / HOUR)
-                    : 0) > 3
-                    ? DelayCategory.threehours_or_more
-                    : DelayCategory.less_than_3hours,
-            cancellationNoticeDays: dto.issue.cancellationNoticeDays,
-            wasDeniedBoarding:
-                dto.issue.disruptionType == DisruptionType.denied_boarding,
-            wasAlternativeFlightOffered:
-                !!dto.issue.wasAlternativeFlightOffered,
-            arrivalTimeDelayOfAlternative:
-                dto.issue.arrivalTimeDelayOfAlternativeHours || 0,
-            wasDisruptionDuoExtraordinaryCircumstances: false, // deprecated param, extraordinary circumstances always aren't proved
-        });
+
+        let actualCompensation: number | undefined;
+
+        if (flightStatus) {
+            const actualDistance =
+                this.flightService.calculateDistanceBetweenAirports(
+                    departureAirport.latitude,
+                    departureAirport.longitude,
+                    departureAirport.altitude,
+                    arrivalAirport.latitude,
+                    arrivalAirport.longitude,
+                    arrivalAirport.altitude,
+                );
+            actualCompensation = this.claimService.calculateCompensation({
+                flightDistanceKm: actualDistance,
+                delayHours:
+                    (flightStatus?.arrival_delay
+                        ? Math.floor(flightStatus.arrival_delay / HOUR)
+                        : 0) > 3
+                        ? DelayCategory.threehours_or_more
+                        : DelayCategory.less_than_3hours,
+                cancellationNoticeDays: dto.issue.cancellationNoticeDays,
+                wasDeniedBoarding:
+                    dto.issue.disruptionType == DisruptionType.denied_boarding,
+                wasAlternativeFlightOffered:
+                    !!dto.issue.wasAlternativeFlightOffered,
+                arrivalTimeDelayOfAlternative:
+                    dto.issue.arrivalTimeDelayOfAlternativeHours || 0,
+                wasDisruptionDuoExtraordinaryCircumstances: false, // deprecated param, extraordinary circumstances always aren't proved
+            });
+        }
 
         // Create claim
 
@@ -224,7 +229,7 @@ export class PublicClaimController {
                       delayMinutes: flightStatus?.arrival_delay
                           ? flightStatus.arrival_delay / MINUTE
                           : 0,
-                      actualCompensation,
+                      actualCompensation: actualCompensation || 0,
                   }
                 : undefined,
         });

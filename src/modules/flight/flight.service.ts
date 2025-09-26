@@ -7,8 +7,12 @@ import {
     IFlightRadarFlight,
     IFlightsResponse,
 } from './interfaces/flight-radar-flight';
-import { FlightAwareFlightsResponse } from './interfaces/flight-aware-flight';
+import {
+    FlightAwareFlight,
+    FlightAwareFlightsResponse,
+} from './interfaces/flight-aware-flight';
 import { IFlight } from './interfaces/flight';
+import { formatDate } from '../../utils/formatDate';
 
 @Injectable()
 export class FlightService {
@@ -40,7 +44,18 @@ export class FlightService {
             },
         );
 
-        return res.data.flights[0];
+        return this.findFlightByDate(res.data.flights, date);
+    }
+
+    private findFlightByDate(
+        flights: FlightAwareFlight[],
+        date: Date,
+    ): FlightAwareFlight | undefined {
+        return flights.find(
+            (f) =>
+                f.scheduled_off &&
+                f.scheduled_off.includes(formatDate(date, 'yyyy-mm-dd')),
+        );
     }
 
     async getFlightsByDateAirportsCompany(
