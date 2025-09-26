@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import {
     CancellationNotice,
     ClaimStatus,
     DelayCategory,
+    DisruptionType,
     Prisma,
     UserRole,
 } from '@prisma/client';
@@ -17,6 +18,8 @@ import {
     CLAIM_QUEUE_KEY,
     FIVE_DAYS_MILLISECONDS,
     FOUR_DAYS_MILLISECONDS,
+    HOUR,
+    MINUTE,
     ONE_DAY_MILLISECONDS,
     ONE_HOUR_MILLISECONDS,
     SIX_DAYS_MILLISECONDS,
@@ -26,14 +29,122 @@ import {
 import { Queue } from 'bullmq';
 import { IJobClaimFollowupData } from './interfaces/job-data.interface';
 import { BasePassenger } from './interfaces/base-passenger.interface';
+import { FlightService } from '../flight/flight.service';
+import { AirportService } from '../airport/airport.service';
+import { isProd } from '../../utils/isProd';
 
 @Injectable()
-export class ClaimService {
+export class ClaimService implements OnModuleInit {
     constructor(
         private readonly prisma: PrismaService,
         @InjectQueue(CLAIM_QUEUE_KEY)
         private readonly claimFollowupQueue: Queue,
+        private readonly flightService: FlightService,
+        private readonly airportService: AirportService,
     ) {}
+
+    async onModuleInit() {
+        if (!isProd()) return;
+        const claims = await this.prisma.claim.findMany({
+            include: this.fullClaimInclude(),
+            take: 40,
+        });
+
+        for (let i = 0; i < claims.length; i++) {
+            const claim = claims[i];
+
+            const flightNumber = claim.details.flightNumber
+                .trim()
+                .replace('/', '')
+                .replace(' ', '');
+
+            const airlineIata = flightNumber.slice(0, 2);
+            const flightCode = flightNumber.slice(2);
+
+            if (!airlineIata || !flightCode) {
+                console.log(`${claim.id} has invalid flightNumber`);
+                continue;
+            }
+
+            let actualCompensation: number | undefined;
+
+            const troubledRoute = claim.details.routes.find((r) => r.troubled);
+
+            if (!troubledRoute) {
+                console.log(`${claim.id} has invalid routes`);
+                continue;
+            }
+
+            const departureAirport = await this.airportService.getAirportByIcao(
+                troubledRoute.DepartureAirport.icao,
+            );
+            const arrivalAirport = await this.airportService.getAirportByIcao(
+                troubledRoute.ArrivalAirport.icao,
+            );
+
+            if (!departureAirport || !arrivalAirport) {
+                console.log(
+                    `${claim.id} has invalid departure or arrival airport`,
+                );
+                continue;
+            }
+
+            const flightStatus = await this.flightService
+                .getFlightByFlightCode(
+                    flightCode,
+                    claim.details.airlines.icao,
+                    claim.details.date,
+                )
+                .catch();
+
+            if (flightStatus) {
+                const actualDistance =
+                    this.flightService.calculateDistanceBetweenAirports(
+                        departureAirport.latitude,
+                        departureAirport.longitude,
+                        departureAirport.altitude,
+                        arrivalAirport.latitude,
+                        arrivalAirport.longitude,
+                        arrivalAirport.altitude,
+                    );
+                actualCompensation = this.calculateCompensation({
+                    flightDistanceKm: actualDistance,
+                    delayHours:
+                        (flightStatus?.arrival_delay
+                            ? Math.floor(flightStatus.arrival_delay / HOUR)
+                            : 0) > 3
+                            ? DelayCategory.threehours_or_more
+                            : DelayCategory.less_than_3hours,
+                    cancellationNoticeDays: claim.issue.cancellationNoticeDays,
+                    wasDeniedBoarding:
+                        claim.issue.disruptionType ==
+                        DisruptionType.denied_boarding,
+                    wasAlternativeFlightOffered:
+                        !!claim.issue.wasAlternativeFlightOffered,
+                    arrivalTimeDelayOfAlternative:
+                        claim.issue.arrivalTimeDelayOfAlternativeHours || 0,
+                    wasDisruptionDuoExtraordinaryCircumstances: false, // deprecated param, extraordinary circumstances always aren't proved
+                });
+            }
+
+            if (!flightStatus) {
+                console.warn(`${claim.id} Flightaware didn't find`);
+                continue;
+            }
+
+            this.prisma.claimFlightStatus.create({
+                data: {
+                    isCancelled: flightStatus.cancelled,
+                    delayMinutes: flightStatus?.arrival_delay
+                        ? flightStatus.arrival_delay / MINUTE
+                        : 0,
+                    actualCompensation: actualCompensation || 0,
+                },
+            });
+
+            console.log(`${i} of ${claims.length}`);
+        }
+    }
 
     scheduleClaimFollowUpEmails(jobData: IJobClaimFollowupData) {
         const delays = [
