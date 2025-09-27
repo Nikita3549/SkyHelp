@@ -2672,7 +2672,7 @@
     "QRCodeDialog.note": "Aceasta va deschide interfața de încărcare a cartelei de îmbarcare pe dispozitivul tău mobil, unde poți face o fotografie direct.",
     "QRCodeDialog.closeButton": "Închide",
     "HeaderSection.greeting": "Salut! Să începem cu încărcarea cartelei de îmbarcare.",
-    "HeaderSection.instructions": "Te rugăm să încarci cartea de îmbarcare în format PNG, JPG sau PDF. Dimensiune maximă 15MB.",
+    "HeaderSection.instructions": "Te rugăm să încarci cartea de îmbarcare",
     "FilePreview.unit": "MB",
     "FileDropZone.dragDropTextPart1": "Trage și plasează documentele sau",
     "FileDropZone.select": "selectează",

@@ -2672,7 +2672,7 @@
     "QRCodeDialog.note": "This will open the boarding pass upload on your mobile device where you can take a photo directly.",
     "QRCodeDialog.closeButton": "Close",
     "HeaderSection.greeting": "Hi! Let's start with getting your boarding pass.",
-    "HeaderSection.instructions": "Please upload your boarding pass as a PNG, JPG or PDF. Max size 15MB",
+    "HeaderSection.instructions": "Please upload your boarding pass",
     "FilePreview.unit": "MB",
     "FileDropZone.dragDropTextPart1": "Drag & drop documents or",
     "FileDropZone.select": "select",

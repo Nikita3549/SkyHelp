@@ -2672,7 +2672,7 @@
     "QRCodeDialog.note": "Это откроет загрузку посадочного талона на вашем телефоне, где вы сможете сделать фото прямо с устройства.",
     "QRCodeDialog.closeButton": "Закрыть",
     "HeaderSection.greeting": "Здравствуйте! Давайте начнем с загрузки вашего посадочного талона.",
-    "HeaderSection.instructions": "Пожалуйста, загрузите посадочный талон в формате PNG, JPG или PDF. Максимальный размер 15 МБ",
+    "HeaderSection.instructions": "Пожалуйста, загрузите посадочный талон",
     "FilePreview.unit": "МБ",
     "FileDropZone.dragDropTextPart1": "Перетащите документы или",
     "FileDropZone.select": "выберите",

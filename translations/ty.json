@@ -2674,7 +2674,7 @@
     "QRCodeDialog.note": " Bu, boarding pass yüklemesini mobil cihazınızda açacak ve doğrudan fotoğraf çekme imkanı sağlayacaktır.",
     "QRCodeDialog.closeButton": " Kapat",
     "HeaderSection.greeting": " Merhaba! Boarding pass'ınızı almaya başlayalım.",
-    "HeaderSection.instructions": " Lütfen boarding pass'ınızı PNG, JPG veya PDF formatında yükleyin. Maksimum boyut 15MB'dir",
+    "HeaderSection.instructions": " Lütfen boarding pass",
     "FilePreview.unit": " MB",
     "FileDropZone.dragDropTextPart1": " Belge yüklemek için sürükleyin ve bırakın veya",
     "FileDropZone.select": " seçin",
