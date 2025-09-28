@@ -3719,5 +3719,17 @@
     "HeroForm.scanQRCodeTitle": "Scan QR Code",
     "HeroForm.qrCodeAlt": "QR Code for boarding pass",
     "HeroForm.scanQRInstructions": "Scan this qr with your phone and take a photo of the boarding pass",
-    "HeroForm.whatIsBoardingPass": "What is boarding pass?"
+    "HeroForm.whatIsBoardingPass": "What is boarding pass?",
+    "LegalPartnership.heading": "Legal Partnership",
+    "LegalPartnership.subheading": "Submit your details to become our legal partner",
+    "LegalPartnership.labelFirstName": "First Name",
+    "LegalPartnership.labelLastName": "Last Name",
+    "LegalPartnership.labelEmail": "Email",
+    "LegalPartnership.labelOrganization": "Organization",
+    "LegalPartnership.labelMessage": "Message",
+    "LegalPartnership.buttonBecomePartner": "Become a Partner",
+    "LegalPartnership.submittedTitle": "Form submitted",
+    "LegalPartnership.submittedDescription": "Your request has been sent successfully.",
+    "LegalPartnership.errorTitle": "Submission error",
+    "LegalPartnership.errorDescription": "Something went wrong. Please try again."
 }

@@ -3722,5 +3722,17 @@
     "HeroForm.scanQRCodeTitle": "Scanează codul QR",
     "HeroForm.qrCodeAlt": "Cod QR pentru cartea de îmbarcare",
     "HeroForm.scanQRInstructions": "Scanează acest cod QR cu telefonul și fă o poză cărții de îmbarcare",
-    "HeroForm.whatIsBoardingPass": "Ce este cartea de îmbarcare?"
+    "HeroForm.whatIsBoardingPass": "Ce este cartea de îmbarcare?",
+    "LegalPartnership.heading": "Parteneriat Legal",
+    "LegalPartnership.subheading": "Trimiteți detaliile dvs. pentru a deveni partenerul nostru legal",
+    "LegalPartnership.labelFirstName": "Prenume",
+    "LegalPartnership.labelLastName": "Nume",
+    "LegalPartnership.labelEmail": "Email",
+    "LegalPartnership.labelOrganization": "Organizație",
+    "LegalPartnership.labelMessage": "Mesaj",
+    "LegalPartnership.buttonBecomePartner": "Deveniți Partener",
+    "LegalPartnership.submittedTitle": "Formular trimis",
+    "LegalPartnership.submittedDescription": "Cererea dvs. a fost trimisă cu succes.",
+    "LegalPartnership.errorTitle": "Eroare la trimitere",
+    "LegalPartnership.errorDescription": "Ceva nu a mers bine. Vă rugăm să încercați din nou."
 }

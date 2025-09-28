@@ -3720,5 +3720,17 @@
     "HeroForm.scanQRCodeTitle": "Сканируйте QR-код",
     "HeroForm.qrCodeAlt": "QR-код для посадочного талона",
     "HeroForm.scanQRInstructions": "Сканируйте этот QR-код телефоном и сделайте фото посадочного талона",
-    "HeroForm.whatIsBoardingPass": "Что такое посадочный талон?"
+    "HeroForm.whatIsBoardingPass": "Что такое посадочный талон?",
+    "LegalPartnership.heading": "Юридическое партнёрство",
+    "LegalPartnership.subheading": "Отправьте ваши данные, чтобы стать нашим юридическим партнёром",
+    "LegalPartnership.labelFirstName": "Имя",
+    "LegalPartnership.labelLastName": "Фамилия",
+    "LegalPartnership.labelEmail": "Email",
+    "LegalPartnership.labelOrganization": "Организация",
+    "LegalPartnership.labelMessage": "Сообщение",
+    "LegalPartnership.buttonBecomePartner": "Стать партнёром",
+    "LegalPartnership.submittedTitle": "Форма отправлена",
+    "LegalPartnership.submittedDescription": "Ваш запрос успешно отправлен.",
+    "LegalPartnership.errorTitle": "Ошибка отправки",
+    "LegalPartnership.errorDescription": "Что-то пошло не так. Пожалуйста, попробуйте снова."
 }

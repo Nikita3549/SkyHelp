@@ -3742,5 +3742,17 @@
     "HeroForm.scanQRCodeTitle": "QR Kodunu Tara",
     "HeroForm.qrCodeAlt": "Biniş kartı için QR kodu",
     "HeroForm.scanQRInstructions": "Bu QR kodunu telefonunuzla tarayın ve biniş kartının fotoğrafını çekin",
-    "HeroForm.whatIsBoardingPass": "Biniş kartı nedir?"
+    "HeroForm.whatIsBoardingPass": "Biniş kartı nedir?",
+    "LegalPartnership.heading": "Hukuki Ortaklık",
+    "LegalPartnership.subheading": "Hukuki ortağımız olmak için bilgilerinizi gönderin",
+    "LegalPartnership.labelFirstName": "Ad",
+    "LegalPartnership.labelLastName": "Soyad",
+    "LegalPartnership.labelEmail": "E-posta",
+    "LegalPartnership.labelOrganization": "Kuruluş",
+    "LegalPartnership.labelMessage": "Mesaj",
+    "LegalPartnership.buttonBecomePartner": "Ortak Ol",
+    "LegalPartnership.submittedTitle": "Form gönderildi",
+    "LegalPartnership.submittedDescription": "Talebiniz başarıyla gönderildi.",
+    "LegalPartnership.errorTitle": "Gönderim hatası",
+    "LegalPartnership.errorDescription": "Bir şeyler yanlış gitti. Lütfen tekrar deneyin."
 }

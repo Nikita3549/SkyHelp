@@ -1,4 +1,4 @@
-import { Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { GmailService } from '../gmail/gmail.service';
 import { ConfigService } from '@nestjs/config';
 import { SendToCeoDto } from './dto/send-to-ceo.dto';
@@ -11,7 +11,7 @@ export class SendToCeoController {
     ) {}
     @Post()
     @HttpCode(HttpStatus.NO_CONTENT)
-    async sendEmailToCeo(dto: SendToCeoDto) {
+    async sendEmailToCeo(@Body() dto: SendToCeoDto) {
         const { subject, body } = dto;
 
         await this.gmailService.noreply.sendEmail(
