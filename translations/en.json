@@ -3712,5 +3712,12 @@
     "AuthContext.login.wrongCredentials.title": "Wrong credentials",
     "AuthContext.login.wrongCredentials.description": "Incorrect email or password",
     "AuthContext.login.accountInactive.title": "Account inactive",
-    "AuthContext.login.accountInactive.description": "Your account is not active. Please contact support."
+    "AuthContext.login.accountInactive.description": "Your account is not active. Please contact support.",
+    "HeroForm.fastCheckWithBoardingPass": "or fast check with boarding pass",
+    "HeroForm.upload": "Upload",
+    "HeroForm.scan": "Scan",
+    "HeroForm.scanQRCodeTitle": "Scan QR Code",
+    "HeroForm.qrCodeAlt": "QR Code for boarding pass",
+    "HeroForm.scanQRInstructions": "Scan this qr with your phone and take a photo of the boarding pass",
+    "HeroForm.whatIsBoardingPass": "What is boarding pass?"
 }

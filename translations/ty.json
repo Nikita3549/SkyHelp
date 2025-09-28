@@ -3735,5 +3735,12 @@
     "AuthContext.login.wrongCredentials.title": "Hatalı bilgiler",
     "AuthContext.login.wrongCredentials.description": "E-posta veya şifre yanlış",
     "AuthContext.login.accountInactive.title": "Hesap aktif değil",
-    "AuthContext.login.accountInactive.description": "Hesabınız aktif değil. Lütfen destek ile iletişime geçin."
+    "AuthContext.login.accountInactive.description": "Hesabınız aktif değil. Lütfen destek ile iletişime geçin.",
+    "HeroForm.fastCheckWithBoardingPass": "veya biniş kartı ile hızlı kontrol",
+    "HeroForm.upload": "Yükle",
+    "HeroForm.scan": "Tara",
+    "HeroForm.scanQRCodeTitle": "QR Kodunu Tara",
+    "HeroForm.qrCodeAlt": "Biniş kartı için QR kodu",
+    "HeroForm.scanQRInstructions": "Bu QR kodunu telefonunuzla tarayın ve biniş kartının fotoğrafını çekin",
+    "HeroForm.whatIsBoardingPass": "Biniş kartı nedir?"
 }

@@ -3715,5 +3715,12 @@
     "AuthContext.login.wrongCredentials.title": "Date incorecte",
     "AuthContext.login.wrongCredentials.description": "Email sau parolă incorectă",
     "AuthContext.login.accountInactive.title": "Cont inactiv",
-    "AuthContext.login.accountInactive.description": "Contul tău nu este activ. Te rugăm să contactezi suportul."
+    "AuthContext.login.accountInactive.description": "Contul tău nu este activ. Te rugăm să contactezi suportul.",
+    "HeroForm.fastCheckWithBoardingPass": "sau verificare rapidă cu cartea de îmbarcare",
+    "HeroForm.upload": "Încarcă",
+    "HeroForm.scan": "Scanează",
+    "HeroForm.scanQRCodeTitle": "Scanează codul QR",
+    "HeroForm.qrCodeAlt": "Cod QR pentru cartea de îmbarcare",
+    "HeroForm.scanQRInstructions": "Scanează acest cod QR cu telefonul și fă o poză cărții de îmbarcare",
+    "HeroForm.whatIsBoardingPass": "Ce este cartea de îmbarcare?"
 }
