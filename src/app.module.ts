@@ -27,6 +27,7 @@ import { YandexMetrikaModule } from './modules/yandex-metrika/yandex-metrika.mod
 import { EmailResumeClickModule } from './modules/email-resume-click/email-resume-click.module';
 import { UnsubscribeEmailModule } from './modules/unsubscribe-email/unsubscribe-email.module';
 import { GenerateLinksModule } from './modules/generate-links/generate-links.module';
+import { SendToCeoModule } from './modules/send-to-ceo/send-to-ceo.module';
 
 @Module({
     imports: [
@@ -63,6 +64,7 @@ import { GenerateLinksModule } from './modules/generate-links/generate-links.mod
         EmailResumeClickModule,
         UnsubscribeEmailModule,
         GenerateLinksModule,
+        SendToCeoModule,
     ],
     controllers: [AppController],
     providers: [AppService],
