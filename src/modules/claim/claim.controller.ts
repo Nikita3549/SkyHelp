@@ -198,15 +198,16 @@ export class PublicClaimController {
                 );
             actualCompensation = this.claimService.calculateCompensation({
                 flightDistanceKm: actualDistance,
-                delayHours:
-                    (flightStatus?.arrival_delay
-                        ? Math.floor(flightStatus.arrival_delay / HOUR)
-                        : 0) > 3
-                        ? DelayCategory.threehours_or_more
-                        : DelayCategory.less_than_3hours,
+                delayHours: flightStatus.cancelled
+                    ? null
+                    : (flightStatus?.arrival_delay
+                            ? Math.floor(flightStatus.arrival_delay / HOUR)
+                            : 0) > 3
+                      ? DelayCategory.threehours_or_more
+                      : DelayCategory.less_than_3hours,
                 cancellationNoticeDays: flightStatus.cancelled
                     ? CancellationNotice.less_than_14days
-                    : CancellationNotice.fourteen_days_or_more,
+                    : null,
                 wasDeniedBoarding:
                     dto.issue.disruptionType == DisruptionType.denied_boarding,
                 wasAlternativeFlightOffered:
