@@ -22,29 +22,35 @@ export class FlightService {
         airlineIcao: string,
         date: Date,
     ) {
-        const flightIdent = `${airlineIcao}${flightCode}`;
+        try {
+            const flightIdent = `${airlineIcao}${flightCode}`;
 
-        const { end: flightDateEnd, start: flightDateStart } =
-            this.getFlightDateRange(date);
+            const { end: flightDateEnd, start: flightDateStart } =
+                this.getFlightDateRange(date);
 
-        const res = await axios.get<FlightAwareFlightsResponse>(
-            `${this.configService.getOrThrow('FLIGHTAWARE_BASE_URL')}/history/flights/${flightIdent}`,
-            {
-                params: {
-                    start: flightDateStart
-                        .toISOString()
-                        .replace(/\.\d{3}Z$/, 'Z'),
-                    end: flightDateEnd.toISOString().replace(/\.\d{3}Z$/, 'Z'),
+            const res = await axios.get<FlightAwareFlightsResponse>(
+                `${this.configService.getOrThrow('FLIGHTAWARE_BASE_URL')}/history/flights/${flightIdent}`,
+                {
+                    params: {
+                        start: flightDateStart
+                            .toISOString()
+                            .replace(/\.\d{3}Z$/, 'Z'),
+                        end: flightDateEnd
+                            .toISOString()
+                            .replace(/\.\d{3}Z$/, 'Z'),
+                    },
+                    headers: {
+                        ['x-apikey']: this.configService.getOrThrow(
+                            'FLIGHTAWARE_API_KEY',
+                        ),
+                    },
                 },
-                headers: {
-                    ['x-apikey']: this.configService.getOrThrow(
-                        'FLIGHTAWARE_API_KEY',
-                    ),
-                },
-            },
-        );
+            );
 
-        return this.findFlightByDate(res.data.flights, date);
+            return this.findFlightByDate(res.data.flights, date);
+        } catch (e) {
+            return;
+        }
     }
 
     private findFlightByDate(

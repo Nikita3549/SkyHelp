@@ -50,6 +50,7 @@ import { CustomerService } from './customer/customer.service';
 import { validateClaimJwt } from '../../utils/validate-claim-jwt';
 import { IFullClaim } from './interfaces/full-claim.interface';
 import {
+    CancellationNotice,
     DelayCategory,
     DisruptionType,
     DocumentType,
@@ -174,16 +175,14 @@ export class PublicClaimController {
         });
 
         // Calculate flight status
-        const flightStatus = await this.flightService
-            .getFlightByFlightCode(
-                dto.details.flightNumber.replace(
-                    dto.details.airline.iata || '',
-                    '',
-                ),
-                dto.details.airline.icao,
-                dto.details.date,
-            )
-            .catch();
+        const flightStatus = await this.flightService.getFlightByFlightCode(
+            dto.details.flightNumber.replace(
+                dto.details.airline.iata || '',
+                '',
+            ),
+            dto.details.airline.icao,
+            dto.details.date,
+        );
 
         let actualCompensation: number | undefined;
 
@@ -205,7 +204,9 @@ export class PublicClaimController {
                         : 0) > 3
                         ? DelayCategory.threehours_or_more
                         : DelayCategory.less_than_3hours,
-                cancellationNoticeDays: dto.issue.cancellationNoticeDays,
+                cancellationNoticeDays: flightStatus.cancelled
+                    ? CancellationNotice.less_than_14days
+                    : CancellationNotice.fourteen_days_or_more,
                 wasDeniedBoarding:
                     dto.issue.disruptionType == DisruptionType.denied_boarding,
                 wasAlternativeFlightOffered:
