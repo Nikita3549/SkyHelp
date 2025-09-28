@@ -40,6 +40,9 @@ export class ActivityService {
         return this.prisma.claimActivity.findMany({
             where,
             skip,
+            orderBy: {
+                createdAt: 'desc',
+            },
         });
     }
 }
