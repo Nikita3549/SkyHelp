@@ -1071,7 +1071,6 @@ id,name,alias,iata_code,icao_code,callsign,country,active
 1070,"Asia Pacific Airlines",\N,"","MGE","MAGELLAN","United States","N"
 1071,"Aeromagar",\N,"","MGS","AEROMAGAR","Mexico","N"
 1072,"Aero Premier De Mexico",\N,"","MIE","AEROPREMIER","Mexico","N"
-1073,"Air Moldova",\N,"9U","MLD","AIR MOLDOVA","Moldova","Y"
 1074,"Amal Airlines",\N,"","MLF","AMAL","Djibouti","N"
 1075,"Air Mali",\N,"","MLI","AIR MALI","Mali","N"
 1076,"Air Madeleine",\N,"","MLN","AIR MADELEINE","Canada","N"
