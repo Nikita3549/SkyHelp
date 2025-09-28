@@ -3711,5 +3711,9 @@
     "PartnerTypesSection.image3.subcaption": "Asistență dedicată pentru fiecare caz",
     "PartnerTypesSection.gallery.heading": "Galeria parteneriatelor",
     "PartnerTypesSection.whoCanPartner.heading": "Cine poate deveni partenerul nostru?",
-    "PartnerTypesSection.whoCanPartner.subheading": "Colaborăm cu diverse industrii pentru a oferi cele mai bune soluții pasagerilor."
+    "PartnerTypesSection.whoCanPartner.subheading": "Colaborăm cu diverse industrii pentru a oferi cele mai bune soluții pasagerilor.",
+    "AuthContext.login.wrongCredentials.title": "Date incorecte",
+    "AuthContext.login.wrongCredentials.description": "Email sau parolă incorectă",
+    "AuthContext.login.accountInactive.title": "Cont inactiv",
+    "AuthContext.login.accountInactive.description": "Contul tău nu este activ. Te rugăm să contactezi suportul."
 }

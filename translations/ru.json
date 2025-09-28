@@ -3709,5 +3709,9 @@
     "PartnerTypesSection.image3.subcaption": "Персональная помощь в каждом случае",
     "PartnerTypesSection.gallery.heading": "Галерея партнерств",
     "PartnerTypesSection.whoCanPartner.heading": "Кто может стать нашим партнером?",
-    "PartnerTypesSection.whoCanPartner.subheading": "Мы сотрудничаем с различными отраслями, чтобы предоставить лучшие решения пассажирам."
+    "PartnerTypesSection.whoCanPartner.subheading": "Мы сотрудничаем с различными отраслями, чтобы предоставить лучшие решения пассажирам.",
+    "AuthContext.login.wrongCredentials.title": "Неверные данные",
+    "AuthContext.login.wrongCredentials.description": "Неправильный email или пароль",
+    "AuthContext.login.accountInactive.title": "Аккаунт неактивен",
+    "AuthContext.login.accountInactive.description": "Ваш аккаунт не активен. Пожалуйста, свяжитесь с поддержкой."
 }

@@ -3708,5 +3708,9 @@
     "PartnerTypesSection.image3.subcaption": "Dedicated assistance for every case",
     "PartnerTypesSection.gallery.heading": "Partnership Gallery",
     "PartnerTypesSection.whoCanPartner.heading": "Who Can Become Our Partner?",
-    "PartnerTypesSection.whoCanPartner.subheading": "We collaborate with a wide range of industries to deliver the best solutions for passengers."
+    "PartnerTypesSection.whoCanPartner.subheading": "We collaborate with a wide range of industries to deliver the best solutions for passengers.",
+    "AuthContext.login.wrongCredentials.title": "Wrong credentials",
+    "AuthContext.login.wrongCredentials.description": "Incorrect email or password",
+    "AuthContext.login.accountInactive.title": "Account inactive",
+    "AuthContext.login.accountInactive.description": "Your account is not active. Please contact support."
 }

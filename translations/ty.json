@@ -3731,5 +3731,9 @@
     "PartnerTypesSection.image3.subcaption": "Her vaka için özel destek",
     "PartnerTypesSection.gallery.heading": "Ortaklık Galerisi",
     "PartnerTypesSection.whoCanPartner.heading": "Kimler Ortak Olabilir?",
-    "PartnerTypesSection.whoCanPartner.subheading": "Yolculara en iyi çözümleri sunmak için birçok sektörle işbirliği yapıyoruz."
+    "PartnerTypesSection.whoCanPartner.subheading": "Yolculara en iyi çözümleri sunmak için birçok sektörle işbirliği yapıyoruz.",
+    "AuthContext.login.wrongCredentials.title": "Hatalı bilgiler",
+    "AuthContext.login.wrongCredentials.description": "E-posta veya şifre yanlış",
+    "AuthContext.login.accountInactive.title": "Hesap aktif değil",
+    "AuthContext.login.accountInactive.description": "Hesabınız aktif değil. Lütfen destek ile iletişime geçin."
 }
