@@ -596,6 +596,17 @@ export class ClaimService {
         const airlines = await this.prisma.airline.groupBy({
             by: ['name'],
             _count: { _all: true },
+            where: {
+                Details: {
+                    some: {
+                        Claim: {
+                            some: {
+                                archived: false,
+                            },
+                        },
+                    },
+                },
+            },
         });
 
         const completedAmount = completedAmountAgg._sum.amount ?? 0;
