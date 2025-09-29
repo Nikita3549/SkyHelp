@@ -3731,5 +3731,6 @@
     "LegalPartnership.submittedTitle": "Form submitted",
     "LegalPartnership.submittedDescription": "Your request has been sent successfully.",
     "LegalPartnership.errorTitle": "Submission error",
-    "LegalPartnership.errorDescription": "Something went wrong. Please try again."
+    "LegalPartnership.errorDescription": "Something went wrong. Please try again.",
+    "rate.NoFee": "No fees for checking eligibility"
 }

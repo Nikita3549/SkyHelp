@@ -3754,5 +3754,6 @@
     "LegalPartnership.submittedTitle": "Form gönderildi",
     "LegalPartnership.submittedDescription": "Talebiniz başarıyla gönderildi.",
     "LegalPartnership.errorTitle": "Gönderim hatası",
-    "LegalPartnership.errorDescription": "Bir şeyler yanlış gitti. Lütfen tekrar deneyin."
+    "LegalPartnership.errorDescription": "Bir şeyler yanlış gitti. Lütfen tekrar deneyin.",
+    "rate.NoFee": "Uygunluk kontrolü için ücret yok"
 }

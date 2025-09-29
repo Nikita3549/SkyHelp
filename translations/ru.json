@@ -3732,5 +3732,6 @@
     "LegalPartnership.submittedTitle": "Форма отправлена",
     "LegalPartnership.submittedDescription": "Ваш запрос успешно отправлен.",
     "LegalPartnership.errorTitle": "Ошибка отправки",
-    "LegalPartnership.errorDescription": "Что-то пошло не так. Пожалуйста, попробуйте снова."
+    "LegalPartnership.errorDescription": "Что-то пошло не так. Пожалуйста, попробуйте снова.",
+    "rate.NoFee": "Без комиссии за проверку права на компенсацию"
 }

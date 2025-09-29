@@ -3734,5 +3734,6 @@
     "LegalPartnership.submittedTitle": "Formular trimis",
     "LegalPartnership.submittedDescription": "Cererea dvs. a fost trimisă cu succes.",
     "LegalPartnership.errorTitle": "Eroare la trimitere",
-    "LegalPartnership.errorDescription": "Ceva nu a mers bine. Vă rugăm să încercați din nou."
+    "LegalPartnership.errorDescription": "Ceva nu a mers bine. Vă rugăm să încercați din nou.",
+    "rate.NoFee": "Fără taxe pentru verificarea eligibilității"
 }
