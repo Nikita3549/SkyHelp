@@ -1,4 +1,5 @@
 import {
+    BadRequestException,
     Body,
     Controller,
     Delete,
@@ -25,14 +26,11 @@ import { CreateProgressDto } from './dto/create-progress.dto';
 import { INVALID_CLAIM_ID } from '../constants';
 import { ProgressVariants } from './constants/progresses/progressVariants';
 import { ClaimStatus } from '@prisma/client';
-import { enProgresses } from './constants/progresses/translations/en';
-import { ruProgresses } from './constants/progresses/translations/ru';
-import { tyProgresses } from './constants/progresses/translations/ty';
-import { roProgresses } from './constants/progresses/translations/ro';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
 import { ISendNewProgressEmailJobData } from './interfaces/send-new-progress-email-job-data.interface';
 import { HttpStatusCode } from 'axios';
+import { LanguageService } from '../../language/language.service';
 
 @Controller('claims/progresses')
 @UseGuards(JwtAuthGuard, IsPartnerOrAgentGuard)
@@ -42,6 +40,7 @@ export class ProgressController {
         private readonly claimService: ClaimService,
         @InjectQueue(SEND_NEW_PROGRESS_EMAIL_QUEUE_KEY)
         private readonly sendNewProgressEmailQueue: Queue,
+        private readonly languageService: LanguageService,
     ) {}
 
     @Post(':claimId')
@@ -49,7 +48,7 @@ export class ProgressController {
         @Body() dto: CreateProgressDto,
         @Param('claimId') claimId: string,
     ) {
-        const { status, order } = dto;
+        const { status, order, description } = dto;
 
         const claim = await this.claimService.getClaim(claimId);
 
@@ -57,14 +56,18 @@ export class ProgressController {
             throw new NotFoundException(INVALID_CLAIM_ID);
         }
 
-        const progressVariant = this.getProgressVariantByStatus(status, {
-            claimId,
-        });
+        const progressVariant = this.getProgressVariantByStatus(
+            status,
+            description,
+            {
+                claimId,
+            },
+        );
 
         const progress = await this.progressesService.createProgressByClaimId(
             {
                 title: progressVariant.title,
-                description: progressVariant.description,
+                description: description,
                 order,
             },
             claim.stateId,
@@ -74,27 +77,11 @@ export class ProgressController {
             ? claim.customer.language
             : Languages.EN;
 
-        let translatedTitle: string;
-        let translatedDescription: string;
+        const translations =
+            await this.languageService.getTranslationsJson(customerLanguage);
 
-        switch (customerLanguage) {
-            case Languages.RU:
-                translatedTitle = ruProgresses[progress.title];
-                translatedDescription = ruProgresses[progress.description];
-                break;
-            case Languages.RO:
-                translatedTitle = roProgresses[progress.title];
-                translatedDescription = roProgresses[progress.description];
-                break;
-            case Languages.TY:
-                translatedTitle = tyProgresses[progress.title];
-                translatedDescription = tyProgresses[progress.description];
-                break;
-            default:
-                translatedTitle = enProgresses[progress.title];
-                translatedDescription = enProgresses[progress.description];
-                break;
-        }
+        let translatedTitle = translations[progress.title];
+        let translatedDescription = translations[progress.description];
 
         const jobData: ISendNewProgressEmailJobData = {
             progressId: progress.id,
@@ -136,6 +123,7 @@ export class ProgressController {
 
     private getProgressVariantByStatus(
         status: ClaimStatus,
+        description: string,
         exceptionData: {
             claimId?: string;
         },
@@ -145,15 +133,15 @@ export class ProgressController {
                 Object.keys(ProgressVariants) as Array<
                     keyof typeof ProgressVariants
                 >
-            ).find((key) => ProgressVariants[key].status == status) ||
+            ).find(
+                (key) =>
+                    ProgressVariants[key].status == status &&
+                    ProgressVariants[key].description.includes(description),
+            ) ||
                 (() => {
-                    const message = UNKNOWN_PROGRESS_VARIANT.replace(
-                        '{{claimId}}',
-                        exceptionData.claimId || '-',
+                    throw new BadRequestException(
+                        'Invalid progress description',
                     );
-
-                    console.error(message);
-                    throw new InternalServerErrorException(message);
                 })()
         ];
     }

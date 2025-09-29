@@ -4,62 +4,62 @@ export const ProgressVariants: {
     [key: string]: {
         status: ClaimStatus;
         title: string;
-        description: string;
+        description: string[];
     };
 } = {
     claimReceived: {
         status: ClaimStatus.CLAIM_RECEIVED,
         title: 'claimReceived.title',
-        description: 'claimReceived.description',
+        description: ['claimReceived.description'],
     },
     missingInformation: {
         status: ClaimStatus.MISSING_INFO,
         title: 'missingInformation.title',
-        description: 'missingInformation.description',
+        description: ['missingInformation.description'],
     },
     additionalDocumentsRequired: {
         status: ClaimStatus.DOCS_REQUESTED,
         title: 'additionalDocumentsRequired.title',
-        description: 'additionalDocumentsRequired.description',
+        description: ['additionalDocumentsRequired.description'],
     },
     claimSubmittedToAirline: {
         status: ClaimStatus.SENT_TO_AIRLINE,
         title: 'claimSubmittedToAirline.title',
-        description: 'claimSubmittedToAirline.description',
+        description: ['claimSubmittedToAirline.description'],
     },
     awaitingAirlineResponse: {
         status: ClaimStatus.WAITING_AIRLINE,
         title: 'awaitingAirlineResponse.title',
-        description: 'awaitingAirlineResponse.description',
+        description: ['awaitingAirlineResponse.description'],
     },
     compensationApproved: {
         status: ClaimStatus.APPROVED,
         title: 'compensationApproved.title',
-        description: 'compensationApproved.description',
+        description: ['compensationApproved.description'],
     },
     compensationPaid: {
         status: ClaimStatus.PAID,
         title: 'compensationPaid.title',
-        description: 'compensationPaid.description',
+        description: ['compensationPaid.description'],
     },
     claimRejected: {
         status: ClaimStatus.REJECTED,
         title: 'claimRejected.title',
-        description: 'claimRejected.description',
+        description: ['claimRejected.description'],
     },
     legalActionInProgress: {
         status: ClaimStatus.LEGAL_PROCESS,
         title: 'legalActionInProgress.title',
-        description: 'legalActionInProgress.description',
+        description: ['legalActionInProgress.description'],
     },
     closedWithoutResolution: {
         status: ClaimStatus.CLOSED,
         title: 'closedWithoutResolution.title',
-        description: 'closedWithoutResolution.description',
+        description: ['closedWithoutResolution.description'],
     },
     notEligible: {
         status: ClaimStatus.NOT_ELIGIBLE,
         title: 'notEligible.title',
-        description: 'notEligible.description',
+        description: ['notEligible.description'],
     },
 } as const;

@@ -1,24 +1,18 @@
 import { Controller, Get, NotFoundException, Param } from '@nestjs/common';
-import * as fs from 'fs/promises';
-import * as path from 'path';
+import { LanguageService } from './language.service';
+import { GetLanguageDto } from './dto/get-language.dto';
 import { INVALID_LANGUAGE } from './constants';
 
 @Controller('languages')
 export class LanguageController {
+    constructor(private readonly languageService: LanguageService) {}
     @Get(':language')
-    async getLanguage(@Param('language') language: string) {
-        const filename = `${language}.json`;
-
-        return JSON.parse(
-            await fs
-                .readFile(
-                    path.join(__dirname, `../../../translations/${filename}`),
-                    { encoding: 'utf-8' },
-                )
-                .catch((_e: unknown) => {
-                    console.error(_e);
-                    throw new NotFoundException(INVALID_LANGUAGE);
-                }),
-        );
+    async getLanguage(@Param() params: GetLanguageDto) {
+        return this.languageService
+            .getTranslationsJson(params.language)
+            .catch((_e: unknown) => {
+                console.error(_e);
+                throw new NotFoundException(INVALID_LANGUAGE);
+            });
     }
 }

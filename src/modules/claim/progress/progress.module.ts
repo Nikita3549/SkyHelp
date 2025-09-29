@@ -6,6 +6,7 @@ import { ClaimModule } from '../claim.module';
 import { BullModule } from '@nestjs/bullmq';
 import { SEND_NEW_PROGRESS_EMAIL_QUEUE_KEY } from './constants';
 import { SendNewProgressEmailProcessor } from './processors/send-new-progress-email.processor';
+import { LanguageModule } from '../../language/language.module';
 
 @Module({
     imports: [
@@ -14,6 +15,7 @@ import { SendNewProgressEmailProcessor } from './processors/send-new-progress-em
         BullModule.registerQueue({
             name: SEND_NEW_PROGRESS_EMAIL_QUEUE_KEY,
         }),
+        forwardRef(() => LanguageModule),
     ],
     controllers: [ProgressController],
     providers: [ProgressService, SendNewProgressEmailProcessor],
