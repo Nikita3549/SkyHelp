@@ -13,4 +13,8 @@ export class LanguageWithReferrerDto {
     @IsOptional()
     @IsString()
     referrer?: string;
+
+    @IsOptional()
+    @IsString()
+    referrerSource?: string;
 }

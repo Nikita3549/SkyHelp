@@ -100,7 +100,7 @@ export class PublicClaimController {
         @Req() req: Request,
         @Query() query: LanguageWithReferrerDto,
     ): Promise<IClaimWithJwt> {
-        const { language, referrer } = query;
+        const { language, referrer, referrerSource } = query;
         let userId: string | null | undefined;
         let userToken: string | undefined | null;
         const troubledRoute = dto.details.routes.find((r) => r.troubled);
@@ -223,6 +223,7 @@ export class PublicClaimController {
 
         const claim = await this.claimService.createClaim(dto, {
             referrer,
+            referrerSource,
             language,
             userId,
             isDuplicate: !!duplicate,

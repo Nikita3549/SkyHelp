@@ -85,6 +85,7 @@ export class ClaimService {
         extraData: {
             language?: string;
             referrer?: string;
+            referrerSource?: string;
             userId?: string | null;
             isDuplicate?: boolean;
             flightNumber: string;
@@ -101,6 +102,8 @@ export class ClaimService {
             flightNumber,
             isDuplicate,
             flightStatusData,
+            referrer,
+            referrerSource,
         } = extraData;
 
         const maxAttempts = 5;
@@ -112,7 +115,8 @@ export class ClaimService {
                     data: {
                         id: numericId,
                         user: userId ? { connect: { id: userId } } : undefined,
-                        referrer: extraData.referrer,
+                        referrer,
+                        referrerSource,
                         details: {
                             create: {
                                 flightNumber: flightNumber,
