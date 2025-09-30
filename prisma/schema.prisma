@@ -69,6 +69,7 @@ model Claim {
   email            Email[]
   emailResumeClick EmailResumeClick[]
   activities       ClaimActivity[]
+  referrer         String?
 
   @@map("claims")
 }

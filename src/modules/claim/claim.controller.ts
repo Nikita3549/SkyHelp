@@ -65,6 +65,7 @@ import * as FormData from 'form-data';
 import { BoardingPassData } from './interfaces/boarding-pass-api.response';
 import { BoardingPassUploadMultiInterceptor } from '../../interceptors/boarding-pass/boarding-pass-upload.interceptor';
 import { AirlineService } from '../airline/airline.service';
+import { LanguageWithReferrerDto } from './dto/language-with-referrer.dto';
 
 @Controller('claims')
 @UseGuards(JwtAuthGuard)
@@ -97,9 +98,9 @@ export class PublicClaimController {
     async create(
         @Body() dto: CreateClaimDto,
         @Req() req: Request,
-        @Query() query: LanguageQueryDto,
+        @Query() query: LanguageWithReferrerDto,
     ): Promise<IClaimWithJwt> {
-        const { language } = query;
+        const { language, referrer } = query;
         let userId: string | null | undefined;
         let userToken: string | undefined | null;
         const troubledRoute = dto.details.routes.find((r) => r.troubled);
@@ -221,6 +222,7 @@ export class PublicClaimController {
         // Create claim
 
         const claim = await this.claimService.createClaim(dto, {
+            referrer,
             language,
             userId,
             isDuplicate: !!duplicate,
@@ -235,6 +237,13 @@ export class PublicClaimController {
                   }
                 : undefined,
         });
+
+        if (referrer == 'zbor') {
+            await this.claimService.addPartner(
+                claim.id,
+                '7d7bdd2c-34e6-40b8-ad3d-8e05a6aa012d',
+            );
+        }
 
         const jwt = this.tokenService.generateJWT<IClaimJwt>(
             {

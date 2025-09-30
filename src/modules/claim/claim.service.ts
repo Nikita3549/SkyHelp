@@ -84,6 +84,7 @@ export class ClaimService {
         claim: CreateClaimDto,
         extraData: {
             language?: string;
+            referrer?: string;
             userId?: string | null;
             isDuplicate?: boolean;
             flightNumber: string;
@@ -111,6 +112,7 @@ export class ClaimService {
                     data: {
                         id: numericId,
                         user: userId ? { connect: { id: userId } } : undefined,
+                        referrer: extraData.referrer,
                         details: {
                             create: {
                                 flightNumber: flightNumber,
