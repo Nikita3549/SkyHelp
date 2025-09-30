@@ -32,6 +32,7 @@ enum UserRole {
   PARTNER
   AGENT
   CLIENT
+  LAWYER
 }
 
 model Claim {

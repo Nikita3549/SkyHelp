@@ -66,6 +66,7 @@ import { BoardingPassData } from './interfaces/boarding-pass-api.response';
 import { BoardingPassUploadMultiInterceptor } from '../../interceptors/boarding-pass/boarding-pass-upload.interceptor';
 import { AirlineService } from '../airline/airline.service';
 import { LanguageWithReferrerDto } from './dto/language-with-referrer.dto';
+import { isProd } from '../../utils/isProd';
 
 @Controller('claims')
 @UseGuards(JwtAuthGuard)
@@ -242,7 +243,9 @@ export class PublicClaimController {
         if (referrer == 'zbor') {
             await this.claimService.addPartner(
                 claim.id,
-                '7d7bdd2c-34e6-40b8-ad3d-8e05a6aa012d',
+                isProd()
+                    ? '7d7bdd2c-34e6-40b8-ad3d-8e05a6aa012d' // zbor
+                    : '1fead5e5-4840-4f4a-b8f4-3ee82e3d81d8',
             );
         }
 
