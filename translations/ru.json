@@ -3714,7 +3714,7 @@
     "AuthContext.login.wrongCredentials.description": "Неправильный email или пароль",
     "AuthContext.login.accountInactive.title": "Аккаунт неактивен",
     "AuthContext.login.accountInactive.description": "Ваш аккаунт не активен. Пожалуйста, свяжитесь с поддержкой.",
-    "HeroForm.fastCheckWithBoardingPass": "или быстрая проверка с посадочным талоном",
+    "HeroForm.fastCheckWithBoardingPass": "или быстрая провверка по билету",
     "HeroForm.upload": "Загрузить",
     "HeroForm.scan": "Сканировать",
     "HeroForm.scanQRCodeTitle": "Сканируйте QR-код",
