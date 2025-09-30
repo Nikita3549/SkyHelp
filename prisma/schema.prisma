@@ -88,8 +88,9 @@ model ClaimDetails {
 }
 
 model Airline {
-  id   String @id @default(cuid()) @map("id")
+  id   String  @id @default(cuid()) @map("id")
   icao String
+  iata String?
   name String
 
   Details ClaimDetails[]

@@ -59,9 +59,6 @@ export class ProgressController {
         const progressVariant = this.getProgressVariantByStatus(
             status,
             description,
-            {
-                claimId,
-            },
         );
 
         const progress = await this.progressesService.createProgressByClaimId(
@@ -124,9 +121,6 @@ export class ProgressController {
     private getProgressVariantByStatus(
         status: ClaimStatus,
         description: string,
-        exceptionData: {
-            claimId?: string;
-        },
     ) {
         return ProgressVariants[
             (

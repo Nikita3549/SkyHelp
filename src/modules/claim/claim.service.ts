@@ -119,6 +119,7 @@ export class ClaimService {
                                     create: {
                                         icao: claim.details.airline.icao,
                                         name: claim.details.airline.name,
+                                        iata: claim.details.airline.iata,
                                     },
                                 },
                                 bookingRef: claim.details.bookingRef,
