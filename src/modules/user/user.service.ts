@@ -35,7 +35,7 @@ export class UserService {
         });
     }
 
-    async getPublicUsers(): Promise<IPublicUserData[]> {
+    async getPublicUsers(role?: UserRole): Promise<IPublicUserData[]> {
         return this.prisma.user.findMany({
             select: {
                 id: true,
@@ -46,6 +46,9 @@ export class UserService {
                 isActive: true,
                 lastSign: true,
                 createdAt: true,
+            },
+            where: {
+                role,
             },
         });
     }
