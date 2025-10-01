@@ -3735,5 +3735,8 @@
     "LegalPartnership.submittedDescription": "Cererea dvs. a fost trimisă cu succes.",
     "LegalPartnership.errorTitle": "Eroare la trimitere",
     "LegalPartnership.errorDescription": "Ceva nu a mers bine. Vă rugăm să încercați din nou.",
-    "rate.NoFee": "Fără taxe pentru verificarea eligibilității"
+    "rate.NoFee": "Fără taxe pentru verificarea eligibilității",
+    "Testimonials.review1.text": "Compania aeriană mi-a anulat zborul cu doar o zi înainte de plecare. Am depus cererea prin SkyHelp și am primit 600 € despăgubire fără niciun efort. Sunt foarte impresionat!",
+    "Testimonials.review2.text": "Zborul meu a avut o întârziere de 4 ore din cauza unei probleme tehnice. SkyHelp s-a ocupat de tot și am primit 400 € despăgubire în 6 săptămâni. Serviciu excelent!",
+    "Testimonials.review3.text": "Am fost refuzat la îmbarcare din cauza suprarezervării. Compania aeriană a refuzat inițial cererea mea, dar SkyHelp a reușit să obțină 400 € despăgubire după apel. Perseverență extraordinară!"
 }

@@ -3732,5 +3732,8 @@
     "LegalPartnership.submittedDescription": "Your request has been sent successfully.",
     "LegalPartnership.errorTitle": "Submission error",
     "LegalPartnership.errorDescription": "Something went wrong. Please try again.",
-    "rate.NoFee": "No fees for checking eligibility"
+    "rate.NoFee": "No fees for checking eligibility",
+    "Testimonials.review1.text": "The airline cancelled my flight just a day before departure. I submitted my claim with SkyHelp and received €600 compensation without any hassle. I'm very impressed!",
+    "Testimonials.review2.text": "My flight was delayed by 4 hours due to a technical issue. SkyHelp handled everything and I received €400 compensation within 6 weeks. Excellent service!",
+    "Testimonials.review3.text": "I was denied boarding due to overbooking. The airline initially refused my claim, but SkyHelp managed to get me €400 in compensation after appealing. Great persistence!"
 }
