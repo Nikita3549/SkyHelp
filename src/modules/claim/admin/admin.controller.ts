@@ -191,7 +191,9 @@ export class AdminController {
 
         if (
             !partner ||
-            (partner.role != UserRole.PARTNER && partner.role != UserRole.AGENT)
+            (partner.role != UserRole.PARTNER &&
+                partner.role != UserRole.AGENT &&
+                partner.role != UserRole.LAWYER)
         ) {
             throw new NotFoundException(INVALID_PARTNER_ID);
         }
