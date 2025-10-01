@@ -9,7 +9,7 @@ import {
     UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../../guards/jwtAuth.guard';
-import { IsPartnerOrAgentGuard } from '../../guards/isPartnerOrAgentGuard';
+import { IsPartnerOrLawyerOrAgentGuard } from '../../guards/isPartnerOrLawyerOrAgentGuard';
 import { TokenService } from '../token/token.service';
 import { GenerateLinksService } from './generate-links.service';
 import {
@@ -38,7 +38,7 @@ export class GenerateLinksController {
         private readonly claimService: ClaimService,
     ) {}
 
-    @UseGuards(IsPartnerOrAgentGuard)
+    @UseGuards(IsPartnerOrLawyerOrAgentGuard)
     @Get('upload-documents')
     async copyUploadDocuments(
         @Query() query: CustomerClaimDto,
@@ -65,7 +65,7 @@ export class GenerateLinksController {
         return { link };
     }
 
-    @UseGuards(IsPartnerOrAgentGuard)
+    @UseGuards(IsPartnerOrLawyerOrAgentGuard)
     @Get('upload-passport')
     async copyUploadPassport(
         @Query() query: CustomerClaimDto,

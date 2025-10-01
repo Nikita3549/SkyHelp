@@ -34,7 +34,7 @@ import { UploadDocumentsJwtQueryDto } from './dto/upload-documents-jwt-query.dto
 import { AuthRequest } from '../../../interfaces/AuthRequest.interface';
 import { UploadDocumentsQueryDto } from './dto/upload-documents-query.dto';
 import { UpdateDocumentTypeDto } from './dto/update-document-type.dto';
-import { IsPartnerOrAgentGuard } from '../../../guards/isPartnerOrAgentGuard';
+import { IsPartnerOrLawyerOrAgentGuard } from '../../../guards/isPartnerOrLawyerOrAgentGuard';
 import { MergeDocumentsDto } from './dto/merge-documents.dto';
 import { RecentUpdatesService } from '../recent-updates/recent-updates.service';
 import { ClaimRecentUpdatesType, DocumentRequestStatus } from '@prisma/client';
@@ -71,7 +71,7 @@ export class DocumentController {
     }
 
     @Post('admin')
-    @UseGuards(IsPartnerOrAgentGuard)
+    @UseGuards(IsPartnerOrLawyerOrAgentGuard)
     @DocumentsUploadInterceptor()
     async uploadAdminDocuments(
         @UploadedFiles() files: Express.Multer.File[],
@@ -112,7 +112,7 @@ export class DocumentController {
     }
 
     @Patch('/:documentId/admin')
-    @UseGuards(IsPartnerOrAgentGuard)
+    @UseGuards(IsPartnerOrLawyerOrAgentGuard)
     async updateDocumentType(
         @Body() dto: UpdateDocumentTypeDto,
         @Param('documentId') documentId: string,
@@ -160,7 +160,7 @@ export class DocumentController {
     }
 
     @Get('admin')
-    @UseGuards(IsPartnerOrAgentGuard)
+    @UseGuards(IsPartnerOrLawyerOrAgentGuard)
     async getDocumentAdmin(
         @Query() query: GetDocumentDto,
         @Res() res: Response,

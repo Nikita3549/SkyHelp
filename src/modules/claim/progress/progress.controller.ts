@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
 import { ProgressService } from './progress.service';
-import { IsPartnerOrAgentGuard } from '../../../guards/isPartnerOrAgentGuard';
+import { IsPartnerOrLawyerOrAgentGuard } from '../../../guards/isPartnerOrLawyerOrAgentGuard';
 import {
     INVALID_PROGRESS_ID,
     SEND_NEW_PROGRESS_EMAIL_QUEUE_DELAY,
@@ -33,7 +33,7 @@ import { HttpStatusCode } from 'axios';
 import { LanguageService } from '../../language/language.service';
 
 @Controller('claims/progresses')
-@UseGuards(JwtAuthGuard, IsPartnerOrAgentGuard)
+@UseGuards(JwtAuthGuard, IsPartnerOrLawyerOrAgentGuard)
 export class ProgressController {
     constructor(
         private readonly progressesService: ProgressService,

@@ -18,7 +18,7 @@ import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
 import { GetDocumentRequestsQuery } from './dto/get-document-requests.query';
 import { ClaimService } from '../claim.service';
 import { HAVE_NO_RIGHTS_ON_CLAIM, INVALID_CLAIM_ID } from '../constants';
-import { IsPartnerOrAgentGuard } from '../../../guards/isPartnerOrAgentGuard';
+import { IsPartnerOrLawyerOrAgentGuard } from '../../../guards/isPartnerOrLawyerOrAgentGuard';
 import { AuthRequest } from '../../../interfaces/AuthRequest.interface';
 import { UserRole } from '@prisma/client';
 import {
@@ -44,7 +44,7 @@ export class DocumentRequestController {
     ) {}
 
     @Post()
-    @UseGuards(IsPartnerOrAgentGuard)
+    @UseGuards(IsPartnerOrLawyerOrAgentGuard)
     async create(
         @Body() dto: CreateDocumentRequestDto,
         @Req() req: AuthRequest,
@@ -103,7 +103,7 @@ export class DocumentRequestController {
 
     @Delete(':documentRequestId')
     @HttpCode(HttpStatusCode.NoContent)
-    @UseGuards(IsPartnerOrAgentGuard)
+    @UseGuards(IsPartnerOrLawyerOrAgentGuard)
     async delete(
         @Req() req: AuthRequest,
         @Param('documentRequestId') documentRequestId: string,
