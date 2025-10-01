@@ -3758,5 +3758,8 @@
     "rate.NoFee": "Uygunluk kontrolü için ücret yok",
     "Testimonials.review1.text": "Havayolu uçuşumu kalkıştan sadece bir gün önce iptal etti. SkyHelp üzerinden başvurdum ve hiçbir sorun yaşamadan 600 € tazminat aldım. Çok etkilendim!",
     "Testimonials.review2.text": "Uçağım teknik bir sorun nedeniyle 4 saat rötar yaptı. SkyHelp her şeyi halletti ve 6 hafta içinde 400 € tazminat aldım. Mükemmel hizmet!",
-    "Testimonials.review3.text": "Aşırı rezervasyon nedeniyle uçağa alınmadım. Havayolu ilk başta talebimi reddetti, ancak SkyHelp itirazdan sonra bana 400 € tazminat almayı başardı. Harika bir azim!"
+    "Testimonials.review3.text": "Aşırı rezervasyon nedeniyle uçağa alınmadım. Havayolu ilk başta talebimi reddetti, ancak SkyHelp itirazdan sonra bana 400 € tazminat almayı başardı. Harika bir azim!",
+    "UserRolesSection.lawyer": "Avukat",
+    "UserRolesSection.LawyerDescription": "Hukuki davalarla ilgilenir ve müşterileri havayolları ile olan uyuşmazlıklarda temsil eder",
+    "ClaimsTable.actionMoveToLawyer": "Avukata Gönder"
 }
