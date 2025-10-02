@@ -6154,7 +6154,7 @@ id,name,alias,iata_code,icao_code,callsign,country,active
 21270,"Air Carnival","","2S",\N,"","India","Y"
 21317,"Svyaz Rossiya","Russian Commuter ","7R","SJM","RussianConnecty","Russia","Y"
 21318,HiSky Europe,\N,H4,HYS,SKY EUROPE,Romania,Y
-21319,SkyUp Airlines,\N,PQ,SQP,SKYUP,Ukraine,Y
+21319,SkyUp Airlines,\N,U5,SQP,SKYUP,Ukraine,Y
 21320,Wizz Air UK,Wizz Air UK,W9,WUK,WIZZ GO,United United Kingdom,Y
 21321,Wizz Air Malta,Wizz Air Malta,W4,WMT,WIZZ MALTA,Malta,Y
 21322,Wizz Air Abu Dhabi,Wizz Air Abu Dhabi,5W,WAZ,WIZZ SKY,United Arab Emirates,Y
