@@ -121,7 +121,39 @@ export class PublicClaimController {
                 'Invalid departure or arrival airport ICAO',
             );
         }
-        // if user account doesn't exist generate new one
+
+        const fullRoutes = await Promise.all(
+            dto.details.routes.map(async (r) => {
+                const arrivalAirport =
+                    await this.airportService.getAirportByIcao(
+                        r.arrivalAirport.icao,
+                    );
+                const departureAirport =
+                    await this.airportService.getAirportByIcao(
+                        r.arrivalAirport.icao,
+                    );
+
+                if (!arrivalAirport || !departureAirport) {
+                    throw new BadRequestException('Invalid airport');
+                }
+
+                return {
+                    troubled: r.troubled,
+                    departureAirport: {
+                        icao: departureAirport.icao_code,
+                        iata: departureAirport.iata_code,
+                        name: departureAirport.name,
+                        country: departureAirport?.country,
+                    },
+                    arrivalAirport: {
+                        icao: arrivalAirport.icao_code,
+                        iata: arrivalAirport.iata_code,
+                        name: arrivalAirport.name,
+                        country: arrivalAirport.country,
+                    },
+                };
+            }),
+        );
 
         const jwtPayload = getAuthJwt(req);
         if (jwtPayload) {
@@ -130,6 +162,7 @@ export class PublicClaimController {
             ).id;
         }
 
+        // if user account doesn't exist generate new one
         if (!userId) {
             const user = await this.userService.getUserByEmail(
                 dto.customer.email,
@@ -229,6 +262,7 @@ export class PublicClaimController {
             userId,
             isDuplicate: !!duplicate,
             flightNumber: dto.details.flightNumber,
+            fullRoutes,
             flightStatusData: flightStatus
                 ? {
                       isCancelled: flightStatus?.cancelled,

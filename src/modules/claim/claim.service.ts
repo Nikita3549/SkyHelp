@@ -6,6 +6,7 @@ import {
     DelayCategory,
     DisruptionType,
     Prisma,
+    Route,
     UserRole,
 } from '@prisma/client';
 import { CreateClaimDto } from './dto/create-claim.dto';
@@ -89,6 +90,21 @@ export class ClaimService {
             userId?: string | null;
             isDuplicate?: boolean;
             flightNumber: string;
+            fullRoutes: {
+                troubled: boolean | undefined;
+                departureAirport: {
+                    icao: string;
+                    iata: string;
+                    name: string;
+                    country: string;
+                };
+                arrivalAirport: {
+                    icao: string;
+                    iata: string;
+                    name: string;
+                    country: string;
+                };
+            }[];
             flightStatusData?: {
                 isCancelled: boolean;
                 delayMinutes: number;
@@ -104,6 +120,7 @@ export class ClaimService {
             flightStatusData,
             referrer,
             referrerSource,
+            fullRoutes,
         } = extraData;
 
         const maxAttempts = 5;
@@ -130,7 +147,7 @@ export class ClaimService {
                                 },
                                 bookingRef: claim.details.bookingRef,
                                 routes: {
-                                    create: claim.details.routes.map((r) => ({
+                                    create: fullRoutes.map((r) => ({
                                         ArrivalAirport: {
                                             create: r.arrivalAirport,
                                         },

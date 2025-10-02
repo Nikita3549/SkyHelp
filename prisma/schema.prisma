@@ -118,6 +118,7 @@ model Route {
 model ArrivalAirport {
   id      String  @id @default(cuid()) @map("id")
   icao    String
+  iata    String?
   name    String
   country String?
   Route   Route?
@@ -128,6 +129,7 @@ model ArrivalAirport {
 model DepartureAirport {
   id      String  @id @default(cuid()) @map("id")
   icao    String
+  iata    String?
   name    String
   country String?
   Route   Route?
