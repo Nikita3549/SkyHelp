@@ -130,7 +130,7 @@ export class PublicClaimController {
                     );
                 const departureAirport =
                     await this.airportService.getAirportByIcao(
-                        r.arrivalAirport.icao,
+                        r.departureAirport.icao,
                     );
 
                 if (!arrivalAirport || !departureAirport) {
@@ -254,7 +254,6 @@ export class PublicClaimController {
         }
 
         // Create claim
-
         const claim = await this.claimService.createClaim(dto, {
             referrer,
             referrerSource,
@@ -507,14 +506,19 @@ export class PublicClaimController {
                 form,
                 {
                     headers: form.getHeaders(),
+                    maxBodyLength: MEGABYTE,
                     maxContentLength: MEGABYTE,
                 },
             );
 
             results = data;
         } catch (e) {
-            console.log(e);
-            if (!(e instanceof AxiosError)) {
+            if (e instanceof AxiosError) {
+                console.error(
+                    'error while fetching boarding pass data: ',
+                    e?.response?.data,
+                );
+            } else {
                 console.error(
                     'unkwnon error while fetching boarding pass data: ',
                     e,
@@ -524,6 +528,8 @@ export class PublicClaimController {
                 `${INVALID_BOARDING_PASS}: error while fetching reader`,
             );
         }
+
+        console.log(results);
 
         const boardingPassData = results[0];
 
@@ -557,9 +563,7 @@ export class PublicClaimController {
         );
 
         if (!departureAirport || !arrivalAirport || !airline) {
-            throw new BadRequestException(
-                `${INVALID_BOARDING_PASS}: invalid departureAirport or arrivalAirport or airline from reader`,
-            );
+            throw new BadRequestException(INVALID_BOARDING_PASS);
         }
 
         const departureIso = this.toIso(
