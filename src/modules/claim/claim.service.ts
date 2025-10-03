@@ -30,9 +30,6 @@ import {
 import { Queue } from 'bullmq';
 import { IJobClaimFollowupData } from './interfaces/job-data.interface';
 import { BasePassenger } from './interfaces/base-passenger.interface';
-import { FlightService } from '../flight/flight.service';
-import { AirportService } from '../airport/airport.service';
-import { sleep } from '../../utils/sleep';
 
 @Injectable()
 export class ClaimService {

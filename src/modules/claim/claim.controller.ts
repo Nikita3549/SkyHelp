@@ -62,7 +62,7 @@ import { AuthService } from '../auth/auth.service';
 import { generateAssignmentName } from '../../utils/generate-assignment-name';
 import axios, { AxiosError } from 'axios';
 import * as FormData from 'form-data';
-import { BoardingPassData } from './interfaces/boarding-pass-api.response';
+import { BoardingPassApiResponse } from './boarding-pass/interfaces/boarding-pass-api.response';
 import { BoardingPassUploadMultiInterceptor } from '../../interceptors/boarding-pass/boarding-pass-upload.interceptor';
 import { AirlineService } from '../airline/airline.service';
 import { LanguageWithReferrerDto } from './dto/language-with-referrer.dto';
@@ -484,115 +484,5 @@ export class PublicClaimController {
         return {
             compensation,
         };
-    }
-
-    @Post('/boarding-pass')
-    @BoardingPassUploadMultiInterceptor()
-    async boardingPass(@UploadedFiles() files: Express.Multer.File[]) {
-        const form = new FormData();
-
-        for (const file of files) {
-            form.append('files', file.buffer, {
-                filename: file.originalname,
-                contentType: file.mimetype,
-            });
-        }
-
-        let results: BoardingPassData[];
-
-        try {
-            const { data } = await axios.post<BoardingPassData[]>(
-                this.configService.getOrThrow('BOARDING_PASS_API_URL'),
-                form,
-                {
-                    headers: form.getHeaders(),
-                    maxBodyLength: MEGABYTE,
-                    maxContentLength: MEGABYTE,
-                },
-            );
-
-            results = data;
-        } catch (e) {
-            if (e instanceof AxiosError) {
-                console.error(
-                    'error while fetching boarding pass data: ',
-                    e?.response?.data,
-                );
-            } else {
-                console.error(
-                    'unkwnon error while fetching boarding pass data: ',
-                    e,
-                );
-            }
-            throw new BadRequestException(
-                `${INVALID_BOARDING_PASS}: error while fetching reader`,
-            );
-        }
-
-        console.log(results);
-
-        const boardingPassData = results[0];
-
-        if (
-            !boardingPassData?.Flight_number ||
-            !boardingPassData?.From ||
-            !boardingPassData?.To
-        ) {
-            throw new BadRequestException(
-                `${INVALID_BOARDING_PASS}: invalid flightnumber or airport from or airport to`,
-            );
-        }
-
-        const airlineIata = boardingPassData.Flight_number.split(' ')[0];
-
-        const flightCode = boardingPassData.Flight_number.split(' ')[1];
-
-        if (!airlineIata || !flightCode) {
-            throw new BadRequestException(
-                `${INVALID_BOARDING_PASS}: invalid airlineIata or flightCode from reader`,
-            );
-        }
-
-        const airline = await this.airlineService.getAirlineByIata(airlineIata);
-
-        const departureAirport = await this.airportService.getAirportByIata(
-            boardingPassData.From,
-        );
-        const arrivalAirport = await this.airportService.getAirportByIata(
-            boardingPassData.To,
-        );
-
-        if (!departureAirport || !arrivalAirport || !airline) {
-            throw new BadRequestException(INVALID_BOARDING_PASS);
-        }
-
-        const departureIso = this.toIso(
-            boardingPassData.Departure_Date,
-            boardingPassData.Departure_Time,
-        );
-        const arrivalIso = this.toIso(
-            boardingPassData.Arrival_Date,
-            boardingPassData.Arrival_Time,
-        );
-
-        return {
-            passengers: results.map((r) => ({
-                passengerName: r.Passenger_Name,
-            })),
-            bookingRef: boardingPassData.Booking_reference,
-            flightNumber: boardingPassData.Flight_number.replace(' ', ''),
-            arrivalAirport,
-            departureAirport,
-            airline,
-            departureDate: departureIso,
-            arrivalDate: arrivalIso,
-        };
-    }
-
-    private toIso(date?: string | null, time?: string | null): string | null {
-        if (!date || !time) return null;
-
-        const d = new Date(`${date}T${time}`);
-        return d.toISOString();
     }
 }

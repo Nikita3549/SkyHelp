@@ -26,6 +26,7 @@ import { DocumentRequestModule } from './document-request/document-request.modul
 import { RecentUpdatesModule } from './recent-updates/recent-updates.module';
 import { ActivityModule } from './activity/activity.module';
 import { AirlineModule } from '../airline/airline.module';
+import { BoardingPassModule } from './boarding-pass/boarding-pass.module';
 
 @Module({
     imports: [
@@ -53,6 +54,7 @@ import { AirlineModule } from '../airline/airline.module';
         forwardRef(() => RecentUpdatesModule),
         ActivityModule,
         AirlineModule,
+        BoardingPassModule,
     ],
     controllers: [ClaimController, AdminController, PublicClaimController],
     providers: [ClaimService, ClaimFollowupProcessor, ClaimGateway],

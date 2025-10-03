@@ -3,6 +3,7 @@ import {
     ForbiddenException,
     Get,
     NotFoundException,
+    Post,
     Query,
     Req,
     UnauthorizedException,
@@ -28,6 +29,7 @@ import { VerifyJwtDto } from './dto/verify-jwt.dto';
 import { ClaimService } from '../claim/claim.service';
 import { AuthRequest } from '../../interfaces/AuthRequest.interface';
 import { UserRole } from '@prisma/client';
+import { v4 as uuid } from 'uuid';
 
 @Controller('links')
 @UseGuards(JwtAuthGuard)
@@ -185,5 +187,17 @@ export class PublicGenerateLinksController {
             { claimId },
             { expiresIn: CONTINUE_LINKS_EXP },
         );
+    }
+
+    @Post('/boarding-pass/scan')
+    generateQRUuidLink() {
+        const sessionId = uuid();
+
+        const link = this.generateLinksService.generateScanLink(sessionId);
+
+        return {
+            sessionId,
+            link,
+        };
     }
 }

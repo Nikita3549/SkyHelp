@@ -9,6 +9,10 @@ export class GenerateLinksService {
         this.FRONTEND_URL = this.configService.getOrThrow('FRONTEND_URL');
     }
 
+    generateScanLink(sessionId: string) {
+        return `${this.FRONTEND_URL}/scan?sessionId=${sessionId}`;
+    }
+
     async generateUploadPassport(
         customerId: string,
         claimId: string,
