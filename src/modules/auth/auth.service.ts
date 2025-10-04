@@ -10,10 +10,20 @@ import {
 } from './constants';
 import * as bcrypt from 'bcryptjs';
 import * as crypto from 'crypto';
+import { UserRole } from '@prisma/client';
+import { UserService } from '../user/user.service';
+import { NotificationService } from '../notification/notification.service';
+import { TokenService } from '../token/token.service';
+import { Languages } from '../language/enums/languages.enums';
 
 @Injectable()
 export class AuthService {
-    constructor(private readonly redis: RedisService) {}
+    constructor(
+        private readonly redis: RedisService,
+        private readonly userService: UserService,
+        private readonly notificationService: NotificationService,
+        private readonly tokenService: TokenService,
+    ) {}
 
     async deleteRegisterDataFromRedis(email: string) {
         await this.redis.del(`${email}:${REDIS_REGISTER_DATA_KEY_POSTFIX}`);
@@ -96,7 +106,56 @@ export class AuthService {
         new Error("Redis error. Data from redis doesn't match save pattern");
     }
 
-    generatePassword(length = DEFAULT_GENERATED_PASSWORD_LENGTH) {
+    async generateNewUser(userData: {
+        email: string;
+        name: string;
+        secondName: string;
+        language: Languages;
+    }) {
+        const { email, name, secondName, language } = userData;
+        let userToken: string | null = null;
+        let userId: string | null = null;
+
+        const user = await this.userService.getUserByEmail(email);
+
+        if (!user) {
+            const password = this.generatePassword();
+
+            const hashedPassword = await this.hashPassword(password);
+
+            const newUser = await this.userService.saveUser({
+                email,
+                hashedPassword,
+                name,
+                secondName,
+            });
+            userId = newUser.id;
+
+            userToken = this.tokenService.generateJWT({
+                id: newUser.id,
+                email: newUser.email,
+                name: newUser.name,
+                secondName: newUser.secondName,
+                role: UserRole.CLIENT,
+                isActive: true,
+            });
+
+            this.notificationService.sendNewGeneratedAccount(
+                email,
+                {
+                    email: email,
+                    password,
+                },
+                language,
+            );
+        }
+        return {
+            userToken,
+            userId,
+        };
+    }
+
+    private generatePassword(length = DEFAULT_GENERATED_PASSWORD_LENGTH) {
         return crypto
             .randomBytes(length)
             .toString('base64')

@@ -14,23 +14,20 @@ import {
 import { CreateClaimDto } from './dto/create-claim.dto';
 import { ClaimService } from './claim.service';
 import {
-    CONTINUE_LINKS_EXP,
+    ADD_FLIGHT_STATUS_QUEUE_KEY,
     FINAL_STEP,
-    HOUR,
     INVALID_CLAIM_ID,
     INVALID_ICAO,
-    MINUTE,
 } from './constants';
 import { JwtAuthGuard } from '../../guards/jwtAuth.guard';
 import { AuthRequest } from '../../interfaces/AuthRequest.interface';
 import { GetCompensationDto } from './dto/get-compensation.dto';
 import { FlightService } from '../flight/flight.service';
 import { UpdateClaimDto } from './dto/update-claim.dto';
-import { getAuthJwt } from '../auth/typeGuards/getAuthJwt.function';
+import { getAuthJwtFromRequest } from '../auth/typeGuards/getAuthJwt.function';
 import { Request } from 'express';
 import { TokenService } from '../token/token.service';
 import { IClaimWithJwt } from './interfaces/claimWithJwt.interface';
-import { IClaimJwt } from './interfaces/claim-jwt.interface';
 import { JwtStepQueryDto } from './dto/jwt-step-query.dto';
 import { JwtQueryDto } from './dto/jwt-query.dto';
 import { IJwtPayload } from '../token/interfaces/jwtPayload';
@@ -43,20 +40,16 @@ import { DocumentService } from './document/document.service';
 import { CustomerService } from './customer/customer.service';
 import { validateClaimJwt } from '../../utils/validate-claim-jwt';
 import { IFullClaim } from './interfaces/full-claim.interface';
-import {
-    CancellationNotice,
-    DelayCategory,
-    DisruptionType,
-    DocumentType,
-    UserRole,
-} from '@prisma/client';
+import { DocumentType } from '@prisma/client';
 import { UploadFormSignDto } from './dto/upload-form-sign-dto';
-import { UserService } from '../user/user.service';
 import { AuthService } from '../auth/auth.service';
 import { generateAssignmentName } from '../../utils/generate-assignment-name';
-import { AirlineService } from '../airline/airline.service';
 import { LanguageWithReferrerDto } from './dto/language-with-referrer.dto';
 import { isProd } from '../../utils/isProd';
+import { Languages } from '../language/enums/languages.enums';
+import { InjectQueue } from '@nestjs/bullmq';
+import { Queue } from 'bullmq';
+import { IAddFlightStatusJobData } from './interfaces/add-flight-status-job-data.interface';
 
 @Controller('claims')
 @UseGuards(JwtAuthGuard)
@@ -80,9 +73,9 @@ export class PublicClaimController {
         private readonly configService: ConfigService,
         private readonly documentService: DocumentService,
         private readonly customerService: CustomerService,
-        private readonly userService: UserService,
         private readonly authService: AuthService,
-        private readonly airlineService: AirlineService,
+        @InjectQueue(ADD_FLIGHT_STATUS_QUEUE_KEY)
+        private readonly addFlightStatusQueue: Queue,
     ) {}
 
     @Post()
@@ -92,8 +85,8 @@ export class PublicClaimController {
         @Query() query: LanguageWithReferrerDto,
     ): Promise<IClaimWithJwt> {
         const { language, referrer, referrerSource } = query;
-        let userId: string | null | undefined;
-        let userToken: string | undefined | null;
+        let userId: string | null = null;
+        let userToken: string | null = null;
 
         const fullRoutes = await Promise.all(
             dto.details.routes.map(async (r) => {
@@ -128,99 +121,35 @@ export class PublicClaimController {
             }),
         );
 
-        const jwtPayload = getAuthJwt(req);
+        // if user account doesn't exist generate new one
+        const jwtPayload = getAuthJwtFromRequest(req);
         if (jwtPayload) {
             userId = (
                 await this.tokenService.verifyJWT<IJwtPayload>(jwtPayload)
             ).id;
         }
 
-        // if user account doesn't exist generate new one
         if (!userId) {
-            const user = await this.userService.getUserByEmail(
-                dto.customer.email,
-            );
-
-            if (!user) {
-                const password = this.authService.generatePassword();
-
-                const hashedPassword =
-                    await this.authService.hashPassword(password);
-
-                const newUser = await this.userService.saveUser({
-                    email: dto.customer.email,
-                    hashedPassword,
-                    name: dto.customer.firstName,
-                    secondName: dto.customer.lastName,
-                });
-                userId = newUser.id;
-
-                userToken = this.tokenService.generateJWT({
-                    id: newUser.id,
-                    email: newUser.email,
-                    name: newUser.name,
-                    secondName: newUser.secondName,
-                    role: UserRole.CLIENT,
-                    isActive: true,
-                });
-
-                this.notificationService.sendNewGeneratedAccount(
-                    dto.customer.email,
-                    {
-                        email: dto.customer.email,
-                        password,
-                    },
-                    language,
-                );
-            }
+            const userData = await this.authService.generateNewUser({
+                email: dto.customer.email,
+                name: dto.customer.firstName,
+                secondName: dto.customer.lastName,
+                language: language || Languages.EN,
+            });
+            userToken = userData.userToken;
+            userId = userData.userId;
         }
 
-        const duplicate = await this.claimService.findDuplicate({
-            email: dto.customer.email,
-            firstName: dto.customer.firstName,
-            lastName: dto.customer.lastName,
-            flightNumber: dto.details.flightNumber,
-        });
-
-        // Calculate flight status
-        const flightStatus = await this.flightService.getFlightByFlightCode(
-            dto.details.flightNumber.replace(
-                dto.details.airline.iata || '',
-                '',
-            ),
-            dto.details.airline.icao,
-            dto.details.date,
-        );
-
-        let actualCancelled = false;
-        let delayMinutes = 0;
-
-        if (flightStatus) {
-            actualCancelled =
-                flightStatus.status == 'C' || flightStatus.status == 'R'; // C - cancelled, R - redirected
-            delayMinutes = flightStatus.delays?.arrivalGateDelayMinutes
-                ? flightStatus.delays.arrivalGateDelayMinutes
-                : 0;
-        }
-
-        // Create claim
         const claim = await this.claimService.createClaim(dto, {
             referrer,
             referrerSource,
             language,
             userId,
-            isDuplicate: !!duplicate,
             flightNumber: dto.details.flightNumber,
             fullRoutes,
-            flightStatusData: flightStatus
-                ? {
-                      isCancelled: actualCancelled,
-                      delayMinutes,
-                      actualCompensation: 0, // deprecated
-                  }
-                : undefined,
         });
 
+        // Temporary mock
         if (referrer == 'zbor') {
             await this.claimService.addPartner(
                 claim.id,
@@ -230,29 +159,33 @@ export class PublicClaimController {
             );
         }
 
-        const jwt = this.tokenService.generateJWT<IClaimJwt>(
-            {
-                claimId: claim.id,
-            },
-            { expiresIn: CONTINUE_LINKS_EXP },
-        );
-
-        const continueClaimLink = `${this.configService.getOrThrow('FRONTEND_URL')}/claim?claimId=${claim.id}&jwt=${jwt}`;
-
         this.claimService.scheduleClaimFollowUpEmails({
             email: claim.customer.email,
             claimId: claim.id,
             language,
-            continueClaimLink,
+            continueClaimLink: claim.continueLink!, // after creating continue link isn't null anyway
             clientFirstName: claim.customer.firstName,
             compensation: claim.state.amount,
         });
 
-        await this.claimService.updateContinueLink(claim.id, continueClaimLink);
+        const addFlightStatusJobData: IAddFlightStatusJobData = {
+            flightNumber: claim.details.flightNumber,
+            airlineIcao: claim.details.airlines.icao,
+            flightDate: claim.details.date,
+            claimId: claim.id,
+        };
+
+        this.addFlightStatusQueue.add(
+            'addFlightStatus',
+            addFlightStatusJobData,
+            {
+                attempts: 1,
+            },
+        );
 
         return {
             claimData: claim,
-            jwt,
+            jwt: claim.jwt,
             userToken: userToken ? userToken : null,
         };
     }

@@ -11,10 +11,14 @@ import { CreateClaimDto } from './dto/create-claim.dto';
 import { IGetCompensation } from './interfaces/compensation.interface';
 import { defaultProgress } from './progress/constants/progresses/default-progress';
 import { UpdateClaimDto } from './dto/update-claim.dto';
-import { IFullClaim } from './interfaces/full-claim.interface';
+import {
+    IFullClaim,
+    IFullClaimWithJwt,
+} from './interfaces/full-claim.interface';
 import { InjectQueue } from '@nestjs/bullmq';
 import {
     CLAIM_FOLLOWUP_QUEUE_KEY,
+    CONTINUE_LINKS_EXP,
     FIVE_DAYS_MILLISECONDS,
     FOUR_DAYS_MILLISECONDS,
     ONE_DAY_MILLISECONDS,
@@ -26,6 +30,9 @@ import {
 import { Queue } from 'bullmq';
 import { IJobClaimFollowupData } from './interfaces/job-data.interface';
 import { BasePassenger } from './interfaces/base-passenger.interface';
+import { ConfigService } from '@nestjs/config';
+import { IClaimJwt } from './interfaces/claim-jwt.interface';
+import { TokenService } from '../token/token.service';
 
 @Injectable()
 export class ClaimService {
@@ -33,6 +40,8 @@ export class ClaimService {
         private readonly prisma: PrismaService,
         @InjectQueue(CLAIM_FOLLOWUP_QUEUE_KEY)
         private readonly claimFollowupQueue: Queue,
+        private readonly configService: ConfigService,
+        private readonly tokenService: TokenService,
     ) {}
 
     scheduleClaimFollowUpEmails(jobData: IJobClaimFollowupData) {
@@ -75,13 +84,12 @@ export class ClaimService {
     }
 
     async createClaim(
-        claim: CreateClaimDto,
+        claimData: CreateClaimDto,
         extraData: {
             language?: string;
             referrer?: string;
             referrerSource?: string;
             userId?: string | null;
-            isDuplicate?: boolean;
             flightNumber: string;
             fullRoutes: {
                 troubled: boolean | undefined;
@@ -98,47 +106,56 @@ export class ClaimService {
                     country: string;
                 };
             }[];
-            flightStatusData?: {
-                isCancelled: boolean;
-                delayMinutes: number;
-                actualCompensation: number;
-            };
         },
-    ): Promise<IFullClaim> {
+    ): Promise<IFullClaimWithJwt> {
         const {
             language,
             userId,
             flightNumber,
-            isDuplicate,
-            flightStatusData,
             referrer,
             referrerSource,
             fullRoutes,
         } = extraData;
 
+        const isDuplicate = !!(await this.findDuplicate({
+            email: claimData.customer.email,
+            firstName: claimData.customer.firstName,
+            lastName: claimData.customer.lastName,
+            flightNumber: claimData.details.flightNumber,
+        }));
+
         const maxAttempts = 5;
         for (let attempt = 0; attempt < maxAttempts; attempt++) {
             const numericId = this.generateNumericId();
 
+            const jwt = this.tokenService.generateJWT<IClaimJwt>(
+                {
+                    claimId: numericId,
+                },
+                { expiresIn: CONTINUE_LINKS_EXP },
+            );
+            const continueClaimLink = `${this.configService.getOrThrow('FRONTEND_URL')}/claim?claimId=${numericId}&jwt=${jwt}`;
+
             try {
-                return await this.prisma.claim.create({
+                const claim = await this.prisma.claim.create({
                     data: {
                         id: numericId,
                         user: userId ? { connect: { id: userId } } : undefined,
                         referrer,
                         referrerSource,
+                        continueLink: continueClaimLink,
                         details: {
                             create: {
                                 flightNumber: flightNumber,
-                                date: claim.details.date,
+                                date: claimData.details.date,
                                 airlines: {
                                     create: {
-                                        icao: claim.details.airline.icao,
-                                        name: claim.details.airline.name,
-                                        iata: claim.details.airline.iata,
+                                        icao: claimData.details.airline.icao,
+                                        name: claimData.details.airline.name,
+                                        iata: claimData.details.airline.iata,
                                     },
                                 },
-                                bookingRef: claim.details.bookingRef,
+                                bookingRef: claimData.details.bookingRef,
                                 routes: {
                                     create: fullRoutes.map((r) => ({
                                         ArrivalAirport: {
@@ -154,7 +171,7 @@ export class ClaimService {
                         },
                         state: {
                             create: {
-                                amount: claim.state.amount,
+                                amount: claimData.state.amount,
                                 isDuplicate,
                                 progress: {
                                     create: defaultProgress,
@@ -163,53 +180,48 @@ export class ClaimService {
                         },
                         customer: {
                             create: {
-                                firstName: claim.customer.firstName,
-                                lastName: claim.customer.lastName,
-                                email: claim.customer.email,
-                                phone: claim.customer.phone,
-                                address: claim.customer.address,
-                                city: claim.customer.city,
-                                state: claim.customer.state,
-                                whatsapp: claim.customer.whatsapp,
-                                country: claim.customer.country,
+                                firstName: claimData.customer.firstName,
+                                lastName: claimData.customer.lastName,
+                                email: claimData.customer.email,
+                                phone: claimData.customer.phone,
+                                address: claimData.customer.address,
+                                city: claimData.customer.city,
+                                state: claimData.customer.state,
+                                whatsapp: claimData.customer.whatsapp,
+                                country: claimData.customer.country,
                                 language,
                             },
                         },
                         issue: {
                             create: {
-                                delay: claim.issue.delay,
+                                delay: claimData.issue.delay,
                                 cancellationNoticeDays:
-                                    claim.issue.cancellationNoticeDays,
-                                disruptionType: claim.issue.disruptionType,
-                                airlineReason: claim.issue.airlineReason,
+                                    claimData.issue.cancellationNoticeDays,
+                                disruptionType: claimData.issue.disruptionType,
+                                airlineReason: claimData.issue.airlineReason,
                                 wasAlternativeFlightOffered:
-                                    claim.issue.wasAlternativeFlightOffered ||
+                                    claimData.issue
+                                        .wasAlternativeFlightOffered ||
                                     undefined,
                                 arrivalTimeDelayOfAlternativeHours:
-                                    claim.issue
+                                    claimData.issue
                                         .arrivalTimeDelayOfAlternativeHours,
-                                additionalInfo: claim.issue.additionalInfo,
+                                additionalInfo: claimData.issue.additionalInfo,
                                 hasContactedAirline:
-                                    claim.issue.hasContactedAirline,
+                                    claimData.issue.hasContactedAirline,
                             },
                         },
-                        flightStatus: flightStatusData
-                            ? {
-                                  create: {
-                                      isCancelled: flightStatusData.isCancelled,
-                                      actualCompensation:
-                                          flightStatusData.actualCompensation,
-                                      delayMinutes:
-                                          flightStatusData.delayMinutes,
-                                  },
-                              }
-                            : undefined,
                         payment: {
                             create: {},
                         },
                     },
                     include: this.fullClaimInclude(),
                 });
+
+                return {
+                    ...claim,
+                    jwt,
+                };
             } catch (error) {
                 if (
                     error instanceof Prisma.PrismaClientKnownRequestError &&
@@ -763,17 +775,6 @@ export class ClaimService {
         });
     }
 
-    async updateContinueLink(claimId: string, continueLink: string) {
-        return this.prisma.claim.update({
-            data: {
-                continueLink,
-            },
-            where: {
-                id: claimId,
-            },
-        });
-    }
-
     async searchClaims(search: string, partnerId?: string, page: number = 20) {
         const normalized = search.replace(/\s+/g, '');
 
@@ -913,5 +914,25 @@ export class ClaimService {
                   email: otherPassenger.email,
                   isSigned: !!otherPassenger.isSigned,
               };
+    }
+
+    async createFlightStatus(
+        flightStatusData: {
+            isCancelled: boolean;
+            delayMinutes: number;
+        },
+        claimId: string,
+    ) {
+        return this.prisma.claim.update({
+            data: {
+                flightStatus: {
+                    create: {
+                        isCancelled: flightStatusData.isCancelled,
+                        delayMinutes: flightStatusData.delayMinutes,
+                    },
+                },
+            },
+            where: { id: claimId },
+        });
     }
 }

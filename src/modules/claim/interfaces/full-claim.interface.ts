@@ -27,6 +27,10 @@ export interface IFullClaim extends Claim {
     passengers: OtherPassenger[];
 }
 
+export interface IFullClaimWithJwt extends IFullClaim {
+    jwt: string;
+}
+
 interface IClaimDetails extends ClaimDetails {
     airlines: Airline;
     routes: IClaimRoute[];

@@ -6,7 +6,10 @@ import { TokenModule } from '../token/token.module';
 import { AirportModule } from '../airport/airport.module';
 import { NotificationModule } from '../notification/notification.module';
 import { BullModule } from '@nestjs/bullmq';
-import { CLAIM_FOLLOWUP_QUEUE_KEY } from './constants';
+import {
+    ADD_FLIGHT_STATUS_QUEUE_KEY,
+    CLAIM_FOLLOWUP_QUEUE_KEY,
+} from './constants';
 import { ClaimFollowupProcessor } from './processors/claim-followup.processor';
 import { ProgressModule } from './progress/progress.module';
 import { DocumentModule } from './document/document.module';
@@ -27,6 +30,7 @@ import { RecentUpdatesModule } from './recent-updates/recent-updates.module';
 import { ActivityModule } from './activity/activity.module';
 import { AirlineModule } from '../airline/airline.module';
 import { BoardingPassModule } from './boarding-pass/boarding-pass.module';
+import { AddFlightStatusProcessor } from './processors/add-flight-status.processor';
 
 @Module({
     imports: [
@@ -35,9 +39,14 @@ import { BoardingPassModule } from './boarding-pass/boarding-pass.module';
         AirportModule,
         ClaimModule,
         forwardRef(() => NotificationModule),
-        BullModule.registerQueue({
-            name: CLAIM_FOLLOWUP_QUEUE_KEY,
-        }),
+        BullModule.registerQueue(
+            {
+                name: CLAIM_FOLLOWUP_QUEUE_KEY,
+            },
+            {
+                name: ADD_FLIGHT_STATUS_QUEUE_KEY,
+            },
+        ),
         ProgressModule,
         UserModule,
         forwardRef(() => AuthModule),
@@ -57,7 +66,12 @@ import { BoardingPassModule } from './boarding-pass/boarding-pass.module';
         BoardingPassModule,
     ],
     controllers: [ClaimController, AdminController, PublicClaimController],
-    providers: [ClaimService, ClaimFollowupProcessor, ClaimGateway],
+    providers: [
+        ClaimService,
+        ClaimFollowupProcessor,
+        ClaimGateway,
+        AddFlightStatusProcessor,
+    ],
     exports: [ClaimService],
 })
 export class ClaimModule {}

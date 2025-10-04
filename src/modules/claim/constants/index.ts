@@ -18,6 +18,7 @@ export const INVALID_PASSENGER_ID = 'Invalid passengerId';
 export const INVALID_CUSTOMER_ID = 'Invalid customerId';
 
 export const CLAIM_FOLLOWUP_QUEUE_KEY = 'claims';
+export const ADD_FLIGHT_STATUS_QUEUE_KEY = 'add-flight-status';
 
 export const ONE_HOUR_MILLISECONDS = 60 * 60 * 1000;
 export const ONE_DAY_MILLISECONDS = 24 * ONE_HOUR_MILLISECONDS;

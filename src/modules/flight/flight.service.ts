@@ -28,19 +28,16 @@ export class FlightService {
         date: Date,
     ): Promise<IFlightStatsFlight | null> {
         try {
-            const res = await axios.get<FlightStatsResponse>(
-                `${this.configService.getOrThrow('FLIGHT_STATS_URL')}/flex/flightstatus/rest/v2/json/flight/status/${airlineIcao}/${flightCode}/dep/${date.getUTCFullYear()}/${date.getMonth() + 1}/${date.getDate()}`,
-                {
-                    params: {
-                        appId: this.configService.getOrThrow(
-                            'FLIGHT_STATS_APP_ID',
-                        ),
-                        appKey: this.configService.getOrThrow(
-                            'FLIGHT_STATS_API_KEY',
-                        ),
-                    },
+            const url = `${this.configService.getOrThrow('FLIGHT_STATS_URL')}/flex/flightstatus/rest/v2/json/flight/status/${airlineIcao}/${flightCode}/dep/${date.getUTCFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
+
+            const res = await axios.get<FlightStatsResponse>(url, {
+                params: {
+                    appId: this.configService.getOrThrow('FLIGHT_STATS_APP_ID'),
+                    appKey: this.configService.getOrThrow(
+                        'FLIGHT_STATS_API_KEY',
+                    ),
                 },
-            );
+            });
 
             return res.data ? res.data.flightStatuses[0] : null;
         } catch (e) {

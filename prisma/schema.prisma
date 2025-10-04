@@ -185,7 +185,7 @@ model ClaimFlightStatus {
   id                 String  @id @default(cuid()) @map("id")
   isCancelled        Boolean @default(false) @map("is_cancelled")
   delayMinutes       Int     @map("delay_minutes")
-  actualCompensation Int     @map("actual_compensation")
+  actualCompensation Int?    @map("actual_compensation")
 
   Claim Claim[]
 

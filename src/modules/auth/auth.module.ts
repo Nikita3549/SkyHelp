@@ -16,6 +16,7 @@ import { ClaimModule } from '../claim/claim.module';
         NotificationModule,
         PassportModule,
         forwardRef(() => ClaimModule),
+        NotificationModule,
     ],
     controllers: [AuthController],
     providers: [AuthService],

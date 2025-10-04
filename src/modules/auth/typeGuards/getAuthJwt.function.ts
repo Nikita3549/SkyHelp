@@ -1,6 +1,6 @@
 import { Request } from 'express';
 
-export function getAuthJwt(req: Request): string | null {
+export function getAuthJwtFromRequest(req: Request): string | null {
     const authHeader =
         req.headers['authorization'] || req.headers['Authorization'];
     if (!authHeader || typeof authHeader !== 'string') return null;
