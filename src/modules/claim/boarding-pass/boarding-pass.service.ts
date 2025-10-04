@@ -15,6 +15,7 @@ export class BoardingPassService {
         private readonly airportService: AirportService,
         private readonly configService: ConfigService,
     ) {}
+
     async parseBoardingPass(
         files: Express.Multer.File[],
     ): Promise<IBoardingPassData> {
@@ -112,6 +113,7 @@ export class BoardingPassService {
             arrivalDate: arrivalIso,
         };
     }
+
     private toIso(date?: string | null, time?: string | null): string | null {
         if (!date || !time) return null;
 

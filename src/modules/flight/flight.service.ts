@@ -17,6 +17,7 @@ import { formatDate } from '../../utils/formatDate';
 @Injectable()
 export class FlightService {
     constructor(private readonly configService: ConfigService) {}
+
     async getFlightByFlightCode(
         flightCode: string,
         airlineIcao: string,

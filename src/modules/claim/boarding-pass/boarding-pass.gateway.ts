@@ -12,7 +12,6 @@ import { UseFilters, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ValidationFilter } from '../../../filters/validation.filter';
 import { AirlineService } from '../../airline/airline.service';
 import { AirportService } from '../../airport/airport.service';
-import { BoardingPassApiResponse } from './interfaces/boarding-pass-api.response';
 import { IBoardingPassData } from './interfaces/boarding-pass-data.interface';
 
 @WebSocketGateway({
@@ -28,6 +27,7 @@ export class BoardingPassGateway implements OnGatewayConnection {
         private readonly airlineService: AirlineService,
         private readonly airportService: AirportService,
     ) {}
+
     @WebSocketServer() server: Server;
 
     handleConnection(client: Socket) {

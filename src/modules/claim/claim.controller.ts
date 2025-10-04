@@ -9,10 +9,7 @@ import {
     Put,
     Query,
     Req,
-    UploadedFile,
-    UploadedFiles,
     UseGuards,
-    UseInterceptors,
 } from '@nestjs/common';
 import { CreateClaimDto } from './dto/create-claim.dto';
 import { ClaimService } from './claim.service';
@@ -20,10 +17,8 @@ import {
     CONTINUE_LINKS_EXP,
     FINAL_STEP,
     HOUR,
-    INVALID_BOARDING_PASS,
     INVALID_CLAIM_ID,
     INVALID_ICAO,
-    MEGABYTE,
     MINUTE,
 } from './constants';
 import { JwtAuthGuard } from '../../guards/jwtAuth.guard';
@@ -44,7 +39,6 @@ import { AirportService } from '../airport/airport.service';
 import { NotificationService } from '../notification/notification.service';
 import { ConfigService } from '@nestjs/config';
 import { UpdateFormStateDto } from './dto/update-form-state.dto';
-import { LanguageQueryDto } from './dto/language-query.dto';
 import { DocumentService } from './document/document.service';
 import { CustomerService } from './customer/customer.service';
 import { validateClaimJwt } from '../../utils/validate-claim-jwt';
@@ -60,10 +54,6 @@ import { UploadFormSignDto } from './dto/upload-form-sign-dto';
 import { UserService } from '../user/user.service';
 import { AuthService } from '../auth/auth.service';
 import { generateAssignmentName } from '../../utils/generate-assignment-name';
-import axios, { AxiosError } from 'axios';
-import * as FormData from 'form-data';
-import { BoardingPassApiResponse } from './boarding-pass/interfaces/boarding-pass-api.response';
-import { BoardingPassUploadMultiInterceptor } from '../../interceptors/boarding-pass/boarding-pass-upload.interceptor';
 import { AirlineService } from '../airline/airline.service';
 import { LanguageWithReferrerDto } from './dto/language-with-referrer.dto';
 import { isProd } from '../../utils/isProd';

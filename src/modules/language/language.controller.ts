@@ -6,6 +6,7 @@ import { INVALID_LANGUAGE } from './constants';
 @Controller('languages')
 export class LanguageController {
     constructor(private readonly languageService: LanguageService) {}
+
     @Get(':language')
     async getLanguage(@Param() params: GetLanguageDto) {
         return this.languageService

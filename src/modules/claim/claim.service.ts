@@ -4,9 +4,7 @@ import {
     CancellationNotice,
     ClaimStatus,
     DelayCategory,
-    DisruptionType,
     Prisma,
-    Route,
     UserRole,
 } from '@prisma/client';
 import { CreateClaimDto } from './dto/create-claim.dto';
@@ -19,8 +17,6 @@ import {
     CLAIM_QUEUE_KEY,
     FIVE_DAYS_MILLISECONDS,
     FOUR_DAYS_MILLISECONDS,
-    HOUR,
-    MINUTE,
     ONE_DAY_MILLISECONDS,
     ONE_HOUR_MILLISECONDS,
     SIX_DAYS_MILLISECONDS,

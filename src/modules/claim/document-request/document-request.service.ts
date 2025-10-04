@@ -7,7 +7,6 @@ import {
     DocumentRequestType,
     DocumentType,
 } from '@prisma/client';
-import { omit } from '../../../utils/omit';
 
 @Injectable()
 export class DocumentRequestService {

@@ -25,6 +25,7 @@ export class UserController {
 
         return this.userService.getPublicUsers(role);
     }
+
     @Get(':id')
     @UseGuards(IsAdminGuard)
     async getUser(@Param('id') id: string): Promise<IPublicUserData> {

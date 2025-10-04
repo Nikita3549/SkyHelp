@@ -4,7 +4,6 @@ import {
     Controller,
     Delete,
     HttpCode,
-    InternalServerErrorException,
     NotFoundException,
     Param,
     Post,
@@ -17,7 +16,6 @@ import {
     INVALID_PROGRESS_ID,
     SEND_NEW_PROGRESS_EMAIL_QUEUE_DELAY,
     SEND_NEW_PROGRESS_EMAIL_QUEUE_KEY,
-    UNKNOWN_PROGRESS_VARIANT,
 } from './constants';
 import { ClaimService } from '../claim.service';
 import { Languages } from '../../language/enums/languages.enums';

@@ -9,6 +9,7 @@ export class SendToCeoController {
         private readonly gmailService: GmailService,
         private readonly configService: ConfigService,
     ) {}
+
     @Post()
     @HttpCode(HttpStatus.NO_CONTENT)
     async sendEmailToCeo(@Body() dto: SendToCeoDto) {
