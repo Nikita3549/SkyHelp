@@ -140,7 +140,7 @@ model DepartureAirport {
 model ClaimState {
   id              String      @id @default(cuid()) @map("id")
   status          ClaimStatus @default(CLAIM_RECEIVED) @map("status")
-  amount          Int?        @map("amount")
+  amount          Int         @map("amount")
   hasRecentUpdate Boolean     @default(false) @map("has_recent_update")
   updatedAt       DateTime    @updatedAt @map("updated_at")
   progress        Progress[]

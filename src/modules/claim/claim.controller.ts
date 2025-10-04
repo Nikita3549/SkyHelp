@@ -245,7 +245,7 @@ export class PublicClaimController {
             language,
             continueClaimLink,
             clientFirstName: claim.customer.firstName,
-            compensation: claim.state.amount as number,
+            compensation: claim.state.amount,
         });
 
         await this.claimService.updateContinueLink(claim.id, continueClaimLink);
