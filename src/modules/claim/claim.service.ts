@@ -14,7 +14,7 @@ import { UpdateClaimDto } from './dto/update-claim.dto';
 import { IFullClaim } from './interfaces/full-claim.interface';
 import { InjectQueue } from '@nestjs/bullmq';
 import {
-    CLAIM_QUEUE_KEY,
+    CLAIM_FOLLOWUP_QUEUE_KEY,
     FIVE_DAYS_MILLISECONDS,
     FOUR_DAYS_MILLISECONDS,
     ONE_DAY_MILLISECONDS,
@@ -31,7 +31,7 @@ import { BasePassenger } from './interfaces/base-passenger.interface';
 export class ClaimService {
     constructor(
         private readonly prisma: PrismaService,
-        @InjectQueue(CLAIM_QUEUE_KEY)
+        @InjectQueue(CLAIM_FOLLOWUP_QUEUE_KEY)
         private readonly claimFollowupQueue: Queue,
     ) {}
 

@@ -17,7 +17,7 @@ export const INVALID_PASSENGER_ID = 'Invalid passengerId';
 
 export const INVALID_CUSTOMER_ID = 'Invalid customerId';
 
-export const CLAIM_QUEUE_KEY = 'claims';
+export const CLAIM_FOLLOWUP_QUEUE_KEY = 'claims';
 
 export const ONE_HOUR_MILLISECONDS = 60 * 60 * 1000;
 export const ONE_DAY_MILLISECONDS = 24 * ONE_HOUR_MILLISECONDS;

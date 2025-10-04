@@ -6,7 +6,7 @@ import { TokenModule } from '../token/token.module';
 import { AirportModule } from '../airport/airport.module';
 import { NotificationModule } from '../notification/notification.module';
 import { BullModule } from '@nestjs/bullmq';
-import { CLAIM_QUEUE_KEY } from './constants';
+import { CLAIM_FOLLOWUP_QUEUE_KEY } from './constants';
 import { ClaimFollowupProcessor } from './processors/claim-followup.processor';
 import { ProgressModule } from './progress/progress.module';
 import { DocumentModule } from './document/document.module';
@@ -36,7 +36,7 @@ import { BoardingPassModule } from './boarding-pass/boarding-pass.module';
         ClaimModule,
         forwardRef(() => NotificationModule),
         BullModule.registerQueue({
-            name: CLAIM_QUEUE_KEY,
+            name: CLAIM_FOLLOWUP_QUEUE_KEY,
         }),
         ProgressModule,
         UserModule,
