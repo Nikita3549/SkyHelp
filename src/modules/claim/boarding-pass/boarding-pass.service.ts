@@ -49,7 +49,7 @@ export class BoardingPassService {
                 );
             }
             throw new BadRequestException(
-                `${INVALID_BOARDING_PASS}: error while fetching reader`,
+                `${INVALID_BOARDING_PASS} error while fetching reader: ${e}`,
             );
         }
 
