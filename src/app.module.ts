@@ -18,7 +18,6 @@ import { AirlineModule } from './modules/airline/airline.module';
 import { LanguageModule } from './modules/language/language.module';
 import { ContactUsModule } from './modules/contact-us/contact-us.module';
 import { BullModule } from '@nestjs/bullmq';
-import { UnixTimeModule } from './modules/unix-time/unix-time.module';
 import { LetterModule } from './modules/letter/letter.module';
 import { ZohoModule } from './modules/zoho/zoho.module';
 import { LogModule } from './modules/log/log.module';
@@ -55,7 +54,6 @@ import { SendToCeoModule } from './modules/send-to-ceo/send-to-ceo.module';
         AirlineModule,
         LanguageModule,
         ContactUsModule,
-        UnixTimeModule,
         LetterModule,
         ZohoModule,
         LogModule,

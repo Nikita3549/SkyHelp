@@ -1,6 +1,5 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { GmailService } from './gmail.service';
-import { UnixTimeModule } from '../unix-time/unix-time.module';
 import { ClaimModule } from '../claim/claim.module';
 import { GmailOfficeAccountModule } from './accounts/gmail-office-account/gmail-office-account.module';
 import { AttachmentModule } from './attachment/attachment.module';
@@ -9,7 +8,6 @@ import { GmailNoreplyAccountModule } from './accounts/gmail-noreply-account/gmai
 
 @Module({
     imports: [
-        UnixTimeModule,
         ClaimModule,
         forwardRef(() => GmailOfficeAccountModule),
         forwardRef(() => GmailNoreplyAccountModule),
