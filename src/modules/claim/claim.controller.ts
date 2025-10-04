@@ -94,23 +94,6 @@ export class PublicClaimController {
         const { language, referrer, referrerSource } = query;
         let userId: string | null | undefined;
         let userToken: string | undefined | null;
-        const troubledRoute = dto.details.routes.find((r) => r.troubled);
-        if (!troubledRoute) {
-            throw new BadRequestException(
-                'There is no troubled route in request',
-            );
-        }
-        const departureAirport = await this.airportService.getAirportByIcao(
-            troubledRoute.departureAirport.icao,
-        );
-        const arrivalAirport = await this.airportService.getAirportByIcao(
-            troubledRoute.arrivalAirport.icao,
-        );
-        if (!departureAirport || !arrivalAirport) {
-            throw new BadRequestException(
-                'Invalid departure or arrival airport ICAO',
-            );
-        }
 
         const fullRoutes = await Promise.all(
             dto.details.routes.map(async (r) => {
@@ -209,38 +192,15 @@ export class PublicClaimController {
             dto.details.date,
         );
 
-        let actualCompensation: number | undefined;
+        let actualCancelled = false;
+        let delayMinutes = 0;
 
         if (flightStatus) {
-            const actualDistance =
-                this.flightService.calculateDistanceBetweenAirports(
-                    departureAirport.latitude,
-                    departureAirport.longitude,
-                    departureAirport.altitude,
-                    arrivalAirport.latitude,
-                    arrivalAirport.longitude,
-                    arrivalAirport.altitude,
-                );
-            actualCompensation = this.claimService.calculateCompensation({
-                flightDistanceKm: actualDistance,
-                delayHours: flightStatus.cancelled
-                    ? null
-                    : (flightStatus?.arrival_delay
-                            ? Math.floor(flightStatus.arrival_delay / HOUR)
-                            : 0) > 3
-                      ? DelayCategory.threehours_or_more
-                      : DelayCategory.less_than_3hours,
-                cancellationNoticeDays: flightStatus.cancelled
-                    ? CancellationNotice.less_than_14days
-                    : null,
-                wasDeniedBoarding:
-                    dto.issue.disruptionType == DisruptionType.denied_boarding,
-                wasAlternativeFlightOffered:
-                    !!dto.issue.wasAlternativeFlightOffered,
-                arrivalTimeDelayOfAlternative:
-                    dto.issue.arrivalTimeDelayOfAlternativeHours || 0,
-                wasDisruptionDuoExtraordinaryCircumstances: false, // deprecated param, extraordinary circumstances always aren't proved
-            });
+            actualCancelled =
+                flightStatus.status == 'C' || flightStatus.status == 'R'; // C - cancelled, R - redirected
+            delayMinutes = flightStatus.delays?.arrivalGateDelayMinutes
+                ? flightStatus.delays.arrivalGateDelayMinutes
+                : 0;
         }
 
         // Create claim
@@ -254,11 +214,9 @@ export class PublicClaimController {
             fullRoutes,
             flightStatusData: flightStatus
                 ? {
-                      isCancelled: flightStatus?.cancelled,
-                      delayMinutes: flightStatus?.arrival_delay
-                          ? flightStatus.arrival_delay / MINUTE
-                          : 0,
-                      actualCompensation: actualCompensation || 0,
+                      isCancelled: actualCancelled,
+                      delayMinutes,
+                      actualCompensation: 0, // deprecated
                   }
                 : undefined,
         });

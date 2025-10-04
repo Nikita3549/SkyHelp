@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios, { AxiosResponse } from 'axios';
 import { GetFlightsDto } from './dto/get-flights.dto';
@@ -13,6 +13,10 @@ import {
 } from './interfaces/flight-aware-flight';
 import { IFlight } from './interfaces/flight';
 import { formatDate } from '../../utils/formatDate';
+import {
+    FlightStatsResponse,
+    IFlightStatsFlight,
+} from './interfaces/fight-stats-flight';
 
 @Injectable()
 export class FlightService {
@@ -22,47 +26,26 @@ export class FlightService {
         flightCode: string,
         airlineIcao: string,
         date: Date,
-    ) {
+    ): Promise<IFlightStatsFlight | null> {
         try {
-            const flightIdent = `${airlineIcao}${flightCode}`;
-
-            const { end: flightDateEnd, start: flightDateStart } =
-                this.getFlightDateRange(date);
-
-            const res = await axios.get<FlightAwareFlightsResponse>(
-                `${this.configService.getOrThrow('FLIGHTAWARE_BASE_URL')}/history/flights/${flightIdent}`,
+            const res = await axios.get<FlightStatsResponse>(
+                `${this.configService.getOrThrow('FLIGHT_STATS_URL')}/flex/flightstatus/rest/v2/json/flight/status/${airlineIcao}/${flightCode}/dep/${date.getUTCFullYear()}/${date.getMonth() + 1}/${date.getDate()}`,
                 {
                     params: {
-                        start: flightDateStart
-                            .toISOString()
-                            .replace(/\.\d{3}Z$/, 'Z'),
-                        end: flightDateEnd
-                            .toISOString()
-                            .replace(/\.\d{3}Z$/, 'Z'),
-                    },
-                    headers: {
-                        ['x-apikey']: this.configService.getOrThrow(
-                            'FLIGHTAWARE_API_KEY',
+                        appId: this.configService.getOrThrow(
+                            'FLIGHT_STATS_APP_ID',
+                        ),
+                        appKey: this.configService.getOrThrow(
+                            'FLIGHT_STATS_API_KEY',
                         ),
                     },
                 },
             );
 
-            return this.findFlightByDate(res.data.flights, date);
+            return res.data ? res.data.flightStatuses[0] : null;
         } catch (e) {
-            return;
+            return null;
         }
-    }
-
-    private findFlightByDate(
-        flights: FlightAwareFlight[],
-        date: Date,
-    ): FlightAwareFlight | undefined {
-        return flights.find(
-            (f) =>
-                f.scheduled_off &&
-                f.scheduled_off.includes(formatDate(date, 'yyyy-mm-dd')),
-        );
     }
 
     async getFlightsByDateAirportsCompany(
