@@ -47,9 +47,12 @@ export class BoardingPassGateway implements OnGatewayConnection {
         client: Socket,
         @MessageBody() payload: SendBoardingPassData,
     ) {
-        const { airlineIata, arrivalAirportIata, departureAirportIata } =
-            payload;
-        console.log(client?.data.sessionId);
+        const {
+            airlineIata,
+            arrivalAirportIata,
+            departureAirportIata,
+            sessionId,
+        } = payload;
 
         const arrivalAirport =
             await this.airportService.getAirportByIata(arrivalAirportIata);
@@ -65,7 +68,6 @@ export class BoardingPassGateway implements OnGatewayConnection {
             throw new WsException('Invalid airline IATA');
         }
 
-        const sessionId = client?.data.sessionId;
         const boardingPassData: IBoardingPassData = {
             ...payload,
             airline,

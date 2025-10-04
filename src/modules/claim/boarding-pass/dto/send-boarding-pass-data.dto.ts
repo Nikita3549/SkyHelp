@@ -36,4 +36,7 @@ export class SendBoardingPassData {
     @IsString()
     @IsOptional()
     arrivalDate: string | null;
+
+    @IsString()
+    sessionId: string;
 }
