@@ -6,7 +6,7 @@ import { IBoardingPassData } from './interfaces/boarding-pass-data.interface';
 @Controller('claims/boarding-pass')
 export class BoardingPassController {
     constructor(private readonly boardingPassService: BoardingPassService) {}
-    @Post('/boarding-pass')
+    @Post()
     @BoardingPassUploadMultiInterceptor()
     async boardingPass(
         @UploadedFiles() files: Express.Multer.File[],

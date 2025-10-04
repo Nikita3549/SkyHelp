@@ -44,7 +44,7 @@ export class BoardingPassService {
             console.log(e);
             if (!(e instanceof AxiosError)) {
                 console.error(
-                    'unkwnon error while fetching boarding pass data: ',
+                    'unknown error while fetching boarding pass data: ',
                     e,
                 );
             }

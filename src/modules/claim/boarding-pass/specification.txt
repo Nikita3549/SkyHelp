@@ -1,0 +1,90 @@
+POST /links/boarding-pass/scan - юзаешь чтобы получить ссылку для qr на десктопе
+
+Response:
+{
+    sessionId: string, - id сессии для подключения сразу по ws
+    link: string,
+};
+
+Далее на десктопе подключаешься к ws,
+/ws/boarding-pass?sessionId=SESSION_ID
+И на нем же слушаешь событие "boarding-pass.data" - придут данные от boarding-pass
+
+Response example:
+{
+    "passengers": [
+        {
+            "passengerName": "John Doe"
+        },
+        {
+            "passengerName": "Jane Smith"
+        }
+    ],
+    "bookingRef": "ABC123",
+    "flightNumber": "LH1234",
+    "arrivalAirportIata": "FRA",
+    "departureAirportIata": "RIX",
+    "airlineIata": "LH",
+    "departureDate": "2025-10-03T12:30:00Z",
+    "arrivalDate": "2025-10-03T15:45:00Z",
+    "airline": {
+        "icao": "DLH",
+        "iata": "LH",
+        "name": "Lufthansa"
+    },
+    "arrivalAirport": {
+        "id": 340,
+        "name": "Frankfurt am Main Airport",
+        "city": "Frankfurt",
+        "country": "Germany",
+        "iata_code": "FRA",
+        "icao_code": "EDDF",
+        "latitude": 50.033333,
+        "longitude": 8.570556,
+        "altitude": 364,
+        "timezone_offset": "1",
+        "dst": "E",
+        "tz": "Europe/Berlin",
+        "type": "airport",
+        "source": "OurAirports"
+    },
+    "departureAirport": {
+        "id": 3953,
+        "name": "Riga International Airport",
+        "city": "Riga",
+        "country": "Latvia",
+        "iata_code": "RIX",
+        "icao_code": "EVRA",
+        "latitude": 56.92359924316406,
+        "longitude": 23.971099853515625,
+        "altitude": 36,
+        "timezone_offset": "2",
+        "dst": "E",
+        "tz": "Europe/Riga",
+        "type": "airport",
+        "source": "OurAirports"
+    }
+}
+
+На мобилке после перехода по ссылке подключай клиента также:
+/ws/boarding-pass?sessionId=SESSION_ID
+(в ссылке будет sessionId)
+
+Если клиент решил продолжить на десктопе, то отправляешь "boarding-pass.send",
+В body кидаешь типо такого:
+
+{
+  "passengers": [
+    { "passengerName": "John Doe" },
+    { "passengerName": "Jane Smith" }
+  ],
+  "bookingRef": "ABC123",
+  "flightNumber": "LH1234",
+  "arrivalAirportIata": "FRA",
+  "departureAirportIata": "RIX",
+  "airlineIata": "LH",
+  "departureDate": "2025-10-03T12:30:00Z",
+  "arrivalDate": "2025-10-03T15:45:00Z"
+}
+
+"exception" может придти, если данных от боди не хватает, либо неверный какой то iata код
