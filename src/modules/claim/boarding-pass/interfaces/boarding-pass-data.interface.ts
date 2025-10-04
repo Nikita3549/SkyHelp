@@ -1,5 +1,5 @@
-import { IDbAirport } from 'src/modules/airport/interfaces/db-airport.interface';
 import { IAirline } from '../../../airline/interfaces/airline.interface';
+import { IDbAirport } from '../../../airport/interfaces/db-airport.interface';
 
 export interface IBoardingPassData {
     passengers: {
