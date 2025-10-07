@@ -257,61 +257,9 @@ export class ClaimService {
             data: {
                 details: {
                     update: {
-                        flightNumber: newClaim.details.flightNumber,
-                        date: newClaim.details.date,
-                        airlines: {
-                            update: {
-                                icao: newClaim.details.airline.icao,
-                                name: newClaim.details.airline.name,
-                            },
-                        },
                         bookingRef: newClaim.details.bookingRef
                             ? newClaim.details.bookingRef
                             : null,
-                        routes: {
-                            deleteMany: {},
-                            create: newClaim.details.routes.map((r) => ({
-                                ArrivalAirport: { create: r.arrivalAirport },
-                                DepartureAirport: {
-                                    create: r.departureAirport,
-                                },
-                                troubled: r.troubled,
-                            })),
-                        },
-                    },
-                },
-                state: {
-                    update: {
-                        status: newClaim.state.status,
-                        amount: newClaim.state.amount,
-                    },
-                },
-                customer: {
-                    update: {
-                        firstName: newClaim.customer.firstName,
-                        lastName: newClaim.customer.lastName,
-                        email: newClaim.customer.email,
-                        phone: newClaim.customer.phone,
-                        address: newClaim.customer.address,
-                        city: newClaim.customer.city,
-                        state: newClaim.customer.state,
-                        whatsapp: newClaim.customer.whatsapp,
-                        country: newClaim.customer.country,
-                    },
-                },
-                issue: {
-                    update: {
-                        delay: newClaim.issue.delay,
-                        cancellationNoticeDays:
-                            newClaim.issue.cancellationNoticeDays,
-                        disruptionType: newClaim.issue.disruptionType,
-                        airlineReason: newClaim.issue.airlineReason,
-                        wasAlternativeFlightOffered:
-                            newClaim.issue.wasAlternativeFlightOffered ||
-                            undefined,
-                        arrivalTimeDelayOfAlternativeHours:
-                            newClaim.issue.arrivalTimeDelayOfAlternativeHours,
-                        additionalInfo: newClaim.issue.additionalInfo,
                     },
                 },
                 payment: {
