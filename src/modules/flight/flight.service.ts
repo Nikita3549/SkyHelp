@@ -50,7 +50,7 @@ export class FlightService {
     ): Promise<IFlight[]> {
         const { arrival, date, company, departure } = dto;
 
-        const url = `${this.configService.getOrThrow('FLIGHT_STATS_URL')}/flex/flightstatus/rest/v2/json/route/status/${arrival}/${departure}/dep/${date.getUTCFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
+        const url = `${this.configService.getOrThrow('FLIGHT_STATS_URL')}/flex/flightstatus/rest/v2/json/route/status/${departure}/${arrival}/dep/${date.getUTCFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
         console.log(url);
 
         try {
