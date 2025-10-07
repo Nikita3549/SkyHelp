@@ -641,6 +641,7 @@ export class ClaimService {
                     updatedAt: true,
                     isDuplicate: true,
                     hasRecentUpdate: true,
+                    comments: true,
                     progress: {
                         orderBy: {
                             order: 'asc' as const,
