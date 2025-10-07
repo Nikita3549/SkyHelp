@@ -20,6 +20,7 @@ export class StateService {
             data: {
                 amount: dto.amount,
                 status: dto.status,
+                comments: dto.comments,
             },
         });
     }

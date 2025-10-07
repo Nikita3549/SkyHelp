@@ -10,4 +10,7 @@ export class StateDto {
 
     @IsNumber()
     amount: number;
+
+    @IsString()
+    comments: string;
 }

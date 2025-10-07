@@ -145,6 +145,7 @@ model ClaimState {
   updatedAt       DateTime    @updatedAt @map("updated_at")
   progress        Progress[]
   isDuplicate     Boolean     @default(false) @map("is_duplicate")
+  comments        String?
   Claim           Claim[]
 
   @@map("claim_states")
