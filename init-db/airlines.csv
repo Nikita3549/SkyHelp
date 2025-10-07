@@ -5188,7 +5188,6 @@ id,name,alias,iata_code,icao_code,callsign,country,active
 5204,"United Kingdom Civil Aviation Authority",\N,"","EXM","EXAM","United Kingdom","N"
 5205,"Union des Transports Africains de Guinee",\N,"","GIH","TRANSPORT AFRICAIN","Guinea","N"
 5206,"US Army Parachute Team",\N,"","GKA","GOLDEN KNIGHTS","United States","N"
-5207,"USA3000 Airlines",\N,"U5","GWY","GETAWAY","United States","Y"
 5208,"United Arabian Airlines",\N,"","UAB","UNITED ARABIAN","Sudan","N"
 5209,"United Airlines",\N,"UA","UAL","UNITED","United States","Y"
 5210,"United Air Charters",\N,"","UAC","UNITAIR","Zimbabwe","Y"
