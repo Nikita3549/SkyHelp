@@ -1,11 +1,13 @@
-import { IsISO8601, IsString } from 'class-validator';
+import { IsDate, IsISO8601, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class GetFlightsDto {
     @IsString()
     company: string;
 
-    @IsISO8601()
-    date: string;
+    @IsDate()
+    @Type(() => Date)
+    date: Date;
 
     @IsString()
     departure: string;

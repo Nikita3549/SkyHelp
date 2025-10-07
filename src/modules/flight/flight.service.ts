@@ -48,89 +48,48 @@ export class FlightService {
     async getFlightsByDateAirportsCompany(
         dto: GetFlightsDto,
     ): Promise<IFlight[]> {
-        const { date: isoDate, company, departure, arrival } = dto;
-        const date = new Date(isoDate);
+        const { arrival, date, company, departure } = dto;
 
-        const { start: flightDateStart, end: flightDateEnd } =
-            this.getFlightDateRange(date);
+        const url = `${this.configService.getOrThrow('FLIGHT_STATS_URL')}/flex/flightstatus/rest/v2/json/route/status/${arrival}/${departure}/dep/${date.getUTCFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
+        console.log(url);
 
-        // --- 1. FlightAware ---
-        const flightAwareResponse: AxiosResponse<any> = await axios
-            .get(
-                `${this.configService.getOrThrow('FLIGHTAWARE_BASE_URL')}/schedules/${flightDateStart.toISOString().split('T')[0]}/${flightDateEnd.toISOString().split('T')[0]}`,
-                {
-                    params: {
-                        origin: departure,
-                        destination: arrival,
-                        airline: company,
-                    },
-                    headers: {
-                        'x-apikey': this.configService.getOrThrow(
-                            'FLIGHTAWARE_API_KEY',
-                        ),
-                        Accept: 'application/json',
-                    },
+        try {
+            const res = await axios.get<FlightStatsResponse>(url, {
+                params: {
+                    appId: this.configService.getOrThrow('FLIGHT_STATS_APP_ID'),
+                    appKey: this.configService.getOrThrow(
+                        'FLIGHT_STATS_API_KEY',
+                    ),
                 },
-            )
-            .catch();
-
-        const scheduled = flightAwareResponse.data?.scheduled ?? [];
-
-        if (scheduled.length > 0) {
-            return scheduled.map((f: any): IFlight => {
-                return {
-                    id: f.ident_iata || f.ident || '',
-                    flightNumber: f.ident_iata || f.ident || '',
-                    departureTime: f.scheduled_out,
-                    arrivalTime: f.scheduled_in,
-                    departureAirport: f.origin_icao,
-                    arrivalAirport: f.destination_icao,
-                };
             });
-        }
 
-        // --- 2. FlightRadar (fallback) ---
-        const flightsResponse: AxiosResponse<IFlightsResponse> =
-            await axios.get(
-                `${this.configService.getOrThrow('FLIGHT_RADAR_API_HOST')}/api/flight-summary/full`,
-                {
-                    params: {
-                        flight_datetime_from: flightDateStart
-                            .toISOString()
-                            .replace(/\.\d{3}Z$/, 'Z'),
-                        flight_datetime_to: flightDateEnd
-                            .toISOString()
-                            .replace(/\.\d{3}Z$/, 'Z'),
-                        routes: `${departure}-${arrival}`,
-                        operating_as: company,
-                    },
-                    headers: {
-                        Authorization: `Bearer ${this.configService.getOrThrow('FLIGHT_RADAR_API_KEY')}`,
-                        Accept: 'application/json',
-                        'Accept-Version': 'v1',
-                    },
-                },
+            const airline = res.data.appendix.airlines.find(
+                (a) => a.icao == company || a.iata == company,
             );
 
-        const flights = flightsResponse.data.data;
+            if (!airline) {
+                return [];
+            }
 
-        return flights
-            .filter((flight) => {
-                return (
-                    flight.flight_ended &&
-                    new Date(flight.datetime_takeoff).getDay() === date.getDay()
-                );
-            })
-            .map((f: IFlightRadarFlight): IFlight => {
-                return {
-                    id: f.fr24_id,
-                    flightNumber: f.flight,
-                    departureTime: f.datetime_takeoff,
-                    arrivalTime: f.datetime_landed!,
-                    departureAirport: f.orig_icao,
-                    arrivalAirport: f.dest_icao,
-                };
-            });
+            const flights = res.data.flightStatuses;
+
+            return flights
+                .filter(
+                    (f) =>
+                        f.carrierFsCode == airline.iata ||
+                        f.carrierFsCode == airline.icao,
+                )
+                .map((f) => ({
+                    id: `${airline.iata}${f.flightNumber}`,
+                    arrivalAirport: f.arrivalAirportFsCode,
+                    departureAirport: f.departureAirportFsCode,
+                    flightNumber: `${airline.iata}${f.flightNumber}`,
+                    departureTime: f.departureDate.dateLocal,
+                    arrivalTime: f.arrivalDate.dateLocal,
+                }));
+        } catch (e) {}
+
+        return [];
     }
 
     calculateDistanceBetweenAirports(

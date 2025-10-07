@@ -3,6 +3,6 @@ export interface IFlight {
     flightNumber: string;
     departureTime: string;
     arrivalTime: string;
-    departureAirport: string;
-    arrivalAirport: string;
+    departureAirport: string | undefined;
+    arrivalAirport: string | undefined;
 }

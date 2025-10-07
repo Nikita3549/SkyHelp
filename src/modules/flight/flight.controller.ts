@@ -19,16 +19,6 @@ export class FlightController {
         const flights = await this.flightService
             .getFlightsByDateAirportsCompany(dto)
             .catch((e: unknown) => {
-                if (
-                    e instanceof AxiosError &&
-                    e.status == HttpStatus.PAYMENT_REQUIRED
-                ) {
-                    console.warn(
-                        'Flight radar payment required, response data: ',
-                        e.response!.data,
-                    );
-                }
-                console.log(e);
                 throw new BadRequestException(INVALID_FLIGHT_DATA);
             });
 
