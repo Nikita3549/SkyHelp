@@ -10,4 +10,7 @@ export class UploadOtherPassengerDto {
 
     @IsJWT()
     jwt: string;
+
+    @IsString()
+    passengerId: string;
 }

@@ -118,6 +118,7 @@ export class PublicCustomerController {
                         customer.firstName,
                         customer.lastName,
                     ),
+                    passengerId: claim.customer.id,
                 },
             ],
             claimId,

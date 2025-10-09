@@ -5,6 +5,7 @@ import {
     Get,
     NotFoundException,
     Param,
+    Patch,
     Post,
     Put,
     Query,
@@ -57,6 +58,10 @@ export class OtherPassengerController {
             passengerId,
         );
     }
+
+    // @UseGuards()
+    // @Patch('admin/minor')
+    // async patchPassengerToMinor(@Body() dto: ) {}
 }
 
 @Controller('claims/passengers')
@@ -165,6 +170,7 @@ export class PublicOtherPassengerController {
                         passenger.firstName,
                         passenger.lastName,
                     ),
+                    passengerId: passenger.id,
                 },
             ],
             claimId,
@@ -235,7 +241,7 @@ export class PublicOtherPassengerController {
         @UploadedFiles() files: Express.Multer.File[] = [],
         @Body() dto: UploadOtherPassengerDto,
     ) {
-        const { claimId, documentType, jwt } = dto;
+        const { claimId, documentType, jwt, passengerId } = dto;
 
         const token = await validateClaimJwt(
             jwt,
@@ -256,6 +262,7 @@ export class PublicOtherPassengerController {
                 return {
                     name: doc.originalname,
                     path: doc.path,
+                    passengerId,
                 };
             }),
             claimId,

@@ -252,6 +252,7 @@ export class PublicClaimController {
                         claim.customer.firstName,
                         claim.customer.lastName,
                     ),
+                    passengerId: claim.customer.id,
                 },
             ],
             claimId,

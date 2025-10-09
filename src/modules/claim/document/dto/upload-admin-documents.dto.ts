@@ -5,6 +5,9 @@ export class UploadAdminDocumentsDto {
     @IsString()
     claimId: string;
 
+    @IsString()
+    passengerId: string;
+
     @IsOptional()
     @IsEnum(DocumentType)
     documentType: DocumentType;

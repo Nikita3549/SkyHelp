@@ -14,4 +14,7 @@ export class UploadDocumentsJwtQueryDto {
     @IsOptional()
     @IsEnum(DocumentType)
     documentType: DocumentType;
+
+    @IsString()
+    passengerId: string;
 }

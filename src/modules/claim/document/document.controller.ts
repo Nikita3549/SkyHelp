@@ -77,7 +77,7 @@ export class DocumentController {
         @UploadedFiles() files: Express.Multer.File[],
         @Query() query: UploadAdminDocumentsDto,
     ) {
-        const { claimId, documentType } = query;
+        const { claimId, documentType, passengerId } = query;
 
         const claim = await this.claimService.getClaim(claimId);
 
@@ -90,6 +90,7 @@ export class DocumentController {
                 return {
                     name: doc.originalname,
                     path: doc.path,
+                    passengerId,
                 };
             }),
             claimId,
@@ -196,7 +197,7 @@ export class DocumentController {
         @Req() req: AuthRequest,
         @Query() query: UploadDocumentsQueryDto,
     ) {
-        const { claimId, documentType, documentRequestId } = query;
+        const { claimId, documentType, documentRequestId, passengerId } = query;
 
         const claim = await this.claimService.getClaim(claimId);
 
@@ -209,6 +210,7 @@ export class DocumentController {
                 return {
                     name: doc.originalname,
                     path: doc.path,
+                    passengerId,
                 };
             }),
             claimId,
@@ -257,7 +259,7 @@ export class PublicDocumentController {
         @UploadedFiles() files: Express.Multer.File[] = [],
         @Query() query: UploadDocumentsJwtQueryDto,
     ) {
-        const { jwt, claimId, step, documentType } = query;
+        const { jwt, claimId, step, documentType, passengerId } = query;
 
         await validateClaimJwt(
             jwt,
@@ -276,6 +278,7 @@ export class PublicDocumentController {
                 return {
                     name: doc.originalname,
                     path: doc.path,
+                    passengerId,
                 };
             }),
             claimId,

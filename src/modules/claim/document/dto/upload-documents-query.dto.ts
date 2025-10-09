@@ -12,4 +12,7 @@ export class UploadDocumentsQueryDto {
     @IsOptional()
     @IsString()
     documentRequestId: string;
+
+    @IsString()
+    passengerId: string;
 }
