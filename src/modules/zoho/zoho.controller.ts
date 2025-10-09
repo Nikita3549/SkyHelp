@@ -117,10 +117,10 @@ export class ZohoController {
                         claim.customer.lastName,
                     ),
                     passengerId: claim.customer.id,
+                    documentType: DocumentType.ASSIGNMENT,
                 },
             ],
             claim.id,
-            DocumentType.ASSIGNMENT,
         );
 
         await this.claimService.updateStep(claim.id, 7);
@@ -160,10 +160,10 @@ export class ZohoController {
                         claim.customer.lastName,
                     ),
                     passengerId: customer.id,
+                    documentType: DocumentType.ASSIGNMENT,
                 },
             ],
             claim.id,
-            DocumentType.ASSIGNMENT,
         );
 
         await this.customerService.setIsSignedCustomer(customer.id, true);
@@ -201,10 +201,10 @@ export class ZohoController {
                         passenger.lastName,
                     ),
                     passengerId: passenger.id,
+                    documentType: DocumentType.ASSIGNMENT,
                 },
             ],
             claim.id,
-            DocumentType.ASSIGNMENT,
         );
 
         await this.otherPassengerService.setIsSignedPassenger(

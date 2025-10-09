@@ -253,10 +253,10 @@ export class PublicClaimController {
                         claim.customer.lastName,
                     ),
                     passengerId: claim.customer.id,
+                    documentType: DocumentType.ASSIGNMENT,
                 },
             ],
             claimId,
-            DocumentType.ASSIGNMENT,
             true,
         );
 

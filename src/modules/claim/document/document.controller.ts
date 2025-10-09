@@ -1,4 +1,5 @@
 import {
+    BadRequestException,
     Body,
     Controller,
     ForbiddenException,
@@ -40,6 +41,7 @@ import { RecentUpdatesService } from '../recent-updates/recent-updates.service';
 import { ClaimRecentUpdatesType, DocumentRequestStatus } from '@prisma/client';
 import { DocumentRequestService } from '../document-request/document-request.service';
 import { PatchPassengerIdDto } from './dto/patch-passenger-id.dto';
+import { UploadDocumentsDto } from './dto/upload-documents.dto';
 
 @Controller('claims/documents')
 @UseGuards(JwtAuthGuard)
@@ -92,10 +94,10 @@ export class DocumentController {
                     name: doc.originalname,
                     path: doc.path,
                     passengerId,
+                    documentType,
                 };
             }),
             claimId,
-            documentType,
             true,
         );
 
@@ -212,10 +214,10 @@ export class DocumentController {
                     name: doc.originalname,
                     path: doc.path,
                     passengerId,
+                    documentType,
                 };
             }),
             claimId,
-            documentType,
             true,
         );
 
@@ -270,8 +272,16 @@ export class PublicDocumentController {
     async uploadDocuments(
         @UploadedFiles() files: Express.Multer.File[] = [],
         @Query() query: UploadDocumentsJwtQueryDto,
+        @Body() dto: UploadDocumentsDto,
     ) {
-        const { jwt, claimId, step, documentType, passengerId } = query;
+        const { jwt, claimId, step, passengerId } = query;
+        const { documentTypes } = dto;
+
+        if (!documentTypes || documentTypes.length != files.length) {
+            throw new BadRequestException(
+                'Files count must match documentTypes count',
+            );
+        }
 
         await validateClaimJwt(
             jwt,
@@ -286,15 +296,15 @@ export class PublicDocumentController {
         await this.claimService.updateStep(claimId, step);
 
         return await this.documentService.saveDocuments(
-            files.map((doc) => {
+            files.map((doc, index) => {
                 return {
                     name: doc.originalname,
                     path: doc.path,
                     passengerId,
+                    documentType: documentTypes[index],
                 };
             }),
             claimId,
-            documentType,
             true,
         );
     }

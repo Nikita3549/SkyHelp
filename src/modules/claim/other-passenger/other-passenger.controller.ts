@@ -171,10 +171,10 @@ export class PublicOtherPassengerController {
                         passenger.lastName,
                     ),
                     passengerId: passenger.id,
+                    documentType: DocumentType.ASSIGNMENT,
                 },
             ],
             claimId,
-            DocumentType.ASSIGNMENT,
             true,
         );
 
@@ -263,10 +263,10 @@ export class PublicOtherPassengerController {
                     name: doc.originalname,
                     path: doc.path,
                     passengerId,
+                    documentType,
                 };
             }),
             claimId,
-            documentType,
             true,
         );
 

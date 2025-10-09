@@ -23,9 +23,13 @@ export class DocumentService {
     }
 
     async saveDocuments(
-        documents: Omit<Omit<Omit<Document, 'id'>, 'claimId'>, 'type'>[],
+        documents: {
+            name: string;
+            path: string;
+            passengerId: string;
+            documentType: DocumentType;
+        }[],
         claimId: string,
-        documentType: DocumentType,
         isPublicData: boolean = false,
     ): Promise<Document[]> {
         return Promise.all(
@@ -35,7 +39,7 @@ export class DocumentService {
                         ...doc,
                         claimId,
                         passengerId: doc.passengerId,
-                        type: documentType,
+                        type: doc.documentType,
                     },
                     select: isPublicData
                         ? this.getPublicDataSelect()

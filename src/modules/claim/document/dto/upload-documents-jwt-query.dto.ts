@@ -11,10 +11,6 @@ export class UploadDocumentsJwtQueryDto {
     @IsNumber()
     step: number;
 
-    @IsOptional()
-    @IsEnum(DocumentType)
-    documentType: DocumentType;
-
     @IsString()
     passengerId: string;
 }

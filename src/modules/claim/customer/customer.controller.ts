@@ -119,10 +119,10 @@ export class PublicCustomerController {
                         customer.lastName,
                     ),
                     passengerId: claim.customer.id,
+                    documentType: DocumentType.ASSIGNMENT,
                 },
             ],
             claimId,
-            DocumentType.ASSIGNMENT,
             true,
         );
 
