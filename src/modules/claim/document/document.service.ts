@@ -475,4 +475,16 @@ export class DocumentService {
             claimId: true,
         };
     }
+
+    async updatePassengerId(documentId: string, passengerId: string) {
+        return this.prisma.document.update({
+            where: {
+                id: documentId,
+            },
+            data: {
+                passengerId,
+            },
+            select: this.getPublicDataSelect(),
+        });
+    }
 }

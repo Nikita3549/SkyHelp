@@ -39,6 +39,7 @@ import { MergeDocumentsDto } from './dto/merge-documents.dto';
 import { RecentUpdatesService } from '../recent-updates/recent-updates.service';
 import { ClaimRecentUpdatesType, DocumentRequestStatus } from '@prisma/client';
 import { DocumentRequestService } from '../document-request/document-request.service';
+import { PatchPassengerIdDto } from './dto/patch-passenger-id.dto';
 
 @Controller('claims/documents')
 @UseGuards(JwtAuthGuard)
@@ -242,6 +243,17 @@ export class DocumentController {
         });
 
         return documents;
+    }
+
+    @UseGuards(IsPartnerOrLawyerOrAgentGuard)
+    @Patch('admin/passenger')
+    async patchPassengerId(@Body() dto: PatchPassengerIdDto) {
+        const { passengerId, documentId } = dto;
+
+        return await this.documentService.updatePassengerId(
+            documentId,
+            passengerId,
+        );
     }
 }
 
