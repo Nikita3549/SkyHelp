@@ -41,8 +41,8 @@ import { RecentUpdatesService } from '../recent-updates/recent-updates.service';
 import { ClaimRecentUpdatesType, DocumentRequestStatus } from '@prisma/client';
 import { DocumentRequestService } from '../document-request/document-request.service';
 import { PatchPassengerIdDto } from './dto/patch-passenger-id.dto';
-import { ValidateDocumentsBodyInterceptor } from '../../../interceptors/documents/validate-documents-body.interceptor';
 import { UploadDocumentsDto } from './dto/upload-documents.dto';
+import { ValidatedDocumentsUploadInterceptor } from '../../../interceptors/documents/validated-documents-upload.interceptor';
 
 @Controller('claims/documents')
 @UseGuards(JwtAuthGuard)
@@ -269,7 +269,7 @@ export class PublicDocumentController {
     ) {}
 
     @Post()
-    @UseGuards(DocumentsUploadInterceptor(), ValidateDocumentsBodyInterceptor)
+    @ValidatedDocumentsUploadInterceptor()
     async uploadDocuments(
         @UploadedFiles() files: Express.Multer.File[] = [],
         @Query() query: UploadDocumentsJwtQueryDto,
