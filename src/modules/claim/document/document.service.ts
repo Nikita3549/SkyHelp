@@ -36,7 +36,8 @@ export class DocumentService {
             documents.map((doc) =>
                 this.prisma.document.create({
                     data: {
-                        ...doc,
+                        name: doc.name,
+                        path: doc.path,
                         claimId,
                         passengerId: doc.passengerId,
                         type: doc.documentType,
