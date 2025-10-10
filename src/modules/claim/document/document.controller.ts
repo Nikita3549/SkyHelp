@@ -38,7 +38,11 @@ import { UpdateDocumentTypeDto } from './dto/update-document-type.dto';
 import { IsPartnerOrLawyerOrAgentGuard } from '../../../guards/isPartnerOrLawyerOrAgentGuard';
 import { MergeDocumentsDto } from './dto/merge-documents.dto';
 import { RecentUpdatesService } from '../recent-updates/recent-updates.service';
-import { ClaimRecentUpdatesType, DocumentRequestStatus } from '@prisma/client';
+import {
+    ClaimRecentUpdatesType,
+    DocumentRequestStatus,
+    DocumentType,
+} from '@prisma/client';
 import { DocumentRequestService } from '../document-request/document-request.service';
 import { PatchPassengerIdDto } from './dto/patch-passenger-id.dto';
 import { UploadDocumentsDto } from './dto/upload-documents.dto';
@@ -269,16 +273,31 @@ export class PublicDocumentController {
     ) {}
 
     @Post()
-    @ValidatedDocumentsUploadInterceptor()
+    @DocumentsUploadInterceptor()
     async uploadDocuments(
         @UploadedFiles() files: Express.Multer.File[] = [],
         @Query() query: UploadDocumentsJwtQueryDto,
-        @Body() dto: UploadDocumentsDto,
+        @Body('documentTypes') documentTypes: string,
     ) {
         const { jwt, claimId, step, passengerId } = query;
-        const { documentTypes } = dto;
 
-        if (!documentTypes || documentTypes.length != files.length) {
+        let parsed: DocumentType[];
+
+        try {
+            parsed = JSON.parse(documentTypes);
+        } catch {
+            throw new BadRequestException('Invalid JSON in documentTypes');
+        }
+
+        const allowedValues = Object.values(DocumentType);
+        const invalid = parsed.filter((v) => !allowedValues.includes(v));
+        if (invalid.length > 0) {
+            throw new BadRequestException(
+                `Invalid documentTypes: ${invalid.join(', ')}`,
+            );
+        }
+
+        if (!parsed || parsed.length != files.length) {
             throw new BadRequestException(
                 'Files count must match documentTypes count',
             );
@@ -302,7 +321,7 @@ export class PublicDocumentController {
                     name: doc.originalname,
                     path: doc.path,
                     passengerId,
-                    documentType: documentTypes[index],
+                    documentType: parsed[index],
                 };
             }),
             claimId,

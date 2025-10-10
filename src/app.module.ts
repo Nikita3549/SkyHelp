@@ -55,7 +55,6 @@ import { SendToCeoModule } from './modules/send-to-ceo/send-to-ceo.module';
         LanguageModule,
         ContactUsModule,
         LetterModule,
-        ZohoModule,
         LogModule,
         GoogleSheetsModule,
         YandexMetrikaModule,
