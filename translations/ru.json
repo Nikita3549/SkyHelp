@@ -3465,7 +3465,7 @@
     "PassportSection.errors.uploadFailed": "Ошибка загрузки. Попробуйте еще раз.",
     "PassportSection.selectedFiles.title": "Выбранные файлы",
     "PassportSection.selectedFiles.remove": "Удалить",
-    "ThankYouPage.documentsUploaded.title": "Спасибо за загрузку паспорта!",
+    "ThankYouPage.documentsUploaded.title": "Спасибо за загрузку ваших документов!",
     "ThankYouPage.documentsUploaded.description": "Ваш паспорт был успешно загружен. Мы обработаем его в ближайшее время.",
     "ThankYouPage.documentsUploaded.continue": "Продолжить",
     "UploadPassportStep.otherPassengers.title": "Другие пассажиры",

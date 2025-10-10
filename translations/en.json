@@ -3465,7 +3465,7 @@
     "PassportSection.errors.uploadFailed": "Upload failed. Please try again.",
     "PassportSection.selectedFiles.title": "Selected files",
     "PassportSection.selectedFiles.remove": "Remove",
-    "ThankYouPage.documentsUploaded.title": "Thank you for uploading your passport!",
+    "ThankYouPage.documentsUploaded.title": "Thank you for uploading your documents!",
     "ThankYouPage.documentsUploaded.description": "Your passport has been successfully uploaded. We will process it shortly.",
     "ThankYouPage.documentsUploaded.continue": "Continue",
     "UploadPassportStep.otherPassengers.title": "Other Passengers",

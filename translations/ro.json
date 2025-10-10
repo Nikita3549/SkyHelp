@@ -3466,7 +3466,7 @@
     "PassportSection.errors.uploadFailed": "Încărcare eșuată. Te rugăm să încerci din nou.",
     "PassportSection.selectedFiles.title": "Fișiere selectate",
     "PassportSection.selectedFiles.remove": "Șterge",
-    "ThankYouPage.documentsUploaded.title": "Mulțumim pentru încărcarea pașaportului!",
+    "ThankYouPage.documentsUploaded.title": "Mulțumim pentru încărcarea documentelor!",
     "ThankYouPage.documentsUploaded.description": "Pașaportul tău a fost încărcat cu succes. Îl vom procesa în curând.",
     "ThankYouPage.documentsUploaded.continue": "Continuă",
     "UploadPassportStep.otherPassengers.title": "Alți pasageri",

@@ -3469,7 +3469,7 @@
     "PassportSection.errors.uploadFailed": "Yükleme başarısız. Lütfen tekrar deneyin.",
     "PassportSection.selectedFiles.title": "Seçilen dosyalar",
     "PassportSection.selectedFiles.remove": "Kaldır",
-    "ThankYouPage.documentsUploaded.title": "Pasaportunuzu yüklediğiniz için teşekkürler!",
+    "ThankYouPage.documentsUploaded.title": "Belgelerinizi yüklediğiniz için teşekkürler!",
     "ThankYouPage.documentsUploaded.description": "Pasaportunuz başarıyla yüklendi. Kısa süre içinde işleyeceğiz.",
     "ThankYouPage.documentsUploaded.continue": "Devam Et",
     "UploadPassportStep.otherPassengers.title": "Diğer Yolcular",
