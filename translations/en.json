@@ -3741,7 +3741,7 @@
     "UserRolesSection.LawyerDescription": "Handles legal cases and represents clients in disputes with airlines",
     "ClaimsTable.actionMoveToLawyer": "Move to Lawyer",
     "documents.pageTitle": "Upload your travel documents",
-    "documents.pageSubtitle": "Please upload the required documents to support your claim",
+    "documents.pageSubtitle": "Please upload the required documents",
     "documents.documentTypes.eTicketOrBoardingPass": "E-ticket or Boarding Pass",
     "documents.documentTypes.eTicketOrBoardingPassDescription": "Electronic flight ticket or boarding pass",
     "documents.documentTypes.identificationDocument": "Identification Document",
