@@ -3770,5 +3770,7 @@
     "documents.takePhoto": "Fă o poză",
     "documents.withPhone": "Cu telefonul",
     "documents.useComputerCamera": "Folosește camera computerului",
-    "documents.continue": "Continuă"
+    "documents.continue": "Continuă",
+     "FlightDocumentsStep.uploadSuccesTitle": "Încărcare reușită",
+  "FlightDocumentsStep.uploadSuccesDescription": "Documentele tale au fost încărcate cu succes."
 }

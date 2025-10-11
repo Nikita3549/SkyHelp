@@ -3767,5 +3767,8 @@
     "documents.takePhoto": "Take a photo",
     "documents.withPhone": "With phone",
     "documents.useComputerCamera": "Use computer camera",
-    "documents.continue": "Continue"  
+    "documents.continue": "Continue",
+    "FlightDocumentsStep.uploadSuccesTitle": "Upload successful",
+    "FlightDocumentsStep.uploadSuccesDescription": "Your documents have been uploaded successfully."
+    
 }

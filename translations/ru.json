@@ -3768,5 +3768,8 @@
     "documents.takePhoto": "Сделать фото",
     "documents.withPhone": "С телефона",
     "documents.useComputerCamera": "Использовать камеру компьютера",
-    "documents.continue": "Продолжить"
+    "documents.continue": "Продолжить",
+    "FlightDocumentsStep.uploadSuccesTitle": "Загрузка выполнена",
+    "FlightDocumentsStep.uploadSuccesDescription": "Ваши документы успешно загружены."
+
 }

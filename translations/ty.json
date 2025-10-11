@@ -3790,5 +3790,7 @@
     "documents.takePhoto": "Fotoğraf çek",
     "documents.withPhone": "Telefonla",
     "documents.useComputerCamera": "Bilgisayar kamerasını kullan",
-    "documents.continue": "Devam et"
+    "documents.continue": "Devam et",
+    "FlightDocumentsStep.uploadSuccesTitle": "Yükleme başarılı",
+    "FlightDocumentsStep.uploadSuccesDescription": "Belgeleriniz başarıyla yüklendi."
 }
