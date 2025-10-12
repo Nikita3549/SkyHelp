@@ -182,7 +182,7 @@ export class DocumentService {
             `${documentData.parentFirstName} ${documentData.parentLastName}`,
             {
                 x: 55,
-                y: 325,
+                y: 320,
                 size: 10.5,
                 color: rgb(0, 0, 0),
                 font: fontRegular,
@@ -253,7 +253,7 @@ export class DocumentService {
 
         firstPage.drawText(today, {
             x: 270,
-            y: 640,
+            y: 685,
             size: 10.5,
             color: rgb(0.333, 0.333, 0.333),
             font: fontRegular,
@@ -261,7 +261,7 @@ export class DocumentService {
 
         firstPage.drawText(documentData.address, {
             x: 205,
-            y: 598,
+            y: 630,
             size: 10.5,
             color: rgb(0.333, 0.333, 0.333),
             font: fontRegular,
@@ -271,7 +271,7 @@ export class DocumentService {
             `${documentData.firstName} ${documentData.lastName}`,
             {
                 x: 205,
-                y: 618,
+                y: 650,
                 size: 10.5,
                 color: rgb(0, 0, 0),
                 font: fontBold,
@@ -279,32 +279,32 @@ export class DocumentService {
         );
 
         firstPage.drawText(documentData.claimId, {
-            x: 180,
-            y: 502,
+            x: 140,
+            y: 531,
             size: 10.5,
             color: rgb(0, 0, 0),
             font: fontRegular,
         });
 
         firstPage.drawText(documentData.airlineName, {
-            x: 180,
-            y: 467,
+            x: 140,
+            y: 496,
             size: 10.5,
             color: rgb(0, 0, 0),
             font: fontRegular,
         });
 
         firstPage.drawText(documentData.flightNumber, {
-            x: 180,
-            y: 436,
+            x: 140,
+            y: 465,
             size: 10.5,
             color: rgb(0, 0, 0),
             font: fontRegular,
         });
 
         firstPage.drawText(formatDate(documentData.date, 'dd.mm.yyyy'), {
-            x: 180,
-            y: 405,
+            x: 140,
+            y: 434,
             size: 10.5,
             color: rgb(0, 0, 0),
             font: fontRegular,
@@ -313,8 +313,8 @@ export class DocumentService {
         secondPage.drawText(
             `${documentData.firstName} ${documentData.lastName}`,
             {
-                x: 100,
-                y: 308,
+                x: 55,
+                y: 542,
                 size: 10.5,
                 color: rgb(0, 0, 0),
                 font: fontRegular,
@@ -322,8 +322,8 @@ export class DocumentService {
         );
 
         secondPage.drawImage(pngImage, {
-            x: 150,
-            y: 217,
+            x: 105,
+            y: 435,
             width: 160,
             height: 70,
         });
