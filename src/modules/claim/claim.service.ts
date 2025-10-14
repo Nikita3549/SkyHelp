@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import {
     CancellationNotice,
+    ClaimFlightStatusSource,
     ClaimStatus,
     DelayCategory,
     Prisma,
@@ -666,11 +667,7 @@ export class ClaimService {
                     role: true,
                 },
             },
-            flightStatus: {
-                omit: {
-                    id: true,
-                },
-            },
+            flightStatuses: true,
             documentRequests: true,
             recentUpdates: true,
         };
@@ -869,19 +866,17 @@ export class ClaimService {
         flightStatusData: {
             isCancelled: boolean;
             delayMinutes: number;
+            source: ClaimFlightStatusSource;
         },
         claimId: string,
     ) {
-        return this.prisma.claim.update({
+        return this.prisma.claimFlightStatus.create({
             data: {
-                flightStatus: {
-                    create: {
-                        isCancelled: flightStatusData.isCancelled,
-                        delayMinutes: flightStatusData.delayMinutes,
-                    },
-                },
+                isCancelled: flightStatusData.isCancelled,
+                delayMinutes: flightStatusData.delayMinutes,
+                source: flightStatusData.source,
+                claimId,
             },
-            where: { id: claimId },
         });
     }
 }

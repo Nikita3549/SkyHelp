@@ -4,6 +4,7 @@ import { ADD_FLIGHT_STATUS_QUEUE_KEY } from '../constants';
 import { ClaimService } from '../claim.service';
 import { IAddFlightStatusJobData } from '../interfaces/add-flight-status-job-data.interface';
 import { FlightService } from '../../flight/flight.service';
+import { ClaimFlightStatusSource } from '@prisma/client';
 
 @Processor(ADD_FLIGHT_STATUS_QUEUE_KEY)
 export class AddFlightStatusProcessor extends WorkerHost {
@@ -19,29 +20,44 @@ export class AddFlightStatusProcessor extends WorkerHost {
 
         const flightCode = flightNumber.slice(2);
 
-        const flightStatus = await this.flightService.getFlightByFlightCode(
-            flightCode,
-            airlineIcao,
-            new Date(flightDate),
+        const flightFromFlightStats =
+            await this.flightService.getFlightFromFlightStats(
+                flightCode,
+                airlineIcao,
+                new Date(flightDate),
+            );
+
+        if (!flightFromFlightStats) {
+            return;
+        }
+
+        await this.claimService.createFlightStatus(
+            {
+                isCancelled: flightFromFlightStats.isCancelled,
+                delayMinutes: flightFromFlightStats.delayMinutes,
+                source: flightFromFlightStats.source,
+            },
+            claimId,
         );
 
-        let actualCancelled = false;
-        let delayMinutes = 0;
-
-        if (flightStatus) {
-            actualCancelled =
-                flightStatus.status == 'C' || flightStatus.status == 'R'; // C - cancelled, R - redirected
-            delayMinutes = flightStatus.delays?.arrivalGateDelayMinutes
-                ? flightStatus.delays.arrivalGateDelayMinutes
-                : 0;
-
-            await this.claimService.createFlightStatus(
-                {
-                    isCancelled: actualCancelled,
-                    delayMinutes,
-                },
-                claimId,
+        const flightFromFlightAware =
+            await this.flightService.getFlightFromFlightAware(
+                flightCode,
+                airlineIcao,
+                new Date(flightDate),
             );
+
+        if (!flightFromFlightAware) {
+            return;
         }
+
+        await this.claimService.createFlightStatus(
+            {
+                isCancelled: flightFromFlightAware.isCancelled,
+                delayMinutes: flightFromFlightAware.delayMinutes,
+                source: flightFromFlightAware.source,
+            },
+            claimId,
+        );
     }
 }

@@ -47,9 +47,8 @@ model Claim {
   detailsId        String               @map("details_id")
   details          ClaimDetails         @relation(fields: [detailsId], references: [id], onDelete: Cascade)
   stateId          String               @map("state_id")
-  flightStatusId   String?              @map("flight_status_id")
-  flightStatus     ClaimFlightStatus?   @relation(fields: [flightStatusId], references: [id], onDelete: SetNull)
   state            ClaimState           @relation(fields: [stateId], references: [id], onDelete: Cascade)
+  flightStatuses   ClaimFlightStatus[]
   customerId       String               @map("customer_id")
   customer         ClaimCustomer        @relation(fields: [customerId], references: [id], onDelete: Cascade)
   issueId          String               @map("issue_id")
@@ -183,13 +182,20 @@ enum ClaimStatus {
 }
 
 model ClaimFlightStatus {
-  id           String  @id @default(cuid()) @map("id")
-  isCancelled  Boolean @default(false) @map("is_cancelled")
-  delayMinutes Int     @map("delay_minutes")
+  id           String                @id @default(cuid()) @map("id")
+  isCancelled  Boolean               @default(false) @map("is_cancelled")
+  delayMinutes Int                   @map("delay_minutes")
+  source         ClaimFlightStatusSource
 
-  Claim Claim[]
+  claimId String
+  claim   Claim  @relation(fields: [claimId], references: [id])
 
   @@map("claim_flight_statuses")
+}
+
+enum ClaimFlightStatusSource {
+  FLIGHT_AWARE
+  FLIGHT_STATS
 }
 
 enum ProgressStatus {

@@ -17,16 +17,72 @@ import {
     FlightStatsResponse,
     IFlightStatsFlight,
 } from './interfaces/fight-stats-flight';
+import { IFlightStatus } from './interfaces/flight-status.interface';
+import { ClaimFlightStatusSource } from '@prisma/client';
 
 @Injectable()
 export class FlightService {
     constructor(private readonly configService: ConfigService) {}
 
-    async getFlightByFlightCode(
+    async getFlightFromFlightAware(
         flightCode: string,
         airlineIcao: string,
         date: Date,
-    ): Promise<IFlightStatsFlight | null> {
+    ): Promise<IFlightStatus | null> {
+        try {
+            const flightIdent = `${airlineIcao}${flightCode}`;
+
+            const { end: flightDateEnd, start: flightDateStart } =
+                this.getFlightDateRange(date);
+
+            const resFlightAware = await axios.get<FlightAwareFlightsResponse>(
+                `${this.configService.getOrThrow('FLIGHTAWARE_BASE_URL')}/history/flights/${flightIdent}`,
+                {
+                    params: {
+                        start: flightDateStart
+                            .toISOString()
+                            .replace(/\.\d{3}Z$/, 'Z'),
+                        end: flightDateEnd
+                            .toISOString()
+                            .replace(/\.\d{3}Z$/, 'Z'),
+                    },
+                    headers: {
+                        ['x-apikey']: this.configService.getOrThrow(
+                            'FLIGHTAWARE_API_KEY',
+                        ),
+                    },
+                },
+            );
+
+            const flight = this.findFlightByDate(
+                resFlightAware.data.flights,
+                date,
+            );
+
+            if (flight) {
+                const actualCancelled = !!flight?.cancelled;
+                const delayMinutes = flight?.arrival_delay
+                    ? Math.floor(flight.arrival_delay / (60 * 60))
+                    : 0;
+
+                return {
+                    delayMinutes,
+                    isCancelled: actualCancelled,
+                    source: ClaimFlightStatusSource.FLIGHT_AWARE,
+                };
+            }
+
+            return null;
+        } catch (e) {
+            return null;
+        }
+    }
+
+    async getFlightFromFlightStats(
+        flightCode: string,
+        airlineIcao: string,
+        date: Date,
+    ): Promise<IFlightStatus | null> {
         try {
             const url = `${this.configService.getOrThrow('FLIGHT_STATS_URL')}/flex/flightstatus/rest/v2/json/flight/status/${airlineIcao}/${flightCode}/dep/${date.getUTCFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
 
@@ -38,11 +94,38 @@ export class FlightService {
                     ),
                 },
             });
+            if (res.data) {
+                const flightStatus = res.data.flightStatuses[0];
 
-            return res.data ? res.data.flightStatuses[0] : null;
+                const actualCancelled =
+                    flightStatus.status == 'C' || flightStatus.status == 'R'; // C - cancelled, R - redirected
+                const delayMinutes = flightStatus.delays
+                    ?.arrivalGateDelayMinutes
+                    ? flightStatus.delays.arrivalGateDelayMinutes
+                    : 0;
+
+                return {
+                    source: ClaimFlightStatusSource.FLIGHT_STATS,
+                    delayMinutes,
+                    isCancelled: actualCancelled,
+                };
+            }
+
+            return null;
         } catch (e) {
             return null;
         }
+    }
+
+    private findFlightByDate(
+        flights: FlightAwareFlight[],
+        date: Date,
+    ): FlightAwareFlight | undefined {
+        return flights.find(
+            (f) =>
+                f.scheduled_off &&
+                f.scheduled_off.includes(formatDate(date, 'yyyy-mm-dd')),
+        );
     }
 
     async getFlightsByDateAirportsCompany(
