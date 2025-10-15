@@ -28,9 +28,7 @@ export const FOUR_DAYS_MILLISECONDS = 4 * ONE_DAY_MILLISECONDS;
 export const FIVE_DAYS_MILLISECONDS = 5 * ONE_DAY_MILLISECONDS;
 export const SIX_DAYS_MILLISECONDS = 6 * ONE_DAY_MILLISECONDS;
 
-export const PASSPORT_STEP = 9;
-
-export const FINAL_STEP = 10;
+export const FINAL_STEP = 9;
 
 export const CONTINUE_LINKS_EXP = '30days';
 

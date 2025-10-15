@@ -7,7 +7,7 @@ import {
 import { ClaimService } from '../claim.service';
 import { ActivityService } from '../activity/activity.service';
 import { omit } from '../../../utils/omit';
-import { PASSPORT_STEP } from '../constants';
+import { FINAL_STEP } from '../constants';
 
 @Injectable()
 export class RecentUpdatesService {
@@ -33,7 +33,7 @@ export class RecentUpdatesService {
             );
         }
 
-        if (claim.step < PASSPORT_STEP) {
+        if (claim.step < FINAL_STEP) {
             return;
         }
         await this.saveActivity(
