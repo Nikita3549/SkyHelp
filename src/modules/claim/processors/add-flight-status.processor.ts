@@ -27,18 +27,16 @@ export class AddFlightStatusProcessor extends WorkerHost {
                 new Date(flightDate),
             );
 
-        if (!flightFromFlightStats) {
-            return;
+        if (flightFromFlightStats) {
+            await this.claimService.createFlightStatus(
+                {
+                    isCancelled: flightFromFlightStats.isCancelled,
+                    delayMinutes: flightFromFlightStats.delayMinutes,
+                    source: flightFromFlightStats.source,
+                },
+                claimId,
+            );
         }
-
-        await this.claimService.createFlightStatus(
-            {
-                isCancelled: flightFromFlightStats.isCancelled,
-                delayMinutes: flightFromFlightStats.delayMinutes,
-                source: flightFromFlightStats.source,
-            },
-            claimId,
-        );
 
         const flightFromFlightAware =
             await this.flightService.getFlightFromFlightAware(
@@ -47,17 +45,15 @@ export class AddFlightStatusProcessor extends WorkerHost {
                 new Date(flightDate),
             );
 
-        if (!flightFromFlightAware) {
-            return;
+        if (flightFromFlightAware) {
+            await this.claimService.createFlightStatus(
+                {
+                    isCancelled: flightFromFlightAware.isCancelled,
+                    delayMinutes: flightFromFlightAware.delayMinutes,
+                    source: flightFromFlightAware.source,
+                },
+                claimId,
+            );
         }
-
-        await this.claimService.createFlightStatus(
-            {
-                isCancelled: flightFromFlightAware.isCancelled,
-                delayMinutes: flightFromFlightAware.delayMinutes,
-                source: flightFromFlightAware.source,
-            },
-            claimId,
-        );
     }
 }

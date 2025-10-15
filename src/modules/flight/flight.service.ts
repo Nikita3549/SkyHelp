@@ -99,10 +99,23 @@ export class FlightService {
 
                 const actualCancelled =
                     flightStatus.status == 'C' || flightStatus.status == 'R'; // C - cancelled, R - redirected
-                const delayMinutes = flightStatus.delays
-                    ?.arrivalGateDelayMinutes
+                let delayMinutes = flightStatus.delays?.arrivalGateDelayMinutes
                     ? flightStatus.delays.arrivalGateDelayMinutes
                     : 0;
+
+                const actual =
+                    flightStatus.operationalTimes.actualGateArrival?.dateUtc;
+                const scheduled =
+                    flightStatus.operationalTimes.scheduledGateArrival?.dateUtc;
+
+                if (delayMinutes == 0 && actual && scheduled) {
+                    const actualDate = new Date(actual);
+                    const scheduledDate = new Date(scheduled);
+                    delayMinutes = Math.round(
+                        (actualDate.getTime() - scheduledDate.getTime()) /
+                            60000,
+                    );
+                }
 
                 return {
                     source: ClaimFlightStatusSource.FLIGHT_STATS,
