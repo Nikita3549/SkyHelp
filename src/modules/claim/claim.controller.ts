@@ -10,6 +10,7 @@ import {
     Put,
     Query,
     Req,
+    UnauthorizedException,
     UseGuards,
 } from '@nestjs/common';
 import { CreateClaimDto } from './dto/create-claim.dto';
@@ -297,7 +298,7 @@ export class PublicClaimController {
         const apiKey = req.headers['x-api-key'];
 
         if (!apiKey || typeof apiKey != 'string') {
-            throw new ForbiddenException('Missing apiKey');
+            throw new UnauthorizedException('Missing apiKey');
         }
         if (apiKey != this.configService.getOrThrow('API_KEY')) {
             throw new ForbiddenException('Invalid apiKey');
