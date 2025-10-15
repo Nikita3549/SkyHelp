@@ -2,8 +2,10 @@ import {
     BadRequestException,
     Body,
     Controller,
+    Delete,
     ForbiddenException,
     Get,
+    HttpCode,
     NotFoundException,
     Param,
     Patch,
@@ -45,8 +47,7 @@ import {
 } from '@prisma/client';
 import { DocumentRequestService } from '../document-request/document-request.service';
 import { PatchPassengerIdDto } from './dto/patch-passenger-id.dto';
-import { UploadDocumentsDto } from './dto/upload-documents.dto';
-import { ValidatedDocumentsUploadInterceptor } from '../../../interceptors/documents/validated-documents-upload.interceptor';
+import { HttpStatusCode } from 'axios';
 
 @Controller('claims/documents')
 @UseGuards(JwtAuthGuard)
@@ -76,6 +77,19 @@ export class DocumentController {
             'Content-Disposition': 'attachment; filename=merged.pdf',
         });
         res.send(newFile);
+    }
+
+    @Delete(':documentId/admin')
+    @HttpCode(HttpStatusCode.NoContent)
+    @UseGuards(IsPartnerOrLawyerOrAgentGuard)
+    async removeDocument(@Param('documentId') documentId: string) {
+        const document = await this.documentService.getDocument(documentId);
+
+        if (!document) {
+            throw new NotFoundException(INVALID_DOCUMENT_ID);
+        }
+
+        await this.documentService.removeDocument(document.id);
     }
 
     @Post('admin')

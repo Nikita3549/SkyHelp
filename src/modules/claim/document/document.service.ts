@@ -14,6 +14,14 @@ import * as fontkit from 'fontkit';
 export class DocumentService {
     constructor(private readonly prisma: PrismaService) {}
 
+    async removeDocument(documentId: string) {
+        const document = await this.prisma.document.delete({
+            where: { id: documentId },
+        });
+
+        await fs.unlink(document.path);
+    }
+
     async getDocument(documentId: string): Promise<Document | null> {
         return this.prisma.document.findFirst({
             where: {
