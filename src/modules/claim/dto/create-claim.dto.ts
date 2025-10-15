@@ -1,4 +1,5 @@
 import {
+    ArrayNotEmpty,
     IsArray,
     IsBoolean,
     IsDate,
@@ -72,6 +73,7 @@ class DetailsDto {
     flightNumber: string;
 
     @IsArray()
+    @ArrayNotEmpty()
     @ValidateNested({ each: true })
     @Type(() => RouteDto)
     routes: RouteDto[];
