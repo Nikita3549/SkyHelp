@@ -104,7 +104,9 @@ export class FlightService {
                     : 0;
 
                 const actual =
-                    flightStatus.operationalTimes.actualGateArrival?.dateUtc;
+                    flightStatus.operationalTimes.actualGateArrival?.dateUtc ||
+                    flightStatus.operationalTimes.actualRunwayArrival?.dateUtc;
+
                 const scheduled =
                     flightStatus.operationalTimes.scheduledGateArrival?.dateUtc;
 
