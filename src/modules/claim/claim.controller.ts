@@ -2,6 +2,7 @@ import {
     BadRequestException,
     Body,
     Controller,
+    ForbiddenException,
     Get,
     NotFoundException,
     Param,
@@ -292,7 +293,16 @@ export class PublicClaimController {
     }
 
     @Get(':claimId')
-    async getClaim(@Param('claimId') claimId: string) {
+    async getClaim(@Param('claimId') claimId: string, @Req() req: Request) {
+        const apiKey = req.headers['x-api-key'];
+
+        if (!apiKey || typeof apiKey != 'string') {
+            throw new ForbiddenException('Missing apiKey');
+        }
+        if (apiKey != this.configService.getOrThrow('API_KEY')) {
+            throw new ForbiddenException('Invalid apiKey');
+        }
+
         const claim = await this.claimService.getClaim(claimId);
 
         if (!claim) {
