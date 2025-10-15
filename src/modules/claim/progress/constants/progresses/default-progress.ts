@@ -4,7 +4,7 @@ import { ProgressVariants } from './progressVariants';
 export const defaultProgress = [
     {
         title: ProgressVariants.claimReceived.title,
-        description: ProgressVariants.claimReceived.description[0],
+        description: ProgressVariants.claimReceived.descriptions[0],
         order: 1,
         endAt: new Date(),
         status: ProgressStatus.COMPLETED,

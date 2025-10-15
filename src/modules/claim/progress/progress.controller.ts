@@ -128,7 +128,7 @@ export class ProgressController {
             ).find(
                 (key) =>
                     ProgressVariants[key].status == status &&
-                    ProgressVariants[key].description.includes(description),
+                    ProgressVariants[key].descriptions.includes(description),
             ) ||
                 (() => {
                     throw new BadRequestException(
