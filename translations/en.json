@@ -3776,6 +3776,9 @@
     "documents.useComputerCamera": "Use computer camera",
     "documents.continue": "Continue",
     "FlightDocumentsStep.uploadSuccesTitle": "Upload successful",
-    "FlightDocumentsStep.uploadSuccesDescription": "Your documents have been uploaded successfully."
-    
+    "FlightDocumentsStep.uploadSuccesDescription": "Your documents have been uploaded successfully.",
+    "signatureStep.parentFirstName": "Parent’s first name",
+    "signatureStep.parentFirstNamePlaceholder": "Enter parent’s first name",
+    "signatureStep.parentLastName": "Parent’s last name",
+    "signatureStep.parentLastNamePlaceholder": "Enter parent’s last name"
 }

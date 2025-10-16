@@ -3777,6 +3777,9 @@
     "documents.useComputerCamera": "Использовать камеру компьютера",
     "documents.continue": "Продолжить",
     "FlightDocumentsStep.uploadSuccesTitle": "Загрузка выполнена",
-    "FlightDocumentsStep.uploadSuccesDescription": "Ваши документы успешно загружены."
-
+    "FlightDocumentsStep.uploadSuccesDescription": "Ваши документы успешно загружены.",
+    "signatureStep.parentFirstName": "Имя родителя",
+    "signatureStep.parentFirstNamePlaceholder": "Введите имя родителя",
+    "signatureStep.parentLastName": "Фамилия родителя",
+    "signatureStep.parentLastNamePlaceholder": "Введите фамилию родителя"
 }

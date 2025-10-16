@@ -23,7 +23,7 @@ export class UpdatePassengerDto {
     @IsOptional()
     @Type(() => Date)
     @IsDate()
-    birthday: Date;
+    birthday?: Date;
 
     @IsOptional()
     @IsEmail()

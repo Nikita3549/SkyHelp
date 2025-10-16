@@ -3799,5 +3799,9 @@
     "documents.useComputerCamera": "Bilgisayar kamerasını kullan",
     "documents.continue": "Devam et",
     "FlightDocumentsStep.uploadSuccesTitle": "Yükleme başarılı",
-    "FlightDocumentsStep.uploadSuccesDescription": "Belgeleriniz başarıyla yüklendi."
+    "FlightDocumentsStep.uploadSuccesDescription": "Belgeleriniz başarıyla yüklendi.",
+    "signatureStep.parentFirstName": "Ebeveynin adı",
+    "signatureStep.parentFirstNamePlaceholder": "Ebeveynin adını girin",
+    "signatureStep.parentLastName": "Ebeveynin soyadı",
+    "signatureStep.parentLastNamePlaceholder": "Ebeveynin soyadını girin"
 }

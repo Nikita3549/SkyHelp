@@ -37,7 +37,11 @@ export class GenerateLinksService {
         return `${this.FRONTEND_URL}/sign/customer?customerId=${encodeURIComponent(customerId)}&claimId=${encodeURIComponent(claimId)}&claim=${encodeURIComponent(jwt)}`;
     }
 
-    async generateSignOtherPassenger(passengerId: string, jwt: string) {
-        return `${this.FRONTEND_URL}/sign?passengerId=${encodeURIComponent(passengerId)}&claim=${encodeURIComponent(jwt)}`;
+    async generateSignOtherPassenger(
+        passengerId: string,
+        jwt: string,
+        requireParentInfo: boolean,
+    ) {
+        return `${this.FRONTEND_URL}/sign?passengerId=${encodeURIComponent(passengerId)}&claim=${encodeURIComponent(jwt)}${requireParentInfo ? `&requireParentInfo=yes` : ''}`;
     }
 }

@@ -3,6 +3,7 @@ import {
     Body,
     Controller,
     Get,
+    InternalServerErrorException,
     NotFoundException,
     Param,
     Patch,
@@ -59,9 +60,20 @@ export class OtherPassengerController {
         );
     }
 
-    // @UseGuards()
-    // @Patch('admin/minor')
-    // async patchPassengerToMinor(@Body() dto: ) {}
+    @UseGuards(IsAgentGuard)
+    @Patch(`:passengerId/admin/minor`)
+    async patchPassengerToMinor(@Param('passengerId') passengerId: string) {
+        const passenger =
+            await this.otherPassengerService.getOtherPassenger(passengerId);
+
+        if (!passenger) {
+            throw new NotFoundException(INVALID_PASSENGER_ID);
+        }
+
+        return await this.otherPassengerService.setOtherPassengerAsMinor(
+            passenger.id,
+        );
+    }
 }
 
 @Controller('claims/passengers')
@@ -92,7 +104,14 @@ export class PublicOtherPassengerController {
         @Body() dto: UploadSignDto,
         @Param('passengerId') passengerId: string,
     ) {
-        const { signature, claimId, jwt, documentRequestId } = dto;
+        const {
+            signature,
+            claimId,
+            jwt,
+            documentRequestId,
+            parentFirstName,
+            parentLastName,
+        } = dto;
 
         const token = await validateClaimJwt(
             jwt,
@@ -102,11 +121,31 @@ export class PublicOtherPassengerController {
 
         await this.tokenService.revokeJwt(token);
 
-        const passenger =
+        let passenger =
             await this.otherPassengerService.getOtherPassenger(passengerId);
 
         if (!passenger) {
             throw new NotFoundException(INVALID_PASSENGER_ID);
+        }
+
+        const requireParentInfo =
+            passenger.isMinor &&
+            (!passenger.parentFirstName || !passenger.parentLastName);
+        debugger;
+        if (requireParentInfo) {
+            if (!parentFirstName || !parentLastName) {
+                throw new BadRequestException(
+                    'This passenger needs parentFirstName and parentLastName for signing',
+                );
+            }
+
+            passenger = await this.otherPassengerService.updatePassenger(
+                {
+                    parentFirstName,
+                    parentLastName,
+                },
+                passenger.id,
+            );
         }
 
         const claim = await this.claimService.getClaim(passenger.claimId);
@@ -129,12 +168,19 @@ export class PublicOtherPassengerController {
 
         let path: string;
 
-        if (
-            passenger.isMinor &&
-            passenger.parentFirstName &&
-            passenger.parentLastName &&
-            passenger.birthday
-        ) {
+        if (passenger.isMinor) {
+            if (
+                !passenger.birthday ||
+                !passenger.parentFirstName ||
+                !passenger.parentLastName
+            ) {
+                debugger;
+                console.error(
+                    `ERROR: Minor passenger ${passengerId} doesn't have birthday or parentFirstName or parentLastName field. Claim: ${claim.id}`,
+                );
+                throw new InternalServerErrorException();
+            }
+
             path = await this.documentService.saveParentalSignaturePdf(
                 signature,
                 {

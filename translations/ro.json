@@ -3778,6 +3778,10 @@
     "documents.withPhone": "Cu telefonul",
     "documents.useComputerCamera": "Folosește camera computerului",
     "documents.continue": "Continuă",
-     "FlightDocumentsStep.uploadSuccesTitle": "Încărcare reușită",
-  "FlightDocumentsStep.uploadSuccesDescription": "Documentele tale au fost încărcate cu succes."
+    "FlightDocumentsStep.uploadSuccesTitle": "Încărcare reușită",
+    "FlightDocumentsStep.uploadSuccesDescription": "Documentele tale au fost încărcate cu succes.",
+    "signatureStep.parentFirstName": "Prenumele părintelui",
+    "signatureStep.parentFirstNamePlaceholder": "Introduceți prenumele părintelui",
+    "signatureStep.parentLastName": "Numele de familie al părintelui",
+    "signatureStep.parentLastNamePlaceholder": "Introduceți numele de familie al părintelui"
 }

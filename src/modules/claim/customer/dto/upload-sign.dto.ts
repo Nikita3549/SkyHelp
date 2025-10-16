@@ -12,5 +12,13 @@ export class UploadSignDto {
 
     @IsOptional()
     @IsString()
-    documentRequestId: string;
+    documentRequestId?: string;
+
+    @IsOptional()
+    @IsString()
+    parentFirstName?: string;
+
+    @IsOptional()
+    @IsString()
+    parentLastName?: string;
 }

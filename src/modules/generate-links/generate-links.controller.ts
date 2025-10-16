@@ -24,12 +24,14 @@ import {
     HAVE_NO_RIGHTS_ON_CLAIM,
     INVALID_CLAIM_ID,
     INVALID_JWT,
+    INVALID_PASSENGER_ID,
 } from '../claim/constants';
 import { VerifyJwtDto } from './dto/verify-jwt.dto';
 import { ClaimService } from '../claim/claim.service';
 import { AuthRequest } from '../../interfaces/AuthRequest.interface';
 import { UserRole } from '@prisma/client';
 import { v4 as uuid } from 'uuid';
+import { OtherPassengerService } from '../claim/other-passenger/other-passenger.service';
 
 @Controller('links')
 @UseGuards(JwtAuthGuard)
@@ -38,6 +40,7 @@ export class GenerateLinksController {
         private readonly tokenService: TokenService,
         private readonly generateLinksService: GenerateLinksService,
         private readonly claimService: ClaimService,
+        private readonly otherPassengerService: OtherPassengerService,
     ) {}
 
     @UseGuards(IsPartnerOrLawyerOrAgentGuard)
@@ -108,9 +111,22 @@ export class GenerateLinksController {
     @Get('sign-other-passenger')
     async copySignOtherPassenger(@Query() query: OtherPassengerClaimDto) {
         const jwt = await this.generateLinkJwt(query.claimId);
-        const link = await this.generateLinksService.generateSignOtherPassenger(
+        const passenger = await this.otherPassengerService.getOtherPassenger(
             query.passengerId,
+        );
+
+        if (!passenger) {
+            throw new NotFoundException(INVALID_PASSENGER_ID);
+        }
+
+        const requireParentInfo =
+            passenger.isMinor &&
+            (!passenger.parentFirstName || !passenger.parentLastName);
+
+        const link = await this.generateLinksService.generateSignOtherPassenger(
+            passenger.id,
             jwt,
+            requireParentInfo,
         );
         return { link };
     }
@@ -128,6 +144,7 @@ export class PublicGenerateLinksController {
     constructor(
         private readonly generateLinksService: GenerateLinksService,
         private readonly tokenService: TokenService,
+        private readonly otherPassengerService: OtherPassengerService,
     ) {}
 
     @Get('verify')
@@ -156,10 +173,24 @@ export class PublicGenerateLinksController {
         }
 
         const jwt = await this.generateLinkJwt(token.claimId);
-        const link = await this.generateLinksService.generateSignOtherPassenger(
+        const passenger = await this.otherPassengerService.getOtherPassenger(
             query.passengerId,
-            jwt,
         );
+
+        if (!passenger) {
+            throw new NotFoundException(INVALID_PASSENGER_ID);
+        }
+
+        const requireParentInfo =
+            passenger.isMinor &&
+            (!passenger.parentFirstName || !passenger.parentLastName);
+
+        const link = await this.generateLinksService.generateSignOtherPassenger(
+            passenger.id,
+            jwt,
+            requireParentInfo,
+        );
+
         return { link };
     }
 

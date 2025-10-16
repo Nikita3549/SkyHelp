@@ -3,6 +3,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { OtherPassenger } from '@prisma/client';
 import { UpdatePassengerDto } from './dto/update-passenger.dto';
 import { OtherPassengerDto } from './dto/create-other-passengers.dto';
+import { OtherPassengerController } from './other-passenger.controller';
 
 @Injectable()
 export class OtherPassengerService {
@@ -35,9 +36,14 @@ export class OtherPassengerService {
         );
     }
 
-    async updatePassenger(passenger: UpdatePassengerDto, passengerId: string) {
+    async updatePassenger(
+        passenger: Partial<OtherPassenger>,
+        passengerId: string,
+    ) {
         return this.prisma.otherPassenger.update({
-            data: passenger,
+            data: {
+                ...passenger,
+            },
             where: {
                 id: passengerId,
             },
@@ -48,6 +54,17 @@ export class OtherPassengerService {
         passengerId: string,
     ): Promise<OtherPassenger | null> {
         return this.prisma.otherPassenger.findFirst({
+            where: {
+                id: passengerId,
+            },
+        });
+    }
+
+    async setOtherPassengerAsMinor(passengerId: string) {
+        return this.prisma.otherPassenger.update({
+            data: {
+                isMinor: true,
+            },
             where: {
                 id: passengerId,
             },
