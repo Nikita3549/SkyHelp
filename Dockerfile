@@ -1,5 +1,6 @@
 FROM node:22-slim as build
 WORKDIR opt/api
+RUN apt-get update -y && apt-get install -y openssl
 COPY package.json nest-cli.json ./
 RUN npm install
 COPY ./src ./prisma ./
