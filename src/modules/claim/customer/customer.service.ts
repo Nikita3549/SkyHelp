@@ -21,7 +21,7 @@ export class CustomerService {
                 firstName: dto.firstName,
                 lastName: dto.lastName,
                 email: dto.email,
-                phone: dto.phone,
+                phone: normalizePhone(dto.phone),
                 address: dto.address,
                 country: dto.country,
                 city: dto.city,

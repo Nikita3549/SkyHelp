@@ -184,7 +184,9 @@ export class ClaimService {
                                 firstName: claimData.customer.firstName,
                                 lastName: claimData.customer.lastName,
                                 email: claimData.customer.email,
-                                phone: claimData.customer.phone,
+                                phone:
+                                    normalizePhone(claimData.customer.phone) ||
+                                    '-',
                                 address: claimData.customer.address,
                                 city: claimData.customer.city,
                                 state: claimData.customer.state,
