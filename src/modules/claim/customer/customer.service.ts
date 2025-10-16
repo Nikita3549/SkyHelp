@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CustomerDto } from './dto/customer.dto';
 import { PrismaService } from '../../prisma/prisma.service';
 import { ClaimCustomer } from '@prisma/client';
+import { normalizePhone } from '../../../utils/normalizePhone';
 
 @Injectable()
 export class CustomerService {

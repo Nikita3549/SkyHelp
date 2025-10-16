@@ -1,3 +1,3 @@
-function normalizePhone(phone: string): string {
+export function normalizePhone(phone: string): string {
     return phone.replace(/[^\d+]/g, '').replace(/^00/, '+');
 }

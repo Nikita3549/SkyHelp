@@ -34,6 +34,7 @@ import { BasePassenger } from './interfaces/base-passenger.interface';
 import { ConfigService } from '@nestjs/config';
 import { IClaimJwt } from './interfaces/claim-jwt.interface';
 import { TokenService } from '../token/token.service';
+import { normalizePhone } from '../../utils/normalizePhone';
 
 @Injectable()
 export class ClaimService {
