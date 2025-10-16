@@ -36,7 +36,7 @@ export class ClaimFollowupProcessor extends WorkerHost {
             throw new Error(INVALID_CLAIM_ID);
         }
 
-        if (claim.step == FINAL_STEP || claim.archived) {
+        if (claim.step >= FINAL_STEP || claim.archived) {
             return;
         }
 
