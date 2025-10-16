@@ -52,15 +52,23 @@ import { Languages } from '../language/enums/languages.enums';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
 import { IAddFlightStatusJobData } from './interfaces/add-flight-status-job-data.interface';
+import { ApiKeyAuthGuard } from '../../guards/ApiKeyAuthGuard';
+import { JwtOrApiKeyAuth } from '../../guards/jwtOrApiKeyAuth';
+import { GetClaimsQuery } from './dto/get-claims.query';
 
 @Controller('claims')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtOrApiKeyAuth)
 export class ClaimController {
     constructor(private readonly claimService: ClaimService) {}
 
     @Get()
-    async getClaims(@Req() req: AuthRequest) {
-        return this.claimService.getUserClaims(req.user.id);
+    async getClaims(@Req() req: AuthRequest, @Query() query: GetClaimsQuery) {
+        const { phone, email } = query;
+
+        return this.claimService.getUserClaims(req?.user?.id, 1, {
+            phone,
+            email,
+        });
     }
 }
 
@@ -294,16 +302,8 @@ export class PublicClaimController {
     }
 
     @Get(':claimId')
+    @UseGuards(ApiKeyAuthGuard)
     async getClaim(@Param('claimId') claimId: string, @Req() req: Request) {
-        const apiKey = req.headers['x-api-key'];
-
-        if (!apiKey || typeof apiKey != 'string') {
-            throw new UnauthorizedException('Missing apiKey');
-        }
-        if (apiKey != this.configService.getOrThrow('API_KEY')) {
-            throw new ForbiddenException('Invalid apiKey');
-        }
-
         const claim = await this.claimService.getClaim(claimId);
 
         if (!claim) {

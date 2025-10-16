@@ -381,6 +381,8 @@ export class ClaimService {
             duplicated?: boolean;
             isOrderByAssignedAt?: boolean;
             onlyRecentlyUpdates?: boolean;
+            phone?: string;
+            email?: string;
         },
         pageSize: number = 20,
     ): Promise<{ claims: IFullClaim[]; total: number }> {
@@ -393,6 +395,7 @@ export class ClaimService {
             details: {
                 airlines: {},
             },
+            customer: {},
         };
         let orderBy: Prisma.ClaimOrderByWithRelationInput = {
             createdAt: 'desc',
@@ -400,6 +403,13 @@ export class ClaimService {
 
         if (searchParams?.duplicated) {
             where.state!.isDuplicate = searchParams.duplicated;
+        }
+
+        if (searchParams?.phone) {
+            where.customer!.phone = searchParams.phone;
+        }
+        if (searchParams?.email) {
+            where.customer!.email = searchParams.email;
         }
 
         if (searchParams?.onlyRecentlyUpdates) {
