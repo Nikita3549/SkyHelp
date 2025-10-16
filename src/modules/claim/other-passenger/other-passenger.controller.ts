@@ -131,7 +131,7 @@ export class PublicOtherPassengerController {
         const requireParentInfo =
             passenger.isMinor &&
             (!passenger.parentFirstName || !passenger.parentLastName);
-        debugger;
+
         if (requireParentInfo) {
             if (!parentFirstName || !parentLastName) {
                 throw new BadRequestException(
@@ -174,7 +174,6 @@ export class PublicOtherPassengerController {
                 !passenger.parentFirstName ||
                 !passenger.parentLastName
             ) {
-                debugger;
                 console.error(
                     `ERROR: Minor passenger ${passengerId} doesn't have birthday or parentFirstName or parentLastName field. Claim: ${claim.id}`,
                 );
