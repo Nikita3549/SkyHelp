@@ -55,6 +55,7 @@ import { IAddFlightStatusJobData } from './interfaces/add-flight-status-job-data
 import { ApiKeyAuthGuard } from '../../guards/ApiKeyAuthGuard';
 import { JwtOrApiKeyAuth } from '../../guards/jwtOrApiKeyAuth';
 import { GetClaimsQuery } from './dto/get-claims.query';
+import { normalizePhone } from '../../utils/normalizePhone';
 
 @Controller('claims')
 @UseGuards(JwtOrApiKeyAuth)
@@ -66,7 +67,7 @@ export class ClaimController {
         const { phone, email } = query;
 
         return this.claimService.getUserClaims(req?.user?.id, 1, {
-            phone,
+            phone: phone ? normalizePhone(phone) : undefined,
             email,
         });
     }
