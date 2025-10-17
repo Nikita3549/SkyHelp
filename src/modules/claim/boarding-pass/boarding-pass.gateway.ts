@@ -76,6 +76,6 @@ export class BoardingPassGateway implements OnGatewayConnection {
         };
         this.server.to(sessionId).emit('boarding-pass.data', boardingPassData);
 
-        return { status: 'ok' };
+        return boardingPassData;
     }
 }
