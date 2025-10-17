@@ -6,7 +6,7 @@ import * as path from 'path';
 import { PDFDocument, rgb } from 'pdf-lib';
 import { UPLOAD_DIRECTORY_PATH } from '../../../constants/UploadsDirectoryPath';
 import { spawn } from 'child_process';
-import { Readable } from 'stream';
+import { PassThrough, Readable } from 'stream';
 import { formatDate } from '../../../utils/formatDate';
 import * as fontkit from 'fontkit';
 
@@ -386,7 +386,9 @@ export class DocumentService {
         });
     }
 
-    async mergeFiles(files: Express.Multer.File[]): Promise<Buffer> {
+    async mergeFiles(
+        files: Express.Multer.File[],
+    ): Promise<NodeJS.ReadableStream> {
         const mergedPdf = await PDFDocument.create();
 
         for (const file of files) {
@@ -436,7 +438,10 @@ export class DocumentService {
             }
         }
 
-        return Buffer.from(await mergedPdf.save());
+        const mergedBytes = await mergedPdf.save();
+        const stream = new PassThrough();
+        stream.end(Buffer.from(mergedBytes));
+        return stream;
     }
 
     async getExpressMulterFilesFromPaths(filePaths: string[]) {

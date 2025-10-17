@@ -62,21 +62,19 @@ export class DocumentController {
     @Post('merge')
     async mergeDocuments(@Res() res: Response, @Body() dto: MergeDocumentsDto) {
         const { documentIds } = dto;
-
         const documents =
             await this.documentService.getDocumentByIds(documentIds);
-
         const files = await this.documentService.getExpressMulterFilesFromPaths(
             documents.map((d) => d.path),
         );
-
-        const newFile = await this.documentService.mergeFiles(files);
 
         res.set({
             'Content-Type': 'application/pdf',
             'Content-Disposition': 'attachment; filename=merged.pdf',
         });
-        res.send(newFile);
+
+        const mergedStream = await this.documentService.mergeFiles(files);
+        mergedStream.pipe(res);
     }
 
     @Delete(':documentId/admin')
