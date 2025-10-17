@@ -1,5 +1,5 @@
 import { ClaimStatus } from '@prisma/client';
-import { IsEnum, IsNumber, IsString } from 'class-validator';
+import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class StateDto {
     @IsString()
@@ -11,6 +11,7 @@ export class StateDto {
     @IsNumber()
     amount: number;
 
+    @IsOptional()
     @IsString()
-    comments: string;
+    comments?: string;
 }
