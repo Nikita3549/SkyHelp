@@ -3784,6 +3784,17 @@
     "signatureStep.parentFirstNamePlaceholder": "Introduceți prenumele părintelui",
     "signatureStep.parentLastName": "Numele de familie al părintelui",
     "signatureStep.parentLastNamePlaceholder": "Introduceți numele de familie al părintelui",
-    "PassengerDetailsStep.validation.phoneRequired": "Numărul de telefon este obligatoriu"
-
+    "PassengerDetailsStep.validation.phoneRequired": "Numărul de telefon este obligatoriu",
+    "camera.apiNotSupported": "API-ul camerei nu este suportat în acest browser.",
+    "camera.permissionDenied": "Permisiunea pentru cameră a fost refuzată. Permite accesul pentru a continua.",
+    "camera.noCameraFound": "Nu a fost găsită nicio cameră compatibilă.",
+    "camera.unableToAccess": "Nu se poate accesa camera.",
+    "camera.starting": "Pornire cameră…",
+    "camera.initializing": "Inițializare",
+    "camera.error": "Eroare cameră",
+    "camera.permissionRequest": "Browserul va cere permisiunea de a folosi camera. Te rugăm să permiți accesul.",
+    "camera.unknownError": "Eroare necunoscută la accesarea camerei.",
+    "camera.httpsRequirement": "Asigură-te că pagina este încărcată prin HTTPS (sau localhost) și că dispozitivul are o cameră.",
+    "camera.processingBoardingPass": "Procesăm biletul de îmbarcare",
+    "camera.extractingFlightInfo": "Te rugăm să aștepți în timp ce extragem informațiile despre zbor..."
 }

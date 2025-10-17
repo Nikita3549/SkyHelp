@@ -3782,6 +3782,18 @@
     "signatureStep.parentFirstNamePlaceholder": "Введите имя родителя",
     "signatureStep.parentLastName": "Фамилия родителя",
     "signatureStep.parentLastNamePlaceholder": "Введите фамилию родителя",
-    "PassengerDetailsStep.validation.phoneRequired": "Необходимо указать номер телефона"
+    "PassengerDetailsStep.validation.phoneRequired": "Необходимо указать номер телефона",
+    "camera.apiNotSupported": "API камеры не поддерживается в этом браузере.",
+    "camera.permissionDenied": "Доступ к камере запрещён. Разрешите доступ, чтобы продолжить.",
+    "camera.noCameraFound": "Камера, соответствующая требованиям, не найдена.",
+    "camera.unableToAccess": "Не удалось получить доступ к камере.",
+    "camera.starting": "Запуск камеры…",
+    "camera.initializing": "Инициализация",
+    "camera.error": "Ошибка камеры",
+    "camera.permissionRequest": "Браузер запросит доступ к вашей камере. Пожалуйста, разрешите.",
+    "camera.unknownError": "Неизвестная ошибка при доступе к камере.",
+    "camera.httpsRequirement": "Убедитесь, что страница загружена через HTTPS (или localhost) и ваше устройство имеет камеру.",
+    "camera.processingBoardingPass": "Обработка посадочного талона",
+    "camera.extractingFlightInfo": "Пожалуйста, подождите, извлекаем информацию о рейсе..."
 
 }

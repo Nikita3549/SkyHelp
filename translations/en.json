@@ -3781,6 +3781,18 @@
     "signatureStep.parentFirstNamePlaceholder": "Enter parent’s first name",
     "signatureStep.parentLastName": "Parent’s last name",
     "signatureStep.parentLastNamePlaceholder": "Enter parent’s last name",
-    "PassengerDetailsStep.validation.phoneRequired": "Phone number is required"
+    "PassengerDetailsStep.validation.phoneRequired": "Phone number is required",
+    "camera.apiNotSupported": "Camera API not supported in this browser.",
+    "camera.permissionDenied": "Camera permission denied. Allow camera access to continue.",
+    "camera.noCameraFound": "No camera found that matches constraints.",
+    "camera.unableToAccess": "Unable to access camera.",
+    "camera.starting": "Starting camera…",
+    "camera.initializing": "Initializing",
+    "camera.error": "Camera error",
+    "camera.permissionRequest": "The browser will ask for permission to use your camera. Please allow access.",
+    "camera.unknownError": "Unknown error while accessing the camera.",
+    "camera.httpsRequirement": "Make sure this page is served over HTTPS (or localhost) and that your device has a camera.",
+    "camera.processingBoardingPass": "Processing your boarding pass",
+    "camera.extractingFlightInfo": "Please wait while we extract the flight information..."
 
 }

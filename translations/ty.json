@@ -3804,6 +3804,17 @@
     "signatureStep.parentFirstNamePlaceholder": "Ebeveynin adını girin",
     "signatureStep.parentLastName": "Ebeveynin soyadı",
     "signatureStep.parentLastNamePlaceholder": "Ebeveynin soyadını girin",
-    "PassengerDetailsStep.validation.phoneRequired": "Telefon numarası gerekli"
-
+    "PassengerDetailsStep.validation.phoneRequired": "Telefon numarası gerekli",
+    "camera.apiNotSupported": "Bu tarayıcıda Kamera API'si desteklenmiyor.",
+    "camera.permissionDenied": "Kamera izni reddedildi. Devam etmek için izin verin.",
+    "camera.noCameraFound": "Uygun kamera bulunamadı.",
+    "camera.unableToAccess": "Kameraya erişilemiyor.",
+    "camera.starting": "Kamera başlatılıyor…",
+    "camera.initializing": "Başlatılıyor",
+    "camera.error": "Kamera hatası",
+    "camera.permissionRequest": "Tarayıcı, kamerayı kullanmak için izin isteyecek. Lütfen erişime izin verin.",
+    "camera.unknownError": "Kameraya erişirken bilinmeyen bir hata oluştu.",
+    "camera.httpsRequirement": "Bu sayfanın HTTPS (veya localhost) üzerinden sunulduğundan ve cihazınızda kamera bulunduğundan emin olun.",
+    "camera.processingBoardingPass": "Biniş kartı işleniyor",
+    "camera.extractingFlightInfo": "Uçuş bilgileri çıkarılırken lütfen bekleyin..."
 }
