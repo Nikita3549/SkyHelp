@@ -11,7 +11,6 @@ import {
 } from '../../constants';
 import { PubSub } from '@google-cloud/pubsub';
 import { GmailService } from '../../gmail.service';
-import { GmailOfficeAccountLogger } from './gmail-office-account.logger';
 import { isProd } from '../../../../utils/isProd';
 import { ClaimRecentUpdatesType } from '@prisma/client';
 import { RecentUpdatesService } from '../../../claim/recent-updates/recent-updates.service';
@@ -25,7 +24,6 @@ export class GmailOfficeAccountService implements OnModuleInit {
     private pubsub: PubSub;
     private expiration: number | null = null;
     private startHistoryId: string;
-    private readonly logger: GmailOfficeAccountLogger;
 
     constructor(
         private readonly configService: ConfigService,
@@ -33,7 +31,6 @@ export class GmailOfficeAccountService implements OnModuleInit {
         private readonly gmailService: GmailService,
         private readonly recentUpdatesService: RecentUpdatesService,
     ) {
-        this.logger = new GmailOfficeAccountLogger();
         if (!isProd()) return;
 
         this.pubsub = new PubSub({
@@ -176,7 +173,6 @@ export class GmailOfficeAccountService implements OnModuleInit {
     }
 
     async onModuleInit() {
-        this.logger.log('Module init started');
         if (!isProd()) return;
 
         try {
@@ -197,23 +193,17 @@ export class GmailOfficeAccountService implements OnModuleInit {
                 auth: this.oauth2Client,
             });
 
-            this.logger.log('Starting watchMailbox...');
             await this.watchMailbox();
 
-            this.logger.log('Starting pullMessages...');
             this.pullMessages();
 
             await this.refreshAccessToken();
-
-            this.logger.log('Module init finished');
         } catch (err) {
-            this.logger.error('Module initialization failed', err);
             throw err;
         }
     }
 
     pullMessages() {
-        this.logger.log('Pull messages subscription started');
         if (!isProd()) return;
 
         const subscription = this.pubsub.subscription(
@@ -223,7 +213,6 @@ export class GmailOfficeAccountService implements OnModuleInit {
         );
 
         subscription.on('message', async (message) => {
-            this.logger.log('PubSub message received:', message.id);
             try {
                 JSON.parse(message.data.toString('utf8'));
 
@@ -242,10 +231,6 @@ export class GmailOfficeAccountService implements OnModuleInit {
                 message.nack();
             }
         });
-
-        subscription.on('error', (error) => {
-            this.logger.error('Subscription error:', error);
-        });
     }
 
     @Interval(FIFTY_FIVE_MINUTES)
@@ -255,9 +240,6 @@ export class GmailOfficeAccountService implements OnModuleInit {
 
         while (attempt < maxAttempts) {
             attempt++;
-            this.logger.log(
-                `Refreshing access token... Attempt ${attempt}/${maxAttempts}`,
-            );
             try {
                 const tokens = await this.oauth2Client.refreshAccessToken();
                 const accessToken = tokens.credentials.access_token;
@@ -265,13 +247,8 @@ export class GmailOfficeAccountService implements OnModuleInit {
                 if (!accessToken) throw new Error('No access token received');
 
                 this.accessToken = accessToken;
-                this.logger.log('Access token refreshed');
                 return;
             } catch (err) {
-                this.logger.error(
-                    `Failed to refresh access token (Attempt ${attempt})`,
-                    err,
-                );
                 if (attempt >= maxAttempts) throw err;
                 await new Promise((res) => setTimeout(res, 1000 * attempt));
             }
@@ -279,7 +256,6 @@ export class GmailOfficeAccountService implements OnModuleInit {
     }
 
     async watchMailbox(labelIds = ['INBOX']) {
-        this.logger.log('Setting watch on mailbox...');
         if (!isProd()) return;
 
         try {
@@ -297,15 +273,8 @@ export class GmailOfficeAccountService implements OnModuleInit {
             this.startHistoryId = res.data.historyId!;
             this.expiration = Number(res.data.expiration);
 
-            this.logger.log(
-                'Watch set. startHistoryId:',
-                this.startHistoryId,
-                'expiration:',
-                this.expiration,
-            );
             return res.data;
         } catch (err) {
-            this.logger.error('Failed to set watch on mailbox', err);
             throw err;
         }
     }
@@ -313,15 +282,12 @@ export class GmailOfficeAccountService implements OnModuleInit {
     @Interval(SIX_HOURS)
     async refreshWatchIfNeeded() {
         if (!isProd()) return;
-        this.logger.log('Checking watch expiration...');
         const now = Date.now();
 
         if (!this.expiration || now > this.expiration - ONE_DAY) {
-            this.logger.warn('Watch expiring soon — refreshing...');
             await this.watchMailbox();
         } else {
             const hoursLeft = Math.round((this.expiration - now) / ONE_HOUR);
-            this.logger.log(`Watch still valid, ${hoursLeft}h left`);
         }
     }
 
@@ -329,10 +295,6 @@ export class GmailOfficeAccountService implements OnModuleInit {
         gmail_v1.Schema$Message | null | undefined
     > {
         if (!isProd()) return;
-        this.logger.log(
-            'Fetching new messages. startHistoryId:',
-            this.startHistoryId,
-        );
         try {
             const history = await this.gmail.users.history.list({
                 userId: 'me',
@@ -341,13 +303,11 @@ export class GmailOfficeAccountService implements OnModuleInit {
             });
 
             if (!history.data.history) {
-                this.logger.log('No new history records');
                 return;
             }
 
             return new Promise(async (resolve) => {
                 for (const record of history.data.history!) {
-                    this.logger.log('History record:', record.id);
                     if (record.messagesAdded) {
                         for (const msg of record.messagesAdded) {
                             const messageId = msg.message!.id as string;
@@ -361,19 +321,13 @@ export class GmailOfficeAccountService implements OnModuleInit {
                             );
 
                             this.startHistoryId = record.id!;
-                            this.logger.log(
-                                'Updated startHistoryId:',
-                                this.startHistoryId,
-                            );
 
                             resolve(message.data);
                         }
                     }
                 }
             });
-        } catch (err) {
-            this.logger.warn('Failed to fetch new messages', err);
-        }
+        } catch (err) {}
     }
 
     get accessToken(): string {
