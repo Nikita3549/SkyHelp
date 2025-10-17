@@ -3781,5 +3781,7 @@
     "signatureStep.parentFirstName": "Имя родителя",
     "signatureStep.parentFirstNamePlaceholder": "Введите имя родителя",
     "signatureStep.parentLastName": "Фамилия родителя",
-    "signatureStep.parentLastNamePlaceholder": "Введите фамилию родителя"
+    "signatureStep.parentLastNamePlaceholder": "Введите фамилию родителя",
+    "PassengerDetailsStep.validation.phoneRequired": "Необходимо указать номер телефона"
+
 }

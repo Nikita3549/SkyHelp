@@ -3780,5 +3780,7 @@
     "signatureStep.parentFirstName": "Parent’s first name",
     "signatureStep.parentFirstNamePlaceholder": "Enter parent’s first name",
     "signatureStep.parentLastName": "Parent’s last name",
-    "signatureStep.parentLastNamePlaceholder": "Enter parent’s last name"
+    "signatureStep.parentLastNamePlaceholder": "Enter parent’s last name",
+    "PassengerDetailsStep.validation.phoneRequired": "Phone number is required"
+
 }
