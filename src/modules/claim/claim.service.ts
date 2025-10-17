@@ -60,7 +60,8 @@ export class ClaimService {
         delays.forEach(async (delay) => {
             await this.claimFollowupQueue.add('followUpClaim', jobData, {
                 delay,
-                attempts: 1,
+                attempts: 3,
+                backoff: { type: 'exponential', delay: 5000 },
             });
         });
     }

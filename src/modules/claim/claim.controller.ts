@@ -186,11 +186,12 @@ export class PublicClaimController {
             claimId: claim.id,
         };
 
-        this.addFlightStatusQueue.add(
+        await this.addFlightStatusQueue.add(
             'addFlightStatus',
             addFlightStatusJobData,
             {
-                attempts: 1,
+                attempts: 3,
+                backoff: { type: 'exponential', delay: 5000 },
             },
         );
 
