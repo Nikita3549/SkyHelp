@@ -52,6 +52,7 @@ export class BoardingPassGateway implements OnGatewayConnection {
             arrivalAirportIata,
             departureAirportIata,
             sessionId,
+            sendToDesktop,
         } = payload;
 
         const arrivalAirport =
@@ -74,7 +75,11 @@ export class BoardingPassGateway implements OnGatewayConnection {
             arrivalAirport,
             departureAirport,
         };
-        this.server.to(sessionId).emit('boarding-pass.data', boardingPassData);
+        if (sendToDesktop) {
+            this.server
+                .to(sessionId)
+                .emit('boarding-pass.data', boardingPassData);
+        }
 
         return boardingPassData;
     }

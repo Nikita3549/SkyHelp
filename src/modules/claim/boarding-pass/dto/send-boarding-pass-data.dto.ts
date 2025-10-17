@@ -1,4 +1,10 @@
-import { IsArray, IsOptional, IsString, ValidateNested } from 'class-validator';
+import {
+    IsArray,
+    IsBoolean,
+    IsOptional,
+    IsString,
+    ValidateNested,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 
 class PassengerDto {
@@ -39,4 +45,7 @@ export class SendBoardingPassData {
 
     @IsString()
     sessionId: string;
+
+    @IsBoolean()
+    sendToDesktop?: boolean = false;
 }
