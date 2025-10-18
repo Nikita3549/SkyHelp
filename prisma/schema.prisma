@@ -19,10 +19,11 @@ model User {
   createdAt      DateTime @default(now()) @map("created_at")
   updatedAt      DateTime @updatedAt @map("updated_at")
 
-  claims          Claim[]      @relation("UserClaims")
-  claimsAsPartner Claim[]      @relation("PartnerClaims")
-  messages        Message[]
-  membership      ChatMember[]
+  claims            Claim[]      @relation("UserClaims")
+  claimsAsPartner   Claim[]      @relation("PartnerClaims")
+  messages          Message[]
+  membership        ChatMember[]
+  updatedProgresses Progress[]
 
   @@map("users")
 }
@@ -159,6 +160,8 @@ model Progress {
   status       ProgressStatus @default(COMPLETED) @map("status")
   claimStateId String         @map("claim_state_id")
   claimState   ClaimState     @relation(fields: [claimStateId], references: [id], onDelete: Cascade)
+  updatedBy    String?
+  user         User?          @relation(fields: [updatedBy], references: [id])
 
   @@map("progresses")
 }
@@ -182,10 +185,10 @@ enum ClaimStatus {
 }
 
 model ClaimFlightStatus {
-  id           String                @id @default(cuid()) @map("id")
-  isCancelled  Boolean               @default(false) @map("is_cancelled")
-  delayMinutes Int                   @map("delay_minutes")
-  source         ClaimFlightStatusSource
+  id           String                  @id @default(cuid()) @map("id")
+  isCancelled  Boolean                 @default(false) @map("is_cancelled")
+  delayMinutes Int                     @map("delay_minutes")
+  source       ClaimFlightStatusSource
 
   claimId String
   claim   Claim  @relation(fields: [claimId], references: [id])

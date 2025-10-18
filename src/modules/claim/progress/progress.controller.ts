@@ -7,6 +7,7 @@ import {
     NotFoundException,
     Param,
     Post,
+    Req,
     UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
@@ -29,6 +30,7 @@ import { Queue } from 'bullmq';
 import { ISendNewProgressEmailJobData } from './interfaces/send-new-progress-email-job-data.interface';
 import { HttpStatusCode } from 'axios';
 import { LanguageService } from '../../language/language.service';
+import { AuthRequest } from '../../../interfaces/AuthRequest.interface';
 
 @Controller('claims/progresses')
 @UseGuards(JwtAuthGuard, IsPartnerOrLawyerOrAgentGuard)
@@ -45,8 +47,10 @@ export class ProgressController {
     async createProgress(
         @Body() dto: CreateProgressDto,
         @Param('claimId') claimId: string,
+        @Req() req: AuthRequest,
     ) {
         const { status, order, description } = dto;
+        const user = req.user;
 
         const claim = await this.claimService.getClaim(claimId);
 
@@ -64,6 +68,7 @@ export class ProgressController {
                 title: progressVariant.title,
                 description: description,
                 order,
+                updatedBy: user.id,
             },
             claim.stateId,
         );
