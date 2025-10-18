@@ -10,6 +10,7 @@ import {
     DOCUMENT_REQUEST_FILENAME,
     FINISH_CLAIM_FILENAME,
     GENERATE_NEW_ACCOUNT_FILENAME,
+    MISSING_DOCUMENTS_FILENAME,
     NEW_STATUS_FILENAME,
 } from './constants';
 import { LETTERS_DIRECTORY_PATH } from '../../constants/LettersDirectoryPath';
@@ -264,6 +265,53 @@ This message was automatically generated.
         );
 
         const subject = `Action required: upload missing documents for claim #${letterData.claimId}`;
+
+        const email = await this.gmailService.noreply.sendEmailHtml(
+            to,
+            subject,
+            letterHtml,
+            emailCategory,
+        );
+
+        await this.saveHtmlEmail({
+            email,
+            subject,
+            claimId: letterData.claimId,
+            contentHtml: letterHtml,
+            to,
+        });
+    }
+
+    async sendMissingDocumentEmail(
+        to: string,
+        letterData: {
+            customerName: string;
+            claimId: string;
+        },
+        language: Languages = Languages.EN,
+    ) {
+        const emailCategory = EmailCategory.TRANSACTIONAL;
+
+        const layoutHtml = await this.getLayout(to, language, emailCategory);
+
+        const letterTemplateHtml = await this.getLetterContent(
+            MISSING_DOCUMENTS_FILENAME,
+            language,
+        );
+
+        const letterContentHtml = letterTemplateHtml
+            .replace('{{customerName}}', letterData.customerName)
+            .replace(
+                '{{dashboardLink}}',
+                `https://${this.configService.getOrThrow('DOMAIN')}/dashboard`,
+            );
+
+        const letterHtml = this.setContentInLayout(
+            letterContentHtml,
+            layoutHtml,
+        );
+
+        const subject = `Missing documents for your claim #${letterData.claimId}`;
 
         const email = await this.gmailService.noreply.sendEmailHtml(
             to,

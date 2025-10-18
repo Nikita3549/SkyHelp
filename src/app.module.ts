@@ -27,6 +27,7 @@ import { EmailResumeClickModule } from './modules/email-resume-click/email-resum
 import { UnsubscribeEmailModule } from './modules/unsubscribe-email/unsubscribe-email.module';
 import { GenerateLinksModule } from './modules/generate-links/generate-links.module';
 import { SendToCeoModule } from './modules/send-to-ceo/send-to-ceo.module';
+import { BotModule } from './modules/bot/bot.module';
 
 @Module({
     imports: [
@@ -62,6 +63,7 @@ import { SendToCeoModule } from './modules/send-to-ceo/send-to-ceo.module';
         UnsubscribeEmailModule,
         GenerateLinksModule,
         SendToCeoModule,
+        BotModule,
     ],
     controllers: [AppController],
     providers: [AppService],
