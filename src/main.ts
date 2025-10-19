@@ -16,8 +16,11 @@ async function bootstrap() {
     const port = configService.getOrThrow<number>('API_PORT');
 
     if (isProd()) {
+        const allowedOrigins: string[] =
+            configService.get('FRONTEND_ALLOWED_ORIGINS')?.split(',') ?? [];
+
         app.enableCors({
-            origin: configService.getOrThrow<string>('FRONTEND_URL'),
+            origin: allowedOrigins,
             credentials: true,
         });
     } else {
