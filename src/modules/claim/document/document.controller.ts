@@ -325,7 +325,9 @@ export class PublicDocumentController {
             throw new NotFoundException(CLAIM_NOT_FOUND);
         }
 
-        await this.claimService.updateStep(claimId, step);
+        if (step) {
+            await this.claimService.updateStep(claimId, step);
+        }
 
         return await this.documentService.saveDocuments(
             files.map((doc, index) => {

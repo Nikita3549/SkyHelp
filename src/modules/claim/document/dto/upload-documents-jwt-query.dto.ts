@@ -1,5 +1,4 @@
-import { IsEnum, IsJWT, IsNumber, IsOptional, IsString } from 'class-validator';
-import { DocumentType } from '@prisma/client';
+import { IsJWT, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class UploadDocumentsJwtQueryDto {
     @IsJWT()
@@ -8,8 +7,9 @@ export class UploadDocumentsJwtQueryDto {
     @IsString()
     claimId: string;
 
+    @IsOptional()
     @IsNumber()
-    step: number;
+    step?: number;
 
     @IsString()
     passengerId: string;
