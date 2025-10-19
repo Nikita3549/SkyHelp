@@ -3793,6 +3793,15 @@
     "camera.unknownError": "Unknown error while accessing the camera.",
     "camera.httpsRequirement": "Make sure this page is served over HTTPS (or localhost) and that your device has a camera.",
     "camera.processingBoardingPass": "Processing your boarding pass",
-    "camera.extractingFlightInfo": "Please wait while we extract the flight information..."
-
+    "camera.extractingFlightInfo": "Please wait while we extract the flight information...",
+    "PassengerDetailsStep.validation.invalidFirstName": "Invalid first name",
+    "PassengerDetailsStep.validation.firstNameRequired": "First name is required",
+    "PassengerDetailsStep.validation.lastNameRequired": "Last name is required",
+    "PassengerDetailsStep.validation.invalidEmail": "Invalid email address",
+    "PassengerDetailsStep.validation.emailRequired": "Email is required",
+    "PassengerDetailsStep.validation.invalidAddress": "Invalid address",
+    "PassengerDetailsStep.validation.addressRequired": "Address is required",
+    "PassengerDetailsStep.validation.invalidCity": "Invalid city name",
+    "PassengerDetailsStep.validation.cityRequired": "City is required",
+    "PassengerDetailsStep.validation.countryRequired": "Country is required"
 }

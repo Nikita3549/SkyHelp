@@ -3794,6 +3794,16 @@
     "camera.unknownError": "Неизвестная ошибка при доступе к камере.",
     "camera.httpsRequirement": "Убедитесь, что страница загружена через HTTPS (или localhost) и ваше устройство имеет камеру.",
     "camera.processingBoardingPass": "Обработка посадочного талона",
-    "camera.extractingFlightInfo": "Пожалуйста, подождите, извлекаем информацию о рейсе..."
+    "camera.extractingFlightInfo": "Пожалуйста, подождите, мы извлекаем информацию о рейсе...",
+    "PassengerDetailsStep.validation.invalidFirstName": "Некорректное имя",
+    "PassengerDetailsStep.validation.firstNameRequired": "Имя обязательно",
+    "PassengerDetailsStep.validation.lastNameRequired": "Фамилия обязательна",
+    "PassengerDetailsStep.validation.invalidEmail": "Некорректный адрес электронной почты",
+    "PassengerDetailsStep.validation.emailRequired": "Email обязателен",
+    "PassengerDetailsStep.validation.invalidAddress": "Некорректный адрес",
+    "PassengerDetailsStep.validation.addressRequired": "Адрес обязателен",
+    "PassengerDetailsStep.validation.invalidCity": "Некорректное название города",
+    "PassengerDetailsStep.validation.cityRequired": "Город обязателен",
+    "PassengerDetailsStep.validation.countryRequired": "Страна обязательна"
 
 }

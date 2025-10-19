@@ -3796,5 +3796,15 @@
     "camera.unknownError": "Eroare necunoscută la accesarea camerei.",
     "camera.httpsRequirement": "Asigură-te că pagina este încărcată prin HTTPS (sau localhost) și că dispozitivul are o cameră.",
     "camera.processingBoardingPass": "Procesăm biletul de îmbarcare",
-    "camera.extractingFlightInfo": "Te rugăm să aștepți în timp ce extragem informațiile despre zbor..."
+    "camera.extractingFlightInfo": "Te rugăm să aștepți în timp ce extragem informațiile despre zbor...",
+    "PassengerDetailsStep.validation.invalidFirstName": "Prenume invalid",
+    "PassengerDetailsStep.validation.firstNameRequired": "Prenumele este obligatoriu",
+    "PassengerDetailsStep.validation.lastNameRequired": "Numele de familie este obligatoriu",
+    "PassengerDetailsStep.validation.invalidEmail": "Adresă de e-mail invalidă",
+    "PassengerDetailsStep.validation.emailRequired": "E-mailul este obligatoriu",
+    "PassengerDetailsStep.validation.invalidAddress": "Adresă invalidă",
+    "PassengerDetailsStep.validation.addressRequired": "Adresa este obligatorie",
+    "PassengerDetailsStep.validation.invalidCity": "Nume de oraș invalid",
+    "PassengerDetailsStep.validation.cityRequired": "Orașul este obligatoriu",
+    "PassengerDetailsStep.validation.countryRequired": "Țara este obligatorie"
 }

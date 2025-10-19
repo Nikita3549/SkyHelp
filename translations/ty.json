@@ -3816,5 +3816,15 @@
     "camera.unknownError": "Kameraya erişirken bilinmeyen bir hata oluştu.",
     "camera.httpsRequirement": "Bu sayfanın HTTPS (veya localhost) üzerinden sunulduğundan ve cihazınızda kamera bulunduğundan emin olun.",
     "camera.processingBoardingPass": "Biniş kartı işleniyor",
-    "camera.extractingFlightInfo": "Uçuş bilgileri çıkarılırken lütfen bekleyin..."
+    "camera.extractingFlightInfo": "Uçuş bilgileri çıkarılırken lütfen bekleyin...",
+    "PassengerDetailsStep.validation.invalidFirstName": "Geçersiz ad",
+    "PassengerDetailsStep.validation.firstNameRequired": "Ad zorunludur",
+    "PassengerDetailsStep.validation.lastNameRequired": "Soyad zorunludur",
+    "PassengerDetailsStep.validation.invalidEmail": "Geçersiz e-posta adresi",
+    "PassengerDetailsStep.validation.emailRequired": "E-posta zorunludur",
+    "PassengerDetailsStep.validation.invalidAddress": "Geçersiz adres",
+    "PassengerDetailsStep.validation.addressRequired": "Adres zorunludur",
+    "PassengerDetailsStep.validation.invalidCity": "Geçersiz şehir adı",
+    "PassengerDetailsStep.validation.cityRequired": "Şehir zorunludur",
+    "PassengerDetailsStep.validation.countryRequired": "Ülke zorunludur"
 }
