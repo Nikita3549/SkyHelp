@@ -9,6 +9,7 @@ export class LanguageService {
         language: Languages,
     ): Promise<{ [key: string]: string }> {
         const filename = `${language}.json`;
+        console.log(language);
 
         return JSON.parse(
             await fs.readFile(
