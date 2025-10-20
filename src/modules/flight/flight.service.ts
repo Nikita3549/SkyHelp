@@ -62,7 +62,7 @@ export class FlightService {
             if (flight) {
                 const actualCancelled = !!flight?.cancelled;
                 const delayMinutes = flight?.arrival_delay
-                    ? Math.floor(flight.arrival_delay / (60 * 60))
+                    ? Math.floor(flight.arrival_delay / 60)
                     : 0;
 
                 return {
