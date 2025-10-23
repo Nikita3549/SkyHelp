@@ -3806,5 +3806,6 @@
     "PassengerDetailsStep.validation.addressRequired": "Adresa este obligatorie",
     "PassengerDetailsStep.validation.invalidCity": "Nume de oraș invalid",
     "PassengerDetailsStep.validation.cityRequired": "Orașul este obligatoriu",
-    "PassengerDetailsStep.validation.countryRequired": "Țara este obligatorie"
+    "PassengerDetailsStep.validation.countryRequired": "Țara este obligatorie",
+    "boardingPassUpload.uploadBoardingPass": "Încarcă"
 }

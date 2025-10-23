@@ -3826,5 +3826,6 @@
     "PassengerDetailsStep.validation.addressRequired": "Adres zorunludur",
     "PassengerDetailsStep.validation.invalidCity": "Geçersiz şehir adı",
     "PassengerDetailsStep.validation.cityRequired": "Şehir zorunludur",
-    "PassengerDetailsStep.validation.countryRequired": "Ülke zorunludur"
+    "PassengerDetailsStep.validation.countryRequired": "Ülke zorunludur",
+    "boardingPassUpload.uploadBoardingPass": "Yükle"
 }

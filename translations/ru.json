@@ -3804,6 +3804,7 @@
     "PassengerDetailsStep.validation.addressRequired": "Адрес обязателен",
     "PassengerDetailsStep.validation.invalidCity": "Некорректное название города",
     "PassengerDetailsStep.validation.cityRequired": "Город обязателен",
-    "PassengerDetailsStep.validation.countryRequired": "Страна обязательна"
+    "PassengerDetailsStep.validation.countryRequired": "Страна обязательна",
+    "boardingPassUpload.uploadBoardingPass": "Загрузить"
 
 }
