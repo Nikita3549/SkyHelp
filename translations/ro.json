@@ -3581,6 +3581,7 @@
     "legalActionInProgress.description": "Cazul dvs. a fost escaladat către departamentul juridic. Vă vom ține la curent.",
     "closedWithoutResolution.title": "Închis fără rezolvare",
     "closedWithoutResolution.description": "Caz închis din cauza lipsei de documente, eligibilității sau la cererea dvs.",
+    "closedWithoutResolution.description2": "Acest caz a fost închis deoarece pasagerul depusese deja o reclamație pentru același zbor printr-o altă companie.",
     "notEligible.title": "Neeligibil",
     "notEligible.description": "Cazul dvs. nu se califică conform Regulamentului UE 261/2004.",
     "notEligible.delayUnder3h": "Întârziere sub 3 ore — zborurile întârziate mai puțin de 3 ore la sosire nu sunt eligibile pentru compensație conform Regulamentului CE 261/2004.",

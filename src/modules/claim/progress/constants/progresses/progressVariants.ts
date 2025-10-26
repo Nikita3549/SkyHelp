@@ -55,7 +55,10 @@ export const ProgressVariants: {
     closedWithoutResolution: {
         status: ClaimStatus.CLOSED,
         title: 'closedWithoutResolution.title',
-        descriptions: ['closedWithoutResolution.description'],
+        descriptions: [
+            'closedWithoutResolution.description',
+            'closedWithoutResolution.description2',
+        ],
     },
     notEligible: {
         status: ClaimStatus.NOT_ELIGIBLE,

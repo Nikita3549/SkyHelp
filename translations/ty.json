@@ -3601,6 +3601,7 @@
     "legalActionInProgress.description": "Dosyanız hukuki sürece aktarılmıştır. Sizi bilgilendirmeye devam edeceğiz.",
     "closedWithoutResolution.title": "Çözüm Olmadan Kapatıldı",
     "closedWithoutResolution.description": "Dosya eksik belgeler, uygun olmama durumu veya talebiniz üzerine kapatıldı.",
+    "closedWithoutResolution.description2": "Bu dava kapatıldı çünkü yolcu aynı uçuş için başka bir şirket aracılığıyla zaten bir talepte bulunmuştu.",
     "notEligible.title": "Uygun Değil",
     "notEligible.description": "Dosyanız AB Yönetmeliği 261/2004 kapsamında uygun değildir.",
     "notEligible.delayUnder3h": "3 saatten az gecikme — varışta 3 saatten az geciken uçuşlar, AB Yönetmeliği 261/2004 kapsamında tazminat hakkına sahip değildir.",
