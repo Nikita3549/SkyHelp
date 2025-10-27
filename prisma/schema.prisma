@@ -199,6 +199,7 @@ model ClaimFlightStatus {
 enum ClaimFlightStatusSource {
   FLIGHT_AWARE
   FLIGHT_STATS
+  OAG
 }
 
 enum ProgressStatus {

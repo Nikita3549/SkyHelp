@@ -20,6 +20,23 @@ export class AddFlightStatusProcessor extends WorkerHost {
 
         const flightCode = flightNumber.slice(2);
 
+        const flightFromOAG = await this.flightService.getFlightFromOAG(
+            flightCode,
+            airlineIcao,
+            new Date(flightDate),
+        );
+
+        if (flightFromOAG) {
+            await this.claimService.createFlightStatus(
+                {
+                    isCancelled: flightFromOAG.isCancelled,
+                    delayMinutes: flightFromOAG.delayMinutes,
+                    source: flightFromOAG.source,
+                },
+                claimId,
+            );
+        }
+
         const flightFromFlightStats =
             await this.flightService.getFlightFromFlightStats(
                 flightCode,

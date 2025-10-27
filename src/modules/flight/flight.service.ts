@@ -19,6 +19,8 @@ import {
 } from './interfaces/fight-stats-flight';
 import { IFlightStatus } from './interfaces/flight-status.interface';
 import { ClaimFlightStatusSource } from '@prisma/client';
+import { IOAGFlightInfo } from './interfaces/oag-flight-info.interface';
+import { IFullOAGFlight } from './interfaces/oag-flight-full-info.interface';
 
 @Injectable()
 export class FlightService {
@@ -143,6 +145,65 @@ export class FlightService {
         );
     }
 
+    async getFlightFromOAG(
+        flightCode: string,
+        airlineCode: string,
+        date: Date,
+    ): Promise<IFlightStatus | null> {
+        try {
+            const formattedDate = formatDate(date, 'yyyy-mm-dd');
+
+            const flightInfo = await axios.get<IOAGFlightInfo>(
+                `https://api.oag.com/flight-instances/?DepartureDateTime=${formattedDate}&CarrierCode=${airlineCode}&FlightNumber=${flightCode}&version=v2&CodeType=ICAO`,
+                {
+                    headers: {
+                        ['Subscription-Key']: this.configService.getOrThrow(
+                            'OAG_SUBSCRIPTION_KEY',
+                        ),
+                    },
+                },
+            );
+
+            const scheduleKey = flightInfo?.data?.data[0]?.scheduleInstanceKey;
+
+            if (!scheduleKey) {
+                return null;
+            }
+
+            const res = await axios.get<IFullOAGFlight>(
+                `https://api.oag.com/flight-instances/${formattedDate}/${scheduleKey}?version=v2`,
+                {
+                    headers: {
+                        ['Subscription-Key']: this.configService.getOrThrow(
+                            'OAG_SUBSCRIPTION_KEY',
+                        ),
+                    },
+                },
+            );
+
+            const fullFlight = res.data;
+
+            const delayMinutes =
+                this.getArrivalDelayMinutesForOAG(fullFlight) ?? 0;
+
+            const actualCancelled = !(
+                !!fullFlight?.statusDetails![0].arrival?.actualTime ||
+                !!fullFlight?.statusDetails![0].departure?.actualTime
+            );
+
+            const formattedFlight: IFlightStatus = {
+                isCancelled: actualCancelled,
+                delayMinutes,
+                source: ClaimFlightStatusSource.OAG,
+            };
+
+            return formattedFlight;
+        } catch (e) {
+            console.log(e);
+            return null;
+        }
+    }
+
     async getFlightsByDateAirportsCompany(
         dto: GetFlightsDto,
     ): Promise<IFlight[]> {
@@ -241,5 +302,28 @@ export class FlightService {
         end.setUTCHours(23, 59, 59, 999);
 
         return { start, end };
+    }
+
+    private getArrivalDelayMinutesForOAG(
+        flight: IFullOAGFlight,
+    ): number | null {
+        const scheduledDate = flight.arrival?.date?.utc;
+        const scheduledTime = flight.arrival?.time?.utc;
+        const actualUtc =
+            flight.statusDetails?.[0]?.arrival?.actualTime?.onGround?.utc;
+
+        if (!scheduledDate || !scheduledTime || !actualUtc) return null;
+
+        const scheduledIso = `${scheduledDate}T${scheduledTime}:00Z`;
+
+        const scheduled = new Date(scheduledIso);
+        const actual = new Date(actualUtc);
+
+        if (isNaN(scheduled.getTime()) || isNaN(actual.getTime())) return null;
+
+        const diffMs = actual.getTime() - scheduled.getTime();
+        const diffMinutes = Math.round(diffMs / 60000);
+
+        return diffMinutes;
     }
 }
