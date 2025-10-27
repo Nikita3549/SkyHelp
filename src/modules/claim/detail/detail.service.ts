@@ -19,30 +19,7 @@ export class DetailService {
             data: {
                 flightNumber: dto.flightNumber,
                 date: new Date(dto.date),
-                airlines: {
-                    update: {
-                        name: dto.airline,
-                    },
-                },
                 bookingRef: dto.bookingRef,
-                routes: {
-                    deleteMany: {},
-                    create: dto.routes.map((r) => ({
-                        ArrivalAirport: {
-                            create: {
-                                name: r.arrivalAirport,
-                                icao: r.arrivalIcao,
-                            },
-                        },
-                        DepartureAirport: {
-                            create: {
-                                name: r.departureAirport,
-                                icao: r.departureIcao,
-                            },
-                        },
-                        troubled: r.troubled,
-                    })),
-                },
             },
         });
     }
