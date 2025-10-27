@@ -1,11 +1,8 @@
-import { IsArray, IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 
 export class FlightDto {
     @IsString()
     claimId: string;
-
-    @IsString()
-    airline: string;
 
     @IsString()
     date: string;
@@ -16,13 +13,4 @@ export class FlightDto {
     @IsOptional()
     @IsString()
     bookingRef?: string;
-
-    @IsArray()
-    routes: {
-        arrivalAirport: string;
-        arrivalIcao: string;
-        departureAirport: string;
-        departureIcao: string;
-        troubled: boolean;
-    }[];
 }
