@@ -86,6 +86,16 @@ export class ClaimService {
         });
     }
 
+    async updateDuplicates(claimIds: string[], duplicateId: string) {
+        await this.prisma.duplicatedClaim.createMany({
+            data: claimIds.map((claimId) => ({
+                claimId: claimId,
+                duplicatedClaimId: duplicateId,
+            })),
+            skipDuplicates: true,
+        });
+    }
+
     async createClaim(
         claimData: CreateClaimDto,
         extraData: {
@@ -120,12 +130,12 @@ export class ClaimService {
             fullRoutes,
         } = extraData;
 
-        const isDuplicate = !!(await this.findDuplicate({
+        const duplicatedClaims = await this.findDuplicate({
             email: claimData.customer.email,
             firstName: claimData.customer.firstName,
             lastName: claimData.customer.lastName,
             flightNumber: claimData.details.flightNumber,
-        }));
+        });
 
         const maxAttempts = 5;
         for (let attempt = 0; attempt < maxAttempts; attempt++) {
@@ -147,6 +157,11 @@ export class ClaimService {
                         referrer,
                         referrerSource,
                         continueLink: continueClaimLink,
+                        duplicates: {
+                            create: duplicatedClaims.map((claim) => ({
+                                duplicatedClaimId: claim.id,
+                            })),
+                        },
                         details: {
                             create: {
                                 flightNumber: flightNumber,
@@ -175,10 +190,10 @@ export class ClaimService {
                         state: {
                             create: {
                                 amount: claimData.state.amount,
-                                isDuplicate,
                                 progress: {
                                     create: defaultProgress,
                                 },
+                                isDuplicate: duplicatedClaims.length > 0, // TODO: remove this field from db
                             },
                         },
                         customer: {
@@ -222,6 +237,11 @@ export class ClaimService {
                     },
                     include: this.fullClaimInclude(),
                 });
+
+                await this.updateDuplicates(
+                    duplicatedClaims.map((claim) => claim.id),
+                    claim.id,
+                );
 
                 return {
                     ...claim,
@@ -406,7 +426,9 @@ export class ClaimService {
         };
 
         if (searchParams?.duplicated) {
-            where.state!.isDuplicate = searchParams.duplicated;
+            where.duplicates = {
+                some: {},
+            };
         }
 
         if (searchParams?.phone) {
@@ -635,7 +657,7 @@ export class ClaimService {
         });
     }
 
-    private fullClaimInclude() {
+    private fullClaimInclude(config?: { fullDuplicates: boolean }) {
         return {
             details: {
                 include: {
@@ -681,6 +703,9 @@ export class ClaimService {
                     role: true,
                 },
             },
+            duplicates: config?.fullDuplicates
+                ? true
+                : { select: { duplicatedClaimId: true } },
             flightStatuses: true,
             documentRequests: true,
             recentUpdates: true,
@@ -789,7 +814,7 @@ export class ClaimService {
         email: string;
         flightNumber: string;
     }) {
-        return this.prisma.claim.findFirst({
+        return this.prisma.claim.findMany({
             where: {
                 customer: {
                     firstName: claimData.firstName,
@@ -890,6 +915,18 @@ export class ClaimService {
                 delayMinutes: flightStatusData.delayMinutes,
                 source: flightStatusData.source,
                 claimId,
+            },
+        });
+    }
+
+    async deleteDuplicates(claimIds: string[]) {
+        if (!claimIds.length) return;
+
+        await this.prisma.duplicatedClaim.deleteMany({
+            where: {
+                claimId: {
+                    in: claimIds,
+                },
             },
         });
     }

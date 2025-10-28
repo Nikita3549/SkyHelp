@@ -25,6 +25,7 @@ export interface IFullClaim extends Claim {
     partner: IPartner | null;
     recentUpdates: ClaimRecentUpdates[];
     passengers: OtherPassenger[];
+    duplicates: IDuplicate[];
 }
 
 export interface IFullClaimWithJwt extends IFullClaim {
@@ -49,4 +50,10 @@ interface IPartner {
     email: string;
     name: string;
     secondName: string;
+}
+
+interface IDuplicate {
+    id: string;
+    claimId: string;
+    duplicatedClaimId: string;
 }

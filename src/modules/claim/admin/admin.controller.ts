@@ -5,6 +5,8 @@ import {
     Delete,
     ForbiddenException,
     Get,
+    HttpCode,
+    HttpStatus,
     NotFoundException,
     Param,
     Patch,
@@ -29,6 +31,7 @@ import { AuthRequest } from '../../../interfaces/AuthRequest.interface';
 import { IsAgentGuard } from '../../../guards/isAgent.guard';
 import { RecentUpdatesService } from '../recent-updates/recent-updates.service';
 import { GetAdminClaimsStatsQuery } from './dto/get-admin-claims-stats.query';
+import { DeleteDuplicatesDto } from './dto/delete-duplicates.dto';
 
 @Controller('claims/admin')
 @UseGuards(JwtAuthGuard, IsPartnerOrLawyerOrAgentGuard)
@@ -38,6 +41,14 @@ export class AdminController {
         private readonly userService: UserService,
         private readonly recentUpdatesService: RecentUpdatesService,
     ) {}
+
+    @Delete('duplicate')
+    @HttpCode(HttpStatus.NO_CONTENT)
+    async deleteDuplicates(@Body() dto: DeleteDuplicatesDto) {
+        const { claimIds } = dto;
+
+        await this.claimService.deleteDuplicates(claimIds);
+    }
 
     @Get()
     async getClaims(@Query() query: GetClaimsQuery, @Req() req: AuthRequest) {
