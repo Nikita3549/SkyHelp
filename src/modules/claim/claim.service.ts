@@ -25,6 +25,8 @@ import {
     SIX_DAYS,
     THREE_DAYS,
     TWO_DAYS,
+    WORK_END_HOUR,
+    WORK_START_HOUR,
 } from './constants';
 import { Queue } from 'bullmq';
 import { IJobClaimFollowupData } from './interfaces/job-data.interface';
@@ -58,11 +60,25 @@ export class ClaimService {
 
         delays.forEach(async (delay) => {
             await this.claimFollowupQueue.add('followUpClaim', jobData, {
-                delay,
+                delay: this.getNextWorkTime(delay),
                 attempts: 3,
                 backoff: { type: 'exponential', delay: 5000 },
             });
         });
+    }
+
+    private getNextWorkTime(delay: number): number {
+        const now = Date.now();
+        const target = new Date(now + delay);
+
+        if (target.getHours() < WORK_START_HOUR) {
+            target.setHours(WORK_START_HOUR, 0, 0, 0);
+        } else if (target.getHours() > WORK_END_HOUR) {
+            target.setDate(target.getDate() + 1);
+            target.setHours(WORK_START_HOUR, 0, 0, 0);
+        }
+
+        return target.getTime() - now;
     }
 
     async getClaim(claimId: string): Promise<IFullClaim | null> {
