@@ -175,6 +175,7 @@ model Progress {
   claimState   ClaimState     @relation(fields: [claimStateId], references: [id], onDelete: Cascade)
   updatedBy    String?
   user         User?          @relation(fields: [updatedBy], references: [id])
+  createdAt    DateTime       @default(now()) @map("created_at")
 
   @@map("progresses")
 }
