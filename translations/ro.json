@@ -3573,6 +3573,7 @@
     "awaitingAirlineResponse.description": "Așteptăm răspunsul companiei aeriene. Acest lucru poate dura câteva săptămâni.",
     "compensationApproved.title": "Compensație aprobată",
     "compensationApproved.description": "Compensația dvs. a fost aprobată. Așteptăm plata de la compania aeriană.",
+    "compensationApproved.description.one-person": "Compensația a fost aprobată doar pentru un pasager, așteptăm ca compania aeriană să trimită plata",
     "compensationPaid.title": "Compensație plătită",
     "compensationPaid.description": "Compania aeriană a efectuat plata compensației. Fondurile au fost deja trimise în contul dvs. bancar.\nVă rugăm să permiteți până la 7 zile lucrătoare pentru finalizarea transferului.",
     "claimRejected.title": "Cerere respinsă",

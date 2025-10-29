@@ -35,7 +35,10 @@ export const ProgressVariants: {
     compensationApproved: {
         status: ClaimStatus.APPROVED,
         title: 'compensationApproved.title',
-        descriptions: ['compensationApproved.description'],
+        descriptions: [
+            'compensationApproved.description',
+            'compensationApproved.description.one-person',
+        ],
     },
     compensationPaid: {
         status: ClaimStatus.PAID,

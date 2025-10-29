@@ -3593,6 +3593,7 @@
     "awaitingAirlineResponse.description": "Havayolunun yanıtını bekliyoruz. Bu birkaç hafta sürebilir.",
     "compensationApproved.title": "Tazminat Onaylandı",
     "compensationApproved.description": "Tazminatınız onaylandı. Havayolundan ödeme bekleniyor.",
+    "compensationApproved.description.one-person": "Tazminat yalnızca bir yolcu için onaylandı, havayolunun ödemeyi göndermesi bekleniyor",
     "compensationPaid.title": "Tazminat Ödendi",
     "compensationPaid.description": "Havayolu tazminatı ödedi. Ödeme zaten banka hesabınıza gönderildi.\nTransferin tamamlanması için lütfen en fazla 7 iş günü bekleyin.",
     "claimRejected.title": "Talep Reddedildi",

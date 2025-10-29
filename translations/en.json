@@ -3570,6 +3570,7 @@
     "awaitingAirlineResponse.description": "We are waiting for the airline's response. This may take several weeks.",
     "compensationApproved.title": "Compensation Approved",
     "compensationApproved.description": "Your compensation was approved. Waiting for the airline to send payment.",
+    "compensationApproved.description.one-person": "Compensation was approved for only one passenger, waiting for the airline to send payment",
     "compensationPaid.title": "Compensation Paid",
     "compensationPaid.description": "The airline has paid the compensation. The payment has already been sent to your bank account.\nPlease allow up to 7 business days for the transfer to be completed.",
     "claimRejected.title": "Claim Rejected",

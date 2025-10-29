@@ -3572,6 +3572,7 @@
     "awaitingAirlineResponse.description": "Мы ждём ответа от авиакомпании. Это может занять несколько недель.",
     "compensationApproved.title": "Компенсация одобрена",
     "compensationApproved.description": "Ваша компенсация была одобрена. Ожидаем перевод от авиакомпании.",
+    "compensationApproved.description.one-person": "Компенсация одобрена только для одного пассажира, ожидаем оплату от авиакомпании",
     "compensationPaid.title": "Компенсация выплачена",
     "compensationPaid.description": "Авиакомпания выплатила компенсацию. Средства уже отправлены на ваш банковский счёт.\nПожалуйста, дождитесь завершения перевода (до 7 рабочих дней).",
     "claimRejected.title": "Заявка отклонена",
