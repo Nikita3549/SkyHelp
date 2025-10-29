@@ -28,6 +28,7 @@ export const FOUR_DAYS = 4 * DAY;
 export const FIVE_DAYS = 5 * DAY;
 export const SIX_DAYS = 6 * DAY;
 
+export const PAYMENT_STEP = 8;
 export const FINAL_STEP = 9;
 
 export const CONTINUE_LINKS_EXP = '30days';
