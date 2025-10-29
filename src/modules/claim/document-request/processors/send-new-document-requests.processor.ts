@@ -7,7 +7,7 @@ import { DocumentRequestService } from '../document-request.service';
 import { SendNewDocumentRequestJobDataInterface } from '../interfaces/send-new-document-request-job-data.interface';
 
 @Processor(SEND_NEW_DOCUMENT_REQUEST_QUEUE_KEY)
-export class SendNewDocumentRequestProcessor extends WorkerHost {
+export class SendNewDocumentRequestsProcessor extends WorkerHost {
     constructor(
         private readonly notificationService: NotificationService,
         private readonly claimService: ClaimService,

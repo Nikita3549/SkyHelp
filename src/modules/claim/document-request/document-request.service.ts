@@ -7,10 +7,22 @@ import {
     DocumentRequestType,
     DocumentType,
 } from '@prisma/client';
+import { InjectQueue } from '@nestjs/bullmq';
+import { SEND_NEW_DOCUMENT_REQUEST_QUEUE_KEY } from './constants';
+import { Queue } from 'bullmq';
+import { SendNewDocumentRequestJobDataInterface } from './interfaces/send-new-document-request-job-data.interface';
+import { Languages } from '../../language/enums/languages.enums';
+import { IFullClaim } from '../interfaces/full-claim.interface';
+import { DAY, MINUTE } from '../../../common/constants/time.constants';
+import { getNextWorkTime } from '../../../utils/getNextWorkTime';
 
 @Injectable()
 export class DocumentRequestService {
-    constructor(private readonly prisma: PrismaService) {}
+    constructor(
+        private readonly prisma: PrismaService,
+        @InjectQueue(SEND_NEW_DOCUMENT_REQUEST_QUEUE_KEY)
+        private readonly sendNewDocumentRequestQueue: Queue,
+    ) {}
 
     async create(data: CreateDocumentRequestDto): Promise<DocumentRequest> {
         return this.prisma.documentRequest.create({
@@ -97,5 +109,35 @@ export class DocumentRequestService {
                 isSent: true,
             },
         });
+    }
+
+    async scheduleSendNewDocumentRequests(claim: IFullClaim) {
+        const delays = [
+            MINUTE * 5,
+            DAY * 2,
+            DAY * 4,
+            DAY * 6,
+            DAY * 8,
+            DAY * 10,
+            DAY * 12,
+        ];
+
+        const jobData: SendNewDocumentRequestJobDataInterface = {
+            claimId: claim.id,
+            customerName: claim.customer.firstName,
+            to: claim.customer.email,
+            language: (claim.customer.language as Languages) || Languages.EN,
+        };
+
+        for (const delay of delays) {
+            await this.sendNewDocumentRequestQueue.add(
+                'sendNewDocumentRequestEmail',
+                jobData,
+                {
+                    delay: getNextWorkTime(delay),
+                    attempts: 1,
+                },
+            );
+        }
     }
 }

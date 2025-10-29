@@ -21,26 +21,19 @@ import { HAVE_NO_RIGHTS_ON_CLAIM, INVALID_CLAIM_ID } from '../constants';
 import { IsPartnerOrLawyerOrAgentGuard } from '../../../guards/isPartnerOrLawyerOrAgentGuard';
 import { AuthRequest } from '../../../interfaces/AuthRequest.interface';
 import { UserRole } from '@prisma/client';
-import {
-    INVALID_DOCUMENT_REQUEST,
-    SEND_NEW_DOCUMENT_REQUEST_QUEUE_DELAY,
-    SEND_NEW_DOCUMENT_REQUEST_QUEUE_KEY,
-} from './constants';
+import { INVALID_DOCUMENT_REQUEST } from './constants';
 import { IFullClaim } from '../interfaces/full-claim.interface';
 import { HttpStatusCode } from 'axios';
-import { InjectQueue } from '@nestjs/bullmq';
-import { Queue } from 'bullmq';
-import { SendNewDocumentRequestJobDataInterface } from './interfaces/send-new-document-request-job-data.interface';
-import { Languages } from '../../language/enums/languages.enums';
+import { RedisService } from '../../redis/redis.service';
+import { DAY } from '../../../common/constants/time.constants';
 
 @Controller('claims/document-requests')
 @UseGuards(JwtAuthGuard)
 export class DocumentRequestController {
     constructor(
         private readonly documentRequestService: DocumentRequestService,
+        private readonly redis: RedisService,
         private readonly claimService: ClaimService,
-        @InjectQueue(SEND_NEW_DOCUMENT_REQUEST_QUEUE_KEY)
-        private readonly sendNewDocumentRequestQueue: Queue,
     ) {}
 
     @Post()
@@ -59,21 +52,22 @@ export class DocumentRequestController {
             throw new ForbiddenException(HAVE_NO_RIGHTS_ON_CLAIM);
         }
 
-        const jobData: SendNewDocumentRequestJobDataInterface = {
-            claimId: claim.id,
-            customerName: claim.customer.firstName,
-            to: claim.customer.email,
-            language: (claim.customer.language as Languages) || Languages.EN,
-        };
-
-        await this.sendNewDocumentRequestQueue.add(
-            'sendNewDocumentRequestEmail',
-            jobData,
-            {
-                delay: SEND_NEW_DOCUMENT_REQUEST_QUEUE_DELAY,
-                attempts: 1,
-            },
+        const isLocked = await this.redis.get(
+            `claim:${claim.id}:docs_request_email_lock`,
         );
+
+        if (!isLocked) {
+            await this.documentRequestService.scheduleSendNewDocumentRequests(
+                claim,
+            );
+
+            await this.redis.set(
+                `claim:${claim.id}:docs_request_email_lock`,
+                1,
+                'PX',
+                DAY * 12,
+            );
+        }
 
         return this.documentRequestService.create(dto);
     }

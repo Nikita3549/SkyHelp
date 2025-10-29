@@ -4,8 +4,9 @@ import { DocumentRequestController } from './document-request.controller';
 import { ClaimModule } from '../claim.module';
 import { BullModule } from '@nestjs/bullmq';
 import { SEND_NEW_DOCUMENT_REQUEST_QUEUE_KEY } from './constants';
-import { SendNewDocumentRequestProcessor } from './processors/send-new-document-request.processor';
+import { SendNewDocumentRequestsProcessor } from './processors/send-new-document-requests.processor';
 import { NotificationModule } from '../../notification/notification.module';
+import { RedisModule } from '../../redis/redis.module';
 
 @Module({
     imports: [
@@ -14,9 +15,10 @@ import { NotificationModule } from '../../notification/notification.module';
             name: SEND_NEW_DOCUMENT_REQUEST_QUEUE_KEY,
         }),
         forwardRef(() => NotificationModule),
+        RedisModule,
     ],
     controllers: [DocumentRequestController],
-    providers: [DocumentRequestService, SendNewDocumentRequestProcessor],
+    providers: [DocumentRequestService, SendNewDocumentRequestsProcessor],
     exports: [DocumentRequestService, DocumentRequestService],
 })
 export class DocumentRequestModule {}
