@@ -1,6 +1,6 @@
 import { HttpStatus, Injectable, OnModuleInit } from '@nestjs/common';
 import { Interval } from '@nestjs/schedule';
-import { FIFTY_MINUTES, REFRESH_ACCESS_TOKEN_ATTEMPTS } from './constants';
+import { REFRESH_ACCESS_TOKEN_ATTEMPTS } from './constants';
 import axios, { AxiosError } from 'axios';
 import { ConfigService } from '@nestjs/config';
 import { sleep } from '../../utils/sleep';
@@ -11,7 +11,8 @@ import * as path from 'path';
 import * as fs from 'fs/promises';
 import { IAssignmentData } from './interfaces/assignment-data.interface';
 import { isProd } from '../../utils/isProd';
-import { UPLOAD_DIRECTORY_PATH } from '../../constants/UploadsDirectoryPath';
+import { UPLOAD_DIRECTORY_PATH } from '../../common/constants/paths/UploadsDirectoryPath';
+import { MINUTE } from '../../common/constants/time.constants';
 
 @Injectable()
 export class ZohoService implements OnModuleInit {
@@ -56,7 +57,7 @@ export class ZohoService implements OnModuleInit {
         await this.refreshAccessToken();
     }
 
-    @Interval(FIFTY_MINUTES)
+    @Interval(MINUTE * 55)
     private async handleTokenRefresh() {
         await this.refreshAccessToken();
     }

@@ -13,7 +13,7 @@ import {
     MISSING_DOCUMENTS_FILENAME,
     NEW_STATUS_FILENAME,
 } from './constants';
-import { LETTERS_DIRECTORY_PATH } from '../../constants/LettersDirectoryPath';
+import { LETTERS_DIRECTORY_PATH } from '../../common/constants/paths/LettersDirectoryPath';
 import { EmailCategory } from '../gmail/enums/email-type.enum';
 import { TokenService } from '../token/token.service';
 import { UnsubscribeJwt } from '../unsubscribe-email/interfaces/unsubscribe-jwt';

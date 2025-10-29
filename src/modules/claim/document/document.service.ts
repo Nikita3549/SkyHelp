@@ -4,7 +4,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import { PDFDocument, rgb } from 'pdf-lib';
-import { UPLOAD_DIRECTORY_PATH } from '../../../constants/UploadsDirectoryPath';
+import { UPLOAD_DIRECTORY_PATH } from '../../../common/constants/paths/UploadsDirectoryPath';
 import { spawn } from 'child_process';
 import { PassThrough, Readable } from 'stream';
 import { formatDate } from '../../../utils/formatDate';

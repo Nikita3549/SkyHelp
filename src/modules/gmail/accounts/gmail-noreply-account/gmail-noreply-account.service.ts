@@ -3,10 +3,10 @@ import { OAuth2Client } from 'google-auth-library';
 import { gmail_v1, google } from 'googleapis';
 import { ConfigService } from '@nestjs/config';
 import { Interval } from '@nestjs/schedule';
-import { FIFTY_FIVE_MINUTES } from '../../constants';
 import { GmailService } from '../../gmail.service';
 import { EmailCategory } from '../../enums/email-type.enum';
 import Gmail = gmail_v1.Gmail;
+import { MINUTE } from '../../../../common/constants/time.constants';
 
 @Injectable()
 export class GmailNoreplyAccountService implements OnModuleInit {
@@ -70,7 +70,7 @@ export class GmailNoreplyAccountService implements OnModuleInit {
         );
     }
 
-    @Interval(FIFTY_FIVE_MINUTES)
+    @Interval(MINUTE * 55)
     async refreshAccessToken() {
         try {
             const tokens = await this.oauth2Client.refreshAccessToken();

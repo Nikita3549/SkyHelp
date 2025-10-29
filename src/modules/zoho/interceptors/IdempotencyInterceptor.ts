@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { RedisService } from '../../redis/redis.service';
 import { Request, Response } from 'express';
-import { ONE_DAY } from '../constants';
+import { DAY_IN_SECONDS } from '../../../common/constants/time.constants';
 
 @Injectable()
 export class IdempotencyInterceptor implements NestInterceptor {
@@ -51,7 +51,7 @@ export class IdempotencyInterceptor implements NestInterceptor {
             return of({});
         }
 
-        await this.redis.set(key, '1', 'EX', ONE_DAY);
+        await this.redis.set(key, '1', 'EX', DAY_IN_SECONDS);
 
         return next.handle();
     }

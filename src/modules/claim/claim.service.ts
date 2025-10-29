@@ -20,13 +20,11 @@ import { InjectQueue } from '@nestjs/bullmq';
 import {
     CLAIM_FOLLOWUP_QUEUE_KEY,
     CONTINUE_LINKS_EXP,
-    FIVE_DAYS_MILLISECONDS,
-    FOUR_DAYS_MILLISECONDS,
-    ONE_DAY_MILLISECONDS,
-    ONE_HOUR_MILLISECONDS,
-    SIX_DAYS_MILLISECONDS,
-    THREE_DAYS_MILLISECONDS,
-    TWO_DAYS_MILLISECONDS,
+    FIVE_DAYS,
+    FOUR_DAYS,
+    SIX_DAYS,
+    THREE_DAYS,
+    TWO_DAYS,
 } from './constants';
 import { Queue } from 'bullmq';
 import { IJobClaimFollowupData } from './interfaces/job-data.interface';
@@ -35,6 +33,7 @@ import { ConfigService } from '@nestjs/config';
 import { IClaimJwt } from './interfaces/claim-jwt.interface';
 import { TokenService } from '../token/token.service';
 import { normalizePhone } from '../../utils/normalizePhone';
+import { DAY, HOUR } from '../../common/constants/time.constants';
 
 @Injectable()
 export class ClaimService {
@@ -48,13 +47,13 @@ export class ClaimService {
 
     scheduleClaimFollowUpEmails(jobData: IJobClaimFollowupData) {
         const delays = [
-            ONE_HOUR_MILLISECONDS,
-            ONE_DAY_MILLISECONDS,
-            TWO_DAYS_MILLISECONDS,
-            THREE_DAYS_MILLISECONDS,
-            FOUR_DAYS_MILLISECONDS,
-            FIVE_DAYS_MILLISECONDS,
-            SIX_DAYS_MILLISECONDS,
+            HOUR,
+            DAY,
+            TWO_DAYS,
+            THREE_DAYS,
+            FOUR_DAYS,
+            FIVE_DAYS,
+            SIX_DAYS,
         ];
 
         delays.forEach(async (delay) => {

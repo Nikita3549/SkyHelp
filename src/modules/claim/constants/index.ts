@@ -1,3 +1,5 @@
+import { DAY } from '../../../common/constants/time.constants';
+
 export const CLAIM_NOT_FOUND = "Claim with this id doesn't exist";
 
 export const INVALID_CLAIM_ID = 'Claim id is invalid';
@@ -20,21 +22,15 @@ export const INVALID_CUSTOMER_ID = 'Invalid customerId';
 export const CLAIM_FOLLOWUP_QUEUE_KEY = 'claims';
 export const ADD_FLIGHT_STATUS_QUEUE_KEY = 'add-flight-status';
 
-export const ONE_HOUR_MILLISECONDS = 60 * 60 * 1000;
-export const ONE_DAY_MILLISECONDS = 24 * ONE_HOUR_MILLISECONDS;
-export const TWO_DAYS_MILLISECONDS = 2 * ONE_DAY_MILLISECONDS;
-export const THREE_DAYS_MILLISECONDS = 3 * ONE_DAY_MILLISECONDS;
-export const FOUR_DAYS_MILLISECONDS = 4 * ONE_DAY_MILLISECONDS;
-export const FIVE_DAYS_MILLISECONDS = 5 * ONE_DAY_MILLISECONDS;
-export const SIX_DAYS_MILLISECONDS = 6 * ONE_DAY_MILLISECONDS;
+export const TWO_DAYS = 2 * DAY;
+export const THREE_DAYS = 3 * DAY;
+export const FOUR_DAYS = 4 * DAY;
+export const FIVE_DAYS = 5 * DAY;
+export const SIX_DAYS = 6 * DAY;
 
 export const FINAL_STEP = 9;
 
 export const CONTINUE_LINKS_EXP = '30days';
-
-export const MINUTE = 60;
-
-export const HOUR = 60 * 60;
 
 export const MEGABYTE = 1024 * 1024;
 

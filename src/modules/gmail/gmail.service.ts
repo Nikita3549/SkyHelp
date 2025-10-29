@@ -3,7 +3,7 @@ import { gmail_v1, google } from 'googleapis';
 import { OAuth2Client } from 'google-auth-library';
 import { ConfigService } from '@nestjs/config';
 import { Interval } from '@nestjs/schedule';
-import { ATTACHMENT_NOT_FOUND, FIFTY_FIVE_MINUTES } from './constants';
+import { ATTACHMENT_NOT_FOUND } from './constants';
 import { IAttachment } from './interfaces/attachment.interface';
 import { AttachmentNotFoundError } from './errors/attachment-not-found.error';
 import { ParsedMailbox, parseOneAddress } from 'email-addresses';
@@ -14,9 +14,10 @@ import { GmailOfficeAccountService } from './accounts/gmail-office-account/gmail
 import { AttachmentService } from './attachment/attachment.service';
 import { EmailService } from './email/email.service';
 import { GmailNoreplyAccountService } from './accounts/gmail-noreply-account/gmail-noreply-account.service';
-import { UPLOAD_DIRECTORY_PATH } from '../../constants/UploadsDirectoryPath';
+import { UPLOAD_DIRECTORY_PATH } from '../../common/constants/paths/UploadsDirectoryPath';
 import { EmailCategory } from './enums/email-type.enum';
 import Gmail = gmail_v1.Gmail;
+import { MINUTE } from '../../common/constants/time.constants';
 
 @Injectable()
 export class GmailService implements OnModuleInit {
@@ -287,7 +288,7 @@ export class GmailService implements OnModuleInit {
         )}>`;
     }
 
-    @Interval(FIFTY_FIVE_MINUTES)
+    @Interval(MINUTE * 55)
     async refreshAccessToken() {
         try {
             const tokens = await this.oauth2Client.refreshAccessToken();

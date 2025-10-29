@@ -23,7 +23,7 @@ import { ClaimService } from '../claim.service';
 import { Languages } from '../../language/enums/languages.enums';
 import { isLanguage } from '../../../utils/isLanguage';
 import { CreateProgressDto } from './dto/create-progress.dto';
-import { INVALID_CLAIM_ID, MINUTE } from '../constants';
+import { INVALID_CLAIM_ID } from '../constants';
 import { ProgressVariants } from './constants/progresses/progressVariants';
 import { ClaimStatus } from '@prisma/client';
 import { InjectQueue } from '@nestjs/bullmq';
@@ -32,6 +32,7 @@ import { ISendNewProgressEmailJobData } from './interfaces/send-new-progress-ema
 import { HttpStatusCode } from 'axios';
 import { LanguageService } from '../../language/language.service';
 import { AuthRequest } from '../../../interfaces/AuthRequest.interface';
+import { MINUTE } from '../../../common/constants/time.constants';
 
 @Controller('claims/progresses')
 @UseGuards(JwtAuthGuard, IsPartnerOrLawyerOrAgentGuard)
@@ -120,7 +121,7 @@ export class ProgressController {
             throw new NotFoundException(INVALID_PROGRESS_ID);
         }
 
-        if (Date.now() - progress.createdAt.getTime() > 1000 * MINUTE * 5) {
+        if (Date.now() - progress.createdAt.getTime() > MINUTE * 5) {
             throw new ForbiddenException(
                 'You cannot delete a progress step after 5 minutes of its creation',
             );

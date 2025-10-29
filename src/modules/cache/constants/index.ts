@@ -1,1 +1,1 @@
-export const TTL = 300;
+export const CACHE_TTL = 300;

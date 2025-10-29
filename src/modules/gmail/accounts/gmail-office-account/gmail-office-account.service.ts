@@ -3,18 +3,13 @@ import { ConfigService } from '@nestjs/config';
 import { OAuth2Client } from 'google-auth-library';
 import { gmail_v1, google } from 'googleapis';
 import { Interval } from '@nestjs/schedule';
-import {
-    FIFTY_FIVE_MINUTES,
-    ONE_DAY,
-    ONE_HOUR,
-    SIX_HOURS,
-} from '../../constants';
 import { PubSub } from '@google-cloud/pubsub';
 import { GmailService } from '../../gmail.service';
 import { isProd } from '../../../../utils/isProd';
 import { ClaimRecentUpdatesType } from '@prisma/client';
 import { RecentUpdatesService } from '../../../claim/recent-updates/recent-updates.service';
 import Gmail = gmail_v1.Gmail;
+import { DAY, HOUR, MINUTE } from '../../../../common/constants/time.constants';
 
 @Injectable()
 export class GmailOfficeAccountService implements OnModuleInit {
@@ -233,7 +228,7 @@ export class GmailOfficeAccountService implements OnModuleInit {
         });
     }
 
-    @Interval(FIFTY_FIVE_MINUTES)
+    @Interval(MINUTE * 55)
     async refreshAccessToken() {
         const maxAttempts = 5;
         let attempt = 0;
@@ -279,15 +274,15 @@ export class GmailOfficeAccountService implements OnModuleInit {
         }
     }
 
-    @Interval(SIX_HOURS)
+    @Interval(HOUR * 6)
     async refreshWatchIfNeeded() {
         if (!isProd()) return;
         const now = Date.now();
 
-        if (!this.expiration || now > this.expiration - ONE_DAY) {
+        if (!this.expiration || now > this.expiration - DAY) {
             await this.watchMailbox();
         } else {
-            const hoursLeft = Math.round((this.expiration - now) / ONE_HOUR);
+            const hoursLeft = Math.round((this.expiration - now) / HOUR);
         }
     }
 
