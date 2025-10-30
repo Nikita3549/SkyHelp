@@ -143,7 +143,9 @@ export class AdminController {
         const { userId, dateTo, dateFrom } = query;
 
         const agentId =
-            req.user.role == UserRole.AGENT || req.user.role == UserRole.LAWYER
+            req.user.role == UserRole.AGENT ||
+            req.user.role == UserRole.LAWYER ||
+            req.user.role == UserRole.PARTNER
                 ? req.user.id
                 : undefined;
 
@@ -227,7 +229,9 @@ export class AdminController {
 
         if (
             !agent ||
-            (agent.role != UserRole.AGENT && agent.role != UserRole.LAWYER)
+            (agent.role != UserRole.AGENT &&
+                agent.role != UserRole.LAWYER &&
+                agent.role != UserRole.PARTNER)
         ) {
             throw new NotFoundException(INVALID_AGENT_ID);
         }
