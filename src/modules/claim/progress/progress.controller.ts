@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
 import { ProgressService } from './progress.service';
-import { IsPartnerOrLawyerOrAgentGuard } from '../../../guards/isPartnerOrLawyerOrAgentGuard';
+import { IsAgentOrLawyerGuard } from '../../../guards/isAgentOrLawyerGuard';
 import {
     INVALID_PROGRESS_ID,
     SEND_NEW_PROGRESS_EMAIL_QUEUE_DELAY,
@@ -35,7 +35,7 @@ import { AuthRequest } from '../../../interfaces/AuthRequest.interface';
 import { MINUTE } from '../../../common/constants/time.constants';
 
 @Controller('claims/progresses')
-@UseGuards(JwtAuthGuard, IsPartnerOrLawyerOrAgentGuard)
+@UseGuards(JwtAuthGuard, IsAgentOrLawyerGuard)
 export class ProgressController {
     constructor(
         private readonly progressesService: ProgressService,

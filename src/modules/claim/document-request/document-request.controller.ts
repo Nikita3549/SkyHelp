@@ -18,7 +18,7 @@ import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
 import { GetDocumentRequestsQuery } from './dto/get-document-requests.query';
 import { ClaimService } from '../claim.service';
 import { HAVE_NO_RIGHTS_ON_CLAIM, INVALID_CLAIM_ID } from '../constants';
-import { IsPartnerOrLawyerOrAgentGuard } from '../../../guards/isPartnerOrLawyerOrAgentGuard';
+import { IsAgentOrLawyerGuard } from '../../../guards/isAgentOrLawyerGuard';
 import { AuthRequest } from '../../../interfaces/AuthRequest.interface';
 import { UserRole } from '@prisma/client';
 import { INVALID_DOCUMENT_REQUEST } from './constants';
@@ -37,7 +37,7 @@ export class DocumentRequestController {
     ) {}
 
     @Post()
-    @UseGuards(IsPartnerOrLawyerOrAgentGuard)
+    @UseGuards(IsAgentOrLawyerGuard)
     async create(
         @Body() dto: CreateDocumentRequestDto,
         @Req() req: AuthRequest,
@@ -48,7 +48,7 @@ export class DocumentRequestController {
             throw new NotFoundException(INVALID_CLAIM_ID);
         }
 
-        if (req.user.role != UserRole.ADMIN && claim.partnerId != req.user.id) {
+        if (req.user.role != UserRole.ADMIN && claim.agentId != req.user.id) {
             throw new ForbiddenException(HAVE_NO_RIGHTS_ON_CLAIM);
         }
 
@@ -87,7 +87,7 @@ export class DocumentRequestController {
 
         if (
             (req.user.role == UserRole.CLIENT && claim.userId != req.user.id) ||
-            (req.user.role != UserRole.ADMIN && claim.partnerId != req.user.id)
+            (req.user.role != UserRole.ADMIN && claim.agentId != req.user.id)
         ) {
             throw new ForbiddenException(HAVE_NO_RIGHTS_ON_CLAIM);
         }
@@ -97,7 +97,7 @@ export class DocumentRequestController {
 
     @Delete(':documentRequestId')
     @HttpCode(HttpStatusCode.NoContent)
-    @UseGuards(IsPartnerOrLawyerOrAgentGuard)
+    @UseGuards(IsAgentOrLawyerGuard)
     async delete(
         @Req() req: AuthRequest,
         @Param('documentRequestId') documentRequestId: string,
@@ -113,7 +113,7 @@ export class DocumentRequestController {
             documentRequest.claimId,
         )) as IFullClaim;
 
-        if (req.user.role != UserRole.ADMIN && claim.partnerId != req.user.id) {
+        if (req.user.role != UserRole.ADMIN && claim.agentId != req.user.id) {
             throw new ForbiddenException(HAVE_NO_RIGHTS_ON_CLAIM);
         }
 

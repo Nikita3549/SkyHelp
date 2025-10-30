@@ -80,7 +80,7 @@ export class LetterController {
         if (
             req.user.role == UserRole.AGENT &&
             claim &&
-            claim.partnerId != req.user.id
+            claim.agentId != req.user.id
         ) {
             throw new ForbiddenException(AGENT_MUST_HAVE_CLAIM_ID);
         }
@@ -174,7 +174,7 @@ export class LetterController {
 
             const claim = await this.claimService.getClaim(email.claimId);
 
-            if (!claim || claim.partnerId != req.user.id) {
+            if (!claim || claim.agentId != req.user.id) {
                 throw new NotFoundException(ATTACHMENT_NOT_FOUND);
             }
         }
@@ -213,7 +213,7 @@ export class LetterController {
 
             const claim = await this.claimService.getClaim(email.claimId);
 
-            if (!claim || claim.partnerId != req.user.id) {
+            if (!claim || claim.agentId != req.user.id) {
                 throw new NotFoundException(INVALID_LETTER_ID);
             }
         }
@@ -248,7 +248,7 @@ export class LetterController {
 
             const claim = await this.claimService.getClaim(email.claimId);
 
-            if (!claim || claim.partnerId != req.user.id) {
+            if (!claim || claim.agentId != req.user.id) {
                 throw new NotFoundException(INVALID_LETTER_ID);
             }
         }

@@ -1,1 +1,1 @@
-export const INVALID_PARTNER_ID = 'Invalid partner id';
+export const INVALID_AGENT_ID = 'Invalid agent id';

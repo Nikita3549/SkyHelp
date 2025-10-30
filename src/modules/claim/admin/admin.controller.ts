@@ -23,11 +23,11 @@ import { HAVE_NO_RIGHTS_ON_CLAIM, INVALID_CLAIM_ID } from '../constants';
 import { UpdateClaimDto } from '../dto/update-claim.dto';
 import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
 import { ClaimService } from '../claim.service';
-import { AddPartnerDto } from './dto/add-partner.dto';
+import { AddAgentDto } from './dto/add-agent.dto';
 import { UserService } from '../../user/user.service';
 import { UserRole } from '@prisma/client';
-import { INVALID_PARTNER_ID } from './constants';
-import { IsPartnerOrLawyerOrAgentGuard } from '../../../guards/isPartnerOrLawyerOrAgentGuard';
+import { INVALID_AGENT_ID } from './constants';
+import { IsAgentOrLawyerGuard } from '../../../guards/isAgentOrLawyerGuard';
 import { AuthRequest } from '../../../interfaces/AuthRequest.interface';
 import { IsAgentGuard } from '../../../guards/isAgent.guard';
 import { RecentUpdatesService } from '../recent-updates/recent-updates.service';
@@ -37,7 +37,7 @@ import { PartnerService } from '../../partner/partner.service';
 import { CreatePartnerDto } from './dto/create-partner.dto';
 
 @Controller('claims/admin')
-@UseGuards(JwtAuthGuard, IsPartnerOrLawyerOrAgentGuard)
+@UseGuards(JwtAuthGuard, IsAgentOrLawyerGuard)
 export class AdminController {
     constructor(
         private readonly claimService: ClaimService,
@@ -87,7 +87,7 @@ export class AdminController {
             flightNumber,
             icao,
             role,
-            partnerId,
+            agentId,
             duplicated,
             onlyRecentlyUpdates,
         } = query;
@@ -112,9 +112,9 @@ export class AdminController {
             icao,
             flightNumber,
             role,
-            partnerId:
-                partnerId ||
-                (req.user.role == UserRole.PARTNER ||
+            agentId:
+                agentId ||
+                (req.user.role == UserRole.LAWYER ||
                 req.user.role == UserRole.AGENT
                     ? req.user.id
                     : undefined),
@@ -142,14 +142,14 @@ export class AdminController {
     ) {
         const { userId, dateTo, dateFrom } = query;
 
-        const partnerId =
-            req.user.role == UserRole.PARTNER || req.user.role == UserRole.AGENT
+        const agentId =
+            req.user.role == UserRole.AGENT || req.user.role == UserRole.LAWYER
                 ? req.user.id
                 : undefined;
 
         const stats = await this.claimService.getUserClaimsStats(
             userId,
-            partnerId,
+            agentId,
             dateFrom && dateTo
                 ? {
                       dateFrom,
@@ -184,7 +184,7 @@ export class AdminController {
             throw new NotFoundException(INVALID_CLAIM_ID);
         }
 
-        if (req.user.role != UserRole.ADMIN && req.user.id != claim.partnerId) {
+        if (req.user.role != UserRole.ADMIN && req.user.id != claim.agentId) {
             throw new ForbiddenException(HAVE_NO_RIGHTS_ON_CLAIM);
         }
 
@@ -215,35 +215,33 @@ export class AdminController {
         return await this.claimService.updateClaim(dto, claimId);
     }
 
-    @Patch(':claimId/partner')
+    @Patch(':claimId/agent')
     @UseGuards(IsAdminGuard)
-    async addPartner(
-        @Body() dto: AddPartnerDto,
+    async addAgent(
+        @Body() dto: AddAgentDto,
         @Param('claimId') claimId: string,
     ) {
-        const { partnerId } = dto;
+        const { agentId } = dto;
 
-        const partner = await this.userService.getUserById(partnerId);
+        const agent = await this.userService.getUserById(agentId);
 
         if (
-            !partner ||
-            (partner.role != UserRole.PARTNER &&
-                partner.role != UserRole.AGENT &&
-                partner.role != UserRole.LAWYER)
+            !agent ||
+            (agent.role != UserRole.AGENT && agent.role != UserRole.LAWYER)
         ) {
-            throw new NotFoundException(INVALID_PARTNER_ID);
+            throw new NotFoundException(INVALID_AGENT_ID);
         }
 
-        return await this.claimService.addPartner(claimId, partnerId);
+        return await this.claimService.addAgent(claimId, agentId);
     }
 
-    @Delete(':claimId/partner')
-    @UseGuards(IsPartnerOrLawyerOrAgentGuard)
-    async deletePartner(@Param('claimId') claimId: string) {
+    @Delete(':claimId/agent')
+    @UseGuards(IsAgentOrLawyerGuard)
+    async deleteAgent(@Param('claimId') claimId: string) {
         if (!(await this.claimService.getClaim(claimId))) {
             throw new BadRequestException(INVALID_CLAIM_ID);
         }
 
-        return this.claimService.addPartner(claimId, null);
+        return this.claimService.addAgent(claimId, null);
     }
 }

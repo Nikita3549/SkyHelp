@@ -12,7 +12,7 @@ import { UserService } from './user.service';
 import { INCORRECT_USER_ID } from './constants';
 import { IsAdminGuard } from '../../guards/isAdminGuard';
 import { GetUsersDto } from './dto/get-users.dto';
-import { IsPartnerOrLawyerOrAgentGuard } from '../../guards/isPartnerOrLawyerOrAgentGuard';
+import { IsAgentOrLawyerGuard } from '../../guards/isAgentOrLawyerGuard';
 
 @Controller('user')
 @UseGuards(JwtAuthGuard)
@@ -20,7 +20,7 @@ export class UserController {
     constructor(private readonly userService: UserService) {}
 
     @Get()
-    @UseGuards(IsPartnerOrLawyerOrAgentGuard)
+    @UseGuards(IsAgentOrLawyerGuard)
     async getUsers(@Query() query: GetUsersDto): Promise<IPublicUserData[]> {
         const { role } = query;
 
@@ -28,7 +28,7 @@ export class UserController {
     }
 
     @Get(':id')
-    @UseGuards(IsPartnerOrLawyerOrAgentGuard)
+    @UseGuards(IsAgentOrLawyerGuard)
     async getUser(@Param('id') id: string): Promise<IPublicUserData> {
         const user = await this.userService.getUserById(id);
 

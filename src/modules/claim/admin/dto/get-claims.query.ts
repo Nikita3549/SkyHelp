@@ -60,7 +60,7 @@ export class GetClaimsQuery {
 
     @IsOptional()
     @IsString()
-    partnerId?: string;
+    agentId?: string;
 
     @IsOptional()
     @IsEnum(IsYesOrNo)

@@ -22,7 +22,7 @@ export interface IFullClaim extends Claim {
     state: IClaimState;
     payment: ClaimPayment | null;
     documents: Document[];
-    partner: IPartner | null;
+    agent: IPartner | null;
     recentUpdates: ClaimRecentUpdates[];
     passengers: OtherPassenger[];
     duplicates: IDuplicate[];

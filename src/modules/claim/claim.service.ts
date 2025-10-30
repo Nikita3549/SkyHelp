@@ -404,7 +404,7 @@ export class ClaimService {
             icao?: string;
             flightNumber?: string;
             role?: UserRole;
-            partnerId?: string;
+            agentId?: string;
             duplicated?: boolean;
             isOrderByAssignedAt?: boolean;
             onlyRecentlyUpdates?: boolean;
@@ -449,8 +449,8 @@ export class ClaimService {
             where.state!.status = searchParams.status;
         }
 
-        if (searchParams?.partnerId) {
-            where.partnerId = searchParams.partnerId;
+        if (searchParams?.agentId) {
+            where.agentId = searchParams.agentId;
         }
 
         if (searchParams?.flightNumber) {
@@ -469,7 +469,7 @@ export class ClaimService {
         }
 
         if (searchParams?.role) {
-            where.partner = {
+            where.agent = {
                 role: searchParams.role,
             };
         }
@@ -506,7 +506,7 @@ export class ClaimService {
 
     async getUserClaimsStats(
         userId?: string,
-        partnerId?: string,
+        agentId?: string,
         dateFilter?: { dateFrom: Date; dateTo: Date },
     ): Promise<{
         total: number;
@@ -533,7 +533,7 @@ export class ClaimService {
             this.prisma.claim.count({
                 where: {
                     userId,
-                    partnerId,
+                    agentId,
                     archived: false,
                     ...(dateWhere ? { createdAt: dateWhere } : {}),
                 },
@@ -543,7 +543,7 @@ export class ClaimService {
             this.prisma.claim.count({
                 where: {
                     userId,
-                    partnerId,
+                    agentId,
                     archived: false,
                     state: { status: ClaimStatus.PAID },
                     ...(dateWhere ? { createdAt: dateWhere } : {}),
@@ -554,7 +554,7 @@ export class ClaimService {
             this.prisma.claim.count({
                 where: {
                     userId,
-                    partnerId,
+                    agentId,
                     archived: false,
                     state: {
                         status: {
@@ -576,7 +576,7 @@ export class ClaimService {
                     Claim: {
                         some: {
                             userId,
-                            partnerId,
+                            agentId,
                             archived: false,
                             ...(dateWhere ? { createdAt: dateWhere } : {}),
                         },
@@ -590,7 +590,7 @@ export class ClaimService {
                 SELECT TO_CHAR(c."created_at"::date, 'DD.MM.YYYY') AS date, COUNT(*) AS count
                 FROM "claims" c
                 WHERE ${userId ? Prisma.sql`c."user_id" = ${userId} AND` : Prisma.empty}
-                      ${partnerId ? Prisma.sql`c."partnerId" = ${partnerId} AND` : Prisma.empty}
+                      ${agentId ? Prisma.sql`c."agent_id" = ${agentId} AND` : Prisma.empty}
                     c."archived" = false
                       ${dateFilter ? Prisma.sql`AND c."created_at" >= ${dateFilter.dateFrom} AND c."created_at" <= ${dateFilter.dateTo}` : Prisma.empty}
                 GROUP BY c."created_at"::date
@@ -603,7 +603,7 @@ export class ClaimService {
                   FROM "claims" c
                       INNER JOIN "claim_states" s
                   ON c."state_id" = s."id"
-                  WHERE s."status" = 'COMPLETED' ${userId ? Prisma.sql`AND c."user_id" = ${userId}` : Prisma.empty} ${partnerId ? Prisma.sql`AND c."partnerId" = ${partnerId}` : Prisma.empty}
+                  WHERE s."status" = 'COMPLETED' ${userId ? Prisma.sql`AND c."user_id" = ${userId}` : Prisma.empty} ${agentId ? Prisma.sql`AND c."agent_id" = ${agentId}` : Prisma.empty}
                     AND c."archived" = false ${dateFilter ? Prisma.sql`AND c."created_at" >= ${dateFilter.dateFrom} AND c."created_at" <= ${dateFilter.dateTo}` : Prisma.empty}
                   GROUP BY month, date_trunc('month', c."created_at")
                   ORDER BY date_trunc('month', c."created_at") DESC`,
@@ -698,7 +698,7 @@ export class ClaimService {
                 },
             },
             passengers: true,
-            partner: {
+            agent: {
                 select: {
                     email: true,
                     name: true,
@@ -763,7 +763,7 @@ export class ClaimService {
         });
     }
 
-    async searchClaims(search: string, partnerId?: string, page: number = 20) {
+    async searchClaims(search: string, agentId?: string, page: number = 20) {
         const normalized = search.replace(/\s+/g, '');
 
         const ids = await this.prisma.$queryRaw<Array<{ id: string }>>`
@@ -780,7 +780,7 @@ export class ClaimService {
                     OR REPLACE("claim_customers"."last_name", ' ', '') ILIKE ${`%${normalized}%`}
                     OR REPLACE("claims"."id"::text, ' ', '') ILIKE ${`%${normalized}%`}
             )
-          AND (${partnerId ?? null}::text IS NULL OR "claims"."partnerId" = ${partnerId ?? null}::text)
+          AND (${agentId ?? null}::text IS NULL OR "claims"."agent_id" = ${agentId ?? null}::text)
         ORDER BY "claims"."created_at" DESC
             LIMIT ${page}
     `;
@@ -795,7 +795,7 @@ export class ClaimService {
         });
     }
 
-    async addPartner(
+    async addAgent(
         claimId: string,
         userId: string | null,
     ): Promise<IFullClaim> {
@@ -805,7 +805,7 @@ export class ClaimService {
             },
             data: {
                 assignedAt: new Date(),
-                partnerId: userId,
+                agentId: userId,
             },
             include: this.fullClaimInclude(),
         });

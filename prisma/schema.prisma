@@ -20,7 +20,7 @@ model User {
   updatedAt      DateTime @updatedAt @map("updated_at")
 
   claims            Claim[]      @relation("UserClaims")
-  claimsAsPartner   Claim[]      @relation("PartnerClaims")
+  claimsAsAgent     Claim[]      @relation("AgentClaims")
   messages          Message[]
   membership        ChatMember[]
   updatedProgresses Progress[]
@@ -58,8 +58,8 @@ model Claim {
   formState        String?              @default("") @map("form_state")
   userId           String?              @map("user_id")
   user             User?                @relation("UserClaims", fields: [userId], references: [id], onDelete: Cascade)
-  partnerId        String?
-  partner          User?                @relation("PartnerClaims", fields: [partnerId], references: [id], onDelete: Cascade)
+  agentId          String?              @map("agent_id")
+  agent            User?                @relation("AgentClaims", fields: [agentId], references: [id], onDelete: Cascade)
   assignedAt       DateTime             @default(now()) @map("assigned_at")
   detailsId        String               @map("details_id")
   details          ClaimDetails         @relation(fields: [detailsId], references: [id], onDelete: Cascade)
@@ -575,3 +575,10 @@ enum ClaimActivityType {
   DOCUMENT
   EMAIL
 }
+
+// model ReferralTransaction {
+//   id        String @id @default(cuid())
+//   partnerId
+//
+//   @@map("referral_transactions")
+// }
