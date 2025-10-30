@@ -10,7 +10,6 @@ import {
     Put,
     Query,
     Req,
-    UnauthorizedException,
     UseGuards,
 } from '@nestjs/common';
 import { CreateClaimDto } from './dto/create-claim.dto';
@@ -21,7 +20,6 @@ import {
     INVALID_CLAIM_ID,
     INVALID_ICAO,
 } from './constants';
-import { JwtAuthGuard } from '../../guards/jwtAuth.guard';
 import { AuthRequest } from '../../interfaces/AuthRequest.interface';
 import { GetCompensationDto } from './dto/get-compensation.dto';
 import { FlightService } from '../flight/flight.service';
@@ -56,6 +54,7 @@ import { ApiKeyAuthGuard } from '../../guards/ApiKeyAuthGuard';
 import { JwtOrApiKeyAuth } from '../../guards/jwtOrApiKeyAuth';
 import { GetClaimsQuery } from './dto/get-claims.query';
 import { normalizePhone } from '../../utils/normalizePhone';
+import { PartnerService } from '../partner/partner.service';
 
 @Controller('claims')
 @UseGuards(JwtOrApiKeyAuth)
@@ -87,6 +86,7 @@ export class PublicClaimController {
         private readonly authService: AuthService,
         @InjectQueue(ADD_FLIGHT_STATUS_QUEUE_KEY)
         private readonly addFlightStatusQueue: Queue,
+        private readonly partnerService: PartnerService,
     ) {}
 
     @Post()
@@ -98,6 +98,7 @@ export class PublicClaimController {
         const { language, referrer, referrerSource } = query;
         let userId: string | null = null;
         let userToken: string | null = null;
+        let referredById: string | null = null;
 
         const fullRoutes = await Promise.all(
             dto.details.routes.map(async (r) => {
@@ -151,24 +152,21 @@ export class PublicClaimController {
             userId = userData.userId;
         }
 
+        if (referrer) {
+            const partner =
+                await this.partnerService.getPartnerByReferralCode(referrer);
+
+            referredById = partner ? partner.id : null;
+        }
+
         const claim = await this.claimService.createClaim(dto, {
-            referrer,
+            referredById,
             referrerSource,
             language,
             userId,
             flightNumber: dto.details.flightNumber,
             fullRoutes,
         });
-
-        // Temporary mock
-        if (referrer == 'zbor') {
-            await this.claimService.addPartner(
-                claim.id,
-                isProd()
-                    ? '7d7bdd2c-34e6-40b8-ad3d-8e05a6aa012d' // zbor
-                    : '1fead5e5-4840-4f4a-b8f4-3ee82e3d81d8',
-            );
-        }
 
         this.claimService.scheduleClaimFollowUpEmails({
             email: claim.customer.email,

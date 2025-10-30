@@ -10,6 +10,7 @@ import {
     NotFoundException,
     Param,
     Patch,
+    Post,
     Put,
     Query,
     Req,
@@ -32,6 +33,8 @@ import { IsAgentGuard } from '../../../guards/isAgent.guard';
 import { RecentUpdatesService } from '../recent-updates/recent-updates.service';
 import { GetAdminClaimsStatsQuery } from './dto/get-admin-claims-stats.query';
 import { DeleteDuplicatesDto } from './dto/delete-duplicates.dto';
+import { PartnerService } from '../../partner/partner.service';
+import { CreatePartnerDto } from './dto/create-partner.dto';
 
 @Controller('claims/admin')
 @UseGuards(JwtAuthGuard, IsPartnerOrLawyerOrAgentGuard)
@@ -40,7 +43,29 @@ export class AdminController {
         private readonly claimService: ClaimService,
         private readonly userService: UserService,
         private readonly recentUpdatesService: RecentUpdatesService,
+        private readonly partnerService: PartnerService,
     ) {}
+
+    @Post('partner')
+    @UseGuards(IsAdminGuard)
+    async createPartner(@Body() dto: CreatePartnerDto) {
+        const { referralCode, userId } = dto;
+
+        const user = await this.userService.getUserById(userId);
+
+        if (!user || user?.role == UserRole.PARTNER) {
+            return;
+        }
+
+        await this.userService.updateRole(UserRole.PARTNER, user.id);
+
+        const partner = await this.partnerService.createPartner({
+            userId,
+            referralCode,
+        });
+
+        return partner;
+    }
 
     @Delete('duplicate')
     @HttpCode(HttpStatus.NO_CONTENT)

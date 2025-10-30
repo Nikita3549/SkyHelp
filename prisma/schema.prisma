@@ -25,6 +25,8 @@ model User {
   membership        ChatMember[]
   updatedProgresses Progress[]
 
+  partner Partner?
+
   @@map("users")
 }
 
@@ -34,6 +36,20 @@ enum UserRole {
   AGENT
   CLIENT
   LAWYER
+}
+
+model Partner {
+  id String @id @default(uuid())
+
+  referralCode  String  @unique @map("referral_code")
+  balance       Decimal @default(0)
+  totalEarnings Decimal @default(0) @map("total_earnings")
+
+  user           User    @relation(fields: [userId], references: [id])
+  userId         String  @unique @map("user_id")
+  refferedClaims Claim[] @relation("Referrals")
+
+  @@map("partners")
 }
 
 model Claim {
@@ -72,8 +88,11 @@ model Claim {
   activities       ClaimActivity[]
   referrer         String?
   referrerSource   String?              @map("referrer_source")
-  duplicates       DuplicatedClaim[]    @relation("ClaimOriginal")
-  duplicatedOf     DuplicatedClaim[]    @relation("ClaimDuplicate")
+
+  duplicates   DuplicatedClaim[] @relation("ClaimOriginal")
+  duplicatedOf DuplicatedClaim[] @relation("ClaimDuplicate")
+  referredById String?           @map("referred_by_id")
+  referredBy   Partner?          @relation("Referrals", fields: [referredById], references: [id])
 
   @@map("claims")
 }

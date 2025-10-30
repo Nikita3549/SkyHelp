@@ -28,6 +28,7 @@ import { UnsubscribeEmailModule } from './modules/unsubscribe-email/unsubscribe-
 import { GenerateLinksModule } from './modules/generate-links/generate-links.module';
 import { SendToCeoModule } from './modules/send-to-ceo/send-to-ceo.module';
 import { BotModule } from './modules/bot/bot.module';
+import { PartnerModule } from './modules/partner/partner.module';
 
 @Module({
     imports: [
@@ -64,6 +65,7 @@ import { BotModule } from './modules/bot/bot.module';
         GenerateLinksModule,
         SendToCeoModule,
         BotModule,
+        PartnerModule,
     ],
     controllers: [AppController],
     providers: [AppService],

@@ -101,6 +101,7 @@ export class ClaimService {
         extraData: {
             language?: string;
             referrer?: string;
+            referredById: string | null;
             referrerSource?: string;
             userId?: string | null;
             flightNumber: string;
@@ -128,6 +129,7 @@ export class ClaimService {
             referrer,
             referrerSource,
             fullRoutes,
+            referredById,
         } = extraData;
 
         const duplicatedClaims = await this.findDuplicate({
@@ -153,8 +155,12 @@ export class ClaimService {
                 const claim = await this.prisma.claim.create({
                     data: {
                         id: numericId,
-                        user: userId ? { connect: { id: userId } } : undefined,
-                        referrer,
+                        ...(userId
+                            ? { user: { connect: { id: userId } } }
+                            : {}),
+                        ...(referredById
+                            ? { referredBy: { connect: { id: referredById } } }
+                            : {}),
                         referrerSource,
                         continueLink: continueClaimLink,
                         duplicates: {
@@ -164,7 +170,7 @@ export class ClaimService {
                         },
                         details: {
                             create: {
-                                flightNumber: flightNumber,
+                                flightNumber,
                                 date: claimData.details.date,
                                 airlines: {
                                     create: {
@@ -190,10 +196,8 @@ export class ClaimService {
                         state: {
                             create: {
                                 amount: claimData.state.amount,
-                                progress: {
-                                    create: defaultProgress,
-                                },
-                                isDuplicate: duplicatedClaims.length > 0, // TODO: remove this field from db
+                                progress: { create: defaultProgress },
+                                isDuplicate: duplicatedClaims.length > 0,
                             },
                         },
                         customer: {
@@ -231,9 +235,7 @@ export class ClaimService {
                                     claimData.issue.hasContactedAirline,
                             },
                         },
-                        payment: {
-                            create: {},
-                        },
+                        payment: { create: {} },
                     },
                     include: this.fullClaimInclude(),
                 });
