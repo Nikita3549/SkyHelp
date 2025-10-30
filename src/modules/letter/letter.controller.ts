@@ -31,12 +31,12 @@ import {
     INVALID_LETTER_ID,
 } from './constants';
 import { UpdateLetterDto } from './dto/update-letter.dto';
-import { IsAgentGuard } from '../../guards/isAgent.guard';
 import { AuthRequest } from '../../interfaces/AuthRequest.interface';
 import { UserRole } from '@prisma/client';
+import { IsAgentOrLawyerGuard } from '../../guards/isAgentOrLawyerGuard';
 
 @Controller('letters')
-@UseGuards(JwtAuthGuard, IsAgentGuard)
+@UseGuards(JwtAuthGuard, IsAgentOrLawyerGuard)
 export class LetterController {
     constructor(
         private readonly gmailService: GmailService,
