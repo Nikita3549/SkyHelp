@@ -161,6 +161,7 @@ export class ClaimService {
                         ...(referredById
                             ? { referredBy: { connect: { id: referredById } } }
                             : {}),
+                        referrer,
                         referrerSource,
                         continueLink: continueClaimLink,
                         duplicates: {
