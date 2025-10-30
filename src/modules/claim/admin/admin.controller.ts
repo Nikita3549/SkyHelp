@@ -27,7 +27,7 @@ import { AddAgentDto } from './dto/add-agent.dto';
 import { UserService } from '../../user/user.service';
 import { UserRole } from '@prisma/client';
 import { INVALID_AGENT_ID } from './constants';
-import { IsAgentOrLawyerGuard } from '../../../guards/isAgentOrLawyerGuard';
+import { IsAgentOrLawyerGuardOrPartner } from '../../../guards/isAgentOrLawyerGuardOrPartner';
 import { AuthRequest } from '../../../interfaces/AuthRequest.interface';
 import { IsAgentGuard } from '../../../guards/isAgent.guard';
 import { RecentUpdatesService } from '../recent-updates/recent-updates.service';
@@ -37,7 +37,7 @@ import { PartnerService } from '../../partner/partner.service';
 import { CreatePartnerDto } from './dto/create-partner.dto';
 
 @Controller('claims/admin')
-@UseGuards(JwtAuthGuard, IsAgentOrLawyerGuard)
+@UseGuards(JwtAuthGuard, IsAgentOrLawyerGuardOrPartner)
 export class AdminController {
     constructor(
         private readonly claimService: ClaimService,
@@ -240,7 +240,7 @@ export class AdminController {
     }
 
     @Delete(':claimId/agent')
-    @UseGuards(IsAgentOrLawyerGuard)
+    @UseGuards(IsAgentOrLawyerGuardOrPartner)
     async deleteAgent(@Param('claimId') claimId: string) {
         if (!(await this.claimService.getClaim(claimId))) {
             throw new BadRequestException(INVALID_CLAIM_ID);

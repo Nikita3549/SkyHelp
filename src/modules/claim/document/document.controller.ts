@@ -37,7 +37,7 @@ import { UploadDocumentsJwtQueryDto } from './dto/upload-documents-jwt-query.dto
 import { AuthRequest } from '../../../interfaces/AuthRequest.interface';
 import { UploadDocumentsQueryDto } from './dto/upload-documents-query.dto';
 import { UpdateDocumentTypeDto } from './dto/update-document-type.dto';
-import { IsAgentOrLawyerGuard } from '../../../guards/isAgentOrLawyerGuard';
+import { IsAgentOrLawyerGuardOrPartner } from '../../../guards/isAgentOrLawyerGuardOrPartner';
 import { MergeDocumentsDto } from './dto/merge-documents.dto';
 import { RecentUpdatesService } from '../recent-updates/recent-updates.service';
 import {
@@ -79,7 +79,7 @@ export class DocumentController {
 
     @Delete(':documentId/admin')
     @HttpCode(HttpStatusCode.NoContent)
-    @UseGuards(IsAgentOrLawyerGuard)
+    @UseGuards(IsAgentOrLawyerGuardOrPartner)
     async removeDocument(@Param('documentId') documentId: string) {
         const document = await this.documentService.getDocument(documentId);
 
@@ -91,7 +91,7 @@ export class DocumentController {
     }
 
     @Post('admin')
-    @UseGuards(IsAgentOrLawyerGuard)
+    @UseGuards(IsAgentOrLawyerGuardOrPartner)
     @DocumentsUploadInterceptor()
     async uploadAdminDocuments(
         @UploadedFiles() files: Express.Multer.File[],
@@ -133,7 +133,7 @@ export class DocumentController {
     }
 
     @Patch('/:documentId/admin')
-    @UseGuards(IsAgentOrLawyerGuard)
+    @UseGuards(IsAgentOrLawyerGuardOrPartner)
     async updateDocumentType(
         @Body() dto: UpdateDocumentTypeDto,
         @Param('documentId') documentId: string,
@@ -181,7 +181,7 @@ export class DocumentController {
     }
 
     @Get('admin')
-    @UseGuards(IsAgentOrLawyerGuard)
+    @UseGuards(IsAgentOrLawyerGuardOrPartner)
     async getDocumentAdmin(
         @Query() query: GetDocumentDto,
         @Res() res: Response,
@@ -264,7 +264,7 @@ export class DocumentController {
         return documents;
     }
 
-    @UseGuards(IsAgentOrLawyerGuard)
+    @UseGuards(IsAgentOrLawyerGuardOrPartner)
     @Patch('admin/passenger')
     async patchPassengerId(@Body() dto: PatchPassengerIdDto) {
         const { passengerId, documentId } = dto;

@@ -33,10 +33,10 @@ import {
 import { UpdateLetterDto } from './dto/update-letter.dto';
 import { AuthRequest } from '../../interfaces/AuthRequest.interface';
 import { UserRole } from '@prisma/client';
-import { IsAgentOrLawyerGuard } from '../../guards/isAgentOrLawyerGuard';
+import { IsAgentOrLawyerGuardOrPartner } from '../../guards/isAgentOrLawyerGuardOrPartner';
 
 @Controller('letters')
-@UseGuards(JwtAuthGuard, IsAgentOrLawyerGuard)
+@UseGuards(JwtAuthGuard, IsAgentOrLawyerGuardOrPartner)
 export class LetterController {
     constructor(
         private readonly gmailService: GmailService,
