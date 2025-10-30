@@ -32,6 +32,8 @@ export class SendNewProgressEmailProcessor extends WorkerHost {
             return;
         }
 
+        await this.claimService.updateStatus(newClaimStatus, emailData.claimId);
+
         await this.notificationService.sendNewStatus(
             emailData.to,
             {
@@ -42,7 +44,5 @@ export class SendNewProgressEmailProcessor extends WorkerHost {
             },
             emailData.language,
         );
-
-        await this.claimService.updateStatus(newClaimStatus, emailData.claimId);
     }
 }
