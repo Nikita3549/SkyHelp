@@ -28,15 +28,18 @@ export class PayoutController {
     @Post()
     @UseGuards(IsAdminGuard)
     async createPayout(@Body() dto: CreatePayoutDto) {
-        const { amount, partnerId } = dto;
+        const { amount, userId } = dto;
 
-        const partner = await this.partnerService.getPartnerById(partnerId);
+        const partner = await this.partnerService.getPartnerByUserId(userId);
 
         if (!partner) {
             throw new NotFoundException(PARTNER_NOT_FOUND);
         }
 
-        return await this.payoutService.makePayout({ amount, partnerId });
+        return await this.payoutService.makePayout({
+            amount,
+            partnerId: partner.id,
+        });
     }
 
     @Get()

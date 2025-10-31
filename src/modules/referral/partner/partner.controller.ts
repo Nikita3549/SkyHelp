@@ -19,12 +19,9 @@ import { UserRole } from '@prisma/client';
 export class PartnerController {
     constructor(private readonly partnerService: PartnerService) {}
 
-    @Get(':partnerId')
-    async getPartner(
-        @Param('partnerId') partnerId: string,
-        @Req() req: AuthRequest,
-    ) {
-        const partner = await this.partnerService.getPartnerById(partnerId);
+    @Get(':userId')
+    async getPartner(@Param('userId') userId: string, @Req() req: AuthRequest) {
+        const partner = await this.partnerService.getPartnerByUserId(userId);
 
         if (!partner) {
             throw new NotFoundException(PARTNER_NOT_FOUND);

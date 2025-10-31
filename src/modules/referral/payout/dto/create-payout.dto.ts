@@ -5,5 +5,5 @@ export class CreatePayoutDto {
     amount: number;
 
     @IsString()
-    partnerId: string;
+    userId: string;
 }

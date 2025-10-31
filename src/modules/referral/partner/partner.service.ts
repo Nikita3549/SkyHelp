@@ -15,10 +15,12 @@ export class PartnerService {
         });
     }
 
-    async getPartnerById(partnerId: string): Promise<Partner | null> {
+    async getPartnerByUserId(userId: string): Promise<Partner | null> {
         return this.prisma.partner.findFirst({
             where: {
-                id: partnerId,
+                user: {
+                    id: userId,
+                },
             },
         });
     }
