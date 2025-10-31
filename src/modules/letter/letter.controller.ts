@@ -25,15 +25,12 @@ import { ATTACHMENT_NOT_FOUND } from '../gmail/constants';
 import { Response } from 'express';
 import { ClaimService } from '../claim/claim.service';
 import { UpdateStatusDto } from './dto/update-status.dto';
-import {
-    AGENT_MUST_HAVE_CLAIM_ID,
-    INVALID_CLAIM_ID,
-    INVALID_LETTER_ID,
-} from './constants';
+import { AGENT_MUST_HAVE_CLAIM_ID, LETTER_NOT_FOUND } from './constants';
 import { UpdateLetterDto } from './dto/update-letter.dto';
 import { AuthRequest } from '../../interfaces/AuthRequest.interface';
 import { UserRole } from '@prisma/client';
 import { IsAgentOrLawyerGuardOrPartner } from '../../guards/isAgentOrLawyerGuardOrPartner';
+import { CLAIM_NOT_FOUND } from '../claim/constants';
 
 @Controller('letters')
 @UseGuards(JwtAuthGuard, IsAgentOrLawyerGuardOrPartner)
@@ -55,7 +52,7 @@ export class LetterController {
             const claim = await this.claimService.getClaim(claimId);
 
             if (!claim) {
-                throw new NotFoundException(INVALID_CLAIM_ID);
+                throw new NotFoundException(CLAIM_NOT_FOUND);
             }
         }
 
@@ -203,18 +200,18 @@ export class LetterController {
         const email = await this.gmailService.email.getEmailById(letterId);
 
         if (!email) {
-            throw new NotFoundException(INVALID_LETTER_ID);
+            throw new NotFoundException(LETTER_NOT_FOUND);
         }
 
         if (req.user.role == UserRole.AGENT) {
             if (!email?.claimId) {
-                throw new NotFoundException(INVALID_LETTER_ID);
+                throw new NotFoundException(LETTER_NOT_FOUND);
             }
 
             const claim = await this.claimService.getClaim(email.claimId);
 
             if (!claim || claim.agentId != req.user.id) {
-                throw new NotFoundException(INVALID_LETTER_ID);
+                throw new NotFoundException(LETTER_NOT_FOUND);
             }
         }
 
@@ -232,24 +229,24 @@ export class LetterController {
         const claim = await this.claimService.getClaim(claimId);
 
         if (!claim) {
-            throw new NotFoundException(INVALID_CLAIM_ID);
+            throw new NotFoundException(CLAIM_NOT_FOUND);
         }
 
         const email = await this.gmailService.email.getEmailById(letterId);
 
         if (!email) {
-            throw new NotFoundException(INVALID_LETTER_ID);
+            throw new NotFoundException(LETTER_NOT_FOUND);
         }
 
         if (req.user.role == UserRole.AGENT) {
             if (!email?.claimId) {
-                throw new NotFoundException(INVALID_LETTER_ID);
+                throw new NotFoundException(LETTER_NOT_FOUND);
             }
 
             const claim = await this.claimService.getClaim(email.claimId);
 
             if (!claim || claim.agentId != req.user.id) {
-                throw new NotFoundException(INVALID_LETTER_ID);
+                throw new NotFoundException(LETTER_NOT_FOUND);
             }
         }
 

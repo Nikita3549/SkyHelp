@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { ClaimService } from '../claim.service';
 import { CustomerDto } from './dto/customer.dto';
-import { INVALID_CLAIM_ID, INVALID_CUSTOMER_ID } from '../constants';
+import { CLAIM_NOT_FOUND, CUSTOMER_NOT_FOUND } from '../constants';
 import { CustomerService } from './customer.service';
 import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
 import { UploadSignDto } from './dto/upload-sign.dto';
@@ -42,7 +42,7 @@ export class CustomerController {
         const { claimId } = dto;
 
         if (!(await this.claimService.getClaim(claimId))) {
-            throw new BadRequestException(INVALID_CLAIM_ID);
+            throw new BadRequestException(CLAIM_NOT_FOUND);
         }
 
         await this.claimService.changeUpdatedAt(claimId);
@@ -67,7 +67,7 @@ export class PublicCustomerController {
         const customer = await this.customerService.getCustomer(customerId);
 
         if (!customer) {
-            throw new NotFoundException(INVALID_CUSTOMER_ID);
+            throw new NotFoundException(CUSTOMER_NOT_FOUND);
         }
 
         return customer;
@@ -91,13 +91,13 @@ export class PublicCustomerController {
         const customer = await this.customerService.getCustomer(customerId);
 
         if (!customer) {
-            throw new NotFoundException(INVALID_CUSTOMER_ID);
+            throw new NotFoundException(CUSTOMER_NOT_FOUND);
         }
 
         const claim = await this.claimService.getClaim(claimId);
 
         if (!claim) {
-            throw new NotFoundException(INVALID_CLAIM_ID);
+            throw new NotFoundException(CLAIM_NOT_FOUND);
         }
 
         const path = await this.documentService.saveSignaturePdf(signature, {

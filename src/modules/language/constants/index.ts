@@ -1,1 +1,2 @@
-export const INVALID_LANGUAGE = "Translations for this language doesn't exist";
+export const LANGUAGE_NOT_FOUND =
+    "Translations for this language doesn't exist";

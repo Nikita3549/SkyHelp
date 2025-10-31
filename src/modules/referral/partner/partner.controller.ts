@@ -7,14 +7,11 @@ import {
     Req,
     UseGuards,
 } from '@nestjs/common';
-import { JwtAuthGuard } from '../../guards/jwtAuth.guard';
-import { IsPartnerGuard } from '../../guards/isPartnerGuard';
-import { AuthRequest } from '../../interfaces/AuthRequest.interface';
+import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
+import { IsPartnerGuard } from '../../../guards/isPartnerGuard';
+import { AuthRequest } from '../../../interfaces/AuthRequest.interface';
 import { PartnerService } from './partner.service';
-import {
-    HAVE_NO_RIGHTS_ON_PARTNER_DATA,
-    INVALID_PARTNER_ID,
-} from './constants';
+import { HAVE_NO_RIGHTS_ON_PARTNER_DATA, PARTNER_NOT_FOUND } from './constants';
 import { UserRole } from '@prisma/client';
 
 @Controller('partner')
@@ -30,7 +27,7 @@ export class PartnerController {
         const partner = await this.partnerService.getPartnerById(partnerId);
 
         if (!partner) {
-            throw new NotFoundException(INVALID_PARTNER_ID);
+            throw new NotFoundException(PARTNER_NOT_FOUND);
         }
 
         if (req.user.role != UserRole.ADMIN && req.user.id != partner.userId) {

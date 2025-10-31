@@ -17,11 +17,11 @@ import { CreateDocumentRequestDto } from './dto/create-document-request.dto';
 import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
 import { GetDocumentRequestsQuery } from './dto/get-document-requests.query';
 import { ClaimService } from '../claim.service';
-import { HAVE_NO_RIGHTS_ON_CLAIM, INVALID_CLAIM_ID } from '../constants';
+import { HAVE_NO_RIGHTS_ON_CLAIM, CLAIM_NOT_FOUND } from '../constants';
 import { IsAgentOrLawyerGuardOrPartner } from '../../../guards/isAgentOrLawyerGuardOrPartner';
 import { AuthRequest } from '../../../interfaces/AuthRequest.interface';
 import { UserRole } from '@prisma/client';
-import { INVALID_DOCUMENT_REQUEST } from './constants';
+import { DOCUMENT_REQUEST_NOT_FOUND } from './constants';
 import { IFullClaim } from '../interfaces/full-claim.interface';
 import { HttpStatusCode } from 'axios';
 import { RedisService } from '../../redis/redis.service';
@@ -45,7 +45,7 @@ export class DocumentRequestController {
         const claim = await this.claimService.getClaim(dto.claimId);
 
         if (!claim) {
-            throw new NotFoundException(INVALID_CLAIM_ID);
+            throw new NotFoundException(CLAIM_NOT_FOUND);
         }
 
         if (req.user.role != UserRole.ADMIN && claim.agentId != req.user.id) {
@@ -82,7 +82,7 @@ export class DocumentRequestController {
         const claim = await this.claimService.getClaim(claimId);
 
         if (!claim) {
-            throw new NotFoundException(INVALID_CLAIM_ID);
+            throw new NotFoundException(CLAIM_NOT_FOUND);
         }
 
         if (
@@ -106,7 +106,7 @@ export class DocumentRequestController {
             await this.documentRequestService.getById(documentRequestId);
 
         if (!documentRequest) {
-            throw new NotFoundException(INVALID_DOCUMENT_REQUEST);
+            throw new NotFoundException(DOCUMENT_REQUEST_NOT_FOUND);
         }
 
         const claim = (await this.claimService.getClaim(

@@ -19,21 +19,21 @@ import {
 import { IsAdminGuard } from '../../../guards/isAdminGuard';
 import { GetClaimsQuery, IsYesOrNo } from './dto/get-claims.query';
 import { ArchiveClaimDto } from './dto/archive-claim.dto';
-import { HAVE_NO_RIGHTS_ON_CLAIM, INVALID_CLAIM_ID } from '../constants';
+import { HAVE_NO_RIGHTS_ON_CLAIM, CLAIM_NOT_FOUND } from '../constants';
 import { UpdateClaimDto } from '../dto/update-claim.dto';
 import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
 import { ClaimService } from '../claim.service';
 import { AddAgentDto } from './dto/add-agent.dto';
 import { UserService } from '../../user/user.service';
 import { UserRole } from '@prisma/client';
-import { INVALID_AGENT_ID } from './constants';
+import { AGENT_NOT_FOUND } from './constants';
 import { IsAgentOrLawyerGuardOrPartner } from '../../../guards/isAgentOrLawyerGuardOrPartner';
 import { AuthRequest } from '../../../interfaces/AuthRequest.interface';
 import { IsAgentGuard } from '../../../guards/isAgent.guard';
 import { RecentUpdatesService } from '../recent-updates/recent-updates.service';
 import { GetAdminClaimsStatsQuery } from './dto/get-admin-claims-stats.query';
 import { DeleteDuplicatesDto } from './dto/delete-duplicates.dto';
-import { PartnerService } from '../../partner/partner.service';
+import { PartnerService } from '../../referral/partner/partner.service';
 import { CreatePartnerDto } from './dto/create-partner.dto';
 
 @Controller('claims/admin')
@@ -127,7 +127,7 @@ export class AdminController {
         const claim = await this.claimService.getClaim(claimId);
 
         if (!claim) {
-            throw new NotFoundException(INVALID_CLAIM_ID);
+            throw new NotFoundException(CLAIM_NOT_FOUND);
         }
 
         await this.recentUpdatesService.unviewRecentUpdatesByClaimId(claimId);
@@ -183,7 +183,7 @@ export class AdminController {
         const claim = await this.claimService.getClaim(claimId);
 
         if (!claim) {
-            throw new NotFoundException(INVALID_CLAIM_ID);
+            throw new NotFoundException(CLAIM_NOT_FOUND);
         }
 
         if (req.user.role != UserRole.ADMIN && req.user.id != claim.agentId) {
@@ -198,7 +198,7 @@ export class AdminController {
         const claim = await this.claimService.getClaim(claimId);
 
         if (!claim) {
-            throw new BadRequestException(INVALID_CLAIM_ID);
+            throw new BadRequestException(CLAIM_NOT_FOUND);
         }
 
         return claim;
@@ -211,7 +211,7 @@ export class AdminController {
         @Param('claimId') claimId: string,
     ) {
         if (!(await this.claimService.getClaim(claimId))) {
-            throw new BadRequestException(INVALID_CLAIM_ID);
+            throw new BadRequestException(CLAIM_NOT_FOUND);
         }
 
         return await this.claimService.updateClaim(dto, claimId);
@@ -233,7 +233,7 @@ export class AdminController {
                 agent.role != UserRole.LAWYER &&
                 agent.role != UserRole.PARTNER)
         ) {
-            throw new NotFoundException(INVALID_AGENT_ID);
+            throw new NotFoundException(AGENT_NOT_FOUND);
         }
 
         return await this.claimService.addAgent(claimId, agentId);
@@ -243,7 +243,7 @@ export class AdminController {
     @UseGuards(IsAgentOrLawyerGuardOrPartner)
     async deleteAgent(@Param('claimId') claimId: string) {
         if (!(await this.claimService.getClaim(claimId))) {
-            throw new BadRequestException(INVALID_CLAIM_ID);
+            throw new BadRequestException(CLAIM_NOT_FOUND);
         }
 
         return this.claimService.addAgent(claimId, null);

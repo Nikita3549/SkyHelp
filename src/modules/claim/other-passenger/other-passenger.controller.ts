@@ -15,7 +15,7 @@ import {
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
 import { UpdatePassengerDto } from './dto/update-passenger.dto';
-import { CLAIM_NOT_FOUND, INVALID_PASSENGER_ID } from '../constants';
+import { CLAIM_NOT_FOUND, PASSENGER_NOT_FOUND } from '../constants';
 import { OtherPassengerService } from './other-passenger.service';
 import { DocumentService } from '../document/document.service';
 import { ClaimService } from '../claim.service';
@@ -51,7 +51,7 @@ export class OtherPassengerController {
         if (
             !(await this.otherPassengerService.getOtherPassenger(passengerId))
         ) {
-            throw new BadRequestException(INVALID_PASSENGER_ID);
+            throw new BadRequestException(PASSENGER_NOT_FOUND);
         }
 
         return await this.otherPassengerService.updatePassenger(
@@ -67,7 +67,7 @@ export class OtherPassengerController {
             await this.otherPassengerService.getOtherPassenger(passengerId);
 
         if (!passenger) {
-            throw new NotFoundException(INVALID_PASSENGER_ID);
+            throw new NotFoundException(PASSENGER_NOT_FOUND);
         }
 
         return await this.otherPassengerService.setOtherPassengerAsMinor(
@@ -93,7 +93,7 @@ export class PublicOtherPassengerController {
             await this.otherPassengerService.getOtherPassenger(passengerId);
 
         if (!passenger) {
-            throw new NotFoundException(INVALID_PASSENGER_ID);
+            throw new NotFoundException(PASSENGER_NOT_FOUND);
         }
 
         return passenger;
@@ -125,7 +125,7 @@ export class PublicOtherPassengerController {
             await this.otherPassengerService.getOtherPassenger(passengerId);
 
         if (!passenger) {
-            throw new NotFoundException(INVALID_PASSENGER_ID);
+            throw new NotFoundException(PASSENGER_NOT_FOUND);
         }
 
         const requireParentInfo =

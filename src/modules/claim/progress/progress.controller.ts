@@ -15,7 +15,7 @@ import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
 import { ProgressService } from './progress.service';
 import { IsAgentOrLawyerGuardOrPartner } from '../../../guards/isAgentOrLawyerGuardOrPartner';
 import {
-    INVALID_PROGRESS_ID,
+    PROGRESS_NOT_FOUND,
     SEND_NEW_PROGRESS_EMAIL_QUEUE_DELAY,
     SEND_NEW_PROGRESS_EMAIL_QUEUE_KEY,
 } from './constants';
@@ -23,7 +23,7 @@ import { ClaimService } from '../claim.service';
 import { Languages } from '../../language/enums/languages.enums';
 import { isLanguage } from '../../../utils/isLanguage';
 import { CreateProgressDto } from './dto/create-progress.dto';
-import { INVALID_CLAIM_ID } from '../constants';
+import { CLAIM_NOT_FOUND } from '../constants';
 import { ProgressVariants } from './constants/progresses/progressVariants';
 import { ClaimStatus } from '@prisma/client';
 import { InjectQueue } from '@nestjs/bullmq';
@@ -57,7 +57,7 @@ export class ProgressController {
         const claim = await this.claimService.getClaim(claimId);
 
         if (!claim) {
-            throw new NotFoundException(INVALID_CLAIM_ID);
+            throw new NotFoundException(CLAIM_NOT_FOUND);
         }
 
         const progressVariant = this.getProgressVariantByStatus(
@@ -119,7 +119,7 @@ export class ProgressController {
             await this.progressesService.getProgressById(progressId);
 
         if (!progress) {
-            throw new NotFoundException(INVALID_PROGRESS_ID);
+            throw new NotFoundException(PROGRESS_NOT_FOUND);
         }
 
         if (Date.now() - progress.createdAt.getTime() > MINUTE * 5) {

@@ -16,9 +16,9 @@ import { ClaimService } from '../claim/claim.service';
 import { TokenService } from '../token/token.service';
 import { validateClaimJwt } from '../../utils/validate-claim-jwt';
 import {
-    INVALID_CLAIM_ID,
-    INVALID_CUSTOMER_ID,
-    INVALID_PASSENGER_ID,
+    CLAIM_NOT_FOUND,
+    CUSTOMER_NOT_FOUND,
+    PASSENGER_NOT_FOUND,
 } from '../claim/constants';
 import { IsZohoGuard } from './guards/isZoho.guard';
 import { IdempotencyInterceptor } from './interceptors/IdempotencyInterceptor';
@@ -220,7 +220,7 @@ export class ZohoController {
         jwt?: string,
     ): Promise<IAssignmentData> {
         if (!jwt) {
-            throw new NotFoundException(INVALID_CLAIM_ID);
+            throw new NotFoundException(CLAIM_NOT_FOUND);
         }
 
         await validateClaimJwt(
@@ -232,7 +232,7 @@ export class ZohoController {
         const claim = await this.claimService.getClaim(claimId);
 
         if (!claim) {
-            throw new NotFoundException(INVALID_CLAIM_ID);
+            throw new NotFoundException(CLAIM_NOT_FOUND);
         }
 
         return {
@@ -252,12 +252,12 @@ export class ZohoController {
         customerId?: string,
     ): Promise<IAssignmentData> {
         if (!customerId) {
-            throw new NotFoundException(INVALID_CUSTOMER_ID);
+            throw new NotFoundException(CUSTOMER_NOT_FOUND);
         }
         const customer = await this.customerService.getCustomer(customerId);
 
         if (!customer) {
-            throw new NotFoundException(INVALID_CUSTOMER_ID);
+            throw new NotFoundException(CUSTOMER_NOT_FOUND);
         }
 
         if (customer.isSigned) {
@@ -267,7 +267,7 @@ export class ZohoController {
         const claim = await this.claimService.getClaim(claimId);
 
         if (!claim) {
-            throw new NotFoundException(INVALID_CLAIM_ID);
+            throw new NotFoundException(CLAIM_NOT_FOUND);
         }
 
         return {
@@ -287,14 +287,14 @@ export class ZohoController {
         passengerId?: string,
     ): Promise<IAssignmentData> {
         if (!passengerId) {
-            throw new NotFoundException(INVALID_PASSENGER_ID);
+            throw new NotFoundException(PASSENGER_NOT_FOUND);
         }
 
         const passenger =
             await this.otherPassengerService.getOtherPassenger(passengerId);
 
         if (!passenger) {
-            throw new NotFoundException(INVALID_PASSENGER_ID);
+            throw new NotFoundException(PASSENGER_NOT_FOUND);
         }
 
         if (passenger.isSigned) {
@@ -304,7 +304,7 @@ export class ZohoController {
         const claim = await this.claimService.getClaim(claimId);
 
         if (!claim) {
-            throw new NotFoundException(INVALID_CLAIM_ID);
+            throw new NotFoundException(CLAIM_NOT_FOUND);
         }
 
         return {

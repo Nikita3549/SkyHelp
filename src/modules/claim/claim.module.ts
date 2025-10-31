@@ -31,7 +31,7 @@ import { ActivityModule } from './activity/activity.module';
 import { AirlineModule } from '../airline/airline.module';
 import { BoardingPassModule } from './boarding-pass/boarding-pass.module';
 import { AddFlightStatusProcessor } from './processors/add-flight-status.processor';
-import { PartnerModule } from '../partner/partner.module';
+import { PartnerModule } from '../referral/partner/partner.module';
 
 @Module({
     imports: [

@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
 import { StateDto } from './dto/state.dto';
-import { INVALID_CLAIM_ID } from '../constants';
+import { CLAIM_NOT_FOUND } from '../constants';
 import { StateService } from './state.service';
 import { ClaimService } from '../claim.service';
 import { IsAgentGuard } from '../../../guards/isAgent.guard';
@@ -26,7 +26,7 @@ export class StateController {
         const { claimId } = dto;
 
         if (!(await this.claimService.getClaim(claimId))) {
-            throw new BadRequestException(INVALID_CLAIM_ID);
+            throw new BadRequestException(CLAIM_NOT_FOUND);
         }
 
         await this.claimService.changeUpdatedAt(claimId);

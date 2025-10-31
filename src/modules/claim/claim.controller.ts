@@ -17,7 +17,7 @@ import { ClaimService } from './claim.service';
 import {
     ADD_FLIGHT_STATUS_QUEUE_KEY,
     FINAL_STEP,
-    INVALID_CLAIM_ID,
+    CLAIM_NOT_FOUND,
     INVALID_ICAO,
 } from './constants';
 import { AuthRequest } from '../../interfaces/AuthRequest.interface';
@@ -54,7 +54,7 @@ import { ApiKeyAuthGuard } from '../../guards/ApiKeyAuthGuard';
 import { JwtOrApiKeyAuth } from '../../guards/jwtOrApiKeyAuth';
 import { GetClaimsQuery } from './dto/get-claims.query';
 import { normalizePhone } from '../../utils/normalizePhone';
-import { PartnerService } from '../partner/partner.service';
+import { PartnerService } from '../referral/partner/partner.service';
 
 @Controller('claims')
 @UseGuards(JwtOrApiKeyAuth)
@@ -217,7 +217,7 @@ export class PublicClaimController {
         const claim = await this.claimService.getClaim(claimId);
 
         if (!claim) {
-            throw new NotFoundException(INVALID_CLAIM_ID);
+            throw new NotFoundException(CLAIM_NOT_FOUND);
         }
 
         return {
@@ -242,7 +242,7 @@ export class PublicClaimController {
         const claim = await this.claimService.getClaim(claimId);
 
         if (!claim) {
-            throw new NotFoundException(INVALID_CLAIM_ID);
+            throw new NotFoundException(CLAIM_NOT_FOUND);
         }
 
         const path = await this.documentService.saveSignaturePdf(signature, {
@@ -308,7 +308,7 @@ export class PublicClaimController {
         const claim = await this.claimService.getClaim(claimId);
 
         if (!claim) {
-            throw new NotFoundException(INVALID_CLAIM_ID);
+            throw new NotFoundException(CLAIM_NOT_FOUND);
         }
 
         return claim;

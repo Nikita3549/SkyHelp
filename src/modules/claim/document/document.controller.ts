@@ -20,7 +20,7 @@ import { DocumentsUploadInterceptor } from '../../../interceptors/documents/docu
 import {
     CLAIM_NOT_FOUND,
     FILE_DOESNT_ON_DISK,
-    INVALID_DOCUMENT_ID,
+    DOCUMENT_NOT_FOUND,
 } from '../constants';
 import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
 import { ClaimService } from '../claim.service';
@@ -84,7 +84,7 @@ export class DocumentController {
         const document = await this.documentService.getDocument(documentId);
 
         if (!document) {
-            throw new NotFoundException(INVALID_DOCUMENT_ID);
+            throw new NotFoundException(DOCUMENT_NOT_FOUND);
         }
 
         await this.documentService.removeDocument(document.id);
@@ -154,7 +154,7 @@ export class DocumentController {
         const document = await this.documentService.getDocument(documentId);
 
         if (!document) {
-            throw new NotFoundException(INVALID_DOCUMENT_ID);
+            throw new NotFoundException(DOCUMENT_NOT_FOUND);
         }
 
         const claim = await this.claimService.getClaim(document.claimId);
@@ -191,7 +191,7 @@ export class DocumentController {
         const document = await this.documentService.getDocument(documentId);
 
         if (!document) {
-            throw new NotFoundException(INVALID_DOCUMENT_ID);
+            throw new NotFoundException(DOCUMENT_NOT_FOUND);
         }
 
         const filePath = path.resolve(document.path);

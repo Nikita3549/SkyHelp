@@ -1,9 +1,9 @@
 export const MESSAGE_ACK_SUCCESSFUL = (messageUuid: string) => `${messageUuid}`;
 
-export const INVALID_CHAT_ID = 'Invalid chatId';
+export const CHAT_NOT_FOUND = 'Chat not found';
 
-export const INVALID_USER_ID = 'Invalid userId';
+export const USER_NOT_FOUND = 'User not found';
 
 export const INVALID_TOKEN = 'Unauthorized: Invalid token';
 
-export const INVALID_MESSAGE_ID = 'Invalid messageId';
+export const MESSAGE_NOT_FOUND = 'Message not found';

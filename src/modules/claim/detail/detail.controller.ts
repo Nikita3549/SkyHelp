@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
 import { FlightDto } from './dto/flight.dto';
-import { INVALID_CLAIM_ID } from '../constants';
+import { CLAIM_NOT_FOUND } from '../constants';
 import { DetailService } from './detail.service';
 import { ClaimService } from '../claim.service';
 import { IsAgentGuard } from '../../../guards/isAgent.guard';
@@ -28,7 +28,7 @@ export class DetailController {
         const claim = await this.claimService.getClaim(claimId);
 
         if (!claim) {
-            throw new BadRequestException(INVALID_CLAIM_ID);
+            throw new BadRequestException(CLAIM_NOT_FOUND);
         }
 
         await this.claimService.changeUpdatedAt(claim.id);

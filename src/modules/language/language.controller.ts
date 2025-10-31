@@ -1,7 +1,7 @@
 import { Controller, Get, NotFoundException, Param } from '@nestjs/common';
 import { LanguageService } from './language.service';
 import { GetLanguageDto } from './dto/get-language.dto';
-import { INVALID_LANGUAGE } from './constants';
+import { LANGUAGE_NOT_FOUND } from './constants';
 
 @Controller('languages')
 export class LanguageController {
@@ -13,7 +13,7 @@ export class LanguageController {
             .getTranslationsJson(params.language)
             .catch((_e: unknown) => {
                 console.error(_e);
-                throw new NotFoundException(INVALID_LANGUAGE);
+                throw new NotFoundException(LANGUAGE_NOT_FOUND);
             });
     }
 }

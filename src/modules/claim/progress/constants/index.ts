@@ -1,4 +1,4 @@
-export const INVALID_PROGRESS_ID = 'Invalid progress id';
+export const PROGRESS_NOT_FOUND = 'Progress not found';
 
 export const SEND_NEW_PROGRESS_EMAIL_QUEUE_KEY =
     'send-new-progress-email-queue';

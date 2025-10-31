@@ -26,7 +26,7 @@ import {
     CONFIRM_REGISTRATION_SUCCESS,
     CORRECT_CODE,
     EXPIRE_CODE_OR_WRONG_EMAIL_ERROR,
-    INVALID_USER_ID,
+    USER_NOT_FOUND,
     PASSWORD_WAS_CHANGED_SUCCESS,
     SEND_FORGOT_PASSWORD_CODE_SUCCESS,
     WRONG_CODE_ERROR,
@@ -274,7 +274,7 @@ export class AuthController {
         const { userUuid, newRole } = dto;
 
         if (!(await this.userService.getUserById(userUuid))) {
-            throw new NotFoundException(INVALID_USER_ID);
+            throw new NotFoundException(USER_NOT_FOUND);
         }
 
         await this.userService.updateRole(newRole, userUuid);
@@ -286,7 +286,7 @@ export class AuthController {
         const { userUuid, isActive } = dto;
 
         if (!(await this.userService.getUserById(userUuid))) {
-            throw new NotFoundException(INVALID_USER_ID);
+            throw new NotFoundException(USER_NOT_FOUND);
         }
 
         await this.userService.updateStatus(isActive, userUuid);

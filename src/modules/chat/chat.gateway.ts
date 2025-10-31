@@ -13,10 +13,10 @@ import { TokenService } from '../token/token.service';
 import { ChatService } from './chat.service';
 import { SendMessageDto } from './dto/send-message.dto';
 import {
-    INVALID_CHAT_ID,
-    INVALID_MESSAGE_ID,
+    CHAT_NOT_FOUND,
+    MESSAGE_NOT_FOUND,
     INVALID_TOKEN,
-    INVALID_USER_ID,
+    USER_NOT_FOUND,
     MESSAGE_ACK_SUCCESSFUL,
 } from './constants';
 import { MessageReadDto } from './dto/message-read.dto';
@@ -95,13 +95,13 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         const { secondChatUser } = dto;
 
         if (client.data.id == secondChatUser) {
-            throw new WsException(INVALID_CHAT_ID);
+            throw new WsException(CHAT_NOT_FOUND);
         }
 
         await this.chatService
             .createChat(client.data.id, secondChatUser)
             .catch((_e: unknown) => {
-                throw new WsException(INVALID_USER_ID);
+                throw new WsException(USER_NOT_FOUND);
             });
 
         client.emit('new_chat', 'Successful created');
@@ -114,7 +114,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         const message = await this.chatService
             .createMessage(chatId, client.data.id, content)
             .catch((_e: unknown) => {
-                throw new WsException(INVALID_CHAT_ID);
+                throw new WsException(CHAT_NOT_FOUND);
             });
 
         client.emit('message_ack', MESSAGE_ACK_SUCCESSFUL(message.id));
@@ -127,7 +127,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         const { messageId } = dto;
 
         await this.chatService.readMessage(messageId).catch((_e: unknown) => {
-            throw new WsException(INVALID_MESSAGE_ID);
+            throw new WsException(MESSAGE_NOT_FOUND);
         });
 
         client.broadcast

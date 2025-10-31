@@ -1,23 +1,21 @@
 import { DAY } from '../../../common/constants/time.constants';
 
-export const CLAIM_NOT_FOUND = "Claim with this id doesn't exist";
-
-export const INVALID_CLAIM_ID = 'Claim id is invalid';
+export const CLAIM_NOT_FOUND = 'Claim not found';
 
 export const HAVE_NO_RIGHTS_ON_CLAIM =
     'You dont have rights to get info about this claim';
 
 export const INVALID_JWT = 'Invalid jwt';
 
-export const INVALID_DOCUMENT_ID = 'Invalid document id';
+export const DOCUMENT_NOT_FOUND = 'Document not found';
 
 export const FILE_DOESNT_ON_DISK = 'File does not exist on disk';
 
 export const INVALID_ICAO = 'Invalid ICAO code';
 
-export const INVALID_PASSENGER_ID = 'Invalid passengerId';
+export const PASSENGER_NOT_FOUND = 'Passenger not found';
 
-export const INVALID_CUSTOMER_ID = 'Invalid customerId';
+export const CUSTOMER_NOT_FOUND = 'Customer not found';
 
 export const CLAIM_FOLLOWUP_QUEUE_KEY = 'claims';
 export const ADD_FLIGHT_STATUS_QUEUE_KEY = 'add-flight-status';

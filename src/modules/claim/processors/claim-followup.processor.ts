@@ -2,7 +2,7 @@ import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
 import {
     CLAIM_FOLLOWUP_QUEUE_KEY,
-    INVALID_CLAIM_ID,
+    CLAIM_NOT_FOUND,
     PAYMENT_STEP,
 } from '../constants';
 import { NotificationService } from '../../notification/notification.service';
@@ -33,7 +33,7 @@ export class ClaimFollowupProcessor extends WorkerHost {
         const claim = await this.claimService.getClaim(claimId);
 
         if (!claim) {
-            throw new Error(INVALID_CLAIM_ID);
+            throw new Error(CLAIM_NOT_FOUND);
         }
 
         if (claim.step >= PAYMENT_STEP || claim.archived) {

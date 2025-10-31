@@ -1,1 +1,1 @@
-export const INVALID_AGENT_ID = 'Invalid agent id';
+export const AGENT_NOT_FOUND = 'Agent not found';

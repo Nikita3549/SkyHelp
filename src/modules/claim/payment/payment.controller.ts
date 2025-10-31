@@ -6,7 +6,7 @@ import {
     UseGuards,
 } from '@nestjs/common';
 import { PaymentDto } from './dto/payment.dto';
-import { INVALID_CLAIM_ID } from '../constants';
+import { CLAIM_NOT_FOUND } from '../constants';
 import { PaymentService } from './payment.service';
 import { ClaimService } from '../claim.service';
 import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
@@ -26,7 +26,7 @@ export class PaymentController {
         const { claimId } = dto;
 
         if (!(await this.claimService.getClaim(claimId))) {
-            throw new BadRequestException(INVALID_CLAIM_ID);
+            throw new BadRequestException(CLAIM_NOT_FOUND);
         }
 
         await this.claimService.changeUpdatedAt(claimId);

@@ -22,9 +22,9 @@ import {
 import {
     CONTINUE_LINKS_EXP,
     HAVE_NO_RIGHTS_ON_CLAIM,
-    INVALID_CLAIM_ID,
+    CLAIM_NOT_FOUND,
     INVALID_JWT,
-    INVALID_PASSENGER_ID,
+    PASSENGER_NOT_FOUND,
 } from '../claim/constants';
 import { VerifyJwtDto } from './dto/verify-jwt.dto';
 import { ClaimService } from '../claim/claim.service';
@@ -53,7 +53,7 @@ export class GenerateLinksController {
             const claim = await this.claimService.getClaim(query.claimId);
 
             if (!claim) {
-                throw new NotFoundException(INVALID_CLAIM_ID);
+                throw new NotFoundException(CLAIM_NOT_FOUND);
             }
 
             if (claim.userId != req.user.id) {
@@ -80,7 +80,7 @@ export class GenerateLinksController {
             const claim = await this.claimService.getClaim(query.claimId);
 
             if (!claim) {
-                throw new NotFoundException(INVALID_CLAIM_ID);
+                throw new NotFoundException(CLAIM_NOT_FOUND);
             }
 
             if (claim.userId != req.user.id) {
@@ -116,7 +116,7 @@ export class GenerateLinksController {
         );
 
         if (!passenger) {
-            throw new NotFoundException(INVALID_PASSENGER_ID);
+            throw new NotFoundException(PASSENGER_NOT_FOUND);
         }
 
         const requireParentInfo =
@@ -178,7 +178,7 @@ export class PublicGenerateLinksController {
         );
 
         if (!passenger) {
-            throw new NotFoundException(INVALID_PASSENGER_ID);
+            throw new NotFoundException(PASSENGER_NOT_FOUND);
         }
 
         const requireParentInfo =

@@ -11,7 +11,7 @@ import { ApiKeyAuthGuard } from '../../guards/ApiKeyAuthGuard';
 import { NotificationService } from '../notification/notification.service';
 import { SendMissingDocumentsEmailDto } from './dto/sendMissingDocumentsEmail.dto';
 import { ClaimService } from '../claim/claim.service';
-import { INVALID_CLAIM_ID } from '../claim/constants';
+import { CLAIM_NOT_FOUND } from '../claim/constants';
 import { Languages } from '../language/enums/languages.enums';
 import { HttpStatusCode } from 'axios';
 
@@ -30,7 +30,7 @@ export class BotController {
         const claim = await this.claimService.getClaim(claimId);
 
         if (!claim) {
-            throw new NotFoundException(INVALID_CLAIM_ID);
+            throw new NotFoundException(CLAIM_NOT_FOUND);
         }
 
         await this.notificationService.sendMissingDocumentEmail(
