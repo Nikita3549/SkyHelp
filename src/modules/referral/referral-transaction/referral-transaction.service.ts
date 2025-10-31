@@ -35,4 +35,12 @@ export class ReferralTransactionService {
             await this.partnerService.increaseBalance(amount, partner.id, tx);
         });
     }
+
+    async getReferralTransactionByClaimId(claimId: string) {
+        return this.prisma.referralTransaction.findFirst({
+            where: {
+                claimId,
+            },
+        });
+    }
 }

@@ -38,7 +38,13 @@ export class SendNewProgressEmailProcessor extends WorkerHost {
 
         await this.claimService.updateStatus(newClaimStatus, emailData.claimId);
 
-        if (newClaimStatus == ClaimStatus.PAID && referralCode) {
+        if (
+            newClaimStatus == ClaimStatus.PAID &&
+            referralCode &&
+            !(await this.referralTransactionService.getReferralTransactionByClaimId(
+                claim.id,
+            ))
+        ) {
             const passengersCount = 1 + claim.passengers.length;
             const amount = passengersCount * claim.state.amount * REFERRAL_RATE;
 

@@ -43,6 +43,23 @@ export class PartnerService {
         });
     }
 
+    async decreaseBalance(
+        amount: number,
+        partnerId: string,
+        tx?: Prisma.TransactionClient,
+    ) {
+        const client = tx ?? this.prisma;
+
+        return client.partner.update({
+            data: {
+                balance: {
+                    decrement: Prisma.Decimal(amount),
+                },
+            },
+            where: { id: partnerId },
+        });
+    }
+
     async getPartnerByReferralCode(
         referralCode: string,
     ): Promise<Partner | null> {

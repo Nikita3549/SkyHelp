@@ -30,6 +30,7 @@ import { SendToCeoModule } from './modules/send-to-ceo/send-to-ceo.module';
 import { BotModule } from './modules/bot/bot.module';
 import { PartnerModule } from './modules/referral/partner/partner.module';
 import { ReferralTransactionModule } from './modules/referral/referral-transaction/referral-transaction.module';
+import { PayoutModule } from './modules/referral/payout/payout.module';
 
 @Module({
     imports: [
@@ -68,6 +69,7 @@ import { ReferralTransactionModule } from './modules/referral/referral-transacti
         BotModule,
         PartnerModule,
         ReferralTransactionModule,
+        PayoutModule,
     ],
     controllers: [AppController],
     providers: [AppService],
