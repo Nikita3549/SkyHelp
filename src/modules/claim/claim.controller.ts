@@ -162,6 +162,7 @@ export class PublicClaimController {
         const claim = await this.claimService.createClaim(dto, {
             referredById,
             referrerSource,
+            referrer,
             language,
             userId,
             flightNumber: dto.details.flightNumber,
