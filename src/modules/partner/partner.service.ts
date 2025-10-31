@@ -15,6 +15,14 @@ export class PartnerService {
         });
     }
 
+    async getPartnerById(partnerId: string): Promise<Partner | null> {
+        return this.prisma.partner.findFirst({
+            where: {
+                id: partnerId,
+            },
+        });
+    }
+
     async increaseBalance(
         amount: number,
         partnerId: string,
