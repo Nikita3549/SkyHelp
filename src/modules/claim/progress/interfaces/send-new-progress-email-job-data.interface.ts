@@ -3,6 +3,7 @@ import { Languages } from '../../../language/enums/languages.enums';
 
 export interface ISendNewProgressEmailJobData {
     progressId: string;
+    referralCode?: string | null;
     emailData: {
         to: string;
         title: string;

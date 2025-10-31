@@ -95,6 +95,7 @@ export class ProgressController {
                 claimId: claim.id,
                 language: customerLanguage,
             },
+            referralCode: claim.referrer,
             newClaimStatus: status,
         };
 

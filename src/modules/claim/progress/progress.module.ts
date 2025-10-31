@@ -7,6 +7,7 @@ import { BullModule } from '@nestjs/bullmq';
 import { SEND_NEW_PROGRESS_EMAIL_QUEUE_KEY } from './constants';
 import { SendNewProgressEmailProcessor } from './processors/send-new-progress-email.processor';
 import { LanguageModule } from '../../language/language.module';
+import { ReferralTransactionModule } from '../../referral-transaction/referral-transaction.module';
 
 @Module({
     imports: [
@@ -16,6 +17,7 @@ import { LanguageModule } from '../../language/language.module';
             name: SEND_NEW_PROGRESS_EMAIL_QUEUE_KEY,
         }),
         forwardRef(() => LanguageModule),
+        ReferralTransactionModule,
     ],
     controllers: [ProgressController],
     providers: [ProgressService, SendNewProgressEmailProcessor],

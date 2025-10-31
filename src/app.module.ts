@@ -29,6 +29,7 @@ import { GenerateLinksModule } from './modules/generate-links/generate-links.mod
 import { SendToCeoModule } from './modules/send-to-ceo/send-to-ceo.module';
 import { BotModule } from './modules/bot/bot.module';
 import { PartnerModule } from './modules/partner/partner.module';
+import { ReferralTransactionModule } from './modules/referral-transaction/referral-transaction.module';
 
 @Module({
     imports: [
@@ -66,6 +67,7 @@ import { PartnerModule } from './modules/partner/partner.module';
         SendToCeoModule,
         BotModule,
         PartnerModule,
+        ReferralTransactionModule,
     ],
     controllers: [AppController],
     providers: [AppService],
