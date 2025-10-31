@@ -1,0 +1,7 @@
+model EmailUnsubscribe {
+  id    String @id @default(cuid())
+  email String @unique
+
+  @@index([email])
+  @@map("email_unsubscribes")
+}

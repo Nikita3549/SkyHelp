@@ -112,6 +112,9 @@
     "collectCoverageFrom": [
       "**/*.(t|j)s"
     ],
+    "prisma": {
+      "schema": "./prisma/schema"
+    },
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
   }

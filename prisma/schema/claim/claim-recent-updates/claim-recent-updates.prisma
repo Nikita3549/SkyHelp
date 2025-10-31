@@ -1,0 +1,8 @@
+model ClaimRecentUpdates {
+  id              String                   @id @default(cuid())
+  type            ClaimRecentUpdatesType
+  status          ClaimRecentUpdatesStatus @default(UNVIEWED)
+  updatedEntityId String                   @map("updated_entity_id")
+  claimId         String                   @map("claim_id")
+  claim           Claim                    @relation(fields: [claimId], references: [id])
+}

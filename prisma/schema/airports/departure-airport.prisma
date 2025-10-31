@@ -1,0 +1,10 @@
+model DepartureAirport {
+  id      String  @id @default(cuid()) @map("id")
+  icao    String
+  iata    String?
+  name    String
+  country String?
+  Route   Route?
+
+  @@map("departure_airports")
+}

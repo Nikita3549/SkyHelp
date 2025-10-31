@@ -1,0 +1,4 @@
+enum ClaimRecentUpdatesType {
+  DOCUMENT
+  EMAIL
+}

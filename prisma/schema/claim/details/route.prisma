@@ -1,0 +1,13 @@
+model Route {
+  id               String       @id @default(cuid()) @map("id")
+  arrivalAirport   String       @unique @map("arrival_airport")
+  departureAirport String       @unique @map("departure_airport")
+  troubled         Boolean      @default(false)
+  detailsId        String       @map("details_id")
+  detail           ClaimDetails @relation(fields: [detailsId], references: [id])
+
+  ArrivalAirport   ArrivalAirport   @relation(fields: [arrivalAirport], references: [id])
+  DepartureAirport DepartureAirport @relation(fields: [departureAirport], references: [id])
+
+  @@map("routes")
+}

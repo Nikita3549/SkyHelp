@@ -1,0 +1,6 @@
+enum IssueReason {
+  delay
+  cancelled
+  denied
+  missed
+}

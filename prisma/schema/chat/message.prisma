@@ -1,0 +1,13 @@
+model Message {
+  id        String        @id @default(uuid())
+  chatId    String        @map("chat_id")
+  senderId  String        @map("sender_id")
+  content   String
+  createdAt DateTime      @default(now()) @map("created_at")
+  status    MessageStatus @default(UNREAD)
+
+  chat   Chat @relation(fields: [chatId], references: [id])
+  sender User @relation(fields: [senderId], references: [id])
+
+  @@map("messages")
+}

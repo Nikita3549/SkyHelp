@@ -1,0 +1,18 @@
+model SignScenario {
+  id          String           @id @default(uuid())
+  claimId     String           @map("claim_id")
+  passengerId String?          @map("passenger_id")
+  requestId   String           @map("request_id")
+  scenario    SignScenarioType
+
+  claim     Claim           @relation(fields: [claimId], references: [id])
+  passenger OtherPassenger? @relation(fields: [passengerId], references: [id])
+
+  @@map("sign_scenarios")
+}
+
+enum SignScenarioType {
+  MainFlow
+  ExternalFlow
+  OtherPassenger
+}

@@ -1,0 +1,5 @@
+enum PaymentMethod {
+  bank_transfer
+  paypal
+  wise
+}

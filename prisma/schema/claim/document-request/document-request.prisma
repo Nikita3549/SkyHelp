@@ -1,0 +1,14 @@
+model DocumentRequest {
+  id           String                @id @default(cuid())
+  type         DocumentRequestType
+  status       DocumentRequestStatus @default(ACTIVE)
+  passengerId  String
+  documentType DocumentType          @default(DOCUMENT) @map("document_type")
+  claimId      String                @map("claim_id")
+  claim        Claim                 @relation(fields: [claimId], references: [id])
+  isSent       Boolean               @default(true) @map("is_sent")
+  createdAt    DateTime              @default(now()) @map("created_at")
+  updatedAt    DateTime              @default(now()) @updatedAt @map("updated_at")
+
+  @@map("document_requests")
+}

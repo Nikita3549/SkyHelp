@@ -1,0 +1,6 @@
+enum DocumentRequestType {
+  ETICKET
+  PASSPORT
+  BOARDING_PASS
+  ASSIGNMENT
+}

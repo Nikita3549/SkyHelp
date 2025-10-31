@@ -1,0 +1,6 @@
+enum ChatType {
+  DIRECT
+  GROUP
+
+  @@map("chat_types")
+}

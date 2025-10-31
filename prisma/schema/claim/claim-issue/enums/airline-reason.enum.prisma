@@ -1,0 +1,8 @@
+enum AirlineReason {
+  technical_problems
+  weather
+  strike
+  issues
+  other
+  dont_remember
+}

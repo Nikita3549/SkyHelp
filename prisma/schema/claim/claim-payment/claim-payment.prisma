@@ -1,0 +1,14 @@
+model ClaimPayment {
+  id            String         @id @default(cuid()) @map("id")
+  email         String?        @map("email")
+  termsAgreed   Boolean?       @map("terms_agreed")
+  paymentMethod PaymentMethod? @map("payment_method")
+  bankName      String?        @map("bank_name")
+  accountName   String?        @map("account_name")
+  accountNumber String?        @map("account_number")
+  iban          String?        @map("iban")
+  paypalEmail   String?        @map("paypal_email")
+  Claim         Claim[]
+
+  @@map("claim_payments")
+}

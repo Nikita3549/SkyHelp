@@ -1,0 +1,7 @@
+enum DocumentType {
+  ASSIGNMENT
+  PASSPORT
+  DOCUMENT
+  ETICKET
+  BOARDING_PASS
+}

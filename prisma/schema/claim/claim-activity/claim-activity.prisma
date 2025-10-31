@@ -1,0 +1,12 @@
+model ClaimActivity {
+  id          String            @id @default(cuid())
+  type        ClaimActivityType
+  title       String
+  description String
+  claimId     String            @map("claim_id")
+  claim       Claim             @relation(fields: [claimId], references: [id])
+  createdAt   DateTime          @default(now()) @map("created_at")
+  updatedAt   DateTime          @default(now()) @updatedAt @map("updated_at")
+
+  @@map("claim_activities")
+}

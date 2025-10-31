@@ -1,0 +1,6 @@
+enum DisruptionType {
+  denied_boarding
+  cancellation
+  delay
+  missed_connection
+}

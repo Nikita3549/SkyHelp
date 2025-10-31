@@ -1,0 +1,11 @@
+model ChatMember {
+  chatId  String
+  userId  String
+  isAdmin Boolean @default(false) @map("is_admin")
+
+  chat Chat @relation(fields: [chatId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+
+  @@id([chatId, userId])
+  @@map("chat_members")
+}

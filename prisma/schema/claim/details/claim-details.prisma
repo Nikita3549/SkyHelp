@@ -1,0 +1,13 @@
+model ClaimDetails {
+  id           String   @id @default(cuid()) @map("id")
+  date         DateTime @map("date")
+  airline      String   @map("airline")
+  bookingRef   String?  @map("booking_ref")
+  flightNumber String   @map("flight_number")
+  Claim        Claim[]
+  routes       Route[]
+
+  airlines Airline @relation(fields: [airline], references: [id])
+
+  @@map("claim_details")
+}

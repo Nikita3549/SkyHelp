@@ -1,0 +1,11 @@
+model ClaimFlightStatus {
+  id           String                  @id @default(cuid()) @map("id")
+  isCancelled  Boolean                 @default(false) @map("is_cancelled")
+  delayMinutes Int                     @map("delay_minutes")
+  source       ClaimFlightStatusSource
+
+  claimId String
+  claim   Claim  @relation(fields: [claimId], references: [id])
+
+  @@map("claim_flight_statuses")
+}

@@ -1,0 +1,14 @@
+model ClaimIssue {
+  id                                 String              @id @default(cuid()) @map("id")
+  delay                              DelayCategory?      @map("delay")
+  cancellationNoticeDays             CancellationNotice? @map("cancellation_notice_days")
+  disruptionType                     DisruptionType      @map("disruption_type")
+  airlineReason                      AirlineReason?      @map("airline_reason")
+  wasAlternativeFlightOffered        Boolean             @default(false) @map("was_alternative_flight_offered")
+  arrivalTimeDelayOfAlternativeHours Int?                @map("arrival_time_delay_of_alternative_hours")
+  additionalInfo                     String?             @map("additional_info")
+  hasContactedAirline                Boolean             @default(false) @map("has_contacted_airline")
+  Claim                              Claim[]
+
+  @@map("claim_issues")
+}

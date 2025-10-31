@@ -1,0 +1,29 @@
+model Email {
+  id                String       @id @map("id")
+  gmailThreadId     String       @map("gmail_thread_id")
+  messageId         String?      @unique @map("message_id") @db.VarChar(255)
+  inReplyTo         String?      @map("in_reply_to")
+  references        String[]     @map("references")
+  subject           String?      @map("subject")
+  normalizedSubject String?      @map("normalized_subject")
+  fromName          String?      @map("from_name")
+  fromEmail         String?      @map("from_email")
+  toName            String       @map("to_name")
+  toEmail           String       @map("to_email")
+  snippet           String?      @map("snippet")
+  bodyPlain         String?      @map("body_plain") @db.Text
+  bodyHtml          String?      @map("body_html") @db.Text
+  sizeEstimate      Int?         @map("size_estimate")
+  internalDate      DateTime?    @map("internal_date")
+  headersJson       Json         @map("headers_json")
+  type              EmailType    @default(INBOX)
+  status            EmailStatus  @default(UNREAD)
+  attachments       Attachment[]
+  claimId           String?      @map("claim_id")
+  claim             Claim?       @relation(fields: [claimId], references: [id])
+  createdAt         DateTime     @default(now()) @map("created_at")
+  updatedAt         DateTime     @updatedAt @map("updated_at")
+
+  @@index([gmailThreadId, normalizedSubject], map: "idx_email_thread_subject")
+  @@map("emails")
+}

@@ -1,0 +1,10 @@
+model Airline {
+  id   String  @id @default(cuid()) @map("id")
+  icao String
+  iata String?
+  name String
+
+  Details ClaimDetails[]
+
+  @@map("airlines")
+}

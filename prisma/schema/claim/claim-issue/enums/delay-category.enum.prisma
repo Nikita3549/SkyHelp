@@ -1,0 +1,5 @@
+enum DelayCategory {
+  less_than_3hours
+  never_arrived
+  threehours_or_more @map("3hours_or_more")
+}

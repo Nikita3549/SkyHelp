@@ -1,0 +1,4 @@
+enum CancellationNotice {
+  less_than_14days
+  fourteen_days_or_more @map("14days_or_more")
+}

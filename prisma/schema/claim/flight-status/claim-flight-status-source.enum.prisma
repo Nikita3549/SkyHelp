@@ -1,0 +1,5 @@
+enum ClaimFlightStatusSource {
+  FLIGHT_AWARE
+  FLIGHT_STATS
+  OAG
+}
