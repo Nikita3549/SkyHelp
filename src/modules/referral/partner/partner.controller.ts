@@ -22,6 +22,7 @@ export class PartnerController {
     @Get(':userId')
     async getPartner(@Param('userId') userId: string, @Req() req: AuthRequest) {
         const partner = await this.partnerService.getPartnerByUserId(userId);
+        console.log('partner', partner);
 
         if (!partner) {
             throw new NotFoundException(PARTNER_NOT_FOUND);
