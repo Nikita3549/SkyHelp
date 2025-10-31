@@ -3,8 +3,9 @@ WORKDIR opt/api
 RUN apt-get update -y && apt-get install -y openssl libssl-dev
 COPY package.json nest-cli.json ./
 RUN npm install
-COPY ./src ./prisma ./
-RUN npx prisma generate --schema=./prisma/schema/schema.prisma
+COPY ./src  ./
+COPY ./prisma ./prisma
+RUN npx prisma generate --schema prisma/schema
 COPY tsconfig.json ./
 RUN npm run build
 
@@ -12,7 +13,7 @@ FROM node:22-slim
 WORKDIR opt/api
 RUN apt-get update -y && apt-get install -y openssl libssl-dev
 COPY package.json ./
-COPY prisma ./
+COPY prisma ./prisma
 COPY translations ./translations
 COPY letters ./letters
 COPY fonts ./fonts

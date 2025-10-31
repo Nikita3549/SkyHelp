@@ -1,6 +1,6 @@
 services:
   db:
-    image: postgres
+    image: postgres:17
     container_name: database
     restart: always
     networks:
@@ -14,7 +14,7 @@ services:
     ports:
       - ${DATABASE_PORT}:5432
   db-static:
-    image: postgres
+    image: postgres:17
     container_name: db-static
     restart: always
     environment:
@@ -56,7 +56,7 @@ services:
       - db
       - redis
       - db-static
-    command: sh -c "cd /opt/api/ && npx prisma db push --schema=./prisma/schema/schema.prisma && npm run start:prod"
+    command: sh -c "cd /opt/api/ && npx prisma db push --schema prisma/schema && npm run start:prod"
 
 networks:
   main:
