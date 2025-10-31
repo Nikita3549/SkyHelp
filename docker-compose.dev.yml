@@ -21,7 +21,7 @@ services:
       - main
     environment:
       - ./uploads:/opt/api/uploads/
-    command: sh -c "cd /opt/api/ && npx prisma db push && NODE_ENV=DEV node dist/main"
+    command: sh -c "cd /opt/api/ && npx prisma db push --schema=./prisma/schema/schema.prisma && NODE_ENV=DEV node dist/main"
 
 networks:
   main:

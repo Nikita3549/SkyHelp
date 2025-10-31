@@ -4,7 +4,7 @@ RUN apt-get update -y && apt-get install -y openssl libssl-dev
 COPY package.json nest-cli.json ./
 RUN npm install
 COPY ./src ./prisma ./
-RUN prisma generate
+RUN npx prisma generate --schema=./prisma/schema/schema.prisma
 COPY tsconfig.json ./
 RUN npm run build
 
