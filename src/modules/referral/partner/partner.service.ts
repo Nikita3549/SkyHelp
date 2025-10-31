@@ -18,9 +18,7 @@ export class PartnerService {
     async getPartnerByUserId(userId: string): Promise<Partner | null> {
         return this.prisma.partner.findFirst({
             where: {
-                user: {
-                    id: userId,
-                },
+                userId,
             },
         });
     }
