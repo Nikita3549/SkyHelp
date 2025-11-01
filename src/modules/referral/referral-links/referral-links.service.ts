@@ -10,6 +10,7 @@ export class ReferralLinksService {
         source: string;
         path: string;
         partnerId: string;
+        name: string;
     }) {
         return this.prisma.referralLink.create({
             data: {
@@ -17,6 +18,7 @@ export class ReferralLinksService {
                 source: data.source,
                 partnerId: data.partnerId,
                 path: data.path,
+                name: data.name,
             },
         });
     }

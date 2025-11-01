@@ -2,6 +2,7 @@ model ReferralLink {
   id           String  @id @default(cuid())
   referralCode String  @map("referral_code")
   source       String
+  name         String?
   path         String
   partnerId    String  @map("partner_id")
   partner      Partner @relation(fields: [partnerId], references: [id])

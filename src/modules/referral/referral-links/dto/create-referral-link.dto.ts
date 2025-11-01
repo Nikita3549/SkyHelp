@@ -5,6 +5,9 @@ export class CreateReferralLinkDto {
     source: string;
 
     @IsString()
+    name: string;
+
+    @IsString()
     @IsOptional()
     referralCode: string;
 }

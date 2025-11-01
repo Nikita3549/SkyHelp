@@ -42,7 +42,7 @@ export class ReferralLinksController {
         @Body() dto: CreateReferralLinkDto,
         @Req() req: AuthRequest,
     ) {
-        let { source, referralCode } = dto;
+        let { source, referralCode, name } = dto;
         let partner: Partner;
 
         if (req.user.role == UserRole.ADMIN) {
@@ -77,7 +77,7 @@ export class ReferralLinksController {
             referralCode,
         );
 
-        if (referralCode) {
+        if (referralLink) {
             throw new ConflictException('Link already exists');
         }
 
@@ -86,6 +86,7 @@ export class ReferralLinksController {
             referralCode,
             partnerId: partner.id,
             path: `/?ref=${referralCode}&ref_source=${source}`,
+            name,
         });
     }
 }
