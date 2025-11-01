@@ -31,6 +31,15 @@ export class ReferralLinksService {
         });
     }
 
+    async getReferralLink(source: string, referralCode: string) {
+        return this.prisma.referralLink.findFirst({
+            where: {
+                source,
+                referralCode,
+            },
+        });
+    }
+
     async saveReferralClick(referralCode: string, source: string) {
         try {
             const referralLink = await this.prisma.referralLink.findFirst({

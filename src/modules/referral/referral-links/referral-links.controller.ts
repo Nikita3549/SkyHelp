@@ -1,5 +1,6 @@
 import {
     Body,
+    ConflictException,
     Controller,
     ForbiddenException,
     Get,
@@ -69,6 +70,15 @@ export class ReferralLinksController {
 
             referralCode = dbPartner.referralCode;
             partner = dbPartner;
+        }
+
+        const referralLink = await this.referralLinkService.getReferralLink(
+            source,
+            referralCode,
+        );
+
+        if (referralCode) {
+            throw new ConflictException('Link already exists');
         }
 
         return await this.referralLinkService.createReferralLinks({
