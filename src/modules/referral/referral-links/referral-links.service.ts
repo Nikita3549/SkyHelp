@@ -53,11 +53,14 @@ export class ReferralLinksService {
                 return;
             }
 
-            this.prisma.referralLinkClick.upsert({
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            await this.prisma.referralLinkClick.upsert({
                 where: {
                     date_linkId: {
                         linkId: referralLink.id,
-                        date: new Date(),
+                        date: today,
                     },
                 },
                 update: {
@@ -66,6 +69,7 @@ export class ReferralLinksService {
                     },
                 },
                 create: {
+                    date: today,
                     linkId: referralLink.id,
                 },
             });
