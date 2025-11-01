@@ -1,6 +1,6 @@
 model ReferralLinkClick {
   clicks Int          @default(1)
-  linkId String
+  linkId String       @map("link_id")
   link   ReferralLink @relation(fields: [linkId], references: [id])
   date   DateTime     @default(now())
 
