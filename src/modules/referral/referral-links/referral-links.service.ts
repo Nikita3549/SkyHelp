@@ -32,16 +32,36 @@ export class ReferralLinksService {
     }
 
     async saveReferralClick(referralCode: string, source: string) {
-        await this.prisma.referralLink.updateMany({
-            data: {
-                clicks: {
-                    increment: 1,
+        try {
+            const referralLink = await this.prisma.referralLink.findFirst({
+                where: {
+                    referralCode,
+                    source,
                 },
-            },
-            where: {
-                referralCode,
-                source,
-            },
-        });
+            });
+
+            if (!referralLink) {
+                return;
+            }
+
+            this.prisma.referralLinkClick.upsert({
+                where: {
+                    date_linkId: {
+                        linkId: referralLink.id,
+                        date: new Date(),
+                    },
+                },
+                update: {
+                    clicks: {
+                        increment: 1,
+                    },
+                },
+                create: {
+                    linkId: referralLink.id,
+                },
+            });
+        } catch (e) {
+            console.error(e);
+        }
     }
 }

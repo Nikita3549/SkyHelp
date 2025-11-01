@@ -1,0 +1,9 @@
+model ReferralLinkClick {
+  clicks Int          @default(1)
+  linkId String
+  link   ReferralLink @relation(fields: [linkId], references: [id])
+  date   DateTime     @default(now())
+
+  @@id([date, linkId])
+  @@map("referral_link_clicks")
+}
