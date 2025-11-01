@@ -1,0 +1,13 @@
+model ReferralLink {
+  id           String  @default(cuid()) @id
+  referralCode String  @map("referral_code")
+  source       String
+  path         String
+  partnerId    String  @map("partner_id")
+  partner      Partner @relation(fields: [partnerId], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("referral_links")
+}

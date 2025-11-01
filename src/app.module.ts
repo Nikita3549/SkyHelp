@@ -31,6 +31,7 @@ import { BotModule } from './modules/bot/bot.module';
 import { PartnerModule } from './modules/referral/partner/partner.module';
 import { ReferralTransactionModule } from './modules/referral/referral-transaction/referral-transaction.module';
 import { PayoutModule } from './modules/referral/payout/payout.module';
+import { ReferralLinksModule } from './modules/referral/referral-links/referral-links.module';
 
 @Module({
     imports: [
@@ -70,6 +71,7 @@ import { PayoutModule } from './modules/referral/payout/payout.module';
         PartnerModule,
         ReferralTransactionModule,
         PayoutModule,
+        ReferralLinksModule,
     ],
     controllers: [AppController],
     providers: [AppService],

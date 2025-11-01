@@ -10,6 +10,7 @@ model Partner {
   referredClaims       Claim[]               @relation("Referrals")
   referralTransactions ReferralTransaction[]
   referralPayouts      ReferralPayout[]
+  referralLinks        ReferralLink[]
 
   @@map("partners")
 }
