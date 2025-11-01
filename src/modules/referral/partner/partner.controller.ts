@@ -33,4 +33,16 @@ export class PartnerController {
 
         return partner;
     }
+
+    @Get(':userId/stats')
+    async getPartnersStats(
+        @Param('userId') userId: string,
+        @Req() req: AuthRequest,
+    ) {
+        if (req.user.role != UserRole.ADMIN && req.user.id != userId) {
+            throw new ForbiddenException(HAVE_NO_RIGHTS_ON_PARTNER_DATA);
+        }
+
+        return await this.partnerService.getPartnerStats(userId);
+    }
 }
