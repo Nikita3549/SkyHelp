@@ -9,11 +9,14 @@ export class ReferralTransactionService {
         private readonly prisma: PrismaService,
         private readonly partnerService: PartnerService,
     ) {}
-    async makeReferralTransaction(data: {
-        claimId: string;
-        amount: number;
-        referralCode: string;
-    }) {
+    async makeReferralTransaction(
+        data: {
+            claimId: string;
+            amount: number;
+            referralCode: string;
+        },
+        tx?: Prisma.TransactionClient,
+    ) {
         const { amount, referralCode, claimId } = data;
 
         const partner =
@@ -23,7 +26,7 @@ export class ReferralTransactionService {
             return;
         }
 
-        this.prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+        const execute = async (tx: Prisma.TransactionClient) => {
             await tx.referralTransaction.create({
                 data: {
                     claimId,
@@ -33,7 +36,13 @@ export class ReferralTransactionService {
             });
 
             await this.partnerService.increaseBalance(amount, partner.id, tx);
-        });
+        };
+
+        if (tx) {
+            await execute(tx);
+        } else {
+            await this.prisma.$transaction(execute);
+        }
     }
 
     async getReferralTransactionByClaimId(claimId: string) {

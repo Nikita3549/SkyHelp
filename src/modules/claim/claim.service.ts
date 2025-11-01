@@ -847,8 +847,14 @@ export class ClaimService {
         });
     }
 
-    async updateStatus(newStatus: ClaimStatus, claimId: string) {
-        return this.prisma.claim.update({
+    async updateStatus(
+        newStatus: ClaimStatus,
+        claimId: string,
+        tx?: Prisma.TransactionClient,
+    ) {
+        const client = tx ?? this.prisma;
+
+        return client.claim.update({
             data: {
                 state: {
                     update: {

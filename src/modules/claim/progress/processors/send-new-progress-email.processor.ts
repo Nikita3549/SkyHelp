@@ -6,8 +6,9 @@ import { ISendNewProgressEmailJobData } from '../interfaces/send-new-progress-em
 import { ProgressService } from '../progress.service';
 import { ClaimService } from '../../claim.service';
 import { ReferralTransactionService } from '../../../referral/referral-transaction/referral-transaction.service';
-import { ClaimStatus } from '@prisma/client';
+import { ClaimStatus, Prisma } from '@prisma/client';
 import { REFERRAL_RATE } from '../../../referral/referral-transaction/constants';
+import { PrismaService } from '../../../prisma/prisma.service';
 
 @Processor(SEND_NEW_PROGRESS_EMAIL_QUEUE_KEY)
 export class SendNewProgressEmailProcessor extends WorkerHost {
@@ -16,6 +17,7 @@ export class SendNewProgressEmailProcessor extends WorkerHost {
         private readonly progressService: ProgressService,
         private readonly claimService: ClaimService,
         private readonly referralTransactionService: ReferralTransactionService,
+        private readonly prisma: PrismaService,
     ) {
         super();
     }
@@ -36,24 +38,34 @@ export class SendNewProgressEmailProcessor extends WorkerHost {
             return;
         }
 
-        await this.claimService.updateStatus(newClaimStatus, emailData.claimId);
+        this.prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+            await this.claimService.updateStatus(
+                newClaimStatus,
+                emailData.claimId,
+                tx,
+            );
 
-        if (
-            newClaimStatus == ClaimStatus.PAID &&
-            referralCode &&
-            !(await this.referralTransactionService.getReferralTransactionByClaimId(
-                claim.id,
-            ))
-        ) {
-            const passengersCount = 1 + claim.passengers.length;
-            const amount = passengersCount * claim.state.amount * REFERRAL_RATE;
+            if (
+                newClaimStatus == ClaimStatus.PAID &&
+                referralCode &&
+                !(await this.referralTransactionService.getReferralTransactionByClaimId(
+                    claim.id,
+                ))
+            ) {
+                const passengersCount = 1 + claim.passengers.length;
+                const amount =
+                    passengersCount * claim.state.amount * REFERRAL_RATE;
 
-            await this.referralTransactionService.makeReferralTransaction({
-                claimId: emailData.claimId,
-                referralCode,
-                amount,
-            });
-        }
+                await this.referralTransactionService.makeReferralTransaction(
+                    {
+                        claimId: emailData.claimId,
+                        referralCode,
+                        amount,
+                    },
+                    tx,
+                );
+            }
+        });
 
         await this.notificationService.sendNewStatus(
             emailData.to,
