@@ -30,4 +30,18 @@ export class ReferralLinksService {
             },
         });
     }
+
+    async saveReferralClick(referralCode: string, source: string) {
+        await this.prisma.referralLink.updateMany({
+            data: {
+                clicks: {
+                    increment: 1,
+                },
+            },
+            where: {
+                referralCode,
+                source,
+            },
+        });
+    }
 }

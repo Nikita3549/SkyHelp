@@ -1,6 +1,7 @@
 model ReferralLink {
-  id           String  @default(cuid()) @id
+  id           String  @id @default(cuid())
   referralCode String  @map("referral_code")
+  clicks       Int     @default(0)
   source       String
   path         String
   partnerId    String  @map("partner_id")
@@ -9,5 +10,6 @@ model ReferralLink {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  @@unique([referralCode, source])
   @@map("referral_links")
 }

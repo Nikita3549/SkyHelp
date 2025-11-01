@@ -3,6 +3,8 @@ import {
     Controller,
     ForbiddenException,
     Get,
+    HttpCode,
+    HttpStatus,
     NotFoundException,
     Post,
     Req,
@@ -16,6 +18,7 @@ import { Partner, UserRole } from '@prisma/client';
 import { CreateReferralLinkDto } from './dto/create-referral-link.dto';
 import { PartnerService } from '../partner/partner.service';
 import { PARTNER_NOT_FOUND } from '../partner/constants';
+import { SaveReferralLinkClickDto } from './dto/save-referral-link-click.dto';
 
 @Controller('referral-links')
 @UseGuards(JwtAuthGuard, IsPartnerGuard)
@@ -74,5 +77,18 @@ export class ReferralLinksController {
             partnerId: partner.id,
             path: `/?ref=${referralCode}&ref_source=${source}`,
         });
+    }
+}
+
+@Controller('referral-links')
+export class PublicReferralLinksController {
+    constructor(private readonly referralLinkService: ReferralLinksService) {}
+
+    @Post('clicks')
+    @HttpCode(HttpStatus.NO_CONTENT)
+    async saveClick(@Body() dto: SaveReferralLinkClickDto) {
+        const { referralCode, source } = dto;
+
+        await this.referralLinkService.saveReferralClick(referralCode, source);
     }
 }
