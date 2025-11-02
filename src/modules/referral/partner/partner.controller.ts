@@ -43,6 +43,12 @@ export class PartnerController {
             throw new ForbiddenException(HAVE_NO_RIGHTS_ON_PARTNER_DATA);
         }
 
+        const partner = await this.partnerService.getPartnerByUserId(userId);
+
+        if (!partner) {
+            throw new NotFoundException(PARTNER_NOT_FOUND);
+        }
+
         return await this.partnerService.getPartnerStats(userId);
     }
 }

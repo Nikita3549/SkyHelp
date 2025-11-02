@@ -1,13 +1,17 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { Prisma } from '@prisma/client';
 import { PartnerService } from '../partner/partner.service';
+import { NotificationService } from '../../notification/notification.service';
+import { PartnerSettingsService } from '../partner/partner-settings/partner-settings.service';
 
 @Injectable()
 export class PayoutService {
     constructor(
         private readonly prisma: PrismaService,
         private readonly partnerService: PartnerService,
+        private readonly notificationService: NotificationService,
+        private readonly partnerSettingsService: PartnerSettingsService,
     ) {}
 
     async getPayouts(filters: { userId?: string }) {
@@ -39,6 +43,25 @@ export class PayoutService {
                     partnerId,
                     tx,
                 );
+
+                const partnerSettings =
+                    await this.partnerSettingsService.getPartnerSettings(
+                        partnerId,
+                    );
+
+                if (!partnerSettings) {
+                    console.error(`Partner ${partnerId} has no settings`);
+                    throw new InternalServerErrorException(`Logged error`);
+                }
+
+                if (partnerSettings.paymentAlerts) {
+                    await this.notificationService.sendPartnerPayout(
+                        partnerSettings.email,
+                        {
+                            amount,
+                        },
+                    );
+                }
 
                 return payout;
             },

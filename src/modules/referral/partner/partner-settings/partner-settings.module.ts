@@ -8,5 +8,6 @@ import { PartnerModule } from '../partner.module';
     imports: [forwardRef(() => PartnerModule)],
     controllers: [PartnerSettingsController],
     providers: [PartnerSettingsService],
+    exports: [PartnerSettingsService],
 })
 export class PartnerSettingsModule {}

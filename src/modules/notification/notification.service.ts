@@ -12,6 +12,7 @@ import {
     GENERATE_NEW_ACCOUNT_FILENAME,
     MISSING_DOCUMENTS_FILENAME,
     NEW_STATUS_FILENAME,
+    SEND_PARTNER_PAYOUT_FILENAME,
 } from './constants';
 import { LETTERS_DIRECTORY_PATH } from '../../common/constants/paths/LettersDirectoryPath';
 import { EmailCategory } from '../gmail/enums/email-type.enum';
@@ -329,6 +330,49 @@ This message was automatically generated.
         });
     }
 
+    async sendPartnerPayout(
+        to: string,
+        letterData: {
+            amount: number;
+        },
+        language: Languages = Languages.EN,
+    ) {
+        const emailCategory = EmailCategory.TRANSACTIONAL;
+
+        const layoutHtml = await this.getLayout(to, language, emailCategory);
+
+        const letterTemplateHtml = await this.getLetterContent(
+            SEND_PARTNER_PAYOUT_FILENAME,
+            language,
+        );
+
+        const letterContentHtml = letterTemplateHtml.replace(
+            '{{amount}}',
+            letterData.amount.toString(),
+        );
+
+        const letterHtml = this.setContentInLayout(
+            letterContentHtml,
+            layoutHtml,
+        );
+
+        const subject = `Your Payout Has Been Processed`;
+
+        const email = await this.gmailService.noreply.sendEmailHtml(
+            to,
+            subject,
+            letterHtml,
+            emailCategory,
+        );
+
+        await this.saveHtmlEmail({
+            email,
+            subject,
+            contentHtml: letterHtml,
+            to,
+        });
+    }
+
     async sendFinishClaim(
         to: string,
         claimData: {
@@ -446,7 +490,7 @@ This message was automatically generated.
         subject: string;
         contentHtml: string;
         to: string;
-        claimId: string;
+        claimId?: string;
     }) {
         const { email, subject, contentHtml, to, claimId } = data;
 

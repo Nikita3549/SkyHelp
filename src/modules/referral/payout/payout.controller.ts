@@ -1,4 +1,5 @@
 import {
+    BadRequestException,
     Body,
     Controller,
     Get,
@@ -14,7 +15,7 @@ import { PartnerService } from '../partner/partner.service';
 import { PARTNER_NOT_FOUND } from '../partner/constants';
 import { PayoutService } from './payout.service';
 import { AuthRequest } from '../../../interfaces/AuthRequest.interface';
-import { UserRole } from '@prisma/client';
+import { Prisma, UserRole } from '@prisma/client';
 import { IsPartnerGuard } from '../../../guards/isPartnerGuard';
 
 @Controller('payout')
@@ -28,7 +29,7 @@ export class PayoutController {
     @Post()
     @UseGuards(IsAdminGuard)
     async createPayout(@Body() dto: CreatePayoutDto) {
-        const { amount, userId } = dto;
+        let { amount, userId } = dto;
 
         const partner = await this.partnerService.getPartnerByUserId(userId);
 
@@ -36,6 +37,11 @@ export class PayoutController {
             throw new NotFoundException(PARTNER_NOT_FOUND);
         }
 
+        const decimalAmount = new Prisma.Decimal(amount);
+
+        if (decimalAmount.gt(partner.balance)) {
+            throw new BadRequestException('Insufficient balance');
+        }
         return await this.payoutService.makePayout({
             amount,
             partnerId: partner.id,

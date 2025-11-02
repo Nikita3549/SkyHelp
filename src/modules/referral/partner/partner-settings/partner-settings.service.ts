@@ -6,6 +6,16 @@ import { PrismaService } from '../../../prisma/prisma.service';
 export class PartnerSettingsService {
     constructor(private readonly prisma: PrismaService) {}
 
+    async getPartnerSettings(partnerId: string) {
+        return this.prisma.partnerSettings.findFirst({
+            where: {
+                partner: {
+                    id: partnerId,
+                },
+            },
+        });
+    }
+
     async updatePartnerSettings(
         data: UpdatePartnerSettingsDto,
         userId: string,

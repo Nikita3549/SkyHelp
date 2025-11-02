@@ -9,3 +9,5 @@ export const NEW_STATUS_FILENAME = 'newStatus.html';
 export const DOCUMENT_REQUEST_FILENAME = 'documentRequests.html';
 
 export const MISSING_DOCUMENTS_FILENAME = 'missingDocuments.html';
+
+export const SEND_PARTNER_PAYOUT_FILENAME = 'sendPartnerPayout.html';
