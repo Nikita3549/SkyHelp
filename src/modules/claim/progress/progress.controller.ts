@@ -122,9 +122,12 @@ export class ProgressController {
             throw new NotFoundException(PROGRESS_NOT_FOUND);
         }
 
-        if (Date.now() - progress.createdAt.getTime() > MINUTE * 5) {
+        if (
+            Date.now() - progress.createdAt.getTime() >
+            SEND_NEW_PROGRESS_EMAIL_QUEUE_DELAY
+        ) {
             throw new ForbiddenException(
-                'You cannot delete a progress step after 5 minutes of its creation',
+                `You cannot delete a progress step after ${SEND_NEW_PROGRESS_EMAIL_QUEUE_DELAY / MINUTE} minutes of its creation`,
             );
         }
 
