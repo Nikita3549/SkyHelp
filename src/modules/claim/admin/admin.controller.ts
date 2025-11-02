@@ -62,6 +62,7 @@ export class AdminController {
         const partner = await this.partnerService.createPartner({
             userId,
             referralCode,
+            userEmail: user.email,
         });
 
         return partner;

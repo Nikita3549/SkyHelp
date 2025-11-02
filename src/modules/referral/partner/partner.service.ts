@@ -6,11 +6,22 @@ import { ClaimStatus, Partner, Prisma } from '@prisma/client';
 export class PartnerService {
     constructor(private readonly prisma: PrismaService) {}
 
-    async createPartner(partnerData: { userId: string; referralCode: string }) {
+    async createPartner(partnerData: {
+        userId: string;
+        userEmail: string;
+        referralCode: string;
+    }) {
+        const settings = await this.prisma.partnerSettings.create({
+            data: {
+                email: partnerData.userEmail,
+            },
+        });
+
         return this.prisma.partner.create({
             data: {
                 userId: partnerData.userId,
                 referralCode: partnerData.referralCode,
+                settingsId: settings.id,
             },
         });
     }

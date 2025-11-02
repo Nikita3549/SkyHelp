@@ -5,8 +5,8 @@ model Partner {
   balance       Decimal @default(0)
   totalEarnings Decimal @default(0) @map("total_earnings")
 
-  settingsId String          @unique @map("settings_id")
-  settings   PartnerSettings @relation(fields: [settingsId], references: [id])
+  settingsId String?          @unique @map("settings_id")
+  settings   PartnerSettings? @relation(fields: [settingsId], references: [id])
 
   user                 User                  @relation(fields: [userId], references: [id])
   userId               String                @unique @map("user_id")
