@@ -20,6 +20,7 @@ import { CreateReferralLinkDto } from './dto/create-referral-link.dto';
 import { PartnerService } from '../partner/partner.service';
 import { PARTNER_NOT_FOUND } from '../partner/constants';
 import { SaveReferralLinkClickDto } from './dto/save-referral-link-click.dto';
+import { GetReferralLinksDto } from './dto/get-referral-links.dto';
 
 @Controller('referral-links')
 @UseGuards(JwtAuthGuard, IsPartnerGuard)
@@ -30,9 +31,12 @@ export class ReferralLinksController {
     ) {}
 
     @Get()
-    async getReferralLinks(@Req() req: AuthRequest) {
+    async getReferralLinks(
+        @Req() req: AuthRequest,
+        @Body() dto: GetReferralLinksDto,
+    ) {
         const userId =
-            req.user.role == UserRole.ADMIN ? undefined : req.user.id;
+            req.user.role == UserRole.ADMIN ? dto.userId : req.user.id;
 
         return this.referralLinkService.getReferralLinks(userId);
     }
