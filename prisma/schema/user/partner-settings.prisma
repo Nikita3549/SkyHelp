@@ -1,5 +1,9 @@
 model PartnerSettings {
-  id String @id @default(uuid())
+  id            String  @id @default(uuid())
+  email         String
+  paymentAlerts Boolean @default(true)
 
-  Partner Partner[]
+  partner Partner?
+
+  @@map("partner_settings")
 }

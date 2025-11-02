@@ -4,7 +4,7 @@ model ReferralLink {
   source       String
   path         String
   partnerId    String  @map("partner_id")
-  partner      Partner @relation(fields: [partnerId], references: [id])
+  partner      Partner @relation(fields: [partnerId], references: [id], onDelete: Cascade)
 
   createdAt DateTime            @default(now()) @map("created_at")
   updatedAt DateTime            @updatedAt @map("updated_at")
