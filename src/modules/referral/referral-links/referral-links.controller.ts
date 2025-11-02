@@ -87,7 +87,7 @@ export class ReferralLinksController {
 
         return await this.referralLinkService.createReferralLinks({
             source,
-            referralCode,
+            referralCode: partner.referralCode,
             partnerId: partner.id,
             path: `/?ref=${referralCode}&ref_source=${source}`,
         });
