@@ -12,6 +12,7 @@ import {
     GENERATE_NEW_ACCOUNT_FILENAME,
     MISSING_DOCUMENTS_FILENAME,
     NEW_STATUS_FILENAME,
+    REGISTER_CODE_FILENAME,
     SEND_PARTNER_PAYOUT_FILENAME,
 } from './constants';
 import { LETTERS_DIRECTORY_PATH } from '../../common/constants/paths/LettersDirectoryPath';
@@ -31,16 +32,6 @@ export class NotificationService {
         private readonly tokenService: TokenService,
         private readonly unsubscribeEmailService: UnsubscribeEmailService,
     ) {}
-
-    async sendRegisterCode(to: string, code: number) {
-        !isProd() && console.log(`Send register code: ${code} on ${to}`);
-
-        await this.gmailService.noreply.sendEmail(
-            to,
-            `Your verification code is: ${code}`,
-            `${code} is your SkyHelp verification code.`,
-        );
-    }
 
     async sendNewGeneratedAccount(
         to: string,
@@ -325,6 +316,53 @@ This message was automatically generated.
             email,
             subject,
             claimId: letterData.claimId,
+            contentHtml: letterHtml,
+            to,
+        });
+    }
+
+    async sendRegisterCode(
+        to: string,
+        letterData: {
+            customerName: string;
+            registerCode: string;
+        },
+    ) {
+        !isProd() &&
+            console.log(
+                `Seng register code ${letterData.registerCode} on ${to}`,
+            );
+        const language = Languages.EN;
+        const emailCategory = EmailCategory.TRANSACTIONAL;
+
+        const layoutHtml = await this.getLayout(to, language, emailCategory);
+
+        const letterTemplateHtml = await this.getLetterContent(
+            REGISTER_CODE_FILENAME,
+            language,
+        );
+
+        const letterContentHtml = letterTemplateHtml
+            .replace('{{customerName}}', letterData.customerName)
+            .replace('{{verificationCode}}', letterData.registerCode);
+
+        const letterHtml = this.setContentInLayout(
+            letterContentHtml,
+            layoutHtml,
+        );
+
+        const subject = `Verification code for your account`;
+
+        const email = await this.gmailService.noreply.sendEmailHtml(
+            to,
+            subject,
+            letterHtml,
+            emailCategory,
+        );
+
+        await this.saveHtmlEmail({
+            email,
+            subject,
             contentHtml: letterHtml,
             to,
         });

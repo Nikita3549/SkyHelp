@@ -97,7 +97,6 @@ export class AdminController {
             onlyRecentlyUpdates,
             referralCode,
         } = query;
-        console.log(referralCode);
 
         return this.claimService.getUserClaims(userId, +page, {
             archived:

@@ -11,3 +11,5 @@ export const DOCUMENT_REQUEST_FILENAME = 'documentRequests.html';
 export const MISSING_DOCUMENTS_FILENAME = 'missingDocuments.html';
 
 export const SEND_PARTNER_PAYOUT_FILENAME = 'sendPartnerPayout.html';
+
+export const REGISTER_CODE_FILENAME = 'registerCode.html';

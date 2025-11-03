@@ -89,7 +89,10 @@ export class AuthController {
                 code,
             });
 
-            await this.notificationService.sendRegisterCode(email, code);
+            await this.notificationService.sendRegisterCode(email, {
+                customerName: name,
+                registerCode: code.toString(),
+            });
         } catch (e: unknown) {
             await this.authService.deleteRegisterDataFromRedis(email);
 
@@ -152,10 +155,10 @@ export class AuthController {
             throw new BadRequestException(EXPIRE_CODE_OR_WRONG_EMAIL_ERROR);
         }
 
-        await this.notificationService.sendRegisterCode(
-            email,
-            registerDataWithCode.code,
-        );
+        await this.notificationService.sendRegisterCode(email, {
+            registerCode: registerDataWithCode.code.toString(),
+            customerName: registerDataWithCode.registerData.name,
+        });
 
         return CODE_SUCCESSFUL_RESEND;
     }
