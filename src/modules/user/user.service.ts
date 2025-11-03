@@ -31,6 +31,11 @@ export class UserService {
                 lastSign: true,
                 createdAt: true,
                 isActive: true,
+                partner: {
+                    select: {
+                        referralCode: true,
+                    },
+                },
             },
         });
     }
