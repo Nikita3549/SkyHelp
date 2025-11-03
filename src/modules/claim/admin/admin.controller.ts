@@ -57,15 +57,19 @@ export class AdminController {
             return;
         }
 
+        const partner = await this.partnerService.getPartnerByUserId(userId);
+
+        if (partner) {
+            return partner;
+        }
+
         await this.userService.updateRole(UserRole.PARTNER, user.id);
 
-        const partner = await this.partnerService.createPartner({
+        return await this.partnerService.createPartner({
             userId,
             referralCode,
             userEmail: user.email,
         });
-
-        return partner;
     }
 
     @Delete('duplicate')
