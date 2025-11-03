@@ -311,10 +311,13 @@ export class FlightService {
     private getArrivalDelayMinutesForOAG(
         flight: IFullOAGFlight,
     ): number | null {
+        const actualUtc =
+            flight.statusDetails?.[0]?.arrival?.actualTime?.onGround?.utc ||
+            flight.statusDetails?.[0]?.arrival?.estimatedTime?.inGate?.utc ||
+            flight.statusDetails?.[0]?.arrival?.estimatedTime?.onGround?.utc;
+
         const scheduledDate = flight.arrival?.date?.utc;
         const scheduledTime = flight.arrival?.time?.utc;
-        const actualUtc =
-            flight.statusDetails?.[0]?.arrival?.actualTime?.onGround?.utc;
 
         if (!scheduledDate || !scheduledTime || !actualUtc) return null;
 
