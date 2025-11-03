@@ -9,6 +9,7 @@ import {
     CREATE_CLAIM_FILENAME,
     DOCUMENT_REQUEST_FILENAME,
     FINISH_CLAIM_FILENAME,
+    FORGOT_PASSWORD_CODE_FILENAME,
     GENERATE_NEW_ACCOUNT_FILENAME,
     MISSING_DOCUMENTS_FILENAME,
     NEW_STATUS_FILENAME,
@@ -69,24 +70,6 @@ export class NotificationService {
             'Your SkyHelp account details',
             letterHtml,
             emailCategory,
-        );
-    }
-
-    async sendForgotPasswordCode(to: string, code: number) {
-        !isProd() && console.log(`Send forgot password code: ${code} on ${to}`);
-
-        await this.gmailService.noreply.sendEmail(
-            to,
-            `Your verification code is: ${code}`,
-            `Verify your identity to log in to SkyHelp.`,
-        );
-    }
-
-    async sendPasswordChanged(to: string) {
-        await this.gmailService.noreply.sendEmail(
-            to,
-            `Your SkyHelp password has been changed`,
-            `Your SkyHelp password has recently changed.`,
         );
     }
 
@@ -316,6 +299,53 @@ This message was automatically generated.
             email,
             subject,
             claimId: letterData.claimId,
+            contentHtml: letterHtml,
+            to,
+        });
+    }
+
+    async sendForgotPasswordCode(
+        to: string,
+        letterData: {
+            customerName: string;
+            resetCode: string;
+        },
+    ) {
+        !isProd() &&
+            console.log(
+                `Seng forgot password code ${letterData.resetCode} on ${to}`,
+            );
+        const language = Languages.EN;
+        const emailCategory = EmailCategory.TRANSACTIONAL;
+
+        const layoutHtml = await this.getLayout(to, language, emailCategory);
+
+        const letterTemplateHtml = await this.getLetterContent(
+            FORGOT_PASSWORD_CODE_FILENAME,
+            language,
+        );
+
+        const letterContentHtml = letterTemplateHtml
+            .replace('{{customerName}}', letterData.customerName)
+            .replace('{{resetCode}}', letterData.resetCode);
+
+        const letterHtml = this.setContentInLayout(
+            letterContentHtml,
+            layoutHtml,
+        );
+
+        const subject = `Verification code for your account`;
+
+        const email = await this.gmailService.noreply.sendEmailHtml(
+            to,
+            subject,
+            letterHtml,
+            emailCategory,
+        );
+
+        await this.saveHtmlEmail({
+            email,
+            subject,
             contentHtml: letterHtml,
             to,
         });

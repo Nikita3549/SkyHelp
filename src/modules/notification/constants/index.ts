@@ -13,3 +13,5 @@ export const MISSING_DOCUMENTS_FILENAME = 'missingDocuments.html';
 export const SEND_PARTNER_PAYOUT_FILENAME = 'sendPartnerPayout.html';
 
 export const REGISTER_CODE_FILENAME = 'registerCode.html';
+
+export const FORGOT_PASSWORD_CODE_FILENAME = 'recoverPassword.html';

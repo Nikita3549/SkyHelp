@@ -222,7 +222,10 @@ export class AuthController {
 
         const code = this.authService.generateCode();
 
-        await this.notificationService.sendForgotPasswordCode(email, code);
+        await this.notificationService.sendForgotPasswordCode(email, {
+            resetCode: code.toString(),
+            customerName: user.name,
+        });
 
         await this.authService.saveForgotPasswordCode(email, code);
 
@@ -253,8 +256,6 @@ export class AuthController {
         await this.userService.changePassword(email, newHashedPassword);
 
         await this.authService.deleteForgotPasswordCode(email);
-
-        await this.notificationService.sendPasswordChanged(email);
 
         return PASSWORD_WAS_CHANGED_SUCCESS;
     }
