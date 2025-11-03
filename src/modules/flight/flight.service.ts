@@ -186,14 +186,21 @@ export class FlightService {
             const delayMinutes =
                 this.getArrivalDelayMinutesForOAG(fullFlight) ?? 0;
 
-            const actualCancelled = !(
-                (!!fullFlight?.statusDetails![0].arrival?.actualTime ||
-                    !!fullFlight?.statusDetails![0].departure?.estimatedTime
-                        .offGround.utc) &&
-                (!!fullFlight?.statusDetails![0].departure?.actualTime ||
-                    !!fullFlight?.statusDetails![0].arrival?.estimatedTime
-                        .onGround.utc)
-            );
+            const status = fullFlight?.statusDetails?.[0]?.state;
+
+            const actualCancelled =
+                status === 'Canceled' ||
+                status === 'Diverted' ||
+                !(
+                    (!!fullFlight?.statusDetails?.[0]?.arrival?.actualTime
+                        ?.onGround?.utc ||
+                        !!fullFlight?.statusDetails?.[0]?.departure?.actualTime
+                            ?.offGround?.utc) &&
+                    (!!fullFlight?.statusDetails?.[0]?.departure?.actualTime
+                        ?.offGround?.utc ||
+                        !!fullFlight?.statusDetails?.[0]?.arrival?.actualTime
+                            ?.onGround?.utc)
+                );
 
             const formattedFlight: IFlightStatus = {
                 isCancelled: actualCancelled,
@@ -311,25 +318,58 @@ export class FlightService {
     private getArrivalDelayMinutesForOAG(
         flight: IFullOAGFlight,
     ): number | null {
-        const actualUtc =
-            flight.statusDetails?.[0]?.arrival?.actualTime?.onGround?.utc ||
-            flight.statusDetails?.[0]?.arrival?.estimatedTime?.inGate?.utc ||
-            flight.statusDetails?.[0]?.arrival?.estimatedTime?.onGround?.utc;
+        const arrivalStatus = flight.statusDetails?.[0]?.arrival;
+        const departureStatus = flight.statusDetails?.[0]?.departure;
 
-        const scheduledDate = flight.arrival?.date?.utc;
-        const scheduledTime = flight.arrival?.time?.utc;
+        if (!arrivalStatus) return null;
 
-        if (!scheduledDate || !scheduledTime || !actualUtc) return null;
+        let actualUtc =
+            arrivalStatus.actualTime?.inGate?.utc ||
+            arrivalStatus.actualTime?.onGround?.utc ||
+            arrivalStatus.estimatedTime?.inGate?.utc ||
+            arrivalStatus.estimatedTime?.onGround?.utc;
 
-        const scheduledIso = `${scheduledDate}T${scheduledTime}:00Z`;
+        const scheduledUtc =
+            flight.arrival?.date?.utc && flight.arrival?.time?.utc
+                ? `${flight.arrival.date.utc}T${flight.arrival.time.utc}`
+                : null;
 
-        const scheduled = new Date(scheduledIso);
-        const actual = new Date(actualUtc);
+        if (!scheduledUtc || !actualUtc) return null;
+
+        const scheduled = new Date(scheduledUtc + 'Z');
+        let actual = new Date(actualUtc);
 
         if (isNaN(scheduled.getTime()) || isNaN(actual.getTime())) return null;
 
-        const diffMs = actual.getTime() - scheduled.getTime();
-        const diffMinutes = Math.round(diffMs / 60000);
+        let diffMinutes = Math.round(
+            (actual.getTime() - scheduled.getTime()) / 60000,
+        );
+
+        if (diffMinutes === 0 && departureStatus) {
+            const depActualUtc =
+                departureStatus.actualTime?.outGate?.utc ||
+                departureStatus.actualTime?.offGround?.utc ||
+                departureStatus.estimatedTime?.outGate?.utc ||
+                departureStatus.estimatedTime?.offGround?.utc;
+
+            const depScheduledUtc =
+                flight.departure?.date?.utc && flight.departure?.time?.utc
+                    ? `${flight.departure.date.utc}T${flight.departure.time.utc}`
+                    : null;
+
+            if (depActualUtc && depScheduledUtc) {
+                const depScheduled = new Date(depScheduledUtc + 'Z');
+                const depActual = new Date(depActualUtc);
+                if (
+                    !isNaN(depScheduled.getTime()) &&
+                    !isNaN(depActual.getTime())
+                ) {
+                    diffMinutes = Math.round(
+                        (depActual.getTime() - depScheduled.getTime()) / 60000,
+                    );
+                }
+            }
+        }
 
         return diffMinutes;
     }
