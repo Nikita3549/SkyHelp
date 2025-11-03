@@ -95,7 +95,9 @@ export class AdminController {
             agentId,
             duplicated,
             onlyRecentlyUpdates,
+            referralCode,
         } = query;
+        console.log(referralCode);
 
         return this.claimService.getUserClaims(userId, +page, {
             archived:
@@ -117,6 +119,7 @@ export class AdminController {
             icao,
             flightNumber,
             role,
+            referralCode,
             agentId:
                 agentId ||
                 (req.user.role == UserRole.LAWYER ||

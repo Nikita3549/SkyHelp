@@ -410,6 +410,7 @@ export class ClaimService {
             onlyRecentlyUpdates?: boolean;
             phone?: string;
             email?: string;
+            referralCode?: string;
         },
         pageSize: number = 20,
     ): Promise<{ claims: IFullClaim[]; total: number }> {
@@ -432,6 +433,10 @@ export class ClaimService {
             where.duplicates = {
                 some: {},
             };
+        }
+
+        if (searchParams?.referralCode) {
+            where.referrer = searchParams.referralCode;
         }
 
         if (searchParams?.phone) {

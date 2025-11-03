@@ -65,4 +65,8 @@ export class GetClaimsQuery {
     @IsOptional()
     @IsEnum(IsYesOrNo)
     onlyRecentlyUpdates: IsYesOrNo;
+
+    @IsOptional()
+    @IsString()
+    referralCode?: string;
 }
