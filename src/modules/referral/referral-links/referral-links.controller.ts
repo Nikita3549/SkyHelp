@@ -8,6 +8,7 @@ import {
     HttpStatus,
     NotFoundException,
     Post,
+    Query,
     Req,
     UseGuards,
 } from '@nestjs/common';
@@ -33,10 +34,10 @@ export class ReferralLinksController {
     @Get()
     async getReferralLinks(
         @Req() req: AuthRequest,
-        @Body() dto: GetReferralLinksDto,
+        @Query() query: GetReferralLinksDto,
     ) {
         const userId =
-            req.user.role == UserRole.ADMIN ? dto.userId : req.user.id;
+            req.user.role == UserRole.ADMIN ? query.userId : req.user.id;
 
         return this.referralLinkService.getReferralLinks(userId);
     }
