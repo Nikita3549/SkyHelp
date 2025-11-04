@@ -10,7 +10,6 @@ import { IPublicUserData } from './interfaces/publicUserData.interface';
 import { JwtAuthGuard } from '../../guards/jwtAuth.guard';
 import { UserService } from './user.service';
 import { INCORRECT_USER_ID } from './constants';
-import { IsAdminGuard } from '../../guards/isAdminGuard';
 import { GetUsersDto } from './dto/get-users.dto';
 import { IsAgentOrLawyerGuardOrPartner } from '../../guards/isAgentOrLawyerGuardOrPartner';
 

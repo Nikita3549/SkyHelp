@@ -8,8 +8,8 @@ import { GmailService } from '../../gmail.service';
 import { isProd } from '../../../../utils/isProd';
 import { ClaimRecentUpdatesType } from '@prisma/client';
 import { RecentUpdatesService } from '../../../claim/recent-updates/recent-updates.service';
-import Gmail = gmail_v1.Gmail;
 import { DAY, HOUR, MINUTE } from '../../../../common/constants/time.constants';
+import Gmail = gmail_v1.Gmail;
 
 @Injectable()
 export class GmailOfficeAccountService implements OnModuleInit {

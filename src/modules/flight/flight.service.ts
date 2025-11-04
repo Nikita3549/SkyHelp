@@ -1,22 +1,15 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 import { GetFlightsDto } from './dto/get-flights.dto';
 import { EARTH_RADIUS, KM, RADIAN } from './constants';
-import {
-    IFlightRadarFlight,
-    IFlightsResponse,
-} from './interfaces/flight-radar-flight';
 import {
     FlightAwareFlight,
     FlightAwareFlightsResponse,
 } from './interfaces/flight-aware-flight';
 import { IFlight } from './interfaces/flight';
 import { formatDate } from '../../utils/formatDate';
-import {
-    FlightStatsResponse,
-    IFlightStatsFlight,
-} from './interfaces/fight-stats-flight';
+import { FlightStatsResponse } from './interfaces/fight-stats-flight';
 import { IFlightStatus } from './interfaces/flight-status.interface';
 import { ClaimFlightStatusSource } from '@prisma/client';
 import { IOAGFlightInfo } from './interfaces/oag-flight-info.interface';

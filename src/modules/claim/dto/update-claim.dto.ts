@@ -1,24 +1,13 @@
 import {
-    IsArray,
     IsBoolean,
-    IsDate,
     IsEmail,
     IsEnum,
-    IsNumber,
     IsOptional,
     IsString,
     ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import {
-    AirlineReason,
-    CancellationNotice,
-    ClaimStatus,
-    DelayCategory,
-    DisruptionType,
-    PaymentMethod,
-    ProgressStatus,
-} from '@prisma/client';
+import { PaymentMethod } from '@prisma/client';
 
 class DetailsDto {
     @IsOptional()

@@ -25,6 +25,7 @@ export interface OAGFlight {
 export interface OAGCarrier {
     iata?: string;
     icao?: string;
+
     [key: string]: any;
 }
 
@@ -34,12 +35,14 @@ export interface OAGFlightPoint {
     country?: OAGCountry;
     date?: OAGLocalUtcDate;
     time?: OAGLocalUtcTime;
+
     [key: string]: any;
 }
 
 export interface OAGAirport {
     iata?: string;
     icao?: string;
+
     [key: string]: any;
 }
 
@@ -60,6 +63,7 @@ export interface OAGLocalUtcTime {
 export interface OAGCodeEntry {
     iata?: string;
     icao?: string;
+
     [key: string]: any;
 }
 

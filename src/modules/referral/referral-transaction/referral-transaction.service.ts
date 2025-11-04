@@ -9,6 +9,7 @@ export class ReferralTransactionService {
         private readonly prisma: PrismaService,
         private readonly partnerService: PartnerService,
     ) {}
+
     async makeReferralTransaction(
         data: {
             claimId: string;

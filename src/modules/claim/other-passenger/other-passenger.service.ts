@@ -1,9 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { OtherPassenger } from '@prisma/client';
-import { UpdatePassengerDto } from './dto/update-passenger.dto';
 import { OtherPassengerDto } from './dto/create-other-passengers.dto';
-import { OtherPassengerController } from './other-passenger.controller';
 
 @Injectable()
 export class OtherPassengerService {

@@ -19,8 +19,8 @@ import {
 import { DocumentsUploadInterceptor } from '../../../interceptors/documents/documents-upload.interceptor';
 import {
     CLAIM_NOT_FOUND,
-    FILE_DOESNT_ON_DISK,
     DOCUMENT_NOT_FOUND,
+    FILE_DOESNT_ON_DISK,
 } from '../constants';
 import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
 import { ClaimService } from '../claim.service';

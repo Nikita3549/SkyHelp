@@ -14,10 +14,10 @@ import { ChatService } from './chat.service';
 import { SendMessageDto } from './dto/send-message.dto';
 import {
     CHAT_NOT_FOUND,
-    MESSAGE_NOT_FOUND,
     INVALID_TOKEN,
-    USER_NOT_FOUND,
     MESSAGE_ACK_SUCCESSFUL,
+    MESSAGE_NOT_FOUND,
+    USER_NOT_FOUND,
 } from './constants';
 import { MessageReadDto } from './dto/message-read.dto';
 import { CreateChatDto } from './dto/create-chat.dto';

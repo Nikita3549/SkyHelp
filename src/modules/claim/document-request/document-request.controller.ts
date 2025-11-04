@@ -17,7 +17,7 @@ import { CreateDocumentRequestDto } from './dto/create-document-request.dto';
 import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
 import { GetDocumentRequestsQuery } from './dto/get-document-requests.query';
 import { ClaimService } from '../claim.service';
-import { HAVE_NO_RIGHTS_ON_CLAIM, CLAIM_NOT_FOUND } from '../constants';
+import { CLAIM_NOT_FOUND, HAVE_NO_RIGHTS_ON_CLAIM } from '../constants';
 import { IsAgentOrLawyerGuardOrPartner } from '../../../guards/isAgentOrLawyerGuardOrPartner';
 import { AuthRequest } from '../../../interfaces/AuthRequest.interface';
 import { UserRole } from '@prisma/client';

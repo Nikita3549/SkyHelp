@@ -1,5 +1,4 @@
 import {
-    BadRequestException,
     Body,
     Controller,
     HttpCode,
@@ -21,6 +20,7 @@ export class BotController {
         private readonly notificationService: NotificationService,
         private readonly claimService: ClaimService,
     ) {}
+
     @UseGuards(ApiKeyAuthGuard)
     @Post('send-missing-documents-email')
     @HttpCode(HttpStatusCode.NoContent)

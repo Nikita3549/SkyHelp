@@ -19,7 +19,6 @@ import { LanguageModule } from './modules/language/language.module';
 import { ContactUsModule } from './modules/contact-us/contact-us.module';
 import { BullModule } from '@nestjs/bullmq';
 import { LetterModule } from './modules/letter/letter.module';
-import { ZohoModule } from './modules/zoho/zoho.module';
 import { LogModule } from './modules/log/log.module';
 import { GoogleSheetsModule } from './modules/google-sheets/google-sheets.module';
 import { YandexMetrikaModule } from './modules/yandex-metrika/yandex-metrika.module';

@@ -4,7 +4,6 @@ import { ADD_FLIGHT_STATUS_QUEUE_KEY } from '../constants';
 import { ClaimService } from '../claim.service';
 import { IAddFlightStatusJobData } from '../interfaces/add-flight-status-job-data.interface';
 import { FlightService } from '../../flight/flight.service';
-import { ClaimFlightStatusSource } from '@prisma/client';
 
 @Processor(ADD_FLIGHT_STATUS_QUEUE_KEY)
 export class AddFlightStatusProcessor extends WorkerHost {

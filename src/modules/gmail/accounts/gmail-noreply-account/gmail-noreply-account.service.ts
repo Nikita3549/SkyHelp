@@ -5,8 +5,8 @@ import { ConfigService } from '@nestjs/config';
 import { Interval } from '@nestjs/schedule';
 import { GmailService } from '../../gmail.service';
 import { EmailCategory } from '../../enums/email-type.enum';
-import Gmail = gmail_v1.Gmail;
 import { MINUTE } from '../../../../common/constants/time.constants';
+import Gmail = gmail_v1.Gmail;
 
 @Injectable()
 export class GmailNoreplyAccountService implements OnModuleInit {

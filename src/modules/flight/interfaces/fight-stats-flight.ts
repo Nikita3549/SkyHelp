@@ -142,6 +142,7 @@ export interface FlightDurations {
     airMinutes?: number;
     taxiOutMinutes?: number;
     taxiInMinutes?: number;
+
     [key: string]: any;
 }
 
@@ -150,6 +151,7 @@ export interface AirportResources {
     departureGate?: string;
     arrivalTerminal?: string;
     baggage?: string;
+
     [key: string]: any;
 }
 

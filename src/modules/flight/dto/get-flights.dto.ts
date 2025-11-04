@@ -1,4 +1,4 @@
-import { IsDate, IsISO8601, IsString } from 'class-validator';
+import { IsDate, IsString } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class GetFlightsDto {

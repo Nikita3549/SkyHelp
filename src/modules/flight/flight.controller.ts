@@ -1,14 +1,7 @@
-import {
-    BadRequestException,
-    Body,
-    Controller,
-    HttpStatus,
-    Post,
-} from '@nestjs/common';
+import { BadRequestException, Body, Controller, Post } from '@nestjs/common';
 import { FlightService } from './flight.service';
 import { GetFlightsDto } from './dto/get-flights.dto';
 import { INVALID_FLIGHT_DATA } from './constants';
-import { AxiosError } from 'axios';
 
 @Controller('flights')
 export class FlightController {

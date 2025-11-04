@@ -19,7 +19,7 @@ import {
 import { IsAdminGuard } from '../../../guards/isAdminGuard';
 import { GetClaimsQuery, IsYesOrNo } from './dto/get-claims.query';
 import { ArchiveClaimDto } from './dto/archive-claim.dto';
-import { HAVE_NO_RIGHTS_ON_CLAIM, CLAIM_NOT_FOUND } from '../constants';
+import { CLAIM_NOT_FOUND, HAVE_NO_RIGHTS_ON_CLAIM } from '../constants';
 import { UpdateClaimDto } from '../dto/update-claim.dto';
 import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
 import { ClaimService } from '../claim.service';

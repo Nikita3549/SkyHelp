@@ -2,7 +2,6 @@ import {
     BadRequestException,
     Body,
     Controller,
-    ForbiddenException,
     Get,
     NotFoundException,
     Param,
@@ -16,8 +15,8 @@ import { CreateClaimDto } from './dto/create-claim.dto';
 import { ClaimService } from './claim.service';
 import {
     ADD_FLIGHT_STATUS_QUEUE_KEY,
-    FINAL_STEP,
     CLAIM_NOT_FOUND,
+    FINAL_STEP,
     INVALID_ICAO,
 } from './constants';
 import { AuthRequest } from '../../interfaces/AuthRequest.interface';
@@ -45,7 +44,6 @@ import { UploadFormSignDto } from './dto/upload-form-sign-dto';
 import { AuthService } from '../auth/auth.service';
 import { generateAssignmentName } from '../../utils/generate-assignment-name';
 import { LanguageWithReferrerDto } from './dto/language-with-referrer.dto';
-import { isProd } from '../../utils/isProd';
 import { Languages } from '../language/enums/languages.enums';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
