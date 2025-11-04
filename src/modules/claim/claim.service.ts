@@ -915,24 +915,6 @@ export class ClaimService {
               };
     }
 
-    async createFlightStatus(
-        flightStatusData: {
-            isCancelled: boolean;
-            delayMinutes: number;
-            source: ClaimFlightStatusSource;
-        },
-        claimId: string,
-    ) {
-        return this.prisma.claimFlightStatus.create({
-            data: {
-                isCancelled: flightStatusData.isCancelled,
-                delayMinutes: flightStatusData.delayMinutes,
-                source: flightStatusData.source,
-                claimId,
-            },
-        });
-    }
-
     async deleteDuplicates(claimIds: string[]) {
         if (!claimIds.length) return;
 

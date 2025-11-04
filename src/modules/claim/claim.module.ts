@@ -32,6 +32,7 @@ import { AirlineModule } from '../airline/airline.module';
 import { BoardingPassModule } from './boarding-pass/boarding-pass.module';
 import { AddFlightStatusProcessor } from './processors/add-flight-status.processor';
 import { PartnerModule } from '../referral/partner/partner.module';
+import { FlightStatusModule } from './flight-status/flight-status.module';
 
 @Module({
     imports: [
@@ -66,6 +67,7 @@ import { PartnerModule } from '../referral/partner/partner.module';
         AirlineModule,
         BoardingPassModule,
         forwardRef(() => PartnerModule),
+        forwardRef(() => FlightStatusModule),
     ],
     controllers: [ClaimController, AdminController, PublicClaimController],
     providers: [

@@ -4,12 +4,14 @@ import { ADD_FLIGHT_STATUS_QUEUE_KEY } from '../constants';
 import { ClaimService } from '../claim.service';
 import { IAddFlightStatusJobData } from '../interfaces/add-flight-status-job-data.interface';
 import { FlightService } from '../../flight/flight.service';
+import { FlightStatusService } from '../flight-status/flight-status.service';
 
 @Processor(ADD_FLIGHT_STATUS_QUEUE_KEY)
 export class AddFlightStatusProcessor extends WorkerHost {
     constructor(
         private readonly claimService: ClaimService,
         private readonly flightService: FlightService,
+        private readonly flightStatusService: FlightStatusService,
     ) {
         super();
     }
@@ -19,6 +21,10 @@ export class AddFlightStatusProcessor extends WorkerHost {
 
         const flightCode = flightNumber.slice(2);
 
+        if (!flightCode) {
+            return;
+        }
+
         const flightFromOAG = await this.flightService.getFlightFromOAG(
             flightCode,
             airlineIcao,
@@ -26,7 +32,7 @@ export class AddFlightStatusProcessor extends WorkerHost {
         );
 
         if (flightFromOAG) {
-            await this.claimService.createFlightStatus(
+            await this.flightStatusService.createFlightStatus(
                 {
                     isCancelled: flightFromOAG.isCancelled,
                     delayMinutes: flightFromOAG.delayMinutes,
@@ -44,7 +50,7 @@ export class AddFlightStatusProcessor extends WorkerHost {
             );
 
         if (flightFromFlightStats) {
-            await this.claimService.createFlightStatus(
+            await this.flightStatusService.createFlightStatus(
                 {
                     isCancelled: flightFromFlightStats.isCancelled,
                     delayMinutes: flightFromFlightStats.delayMinutes,
@@ -62,7 +68,7 @@ export class AddFlightStatusProcessor extends WorkerHost {
             );
 
         if (flightFromFlightAware) {
-            await this.claimService.createFlightStatus(
+            await this.flightStatusService.createFlightStatus(
                 {
                     isCancelled: flightFromFlightAware.isCancelled,
                     delayMinutes: flightFromFlightAware.delayMinutes,
