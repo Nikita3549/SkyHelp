@@ -40,6 +40,25 @@ export class ReferralLinksService {
         });
     }
 
+    async getReferralLinkById(referralLinkId: string) {
+        return this.prisma.referralLink.findFirst({
+            where: {
+                id: referralLinkId,
+            },
+            include: {
+                partner: true,
+            },
+        });
+    }
+
+    async deleteReferralLink(referralLinkId: string) {
+        return this.prisma.referralLink.delete({
+            where: {
+                id: referralLinkId,
+            },
+        });
+    }
+
     async saveReferralClick(referralCode: string, source: string) {
         try {
             const referralLink = await this.prisma.referralLink.findFirst({

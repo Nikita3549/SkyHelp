@@ -2,11 +2,13 @@ import {
     Body,
     ConflictException,
     Controller,
+    Delete,
     ForbiddenException,
     Get,
     HttpCode,
     HttpStatus,
     NotFoundException,
+    Param,
     Post,
     Query,
     Req,
@@ -19,9 +21,13 @@ import { AuthRequest } from '../../../interfaces/AuthRequest.interface';
 import { Partner, UserRole } from '@prisma/client';
 import { CreateReferralLinkDto } from './dto/create-referral-link.dto';
 import { PartnerService } from '../partner/partner.service';
-import { PARTNER_NOT_FOUND } from '../partner/constants';
+import {
+    HAVE_NO_RIGHTS_ON_PARTNER_DATA,
+    PARTNER_NOT_FOUND,
+} from '../partner/constants';
 import { SaveReferralLinkClickDto } from './dto/save-referral-link-click.dto';
 import { GetReferralLinksDto } from './dto/get-referral-links.dto';
+import { REFERRAL_LINK_NOT_FOUND } from './constants';
 
 @Controller('referral-links')
 @UseGuards(JwtAuthGuard, IsPartnerGuard)
@@ -92,6 +98,29 @@ export class ReferralLinksController {
             partnerId: partner.id,
             path: `/?ref=${referralCode}&ref_source=${source}`,
         });
+    }
+
+    @Delete(':referralLinkId')
+    @HttpCode(HttpStatus.NO_CONTENT)
+    async deleteReferralLink(
+        @Param('referralLinkId') referralLinkId: string,
+        @Req() req: AuthRequest,
+    ) {
+        const referralLink =
+            await this.referralLinkService.getReferralLinkById(referralLinkId);
+
+        if (!referralLink) {
+            throw new NotFoundException(REFERRAL_LINK_NOT_FOUND);
+        }
+
+        if (
+            req.user.role != UserRole.ADMIN &&
+            req.user.id != referralLink.partner.userId
+        ) {
+            throw new ForbiddenException(HAVE_NO_RIGHTS_ON_PARTNER_DATA);
+        }
+
+        await this.referralLinkService.deleteReferralLink(referralLink.id);
     }
 }
 

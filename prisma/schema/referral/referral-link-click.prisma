@@ -1,7 +1,7 @@
 model ReferralLinkClick {
   clicks Int          @default(1)
   linkId String       @map("link_id")
-  link   ReferralLink @relation(fields: [linkId], references: [id])
+  link   ReferralLink @relation(fields: [linkId], references: [id], onDelete: Cascade)
   date   DateTime     @default(now())
 
   @@id([date, linkId])
