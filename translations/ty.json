@@ -3829,5 +3829,26 @@
     "PassengerDetailsStep.validation.invalidCity": "Geçersiz şehir adı",
     "PassengerDetailsStep.validation.cityRequired": "Şehir zorunludur",
     "PassengerDetailsStep.validation.countryRequired": "Ülke zorunludur",
-    "boardingPassUpload.uploadBoardingPass": "Yükle"
+    "boardingPassUpload.uploadBoardingPass": "Yükle",
+    "ReferralSection.toast.deleteSuccessTitle": "Başarılı",
+    "ReferralSection.toast.deleteSuccessDescription": "Bağlantı başarıyla silindi",
+    "ReferralSection.toast.errorTitle": "Hata",
+    "ReferralSection.toast.emptySourceDescription": "Lütfen bağlantı için bir kaynak girin",
+    "ReferralSection.toast.createSuccessTitle": "Başarılı",
+    "ReferralSection.toast.createSuccessDescription": "Bağlantı başarıyla oluşturuldu",
+    "ReferralSection.toast.conflictTitle": "Bir şeyler ters gitti",
+    "ReferralSection.toast.conflictDescription": "Bu isimde bir yönlendirme bağlantısı zaten var",
+    "ReferralSection.toast.createErrorDescription": "Bağlantı oluşturulamadı. Lütfen tekrar deneyin.",
+    "ReferralSection.toast.copyTitle": "Kopyalandı!",
+    "ReferralSection.toast.copyDescription": "Bağlantı panoya kopyalandı",
+    "ReferralSection.links.title": "Yönlendirme Bağlantılarınız",
+    "ReferralSection.links.loading": "Bağlantılar yükleniyor...",
+    "ReferralSection.links.empty": "Henüz bağlantınız yok. İlk bağlantınızı oluşturun!",
+    "ReferralSection.links.deleteButton": "Bağlantıyı sil",
+    "ReferralSection.links.createButton": "Yeni bağlantı oluştur",
+    "ReferralSection.links.inputPlaceholder": "Bu bağlantıya bir ad girin (Örnek: Web Sitesi, Sosyal Medya vb.)",
+    "ReferralSection.links.creatingButton": "Oluşturuluyor...",
+    "ReferralSection.links.saveButton": "Oluştur",
+    "ReferralSection.links.cancelButton": "İptal"
+
 }

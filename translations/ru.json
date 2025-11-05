@@ -3807,6 +3807,26 @@
     "PassengerDetailsStep.validation.invalidCity": "Некорректное название города",
     "PassengerDetailsStep.validation.cityRequired": "Город обязателен",
     "PassengerDetailsStep.validation.countryRequired": "Страна обязательна",
-    "boardingPassUpload.uploadBoardingPass": "Загрузить"
+    "boardingPassUpload.uploadBoardingPass": "Загрузить",
+    "ReferralSection.toast.deleteSuccessTitle": "Успешно",
+    "ReferralSection.toast.deleteSuccessDescription": "Ссылка успешно удалена",
+    "ReferralSection.toast.errorTitle": "Ошибка",
+    "ReferralSection.toast.emptySourceDescription": "Пожалуйста, укажите источник ссылки",
+    "ReferralSection.toast.createSuccessTitle": "Успешно",
+    "ReferralSection.toast.createSuccessDescription": "Ссылка успешно сгенерирована",
+    "ReferralSection.toast.conflictTitle": "Что-то пошло не так",
+    "ReferralSection.toast.conflictDescription": "Ссылка с таким именем уже существует",
+    "ReferralSection.toast.createErrorDescription": "Не удалось создать ссылку. Пожалуйста, попробуйте снова.",
+    "ReferralSection.toast.copyTitle": "Скопировано!",
+    "ReferralSection.toast.copyDescription": "Ссылка скопирована в буфер обмена",
+    "ReferralSection.links.title": "Ваши реферальные ссылки",
+    "ReferralSection.links.loading": "Загрузка ссылок...",
+    "ReferralSection.links.empty": "Ссылок пока нет. Создайте первую!",
+    "ReferralSection.links.deleteButton": "Удалить ссылку",
+    "ReferralSection.links.createButton": "Создать новую ссылку",
+    "ReferralSection.links.inputPlaceholder": "Введите имя ссылки (например: Веб-сайт, Соцсети и т.д.)",
+    "ReferralSection.links.creatingButton": "Создание...",
+    "ReferralSection.links.saveButton": "Создать",
+    "ReferralSection.links.cancelButton": "Отмена"
 
 }
