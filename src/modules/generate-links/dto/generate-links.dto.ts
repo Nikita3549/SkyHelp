@@ -8,8 +8,8 @@ export class OtherPassengerClaimDto {
     @IsString()
     claimId: string;
 
-    @IsEnum(DocumentType, { each: true })
-    documentType: DocumentType[];
+    @IsString()
+    documentTypes: string;
 }
 
 export class PublicSignOtherPassengerDto {
@@ -27,6 +27,6 @@ export class PublicUploadPassportDto {
     @IsJWT()
     claimJwt: string;
 
-    @IsEnum(DocumentType, { each: true })
-    documentType: DocumentType[];
+    @IsString()
+    documentTypes: string;
 }

@@ -69,7 +69,7 @@ export class GenerateLinksController {
             query.passengerId,
             query.claimId,
             jwt,
-            query.documentType,
+            query.documentTypes,
         );
         return { link };
     }
@@ -97,7 +97,7 @@ export class GenerateLinksController {
             query.passengerId,
             query.claimId,
             jwt,
-            [DocumentType.PASSPORT],
+            `[DocumentType.PASSPORT]`,
         );
         return { link };
     }
@@ -214,7 +214,7 @@ export class PublicGenerateLinksController {
 
     @Get('public/upload-documents')
     async copyUploadDocuments(@Query() query: PublicUploadPassportDto) {
-        const { passengerId, documentType, claimJwt } = query;
+        const { passengerId, documentTypes, claimJwt } = query;
         const token = await this.tokenService.verifyJWT<{ claimId?: string }>(
             claimJwt,
         );
@@ -235,7 +235,7 @@ export class PublicGenerateLinksController {
             passengerId,
             token.claimId,
             jwt,
-            documentType,
+            documentTypes,
         );
         return { link };
     }
