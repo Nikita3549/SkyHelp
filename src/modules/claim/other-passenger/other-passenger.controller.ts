@@ -286,7 +286,7 @@ export class PublicOtherPassengerController {
         @UploadedFiles() files: Express.Multer.File[] = [],
         @Body() dto: UploadOtherPassengerDto,
     ) {
-        const { claimId, documentType, jwt, passengerId } = dto;
+        const { claimId, documentTypes, jwt, passengerId } = dto;
 
         const token = await validateClaimJwt(
             jwt,
@@ -303,12 +303,12 @@ export class PublicOtherPassengerController {
         }
 
         const documents = await this.documentService.saveDocuments(
-            files.map((doc) => {
+            files.map((doc, index) => {
                 return {
                     name: doc.originalname,
                     path: doc.path,
                     passengerId,
-                    documentType,
+                    documentType: documentTypes[index],
                 };
             }),
             claimId,

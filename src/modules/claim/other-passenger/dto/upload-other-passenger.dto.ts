@@ -5,8 +5,8 @@ export class UploadOtherPassengerDto {
     @IsString()
     claimId: string;
 
-    @IsEnum(DocumentType)
-    documentType: DocumentType;
+    @IsEnum(DocumentType, { each: true })
+    documentTypes: DocumentType[];
 
     @IsJWT()
     jwt: string;
