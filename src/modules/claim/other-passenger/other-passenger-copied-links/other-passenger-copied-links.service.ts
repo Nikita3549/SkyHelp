@@ -15,7 +15,7 @@ export class OtherPassengerCopiedLinksService {
     }
 
     async markAsOpened(otherPassengerId: string) {
-        return this.prisma.otherPassengerCopiedLink.update({
+        return this.prisma.otherPassengerCopiedLink.updateMany({
             where: {
                 otherPassengerId,
             },
