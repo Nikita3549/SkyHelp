@@ -97,7 +97,7 @@ export class GenerateLinksController {
             query.passengerId,
             query.claimId,
             jwt,
-            DocumentType.PASSPORT,
+            [DocumentType.PASSPORT],
         );
         return { link };
     }

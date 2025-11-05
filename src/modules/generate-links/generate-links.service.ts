@@ -18,9 +18,9 @@ export class GenerateLinksService {
         customerId: string,
         claimId: string,
         jwt: string,
-        documentType: DocumentType,
+        documentTypes: DocumentType[],
     ) {
-        return `${this.FRONTEND_URL}/documents/customer?customerId=${encodeURIComponent(customerId)}&claimId=${encodeURIComponent(claimId)}&claim=${encodeURIComponent(jwt)}&documentType=${documentType}`;
+        return `${this.FRONTEND_URL}/documents/customer?customerId=${encodeURIComponent(customerId)}&claimId=${encodeURIComponent(claimId)}&claim=${encodeURIComponent(jwt)}&documentType=${JSON.stringify(documentTypes)}`;
     }
 
     async generateSignCustomer(
