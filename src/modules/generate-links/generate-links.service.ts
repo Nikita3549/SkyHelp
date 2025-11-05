@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { DocumentType } from '@prisma/client';
 
 @Injectable()
 export class GenerateLinksService {
@@ -13,20 +14,13 @@ export class GenerateLinksService {
         return `${this.FRONTEND_URL}/scan?sessionId=${sessionId}`;
     }
 
-    async generateUploadPassport(
-        customerId: string,
-        claimId: string,
-        jwt: string,
-    ) {
-        return `${this.FRONTEND_URL}/passport/customer?customerId=${encodeURIComponent(customerId)}&claimId=${encodeURIComponent(claimId)}&claim=${encodeURIComponent(jwt)}`;
-    }
-
     async generateUploadDocuments(
         customerId: string,
         claimId: string,
         jwt: string,
+        documentType: DocumentType,
     ) {
-        return `${this.FRONTEND_URL}/documents/customer?customerId=${encodeURIComponent(customerId)}&claimId=${encodeURIComponent(claimId)}&claim=${encodeURIComponent(jwt)}`;
+        return `${this.FRONTEND_URL}/documents/customer?customerId=${encodeURIComponent(customerId)}&claimId=${encodeURIComponent(claimId)}&claim=${encodeURIComponent(jwt)}&documentType=${documentType}`;
     }
 
     async generateSignCustomer(

@@ -9,6 +9,7 @@ import { DocumentModule } from '../document/document.module';
 import { TokenModule } from '../../token/token.module';
 import { RecentUpdatesModule } from '../recent-updates/recent-updates.module';
 import { DocumentRequestModule } from '../document-request/document-request.module';
+import { OtherPassengerCopiedLinksModule } from './other-passenger-copied-links/other-passenger-copied-links.module';
 
 @Module({
     imports: [
@@ -17,6 +18,7 @@ import { DocumentRequestModule } from '../document-request/document-request.modu
         TokenModule,
         RecentUpdatesModule,
         DocumentRequestModule,
+        OtherPassengerCopiedLinksModule,
     ],
     controllers: [OtherPassengerController, PublicOtherPassengerController],
     providers: [OtherPassengerService],
