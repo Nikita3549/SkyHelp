@@ -59,11 +59,11 @@ export class AdminController {
 
         const partner = await this.partnerService.getPartnerByUserId(userId);
 
+        await this.userService.updateRole(UserRole.PARTNER, user.id);
+
         if (partner) {
             return partner;
         }
-
-        await this.userService.updateRole(UserRole.PARTNER, user.id);
 
         return await this.partnerService.createPartner({
             userId,
