@@ -15,9 +15,10 @@ import { IsAgentOrLawyerGuardOrPartner } from '../../guards/isAgentOrLawyerGuard
 import { TokenService } from '../token/token.service';
 import { GenerateLinksService } from './generate-links.service';
 import {
-    OtherPassengerClaimDto,
+    UploadDocumentsDto,
     PublicSignOtherPassengerDto,
-    PublicUploadPassportDto,
+    PublicUploadDocumentsDto,
+    SignCustomerDto,
 } from './dto/generate-links.dto';
 import {
     CLAIM_NOT_FOUND,
@@ -53,7 +54,7 @@ export class GenerateLinksController {
     @UseGuards(IsAgentOrLawyerGuardOrPartner)
     @Get('upload-documents')
     async copyUploadDocuments(
-        @Query() query: OtherPassengerClaimDto,
+        @Query() query: UploadDocumentsDto,
         @Req() req: AuthRequest,
     ) {
         if (req.user.role == UserRole.CLIENT) {
@@ -68,12 +69,33 @@ export class GenerateLinksController {
             }
         }
 
-        const jwt = await this.generateLinkJwt(query.claimId);
+        const passenger = await this.otherPassengerService.getOtherPassenger(
+            query.passengerId,
+        );
+
+        let jwt: string;
+        if (passenger) {
+            jwt = await this.generateLinkJwt(query.claimId, {
+                id: passenger.id,
+                copiedLinkType: OtherPassengerCopiedLinkType.DOCUMENT,
+            });
+
+            await this.otherPassengerCopiedLinksService.createIfNotExist(
+                passenger.id,
+                false,
+                OtherPassengerCopiedLinkType.DOCUMENT,
+            );
+        } else {
+            jwt = await this.generateLinkJwt(query.claimId);
+        }
+
         const link = await this.generateLinksService.generateUploadDocuments(
             query.passengerId,
             query.claimId,
             jwt,
-            query.documentTypes,
+            JSON.stringify({
+                documentTypes: [DocumentType.DOCUMENT, DocumentType.ETICKET],
+            }),
         );
         return { link };
     }
@@ -81,7 +103,7 @@ export class GenerateLinksController {
     @UseGuards(IsAgentOrLawyerGuardOrPartner)
     @Get('upload-passport')
     async copyUploadPassport(
-        @Query() query: OtherPassengerClaimDto,
+        @Query() query: UploadDocumentsDto,
         @Req() req: AuthRequest,
     ) {
         if (req.user.role == UserRole.CLIENT) {
@@ -96,21 +118,42 @@ export class GenerateLinksController {
             }
         }
 
-        const jwt = await this.generateLinkJwt(query.claimId);
+        const passenger = await this.otherPassengerService.getOtherPassenger(
+            query.passengerId,
+        );
+
+        let jwt: string;
+        if (passenger) {
+            jwt = await this.generateLinkJwt(query.claimId, {
+                id: passenger.id,
+                copiedLinkType: OtherPassengerCopiedLinkType.DOCUMENT,
+            });
+
+            await this.otherPassengerCopiedLinksService.createIfNotExist(
+                passenger.id,
+                false,
+                OtherPassengerCopiedLinkType.DOCUMENT,
+            );
+        } else {
+            jwt = await this.generateLinkJwt(query.claimId);
+        }
+
         const link = await this.generateLinksService.generateUploadDocuments(
             query.passengerId,
             query.claimId,
             jwt,
-            `[DocumentType.PASSPORT]`,
+            JSON.stringify({
+                documentTypes: [DocumentType.PASSPORT],
+            }),
         );
         return { link };
     }
 
     @Get('sign-customer')
-    async copySignCustomer(@Query() query: OtherPassengerClaimDto) {
+    async copySignCustomer(@Query() query: SignCustomerDto) {
         const jwt = await this.generateLinkJwt(query.claimId);
         const link = await this.generateLinksService.generateSignCustomer(
-            query.passengerId,
+            query.customerId,
             query.claimId,
             jwt,
         );
@@ -118,7 +161,7 @@ export class GenerateLinksController {
     }
 
     @Get('sign-other-passenger')
-    async copySignOtherPassenger(@Query() query: OtherPassengerClaimDto) {
+    async copySignOtherPassenger(@Query() query: UploadDocumentsDto) {
         const passenger = await this.otherPassengerService.getOtherPassenger(
             query.passengerId,
         );
@@ -132,7 +175,7 @@ export class GenerateLinksController {
             copiedLinkType: OtherPassengerCopiedLinkType.ASSIGNMENT,
         });
 
-        await this.otherPassengerCopiedLinksService.create(
+        await this.otherPassengerCopiedLinksService.createIfNotExist(
             passenger.id,
             false,
             OtherPassengerCopiedLinkType.ASSIGNMENT,
@@ -223,7 +266,7 @@ export class PublicGenerateLinksController {
             copiedLinkType: OtherPassengerCopiedLinkType.ASSIGNMENT,
         });
 
-        await this.otherPassengerCopiedLinksService.create(
+        await this.otherPassengerCopiedLinksService.createIfNotExist(
             passenger.id,
             true,
             OtherPassengerCopiedLinkType.ASSIGNMENT,
@@ -243,7 +286,7 @@ export class PublicGenerateLinksController {
     }
 
     @Get('public/upload-documents')
-    async copyUploadDocuments(@Query() query: PublicUploadPassportDto) {
+    async copyUploadDocuments(@Query() query: PublicUploadDocumentsDto) {
         const { passengerId, documentTypes, claimJwt } = query;
         const token = await this.tokenService.verifyJWT<{ claimId?: string }>(
             claimJwt,
@@ -264,7 +307,7 @@ export class PublicGenerateLinksController {
             id: passenger.id,
             copiedLinkType: OtherPassengerCopiedLinkType.DOCUMENT,
         });
-        await this.otherPassengerCopiedLinksService.create(
+        await this.otherPassengerCopiedLinksService.createIfNotExist(
             passenger.id,
             true,
             OtherPassengerCopiedLinkType.DOCUMENT,

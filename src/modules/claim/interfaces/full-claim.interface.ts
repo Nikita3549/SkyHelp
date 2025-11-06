@@ -11,6 +11,7 @@ import {
     DepartureAirport,
     Document,
     OtherPassenger,
+    OtherPassengerCopiedLink,
     Progress,
     Route,
 } from '@prisma/client';
@@ -24,12 +25,16 @@ export interface IFullClaim extends Claim {
     documents: Document[];
     agent: IPartner | null;
     recentUpdates: ClaimRecentUpdates[];
-    passengers: OtherPassenger[];
+    passengers: IClaimOtherPassenger[];
     duplicates: IDuplicate[];
 }
 
 export interface IFullClaimWithJwt extends IFullClaim {
     jwt: string;
+}
+
+export interface IClaimOtherPassenger extends OtherPassenger {
+    copiedLinks: OtherPassengerCopiedLink[];
 }
 
 interface IClaimDetails extends ClaimDetails {

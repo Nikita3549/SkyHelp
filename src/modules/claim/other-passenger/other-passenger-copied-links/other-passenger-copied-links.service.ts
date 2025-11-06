@@ -6,7 +6,7 @@ import { OtherPassengerCopiedLinkType } from '@prisma/client';
 export class OtherPassengerCopiedLinksService {
     constructor(private readonly prisma: PrismaService) {}
 
-    async create(
+    async createIfNotExist(
         otherPassengerId: string,
         isSent: boolean,
         type: OtherPassengerCopiedLinkType,

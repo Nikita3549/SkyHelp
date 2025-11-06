@@ -1,15 +1,19 @@
 import { IsEnum, IsJWT, IsString } from 'class-validator';
-import { DocumentType } from '@prisma/client';
 
-export class OtherPassengerClaimDto {
+export class UploadDocumentsDto {
     @IsString()
     passengerId: string;
 
     @IsString()
     claimId: string;
+}
+
+export class SignCustomerDto {
+    @IsString()
+    customerId: string;
 
     @IsString()
-    documentTypes: string;
+    claimId: string;
 }
 
 export class PublicSignOtherPassengerDto {
@@ -20,7 +24,7 @@ export class PublicSignOtherPassengerDto {
     claimJwt: string;
 }
 
-export class PublicUploadPassportDto {
+export class PublicUploadDocumentsDto {
     @IsString()
     passengerId: string;
 

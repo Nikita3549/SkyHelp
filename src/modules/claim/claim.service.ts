@@ -35,6 +35,7 @@ import { TokenService } from '../token/token.service';
 import { normalizePhone } from '../../utils/normalizePhone';
 import { DAY, HOUR } from '../../common/constants/time.constants';
 import { getNextWorkTime } from '../../utils/getNextWorkTime';
+import { DefaultArgs } from '@prisma/client/runtime/library';
 
 @Injectable()
 export class ClaimService {
@@ -702,7 +703,11 @@ export class ClaimService {
                     path: true,
                 },
             },
-            passengers: true,
+            passengers: {
+                include: {
+                    copiedLinks: true,
+                },
+            },
             agent: {
                 select: {
                     email: true,
