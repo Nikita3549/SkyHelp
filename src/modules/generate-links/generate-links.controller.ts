@@ -29,7 +29,11 @@ import {
 import { VerifyJwtDto } from './dto/verify-jwt.dto';
 import { ClaimService } from '../claim/claim.service';
 import { AuthRequest } from '../../interfaces/AuthRequest.interface';
-import { DocumentType, UserRole } from '@prisma/client';
+import {
+    DocumentType,
+    OtherPassengerCopiedLinkType,
+    UserRole,
+} from '@prisma/client';
 import { v4 as uuid } from 'uuid';
 import { OtherPassengerService } from '../claim/other-passenger/other-passenger.service';
 import { OtherPassengerCopiedLinksService } from '../claim/other-passenger/other-passenger-copied-links/other-passenger-copied-links.service';
@@ -123,9 +127,16 @@ export class GenerateLinksController {
             throw new NotFoundException(PASSENGER_NOT_FOUND);
         }
 
-        const jwt = await this.generateLinkJwt(query.claimId, passenger.id);
+        const jwt = await this.generateLinkJwt(query.claimId, {
+            id: passenger.id,
+            copiedLinkType: OtherPassengerCopiedLinkType.ASSIGNMENT,
+        });
 
-        await this.otherPassengerCopiedLinksService.create(passenger.id, false);
+        await this.otherPassengerCopiedLinksService.create(
+            passenger.id,
+            false,
+            OtherPassengerCopiedLinkType.ASSIGNMENT,
+        );
 
         const requireParentInfo =
             passenger.isMinor &&
@@ -139,9 +150,20 @@ export class GenerateLinksController {
         return { link };
     }
 
-    private async generateLinkJwt(claimId: string, otherPassengerId?: string) {
+    private async generateLinkJwt(
+        claimId: string,
+        otherPassengerData?: {
+            id: string;
+            copiedLinkType: OtherPassengerCopiedLinkType;
+        },
+    ) {
         return this.tokenService.generateJWT(
-            { claimId, otherPassengerId },
+            {
+                claimId,
+                otherPassengerId: otherPassengerData?.id,
+                otherPassengerCopiedLinkType:
+                    otherPassengerData?.copiedLinkType,
+            },
             { expiresIn: CONTINUE_LINKS_EXP },
         );
     }
@@ -167,6 +189,7 @@ export class PublicGenerateLinksController {
             if (isOtherPassengerLinkJwt(jwtPayload)) {
                 await this.otherPassengerCopiedLinksService.markAsOpened(
                     jwtPayload.otherPassengerId,
+                    jwtPayload.otherPassengerCopiedLinkType,
                 );
             }
             isValid = true;
@@ -195,9 +218,16 @@ export class PublicGenerateLinksController {
             throw new NotFoundException(PASSENGER_NOT_FOUND);
         }
 
-        const jwt = await this.generateLinkJwt(token.claimId, passenger.id);
+        const jwt = await this.generateLinkJwt(token.claimId, {
+            id: passenger.id,
+            copiedLinkType: OtherPassengerCopiedLinkType.ASSIGNMENT,
+        });
 
-        await this.otherPassengerCopiedLinksService.create(passenger.id, true);
+        await this.otherPassengerCopiedLinksService.create(
+            passenger.id,
+            true,
+            OtherPassengerCopiedLinkType.ASSIGNMENT,
+        );
 
         const requireParentInfo =
             passenger.isMinor &&
@@ -230,7 +260,16 @@ export class PublicGenerateLinksController {
             throw new BadRequestException(PASSENGER_NOT_FOUND);
         }
 
-        const jwt = await this.generateLinkJwt(token.claimId, passengerId);
+        const jwt = await this.generateLinkJwt(token.claimId, {
+            id: passenger.id,
+            copiedLinkType: OtherPassengerCopiedLinkType.DOCUMENT,
+        });
+        await this.otherPassengerCopiedLinksService.create(
+            passenger.id,
+            true,
+            OtherPassengerCopiedLinkType.DOCUMENT,
+        );
+
         const link = await this.generateLinksService.generateUploadDocuments(
             passengerId,
             token.claimId,
@@ -240,9 +279,20 @@ export class PublicGenerateLinksController {
         return { link };
     }
 
-    private async generateLinkJwt(claimId: string, otherPassengerId?: string) {
+    private async generateLinkJwt(
+        claimId: string,
+        otherPassengerData?: {
+            id: string;
+            copiedLinkType: OtherPassengerCopiedLinkType;
+        },
+    ) {
         return this.tokenService.generateJWT(
-            { claimId, otherPassengerId },
+            {
+                claimId,
+                otherPassengerId: otherPassengerData?.id,
+                otherPassengerCopiedLinkType:
+                    otherPassengerData?.copiedLinkType,
+            },
             { expiresIn: CONTINUE_LINKS_EXP },
         );
     }

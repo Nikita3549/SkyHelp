@@ -7,6 +7,7 @@ export function isOtherPassengerLinkJwt(
         typeof jwt == 'object' &&
         jwt != null &&
         typeof (jwt as any).otherPassengerId == 'string' &&
-        typeof (jwt as any).claimId == 'string'
+        typeof (jwt as any).claimId == 'string' &&
+        typeof (jwt as any).otherPassengerCopiedLinkType == 'string'
     );
 }
