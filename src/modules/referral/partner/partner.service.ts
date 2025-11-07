@@ -81,7 +81,16 @@ export class PartnerService {
         });
     }
 
-    async getPartnerStats(userId: string) {
+    async getPartnerStats(
+        userId: string,
+        filters: {
+            partnerData?: {
+                referralCode: string;
+                referralSource: string;
+            };
+        },
+    ) {
+        const { partnerData } = filters;
         const [
             clicksByDay,
             claimsByDay,
@@ -98,6 +107,7 @@ export class PartnerService {
                 JOIN partners p ON p.id = rl.partner_id
                 JOIN referral_link_clicks rlc ON rlc.link_id = rl.id
                 WHERE p.user_id = ${userId} AND
+                ${filters.partnerData ? Prisma.sql`rl.source = ${filters.partnerData.referralSource} AND` : Prisma.empty}
                 rlc.date >= NOW() - INTERVAL '30 days'
                 GROUP BY rlc.date::date
                 ORDER BY rlc.date::date DESC;
@@ -119,6 +129,7 @@ export class PartnerService {
                 JOIN partners p ON p.id = c.referred_by_id
                 JOIN claim_states cs ON c.state_id = cs.id
                 WHERE p.user_id = ${userId} AND
+                ${filters.partnerData ? Prisma.sql`c.referrer_source = ${filters.partnerData.referralSource} AND` : Prisma.empty}
                 c.created_at >= NOW() - INTERVAL '30 days' AND
                 cs.status = 'Paid'
                 GROUP BY c.created_at::date
@@ -138,6 +149,8 @@ export class PartnerService {
             this.prisma.referralLinkClick.aggregate({
                 where: {
                     link: {
+                        referralCode: filters.partnerData?.referralCode,
+                        source: filters.partnerData?.referralSource,
                         partner: {
                             userId,
                         },
@@ -151,6 +164,8 @@ export class PartnerService {
             // approved claims
             this.prisma.claim.count({
                 where: {
+                    referrer: filters.partnerData?.referralCode,
+                    referrerSource: filters.partnerData?.referralSource,
                     state: {
                         status: ClaimStatus.PAID,
                     },

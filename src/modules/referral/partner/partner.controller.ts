@@ -1,9 +1,11 @@
 import {
+    BadRequestException,
     Controller,
     ForbiddenException,
     Get,
     NotFoundException,
     Param,
+    Query,
     Req,
     UseGuards,
 } from '@nestjs/common';
@@ -13,6 +15,7 @@ import { AuthRequest } from '../../../interfaces/AuthRequest.interface';
 import { PartnerService } from './partner.service';
 import { HAVE_NO_RIGHTS_ON_PARTNER_DATA, PARTNER_NOT_FOUND } from './constants';
 import { UserRole } from '@prisma/client';
+import { GetPartnersStatsDto } from './dto/get-partners-stats.dto';
 
 @Controller('partner')
 @UseGuards(JwtAuthGuard, IsPartnerGuard)
@@ -38,7 +41,19 @@ export class PartnerController {
     async getPartnersStats(
         @Param('userId') userId: string,
         @Req() req: AuthRequest,
+        @Query() query: GetPartnersStatsDto,
     ) {
+        const { referralCode, referralSource } = query;
+
+        if (
+            (!referralCode && referralSource) ||
+            (referralCode && !referralSource)
+        ) {
+            throw new BadRequestException(
+                'You must provide both referralCode and referralSource or neither',
+            );
+        }
+
         if (req.user.role != UserRole.ADMIN && req.user.id != userId) {
             throw new ForbiddenException(HAVE_NO_RIGHTS_ON_PARTNER_DATA);
         }
@@ -49,6 +64,14 @@ export class PartnerController {
             throw new NotFoundException(PARTNER_NOT_FOUND);
         }
 
-        return await this.partnerService.getPartnerStats(userId);
+        return await this.partnerService.getPartnerStats(userId, {
+            partnerData:
+                referralSource && referralCode
+                    ? {
+                          referralSource,
+                          referralCode,
+                      }
+                    : undefined,
+        });
     }
 }
