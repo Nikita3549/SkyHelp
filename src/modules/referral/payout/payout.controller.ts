@@ -16,7 +16,7 @@ import { PARTNER_NOT_FOUND } from '../partner/constants';
 import { PayoutService } from './payout.service';
 import { AuthRequest } from '../../../interfaces/AuthRequest.interface';
 import { Prisma, UserRole } from '@prisma/client';
-import { IsPartnerGuard } from '../../../guards/isPartnerGuard';
+import { IsPartnerOrAffiliateGuard } from '../../../guards/isPartnerOrAffiliateGuard';
 
 @Controller('payout')
 @UseGuards(JwtAuthGuard)
@@ -49,7 +49,7 @@ export class PayoutController {
     }
 
     @Get()
-    @UseGuards(IsPartnerGuard)
+    @UseGuards(IsPartnerOrAffiliateGuard)
     async getPayouts(@Req() req: AuthRequest) {
         const userId =
             req.user.role == UserRole.ADMIN ? undefined : req.user.id;

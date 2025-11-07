@@ -27,4 +27,5 @@ enum UserRole {
   AGENT
   CLIENT
   LAWYER
+  AFFILIATE
 }

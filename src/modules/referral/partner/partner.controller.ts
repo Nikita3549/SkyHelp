@@ -10,7 +10,7 @@ import {
     UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
-import { IsPartnerGuard } from '../../../guards/isPartnerGuard';
+import { IsPartnerOrAffiliateGuard } from '../../../guards/isPartnerOrAffiliateGuard';
 import { AuthRequest } from '../../../interfaces/AuthRequest.interface';
 import { PartnerService } from './partner.service';
 import { HAVE_NO_RIGHTS_ON_PARTNER_DATA, PARTNER_NOT_FOUND } from './constants';
@@ -18,7 +18,7 @@ import { UserRole } from '@prisma/client';
 import { GetPartnersStatsDto } from './dto/get-partners-stats.dto';
 
 @Controller('partner')
-@UseGuards(JwtAuthGuard, IsPartnerGuard)
+@UseGuards(JwtAuthGuard, IsPartnerOrAffiliateGuard)
 export class PartnerController {
     constructor(private readonly partnerService: PartnerService) {}
 

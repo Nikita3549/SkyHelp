@@ -9,7 +9,7 @@ import {
     UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../../guards/jwtAuth.guard';
-import { IsPartnerGuard } from '../../../../guards/isPartnerGuard';
+import { IsPartnerOrAffiliateGuard } from '../../../../guards/isPartnerOrAffiliateGuard';
 import { UpdatePartnerSettingsDto } from './dto/update-partner-settings.dto';
 import { PartnerSettingsService } from './partner-settings.service';
 import { AuthRequest } from '../../../../interfaces/AuthRequest.interface';
@@ -21,7 +21,7 @@ import {
 } from '../constants';
 
 @Controller('partner/:userId/settings')
-@UseGuards(JwtAuthGuard, IsPartnerGuard)
+@UseGuards(JwtAuthGuard, IsPartnerOrAffiliateGuard)
 export class PartnerSettingsController {
     constructor(
         private readonly partnerSettingsService: PartnerSettingsService,
