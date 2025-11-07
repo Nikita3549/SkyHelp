@@ -30,10 +30,13 @@ export class CustomerService {
         });
     }
 
-    async getCustomer(customerId: string): Promise<ClaimCustomer | null> {
+    async getCustomer(customerId: string) {
         return this.prisma.claimCustomer.findFirst({
             where: {
                 id: customerId,
+            },
+            include: {
+                Claim: true,
             },
         });
     }

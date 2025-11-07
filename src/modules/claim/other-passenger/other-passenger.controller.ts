@@ -10,12 +10,17 @@ import {
     Post,
     Put,
     Query,
+    UnauthorizedException,
     UploadedFiles,
     UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
 import { UpdatePassengerDto } from './dto/update-passenger.dto';
-import { CLAIM_NOT_FOUND, PASSENGER_NOT_FOUND } from '../constants';
+import {
+    CLAIM_NOT_FOUND,
+    INVALID_JWT,
+    PASSENGER_NOT_FOUND,
+} from '../constants';
 import { OtherPassengerService } from './other-passenger.service';
 import { DocumentService } from '../document/document.service';
 import { ClaimService } from '../claim.service';
@@ -87,18 +92,6 @@ export class PublicOtherPassengerController {
         private readonly documentRequestService: DocumentRequestService,
     ) {}
 
-    @Get(':passengerId')
-    async getOtherPassenger(@Param('passengerId') passengerId: string) {
-        const passenger =
-            await this.otherPassengerService.getOtherPassenger(passengerId);
-
-        if (!passenger) {
-            throw new NotFoundException(PASSENGER_NOT_FOUND);
-        }
-
-        return passenger;
-    }
-
     @Post(':passengerId/sign')
     async uploadOtherPassengerSign(
         @Body() dto: UploadSignDto,
@@ -106,18 +99,17 @@ export class PublicOtherPassengerController {
     ) {
         const {
             signature,
-            claimId,
             jwt,
             documentRequestId,
             parentFirstName,
             parentLastName,
         } = dto;
 
-        const token = await validateClaimJwt(
-            jwt,
-            claimId,
-            this.tokenService.verifyJWT.bind(this.tokenService),
-        );
+        const token = await this.tokenService.verifyJWT(jwt).catch((_e) => {
+            throw new UnauthorizedException(INVALID_JWT);
+        });
+
+        await this.tokenService.revokeJwt(token);
 
         await this.tokenService.revokeJwt(token);
 
@@ -219,7 +211,7 @@ export class PublicOtherPassengerController {
                     documentType: DocumentType.ASSIGNMENT,
                 },
             ],
-            claimId,
+            passenger.claimId,
             true,
         );
 
@@ -230,7 +222,7 @@ export class PublicOtherPassengerController {
                     updatedEntityId: doc.id,
                     entityData: doc.name,
                 },
-                claimId,
+                passenger.claimId,
             );
         });
 

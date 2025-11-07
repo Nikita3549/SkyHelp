@@ -7,11 +7,12 @@ import {
     Param,
     Post,
     Put,
+    UnauthorizedException,
     UseGuards,
 } from '@nestjs/common';
 import { ClaimService } from '../claim.service';
 import { CustomerDto } from './dto/customer.dto';
-import { CLAIM_NOT_FOUND, CUSTOMER_NOT_FOUND } from '../constants';
+import { CLAIM_NOT_FOUND, CUSTOMER_NOT_FOUND, INVALID_JWT } from '../constants';
 import { CustomerService } from './customer.service';
 import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
 import { UploadSignDto } from './dto/upload-sign.dto';
@@ -62,29 +63,16 @@ export class PublicCustomerController {
         private readonly documentRequestService: DocumentRequestService,
     ) {}
 
-    @Get(':customerId')
-    async getCustomer(@Param('customerId') customerId: string) {
-        const customer = await this.customerService.getCustomer(customerId);
-
-        if (!customer) {
-            throw new NotFoundException(CUSTOMER_NOT_FOUND);
-        }
-
-        return customer;
-    }
-
     @Post(':customerId/sign')
     async uploadCustomerSign(
         @Body() dto: UploadSignDto,
         @Param('customerId') customerId: string,
     ) {
-        const { signature, claimId, jwt, documentRequestId } = dto;
+        const { signature, jwt, documentRequestId } = dto;
 
-        const token = await validateClaimJwt(
-            jwt,
-            claimId,
-            this.tokenService.verifyJWT.bind(this.tokenService),
-        );
+        const token = await this.tokenService.verifyJWT(jwt).catch((_e) => {
+            throw new UnauthorizedException(INVALID_JWT);
+        });
 
         await this.tokenService.revokeJwt(token);
 
@@ -94,7 +82,7 @@ export class PublicCustomerController {
             throw new NotFoundException(CUSTOMER_NOT_FOUND);
         }
 
-        const claim = await this.claimService.getClaim(claimId);
+        const claim = await this.claimService.getClaim(customer.Claim[0].id);
 
         if (!claim) {
             throw new NotFoundException(CLAIM_NOT_FOUND);
@@ -122,7 +110,7 @@ export class PublicCustomerController {
                     documentType: DocumentType.ASSIGNMENT,
                 },
             ],
-            claimId,
+            customer.Claim[0].id,
             true,
         );
 
@@ -145,7 +133,7 @@ export class PublicCustomerController {
                     updatedEntityId: doc.id,
                     entityData: doc.name,
                 },
-                claimId,
+                customer.Claim[0].id,
             );
         });
 

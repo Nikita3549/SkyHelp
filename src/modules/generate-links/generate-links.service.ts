@@ -31,8 +31,6 @@ export class GenerateLinksService {
             url,
             `/documents/customer/?id=${generateNumericId(10)}`,
         );
-        console.log(url);
-        console.log(shortenUrl);
 
         const link = `${this.FRONTEND_URL}${shortenUrl}`;
 
