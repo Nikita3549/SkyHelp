@@ -1,0 +1,64 @@
+import {
+    BadRequestException,
+    Body,
+    Controller,
+    Get,
+    HttpCode,
+    HttpStatus,
+    NotFoundException,
+    Param,
+    Post,
+    Query,
+} from '@nestjs/common';
+import { CreateShortenLinkDto } from './dto/create-shorten-link.dto';
+import { UrlShortenerService } from './url-shortener.service';
+import { generateNumericId } from '../../../utils/generateNumericId';
+import { SHORTEN_URL_NOT_FOUND } from './constants';
+import { isOtherPassengerLinkJwt } from '../utils/isOtherPassengerLinkJwt';
+import { TokenService } from '../../token/token.service';
+import { OtherPassengerCopiedLinksService } from '../../claim/other-passenger/other-passenger-copied-links/other-passenger-copied-links.service';
+
+@Controller('links/url-shortener')
+export class UrlShortenerController {
+    constructor(
+        private readonly urlShortenerService: UrlShortenerService,
+        private readonly tokenService: TokenService,
+        private readonly otherPassengerCopiedLinksService: OtherPassengerCopiedLinksService,
+    ) {}
+
+    @Get()
+    async getShortenLink(@Query('shortenUrl') shortenUrl: string) {
+        const originalUrl =
+            await this.urlShortenerService.getOriginalUrl(shortenUrl);
+
+        if (!originalUrl) {
+            throw new NotFoundException(SHORTEN_URL_NOT_FOUND);
+        }
+
+        const searchParams = new URLSearchParams(originalUrl.split('?')[1]);
+        const jwt = searchParams.get('claim');
+
+        if (!jwt) {
+            throw new BadRequestException(
+                'Invalid link, please create new one',
+            );
+        }
+
+        let isValid: boolean;
+        try {
+            const jwtPayload = await this.tokenService.verifyJWT(jwt);
+
+            if (isOtherPassengerLinkJwt(jwtPayload)) {
+                await this.otherPassengerCopiedLinksService.markAsOpened(
+                    jwtPayload.otherPassengerId,
+                    jwtPayload.otherPassengerCopiedLinkType,
+                );
+            }
+            isValid = true;
+        } catch (e) {
+            isValid = false;
+        }
+
+        return { isValid, originalUrl };
+    }
+}

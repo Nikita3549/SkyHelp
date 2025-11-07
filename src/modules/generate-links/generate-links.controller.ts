@@ -221,28 +221,6 @@ export class PublicGenerateLinksController {
         private readonly otherPassengerCopiedLinksService: OtherPassengerCopiedLinksService,
     ) {}
 
-    @Get('verify')
-    async verify(@Query() query: VerifyJwtDto) {
-        const { jwt } = query;
-
-        let isValid: boolean;
-        try {
-            const jwtPayload = await this.tokenService.verifyJWT(jwt);
-
-            if (isOtherPassengerLinkJwt(jwtPayload)) {
-                await this.otherPassengerCopiedLinksService.markAsOpened(
-                    jwtPayload.otherPassengerId,
-                    jwtPayload.otherPassengerCopiedLinkType,
-                );
-            }
-            isValid = true;
-        } catch (e) {
-            isValid = false;
-        }
-
-        return { isValid };
-    }
-
     @Get('public/sign-other-passenger')
     async copySignOtherPassenger(@Query() query: PublicSignOtherPassengerDto) {
         const token = await this.tokenService.verifyJWT<{ claimId?: string }>(

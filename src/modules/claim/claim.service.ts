@@ -36,6 +36,7 @@ import { normalizePhone } from '../../utils/normalizePhone';
 import { DAY, HOUR } from '../../common/constants/time.constants';
 import { getNextWorkTime } from '../../utils/getNextWorkTime';
 import { DefaultArgs } from '@prisma/client/runtime/library';
+import { generateNumericId } from '../../utils/generateNumericId';
 
 @Injectable()
 export class ClaimService {
@@ -142,7 +143,7 @@ export class ClaimService {
 
         const maxAttempts = 5;
         for (let attempt = 0; attempt < maxAttempts; attempt++) {
-            const numericId = this.generateNumericId();
+            const numericId = generateNumericId();
 
             const jwt = this.tokenService.generateJWT<IClaimJwt>(
                 {
@@ -723,12 +724,6 @@ export class ClaimService {
             documentRequests: true,
             recentUpdates: true,
         };
-    }
-
-    generateNumericId(length = 6): string {
-        const min = Math.pow(10, length - 1);
-        const max = Math.pow(10, length) - 1;
-        return Math.floor(Math.random() * (max - min + 1) + min).toString();
     }
 
     async connectWithUser(claimId: string, userId: string) {
