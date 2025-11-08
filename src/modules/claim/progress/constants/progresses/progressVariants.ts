@@ -53,7 +53,13 @@ export const ProgressVariants: {
     legalActionInProgress: {
         status: ClaimStatus.LEGAL_PROCESS,
         title: 'legalActionInProgress.title',
-        descriptions: ['legalActionInProgress.description'],
+        descriptions: [
+            'legalActionInProgress.description',
+            'legalActionInProgress.first-stage',
+            'legalActionInProgress.submitted-to-court',
+            'legalActionInProgress.won-case',
+            'legalActionInProgress.failed-court',
+        ],
     },
     closedWithoutResolution: {
         status: ClaimStatus.CLOSED,
