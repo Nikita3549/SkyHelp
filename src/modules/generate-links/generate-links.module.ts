@@ -9,6 +9,7 @@ import { ClaimModule } from '../claim/claim.module';
 import { OtherPassengerModule } from '../claim/other-passenger/other-passenger.module';
 import { OtherPassengerCopiedLinksModule } from '../claim/other-passenger/other-passenger-copied-links/other-passenger-copied-links.module';
 import { UrlShortenerModule } from './url-shortener/url-shortener.module';
+import { CustomerModule } from '../claim/customer/customer.module';
 
 @Module({
     imports: [
@@ -17,6 +18,7 @@ import { UrlShortenerModule } from './url-shortener/url-shortener.module';
         OtherPassengerModule,
         OtherPassengerCopiedLinksModule,
         UrlShortenerModule,
+        CustomerModule,
     ],
     controllers: [GenerateLinksController, PublicGenerateLinksController],
     providers: [GenerateLinksService],

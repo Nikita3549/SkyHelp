@@ -39,6 +39,7 @@ import { v4 as uuid } from 'uuid';
 import { OtherPassengerService } from '../claim/other-passenger/other-passenger.service';
 import { OtherPassengerCopiedLinksService } from '../claim/other-passenger/other-passenger-copied-links/other-passenger-copied-links.service';
 import { isOtherPassengerLinkJwt } from './utils/isOtherPassengerLinkJwt';
+import { CustomerService } from '../claim/customer/customer.service';
 
 @Controller('links')
 @UseGuards(JwtAuthGuard)
@@ -49,6 +50,7 @@ export class GenerateLinksController {
         private readonly claimService: ClaimService,
         private readonly otherPassengerService: OtherPassengerService,
         private readonly otherPassengerCopiedLinksService: OtherPassengerCopiedLinksService,
+        private readonly customerService: CustomerService,
     ) {}
 
     @UseGuards(IsAgentOrLawyerGuardOrPartner)
@@ -72,6 +74,9 @@ export class GenerateLinksController {
         const passenger = await this.otherPassengerService.getOtherPassenger(
             query.passengerId,
         );
+        const customer = await this.customerService.getCustomer(
+            query.passengerId,
+        );
 
         let jwt: string;
         if (passenger) {
@@ -85,9 +90,15 @@ export class GenerateLinksController {
                 false,
                 OtherPassengerCopiedLinkType.DOCUMENT,
             );
-        } else {
+        } else if (customer) {
             jwt = await this.generateLinkJwt(query.claimId);
+        } else {
+            throw new NotFoundException(PASSENGER_NOT_FOUND);
         }
+
+        let passengerName = passenger
+            ? `${passenger.firstName} ${passenger.lastName}`
+            : `${customer!.firstName} ${customer!.lastName}`;
 
         const link = await this.generateLinksService.generateUploadDocuments(
             query.passengerId,
@@ -96,6 +107,7 @@ export class GenerateLinksController {
             JSON.stringify({
                 documentTypes: [DocumentType.DOCUMENT, DocumentType.ETICKET],
             }),
+            passengerName,
         );
         return { link };
     }
@@ -122,6 +134,10 @@ export class GenerateLinksController {
             query.passengerId,
         );
 
+        const customer = await this.customerService.getCustomer(
+            query.passengerId,
+        );
+
         let jwt: string;
         if (passenger) {
             jwt = await this.generateLinkJwt(query.claimId, {
@@ -134,9 +150,15 @@ export class GenerateLinksController {
                 false,
                 OtherPassengerCopiedLinkType.DOCUMENT,
             );
-        } else {
+        } else if (customer) {
             jwt = await this.generateLinkJwt(query.claimId);
+        } else {
+            throw new NotFoundException(PASSENGER_NOT_FOUND);
         }
+
+        let passengerName = passenger
+            ? `${passenger.firstName} ${passenger.lastName}`
+            : `${customer!.firstName} ${customer!.lastName}`;
 
         const link = await this.generateLinksService.generateUploadDocuments(
             query.passengerId,
@@ -145,6 +167,7 @@ export class GenerateLinksController {
             JSON.stringify({
                 documentTypes: [DocumentType.PASSPORT],
             }),
+            passengerName,
         );
         return { link };
     }
@@ -296,6 +319,7 @@ export class PublicGenerateLinksController {
             token.claimId,
             jwt,
             documentTypes,
+            `${passenger.firstName} ${passenger.lastName}`,
         );
         return { link };
     }

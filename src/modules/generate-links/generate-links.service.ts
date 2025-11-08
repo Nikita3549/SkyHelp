@@ -24,8 +24,9 @@ export class GenerateLinksService {
         claimId: string,
         jwt: string,
         documentTypes: string,
+        passengerName?: string,
     ) {
-        const url = `/documents/customer?customerId=${encodeURIComponent(customerId)}&claimId=${encodeURIComponent(claimId)}&claim=${encodeURIComponent(jwt)}&documentType=${documentTypes}`;
+        const url = `/documents/customer?customerId=${encodeURIComponent(customerId)}&claimId=${encodeURIComponent(claimId)}&claim=${encodeURIComponent(jwt)}&documentType=${documentTypes}&passengerName=${passengerName}`;
 
         const shortenUrl = await this.urlShortenerService.saveShortenUrl(
             url,
