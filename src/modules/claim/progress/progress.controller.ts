@@ -7,6 +7,7 @@ import {
     HttpCode,
     NotFoundException,
     Param,
+    Patch,
     Post,
     Req,
     UseGuards,
@@ -33,6 +34,7 @@ import { HttpStatusCode } from 'axios';
 import { LanguageService } from '../../language/language.service';
 import { AuthRequest } from '../../../interfaces/AuthRequest.interface';
 import { MINUTE } from '../../../common/constants/time.constants';
+import { UpdateProgressComments } from './dto/update-progress-comments';
 
 @Controller('claims/progresses')
 @UseGuards(JwtAuthGuard, IsAgentOrLawyerGuardOrPartner)
@@ -110,6 +112,23 @@ export class ProgressController {
         );
 
         return progress;
+    }
+
+    @Patch(':progressId/comments')
+    async updateProgressComments(
+        @Body() dto: UpdateProgressComments,
+        @Param('progressId') progressId: string,
+    ) {
+        const { comments } = dto;
+
+        const progress =
+            await this.progressesService.getProgressById(progressId);
+
+        if (!progress) {
+            throw new NotFoundException(PROGRESS_NOT_FOUND);
+        }
+
+        return this.progressesService.updateComments(comments, progressId);
     }
 
     @Delete(':progressId')

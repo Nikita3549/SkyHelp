@@ -2,6 +2,7 @@ model Progress {
   id           String         @id @default(cuid()) @map("id")
   title        String         @map("title")
   description  String         @map("description")
+  comments     String?
   endAt        DateTime?      @map("end_at")
   order        Int            @default(1)
   status       ProgressStatus @default(COMPLETED) @map("status")

@@ -40,4 +40,15 @@ export class ProgressService {
             },
         });
     }
+
+    async updateComments(comments: string, progressId: string) {
+        return this.prisma.progress.update({
+            where: {
+                id: progressId,
+            },
+            data: {
+                comments,
+            },
+        });
+    }
 }
