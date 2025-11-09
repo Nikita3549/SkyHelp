@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { GetFlightsDto } from './dto/get-flights.dto';
 import { EARTH_RADIUS, KM, RADIAN } from './constants';
 import {
@@ -211,47 +211,43 @@ export class FlightService {
     async getFlightsByDateAirportsCompany(
         dto: GetFlightsDto,
     ): Promise<IFlight[]> {
-        const { arrival, date, company, departure } = dto;
+        const { date: isoDate, company, departure, arrival } = dto;
+        const date = new Date(isoDate);
 
-        const url = `${this.configService.getOrThrow('FLIGHT_STATS_URL')}/flex/flightstatus/rest/v2/json/route/status/${departure}/${arrival}/dep/${date.getUTCFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
+        const { start: flightDateStart, end: flightDateEnd } =
+            this.getFlightDateRange(date);
 
-        try {
-            const res = await axios.get<FlightStatsResponse>(url, {
-                params: {
-                    appId: this.configService.getOrThrow('FLIGHT_STATS_APP_ID'),
-                    appKey: this.configService.getOrThrow(
-                        'FLIGHT_STATS_API_KEY',
-                    ),
+        const flightAwareResponse: AxiosResponse<any> = await axios
+            .get(
+                `${this.configService.getOrThrow('FLIGHTAWARE_BASE_URL')}/schedules/${flightDateStart.toISOString().split('T')[0]}/${flightDateEnd.toISOString().split('T')[0]}`,
+                {
+                    params: {
+                        origin: departure,
+                        destination: arrival,
+                        airline: company,
+                    },
+                    headers: {
+                        'x-apikey': this.configService.getOrThrow(
+                            'FLIGHTAWARE_API_KEY',
+                        ),
+                        Accept: 'application/json',
+                    },
                 },
-            });
+            )
+            .catch();
 
-            const airline = res.data.appendix.airlines.find(
-                (a) => a.icao == company || a.iata == company,
-            );
+        const scheduled = flightAwareResponse.data?.scheduled ?? [];
 
-            if (!airline) {
-                return [];
-            }
-
-            const flights = res.data.flightStatuses;
-
-            return flights
-                .filter(
-                    (f) =>
-                        f.carrierFsCode == airline.iata ||
-                        f.carrierFsCode == airline.icao,
-                )
-                .map((f) => ({
-                    id: `${airline.iata}${f.flightNumber}`,
-                    arrivalAirport: f.arrivalAirportFsCode,
-                    departureAirport: f.departureAirportFsCode,
-                    flightNumber: `${airline.iata}${f.flightNumber}`,
-                    departureTime: f.departureDate.dateLocal,
-                    arrivalTime: f.arrivalDate.dateLocal,
-                }));
-        } catch (e) {}
-
-        return [];
+        return scheduled.map((f: any): IFlight => {
+            return {
+                id: f.ident_iata || f.ident || '',
+                flightNumber: f.ident_iata || f.ident || '',
+                departureTime: f.scheduled_out,
+                arrivalTime: f.scheduled_in,
+                departureAirport: f.origin_icao,
+                arrivalAirport: f.destination_icao,
+            };
+        });
     }
 
     calculateDistanceBetweenAirports(
