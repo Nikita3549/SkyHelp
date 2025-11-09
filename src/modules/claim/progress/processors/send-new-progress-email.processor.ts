@@ -74,6 +74,7 @@ export class SendNewProgressEmailProcessor extends WorkerHost {
                 description: emailData.description,
                 clientName: emailData.clientName,
                 claimId: emailData.claimId,
+                comments: progress.comments,
             },
             emailData.language,
         );
