@@ -182,7 +182,7 @@ This message was automatically generated.
             )
             .replace(
                 '{{comments}}',
-                newStatusData
+                newStatusData.comments
                     ? `  
   <div style="margin-top: 20px; padding: 16px; background-color: #f8fafc; border-radius: 8px; border-left: 4px solid #3b82f6;">
     <div style="font-size: 15px; color: #374151; line-height: 1.5; min-height: 1em;">
