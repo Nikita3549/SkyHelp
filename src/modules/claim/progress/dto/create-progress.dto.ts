@@ -1,4 +1,4 @@
-import { IsEnum, IsNumber, IsString } from 'class-validator';
+import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
 import { ClaimStatus } from '@prisma/client';
 
 export class CreateProgressDto {
@@ -10,4 +10,8 @@ export class CreateProgressDto {
 
     @IsNumber()
     order: number;
+
+    @IsOptional()
+    @IsString()
+    comments?: string;
 }

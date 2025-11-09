@@ -53,7 +53,7 @@ export class ProgressController {
         @Param('claimId') claimId: string,
         @Req() req: AuthRequest,
     ) {
-        const { status, order, description } = dto;
+        const { status, order, description, comments } = dto;
         const user = req.user;
 
         const claim = await this.claimService.getClaim(claimId);
@@ -73,6 +73,7 @@ export class ProgressController {
                 description: description,
                 order,
                 updatedBy: user.id,
+                comments,
             },
             claim.stateId,
         );

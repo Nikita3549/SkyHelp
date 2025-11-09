@@ -28,6 +28,7 @@ export class ProgressService {
             description: string;
             order: number;
             updatedBy: string;
+            comments?: string;
         },
         claimStateId: string,
     ) {
