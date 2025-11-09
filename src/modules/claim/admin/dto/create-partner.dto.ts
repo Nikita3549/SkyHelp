@@ -1,4 +1,5 @@
-import { IsString } from 'class-validator';
+import { IsEnum, IsOptional, IsString } from 'class-validator';
+import { UserRole } from '@prisma/client';
 
 export class CreatePartnerDto {
     @IsString()
@@ -6,4 +7,8 @@ export class CreatePartnerDto {
 
     @IsString()
     userId: string;
+
+    @IsOptional()
+    @IsEnum(UserRole)
+    userRole: UserRole = UserRole.PARTNER;
 }

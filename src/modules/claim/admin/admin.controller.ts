@@ -49,7 +49,7 @@ export class AdminController {
     @Post('partner')
     @UseGuards(IsAdminGuard)
     async createPartner(@Body() dto: CreatePartnerDto) {
-        const { referralCode, userId } = dto;
+        const { referralCode, userId, userRole } = dto;
 
         const user = await this.userService.getUserById(userId);
 
@@ -59,7 +59,7 @@ export class AdminController {
 
         const partner = await this.partnerService.getPartnerByUserId(userId);
 
-        await this.userService.updateRole(UserRole.PARTNER, user.id);
+        await this.userService.updateRole(userRole, user.id);
 
         if (partner) {
             return partner;
