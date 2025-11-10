@@ -53,13 +53,13 @@ export class AdminController {
 
         const user = await this.userService.getUserById(userId);
 
-        if (!user || user?.role == UserRole.PARTNER) {
+        if (!user) {
             return;
         }
 
-        const partner = await this.partnerService.getPartnerByUserId(userId);
-
         await this.userService.updateRole(userRole, user.id);
+
+        const partner = await this.partnerService.getPartnerByUserId(userId);
 
         if (partner) {
             return partner;
