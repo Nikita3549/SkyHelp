@@ -41,6 +41,7 @@ export class PartnerService {
             where: {
                 userId,
             },
+            include: { payment: true },
         });
     }
 
@@ -100,7 +101,6 @@ export class PartnerService {
             };
         },
     ) {
-        const { partnerData } = filters;
         const [
             clicksByDay,
             claimsByDay,
