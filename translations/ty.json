@@ -3898,6 +3898,7 @@
     "PayoutsSection.bankOtherInfoPlaceholder": "Bankanızın istediği diğer bilgileri belirtin",
     "WiseFields.accountHolderName": "Hesap Sahibi Adı",
     "WiseFields.accountHolderNamePlaceholder": "Hesap sahibinin tam adını girin",
+    "WiseFields.accountHolderPlaceholder": "Hesap sahibinin adını girin",
     "WiseFields.ibanOrAccountNumber": "IBAN veya Hesap Numarası",
     "WiseFields.ibanOrAccountNumberPlaceholder": "IBAN'ı veya banka hesap numarasını girin"
 

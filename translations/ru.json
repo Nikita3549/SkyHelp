@@ -3876,6 +3876,7 @@
         "PayoutsSection.bankOtherInfoPlaceholder": "Укажите любую дополнительную информацию, которую требует ваш банк",
         "WiseFields.accountHolderName": "Имя владельца счёта",
         "WiseFields.accountHolderNamePlaceholder": "Введите полное имя владельца счёта",
+        "WiseFields.accountHolderPlaceholder": "Введите имя владельца счёта",
         "WiseFields.ibanOrAccountNumber": "IBAN или номер счёта",
         "WiseFields.ibanOrAccountNumberPlaceholder": "Введите IBAN или номер банковского счёта"
 

@@ -3878,6 +3878,7 @@
     "PayoutsSection.bankOtherInfoPlaceholder": "Furnizează orice alte informații solicitate de bancă",
     "WiseFields.accountHolderName": "Nume titular cont",
     "WiseFields.accountHolderNamePlaceholder": "Introdu numele complet al titularului contului",
+    "WiseFields.accountHolderPlaceholder": "Introdu numele titularului contului",
     "WiseFields.ibanOrAccountNumber": "IBAN sau număr de cont",
     "WiseFields.ibanOrAccountNumberPlaceholder": "Introdu IBAN-ul sau numărul contului bancar"
 }

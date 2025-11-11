@@ -3875,6 +3875,7 @@
     "PayoutsSection.bankOtherInfoPlaceholder": "Provide any other information required by your bank",
     "WiseFields.accountHolderName": "Account Holder Name",
     "WiseFields.accountHolderNamePlaceholder": "Enter the account holder's full name",
+    "WiseFields.accountHolderPlaceholder": "Enter the account holder's name",
     "WiseFields.ibanOrAccountNumber": "IBAN or Account Number",
     "WiseFields.ibanOrAccountNumberPlaceholder": "Enter the IBAN or bank account number"
 
