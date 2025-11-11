@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { Document, DocumentType } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import * as fs from 'fs/promises';
@@ -11,8 +11,71 @@ import { formatDate } from '../../../utils/formatDate';
 import * as fontkit from 'fontkit';
 
 @Injectable()
-export class DocumentService {
+export class DocumentService implements OnModuleInit {
     constructor(private readonly prisma: PrismaService) {}
+
+    async onModuleInit() {
+        await this.insertSignatureFromSource(
+            '/Users/nikitatsarenko/programming/back/projects/sky-help/uploads/1760634530452-268996876.pdf', // source (с подписью)
+            '/Users/nikitatsarenko/programming/back/projects/sky-help/uploads/1760635215864-71075618.pdf', // target
+            '/Users/nikitatsarenko/programming/back/projects/sky-help/uploads/merged-with-signature.pdf', // output
+        );
+    }
+
+    /**
+     * Вставляет часть страницы из одного PDF в другой
+     * @param targetPdfBuffer - PDF, куда вставляем
+     * @param sourcePdfBuffer - PDF, откуда берем
+     * @param options - координаты и страница
+     */
+    async insertSignatureFromSource(
+        sourcePath: string,
+        targetPath: string,
+        outputPath: string,
+    ) {
+        const sourceBuffer = await fs.readFile(sourcePath);
+        const targetBuffer = await fs.readFile(targetPath);
+
+        const sourcePdf = await PDFDocument.load(sourceBuffer);
+        const targetPdf = await PDFDocument.load(targetBuffer);
+
+        // Берём вторую страницу (index = 1) — где подпись
+        const sourcePageIndex = 1;
+        const sourcePage = sourcePdf.getPage(sourcePageIndex);
+
+        // Вставляем в первую страницу целевого PDF (index = 0)
+        const targetPage = targetPdf.getPage(1);
+
+        // Координаты области подписи в source (такие же, как ты вставлял)
+        const signatureRect = {
+            x: 105,
+            y: 435,
+            width: 160,
+            height: 70,
+        };
+
+        // Встраиваем фрагмент страницы как XObject
+        const embeddedPage = await targetPdf.embedPage(sourcePage, {
+            left: signatureRect.x,
+            bottom: signatureRect.y,
+            right: signatureRect.x + signatureRect.width,
+            top: signatureRect.y + signatureRect.height,
+        });
+
+        // Рисуем подпись в target в нужной позиции
+        targetPage.drawPage(embeddedPage, {
+            x: 100, // куда вставить
+            y: 200, // координаты на странице назначения
+            xScale: 1,
+            yScale: 1,
+        });
+
+        // Сохраняем новый файл
+        const updatedPdf = await targetPdf.save();
+        await fs.writeFile(outputPath, updatedPdf);
+
+        return outputPath;
+    }
 
     async removeDocument(documentId: string) {
         const document = await this.prisma.document.delete({

@@ -11,7 +11,7 @@ import {
     UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../../guards/jwtAuth.guard';
-import { IsAgentOrLawyerGuardOrPartner } from '../../guards/isAgentOrLawyerGuardOrPartner';
+import { IsAgentOrLawyerGuardOrPartnerOrAccountant } from '../../guards/isAgentOrLawyerGuardOrPartnerOrAccountant';
 import { TokenService } from '../token/token.service';
 import { GenerateLinksService } from './generate-links.service';
 import {
@@ -53,7 +53,7 @@ export class GenerateLinksController {
         private readonly customerService: CustomerService,
     ) {}
 
-    @UseGuards(IsAgentOrLawyerGuardOrPartner)
+    @UseGuards(IsAgentOrLawyerGuardOrPartnerOrAccountant)
     @Get('upload-documents')
     async copyUploadDocuments(
         @Query() query: UploadDocumentsDto,
@@ -112,7 +112,7 @@ export class GenerateLinksController {
         return { link };
     }
 
-    @UseGuards(IsAgentOrLawyerGuardOrPartner)
+    @UseGuards(IsAgentOrLawyerGuardOrPartnerOrAccountant)
     @Get('upload-passport')
     async copyUploadPassport(
         @Query() query: UploadDocumentsDto,

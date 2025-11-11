@@ -27,7 +27,7 @@ import { AddAgentDto } from './dto/add-agent.dto';
 import { UserService } from '../../user/user.service';
 import { UserRole } from '@prisma/client';
 import { AGENT_NOT_FOUND } from './constants';
-import { IsAgentOrLawyerGuardOrPartner } from '../../../guards/isAgentOrLawyerGuardOrPartner';
+import { IsAgentOrLawyerGuardOrPartnerOrAccountant } from '../../../guards/isAgentOrLawyerGuardOrPartnerOrAccountant';
 import { AuthRequest } from '../../../interfaces/AuthRequest.interface';
 import { IsAgentGuard } from '../../../guards/isAgent.guard';
 import { RecentUpdatesService } from '../recent-updates/recent-updates.service';
@@ -49,7 +49,7 @@ export class AdminController {
 
     @Post('partner')
     @UseGuards(IsAdminGuard)
-    @UseGuards(IsAgentOrLawyerGuardOrPartner)
+    @UseGuards(IsAgentOrLawyerGuardOrPartnerOrAccountant)
     async createPartner(@Body() dto: CreatePartnerDto) {
         const { referralCode, userId, userRole } = dto;
 
@@ -76,7 +76,7 @@ export class AdminController {
 
     @Delete('duplicate')
     @HttpCode(HttpStatus.NO_CONTENT)
-    @UseGuards(IsAgentOrLawyerGuardOrPartner)
+    @UseGuards(IsAgentOrLawyerGuardOrPartnerOrAccountant)
     async deleteDuplicates(@Body() dto: DeleteDuplicatesDto) {
         const { claimIds } = dto;
 
@@ -155,7 +155,7 @@ export class AdminController {
     }
 
     @Patch(':claimId/recent-updates')
-    @UseGuards(IsAgentOrLawyerGuardOrPartner)
+    @UseGuards(IsAgentOrLawyerGuardOrPartnerOrAccountant)
     async patchHasRecentUpdates(@Param('claimId') claimId: string) {
         const claim = await this.claimService.getClaim(claimId);
 
@@ -169,7 +169,7 @@ export class AdminController {
     }
 
     @Get('stats')
-    @UseGuards(IsAgentOrLawyerGuardOrPartner)
+    @UseGuards(IsAgentOrLawyerGuardOrPartnerOrAccountant)
     async getAdminClaimsStats(
         @Req() req: AuthRequest,
         @Query() query: GetAdminClaimsStatsQuery,
@@ -228,7 +228,7 @@ export class AdminController {
     }
 
     @Get(':claimId')
-    @UseGuards(IsAgentOrLawyerGuardOrPartner)
+    @UseGuards(IsAgentOrLawyerGuardOrPartnerOrAccountant)
     async getAdminClaim(@Param('claimId') claimId: string) {
         const claim = await this.claimService.getClaim(claimId);
 

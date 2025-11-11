@@ -14,7 +14,7 @@ import {
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
 import { ProgressService } from './progress.service';
-import { IsAgentOrLawyerGuardOrPartner } from '../../../guards/isAgentOrLawyerGuardOrPartner';
+import { IsAgentOrLawyerGuardOrPartnerOrAccountant } from '../../../guards/isAgentOrLawyerGuardOrPartnerOrAccountant';
 import {
     PROGRESS_NOT_FOUND,
     SEND_NEW_PROGRESS_EMAIL_QUEUE_DELAY,
@@ -37,7 +37,7 @@ import { MINUTE } from '../../../common/constants/time.constants';
 import { UpdateProgressComments } from './dto/update-progress-comments';
 
 @Controller('claims/progresses')
-@UseGuards(JwtAuthGuard, IsAgentOrLawyerGuardOrPartner)
+@UseGuards(JwtAuthGuard, IsAgentOrLawyerGuardOrPartnerOrAccountant)
 export class ProgressController {
     constructor(
         private readonly progressesService: ProgressService,

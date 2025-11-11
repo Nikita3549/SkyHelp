@@ -29,11 +29,11 @@ import { AGENT_MUST_HAVE_CLAIM_ID, LETTER_NOT_FOUND } from './constants';
 import { UpdateLetterDto } from './dto/update-letter.dto';
 import { AuthRequest } from '../../interfaces/AuthRequest.interface';
 import { UserRole } from '@prisma/client';
-import { IsAgentOrLawyerGuardOrPartner } from '../../guards/isAgentOrLawyerGuardOrPartner';
+import { IsAgentOrLawyerGuardOrPartnerOrAccountant } from '../../guards/isAgentOrLawyerGuardOrPartnerOrAccountant';
 import { CLAIM_NOT_FOUND } from '../claim/constants';
 
 @Controller('letters')
-@UseGuards(JwtAuthGuard, IsAgentOrLawyerGuardOrPartner)
+@UseGuards(JwtAuthGuard, IsAgentOrLawyerGuardOrPartnerOrAccountant)
 export class LetterController {
     constructor(
         private readonly gmailService: GmailService,

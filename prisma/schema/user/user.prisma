@@ -28,4 +28,5 @@ enum UserRole {
   CLIENT
   LAWYER
   AFFILIATE
+  ACCOUNTANT
 }
