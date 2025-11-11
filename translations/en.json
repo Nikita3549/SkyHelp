@@ -2210,7 +2210,7 @@
     "PayoutsSection.pendingPayouts": "Pending Payouts",
     "PayoutsSection.totalEarnings": "Total Earnings",
     "PayoutsSection.paymentThresholdTitle": "Payment Threshold",
-    "PayoutsSection.paymentThresholdDescription": "Payouts are processed automatically when your balance reaches €50.",
+    "PayoutsSection.paymentThresholdDescription": "Payouts are processed automatically when your balance reaches €200.",
     "PayoutsSection.paymentMethodTitle": "Payment Method",
     "PayoutsSection.paymentMethodDescription": "Choose how you want to receive your earnings",
     "PayoutsSection.paypal": "PayPal",

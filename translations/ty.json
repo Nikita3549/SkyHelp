@@ -2211,7 +2211,7 @@
     "PayoutsSection.pendingPayouts": " Beklemede Ödemeler",
     "PayoutsSection.totalEarnings": " Toplam Kazanç",
     "PayoutsSection.paymentThresholdTitle": " Ödeme Eşiği",
-    "PayoutsSection.paymentThresholdDescription": " Ödemeler otomatik olarak işlenir, bakiyeniz €50'ye ulaştığında.",
+    "PayoutsSection.paymentThresholdDescription": " Ödemeler otomatik olarak işlenir, bakiyeniz €200'ye ulaştığında.",
     "PayoutsSection.paymentMethodTitle": " Ödeme Yöntemi",
     "PayoutsSection.paymentMethodDescription": " Kazançlarınızı nasıl almak istediğinizi seçin",
     "PayoutsSection.paypal": " PayPal",

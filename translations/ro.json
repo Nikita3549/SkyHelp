@@ -2210,7 +2210,7 @@
     "PayoutsSection.pendingPayouts": "Plăți în așteptare",
     "PayoutsSection.totalEarnings": "Câștiguri totale",
     "PayoutsSection.paymentThresholdTitle": "Prag de plată",
-    "PayoutsSection.paymentThresholdDescription": "Plățile sunt procesate automat când soldul tău atinge €50.",
+    "PayoutsSection.paymentThresholdDescription": "Plățile sunt procesate automat când soldul tău atinge €200.",
     "PayoutsSection.paymentMethodTitle": "Metodă de plată",
     "PayoutsSection.paymentMethodDescription": "Alege cum dorești să primești câștigurile tale",
     "PayoutsSection.paypal": "PayPal",

@@ -2210,7 +2210,7 @@
     "PayoutsSection.pendingPayouts": "Ожидающие выплаты",
     "PayoutsSection.totalEarnings": "Общий доход",
     "PayoutsSection.paymentThresholdTitle": "Порог выплаты",
-    "PayoutsSection.paymentThresholdDescription": "Выплаты обрабатываются автоматически, когда ваш баланс достигает €50.",
+    "PayoutsSection.paymentThresholdDescription": "Выплаты обрабатываются автоматически, когда ваш баланс достигает €200.",
     "PayoutsSection.paymentMethodTitle": "Способ получения",
     "PayoutsSection.paymentMethodDescription": "Выберите способ получения выплат",
     "PayoutsSection.paypal": "PayPal",
