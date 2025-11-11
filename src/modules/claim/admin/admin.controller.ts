@@ -35,9 +35,10 @@ import { GetAdminClaimsStatsQuery } from './dto/get-admin-claims-stats.query';
 import { DeleteDuplicatesDto } from './dto/delete-duplicates.dto';
 import { PartnerService } from '../../referral/partner/partner.service';
 import { CreatePartnerDto } from './dto/create-partner.dto';
+import { IsAgentOrLawyerGuardOrPartnerOrAffiliate } from '../../../guards/IsAgentOrLawyerGuardOrPartnerOrAffiliate';
 
 @Controller('claims/admin')
-@UseGuards(JwtAuthGuard, IsAgentOrLawyerGuardOrPartner)
+@UseGuards(JwtAuthGuard, IsAgentOrLawyerGuardOrPartnerOrAffiliate)
 export class AdminController {
     constructor(
         private readonly claimService: ClaimService,
@@ -48,6 +49,7 @@ export class AdminController {
 
     @Post('partner')
     @UseGuards(IsAdminGuard)
+    @UseGuards(IsAgentOrLawyerGuardOrPartner)
     async createPartner(@Body() dto: CreatePartnerDto) {
         const { referralCode, userId, userRole } = dto;
 
@@ -74,6 +76,7 @@ export class AdminController {
 
     @Delete('duplicate')
     @HttpCode(HttpStatus.NO_CONTENT)
+    @UseGuards(IsAgentOrLawyerGuardOrPartner)
     async deleteDuplicates(@Body() dto: DeleteDuplicatesDto) {
         const { claimIds } = dto;
 
@@ -98,38 +101,61 @@ export class AdminController {
             referralCode,
         } = query;
 
-        return this.claimService.getUserClaims(userId, +page, {
-            archived:
-                archived == undefined ? undefined : archived == IsYesOrNo.YES,
-            duplicated:
-                duplicated == undefined
-                    ? undefined
-                    : duplicated == IsYesOrNo.YES,
-            onlyRecentlyUpdates:
-                onlyRecentlyUpdates == undefined
-                    ? undefined
-                    : onlyRecentlyUpdates == IsYesOrNo.YES,
-            date: endDate &&
-                startDate && {
-                    start: startDate,
-                    end: endDate,
-                },
-            status,
-            icao,
-            flightNumber,
-            role,
-            referralCode,
-            agentId:
-                agentId ||
-                (req.user.role == UserRole.LAWYER ||
-                req.user.role == UserRole.AGENT
-                    ? req.user.id
-                    : undefined),
-            isOrderByAssignedAt: req.user.role != UserRole.ADMIN,
-        });
+        const requireReferralCode =
+            req.user.role != UserRole.ADMIN &&
+            req.user.role != UserRole.LAWYER &&
+            req.user.role != UserRole.AGENT;
+
+        if (requireReferralCode && !referralCode) {
+            throw new ForbiddenException('Missed required param referralCode');
+        }
+
+        const partiallyInfo =
+            req.user.role != UserRole.ADMIN &&
+            req.user.role != UserRole.LAWYER &&
+            req.user.role != UserRole.AGENT &&
+            req.user.role != UserRole.PARTNER;
+
+        return this.claimService.getUserClaims(
+            userId,
+            +page,
+            {
+                archived:
+                    archived == undefined
+                        ? undefined
+                        : archived == IsYesOrNo.YES,
+                duplicated:
+                    duplicated == undefined
+                        ? undefined
+                        : duplicated == IsYesOrNo.YES,
+                onlyRecentlyUpdates:
+                    onlyRecentlyUpdates == undefined
+                        ? undefined
+                        : onlyRecentlyUpdates == IsYesOrNo.YES,
+                date: endDate &&
+                    startDate && {
+                        start: startDate,
+                        end: endDate,
+                    },
+                status,
+                icao,
+                flightNumber,
+                role,
+                referralCode,
+                agentId:
+                    agentId ||
+                    (req.user.role == UserRole.LAWYER ||
+                    req.user.role == UserRole.AGENT
+                        ? req.user.id
+                        : undefined),
+                isOrderByAssignedAt: req.user.role != UserRole.ADMIN,
+            },
+            partiallyInfo,
+        );
     }
 
     @Patch(':claimId/recent-updates')
+    @UseGuards(IsAgentOrLawyerGuardOrPartner)
     async patchHasRecentUpdates(@Param('claimId') claimId: string) {
         const claim = await this.claimService.getClaim(claimId);
 
@@ -143,6 +169,7 @@ export class AdminController {
     }
 
     @Get('stats')
+    @UseGuards(IsAgentOrLawyerGuardOrPartner)
     async getAdminClaimsStats(
         @Req() req: AuthRequest,
         @Query() query: GetAdminClaimsStatsQuery,
@@ -201,6 +228,7 @@ export class AdminController {
     }
 
     @Get(':claimId')
+    @UseGuards(IsAgentOrLawyerGuardOrPartner)
     async getAdminClaim(@Param('claimId') claimId: string) {
         const claim = await this.claimService.getClaim(claimId);
 
@@ -247,7 +275,6 @@ export class AdminController {
     }
 
     @Delete(':claimId/agent')
-    @UseGuards(IsAgentOrLawyerGuardOrPartner)
     async deleteAgent(@Param('claimId') claimId: string) {
         if (!(await this.claimService.getClaim(claimId))) {
             throw new BadRequestException(CLAIM_NOT_FOUND);

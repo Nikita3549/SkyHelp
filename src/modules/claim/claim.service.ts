@@ -37,6 +37,7 @@ import { DAY, HOUR } from '../../common/constants/time.constants';
 import { getNextWorkTime } from '../../utils/getNextWorkTime';
 import { DefaultArgs } from '@prisma/client/runtime/library';
 import { generateNumericId } from '../../utils/generateNumericId';
+import { IPartiallyClaim } from './interfaces/partially-claim.interface';
 
 @Injectable()
 export class ClaimService {
@@ -393,7 +394,7 @@ export class ClaimService {
         }
     }
 
-    async getUserClaims(
+    async getUserClaims<T extends boolean>(
         userId?: string,
         page: number = 1,
         searchParams?: {
@@ -414,8 +415,12 @@ export class ClaimService {
             email?: string;
             referralCode?: string;
         },
+        partiallyInfo: T = false as T,
         pageSize: number = 20,
-    ): Promise<{ claims: IFullClaim[]; total: number }> {
+    ): Promise<{
+        claims: T extends true ? IPartiallyClaim[] : IFullClaim[];
+        total: number;
+    }> {
         const skip = (page - 1) * pageSize;
 
         const where: Prisma.ClaimWhereInput = {
@@ -496,7 +501,12 @@ export class ClaimService {
             this.prisma.claim.findMany({
                 where,
                 orderBy,
-                include: this.fullClaimInclude(),
+                include: partiallyInfo
+                    ? this.fullClaimInclude()
+                    : this.partiallyClaimInclude(),
+
+                // ? this.partiallyClaimInclude()
+                // : this.fullClaimInclude(),
                 skip,
                 take: pageSize,
             }),
@@ -506,7 +516,7 @@ export class ClaimService {
         ]);
 
         return {
-            claims,
+            claims: claims as T extends true ? IPartiallyClaim[] : IFullClaim[],
             total,
         };
     }
@@ -665,6 +675,51 @@ export class ClaimService {
             },
             include: this.fullClaimInclude(),
         });
+    }
+
+    private partiallyClaimInclude() {
+        return {
+            step: false,
+            formState: false,
+            userId: false,
+            agentId: false,
+            assignedAt: false,
+            detailsId: false,
+            stateId: false,
+            customerId: false,
+            issueId: false,
+            envelopeId: false,
+            continueLink: false,
+            paymentId: false,
+            updatedAt: false,
+            recentUpdatedAt: false,
+            referredById: false,
+            details: {
+                include: {
+                    airlines: true,
+                },
+            },
+            state: {
+                select: {
+                    status: true,
+                    amount: true,
+                },
+            },
+            customer: {
+                select: {
+                    firstName: true,
+                    lastName: true,
+                    email: true,
+                },
+            },
+            passengers: {
+                select: {
+                    id: true,
+                    isMinor: true,
+                },
+            },
+            duplicates: true,
+        };
     }
 
     private fullClaimInclude(config?: { fullDuplicates: boolean }) {
