@@ -3869,6 +3869,14 @@
         "AdminClaimsFilters.airlineChip": "Авиакомпания",
         "AdminClaimsFilters.flightChip": "Рейс",
         "AdminClaimsFilters.partnerChip": "Партнёр",
-        "AdminClaimsFilters.searchPlaceholder": "Поиск заявок по ID или имени"
+        "AdminClaimsFilters.searchPlaceholder": "Поиск заявок по ID или имени",
+        "PayoutsSection.swiftLabel": "SWIFT/BIC-код",
+        "PayoutsSection.swiftPlaceholder": "Введите SWIFT/BIC-код",
+        "PayoutsSection.bankOtherInfoLabel": "Дополнительные банковские данные",
+        "PayoutsSection.bankOtherInfoPlaceholder": "Укажите любую дополнительную информацию, которую требует ваш банк",
+        "WiseFields.accountHolderName": "Имя владельца счёта",
+        "WiseFields.accountHolderNamePlaceholder": "Введите полное имя владельца счёта",
+        "WiseFields.ibanOrAccountNumber": "IBAN или номер счёта",
+        "WiseFields.ibanOrAccountNumberPlaceholder": "Введите IBAN или номер банковского счёта"
 
 }

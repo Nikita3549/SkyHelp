@@ -3891,6 +3891,14 @@
     "AdminClaimsFilters.airlineChip": "Havayolu",
     "AdminClaimsFilters.flightChip": "Uçuş",
     "AdminClaimsFilters.partnerChip": "Partner",
-    "AdminClaimsFilters.searchPlaceholder": "Talepleri ID veya ada göre ara"
+    "AdminClaimsFilters.searchPlaceholder": "Talepleri ID veya ada göre ara",
+    "PayoutsSection.swiftLabel": "SWIFT/BIC Kodu",
+    "PayoutsSection.swiftPlaceholder": "SWIFT/BIC kodunu girin",
+    "PayoutsSection.bankOtherInfoLabel": "Ek Banka Bilgileri",
+    "PayoutsSection.bankOtherInfoPlaceholder": "Bankanızın istediği diğer bilgileri belirtin",
+    "WiseFields.accountHolderName": "Hesap Sahibi Adı",
+    "WiseFields.accountHolderNamePlaceholder": "Hesap sahibinin tam adını girin",
+    "WiseFields.ibanOrAccountNumber": "IBAN veya Hesap Numarası",
+    "WiseFields.ibanOrAccountNumberPlaceholder": "IBAN'ı veya banka hesap numarasını girin"
 
 }

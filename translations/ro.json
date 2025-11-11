@@ -3871,5 +3871,13 @@
     "AdminClaimsFilters.airlineChip": "Companie",
     "AdminClaimsFilters.flightChip": "Zbor",
     "AdminClaimsFilters.partnerChip": "Partener",
-    "AdminClaimsFilters.searchPlaceholder": "Caută reclamații după ID sau nume"
+    "AdminClaimsFilters.searchPlaceholder": "Caută reclamații după ID sau nume",
+    "PayoutsSection.swiftLabel": "Cod SWIFT/BIC",
+    "PayoutsSection.swiftPlaceholder": "Introdu codul SWIFT/BIC",
+    "PayoutsSection.bankOtherInfoLabel": "Detalii bancare suplimentare",
+    "PayoutsSection.bankOtherInfoPlaceholder": "Furnizează orice alte informații solicitate de bancă",
+    "WiseFields.accountHolderName": "Nume titular cont",
+    "WiseFields.accountHolderNamePlaceholder": "Introdu numele complet al titularului contului",
+    "WiseFields.ibanOrAccountNumber": "IBAN sau număr de cont",
+    "WiseFields.ibanOrAccountNumberPlaceholder": "Introdu IBAN-ul sau numărul contului bancar"
 }

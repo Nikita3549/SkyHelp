@@ -3868,5 +3868,14 @@
     "AdminClaimsFilters.airlineChip": "Airline",
     "AdminClaimsFilters.flightChip": "Flight",
     "AdminClaimsFilters.partnerChip": "Partner",
-    "AdminClaimsFilters.searchPlaceholder": "Search claims by ID, name"
+    "AdminClaimsFilters.searchPlaceholder": "Search claims by ID, name",
+    "PayoutsSection.swiftLabel": "SWIFT/BIC Code",
+    "PayoutsSection.swiftPlaceholder": "Enter the SWIFT/BIC code",
+    "PayoutsSection.bankOtherInfoLabel": "Additional Bank Details",
+    "PayoutsSection.bankOtherInfoPlaceholder": "Provide any other information required by your bank",
+    "WiseFields.accountHolderName": "Account Holder Name",
+    "WiseFields.accountHolderNamePlaceholder": "Enter the account holder's full name",
+    "WiseFields.ibanOrAccountNumber": "IBAN or Account Number",
+    "WiseFields.ibanOrAccountNumberPlaceholder": "Enter the IBAN or bank account number"
+
 }
