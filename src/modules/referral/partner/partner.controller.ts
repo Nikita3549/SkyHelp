@@ -1,10 +1,14 @@
 import {
     BadRequestException,
+    Body,
     Controller,
     ForbiddenException,
     Get,
+    HttpCode,
+    HttpStatus,
     NotFoundException,
     Param,
+    Put,
     Query,
     Req,
     UseGuards,
@@ -16,11 +20,28 @@ import { PartnerService } from './partner.service';
 import { HAVE_NO_RIGHTS_ON_PARTNER_DATA, PARTNER_NOT_FOUND } from './constants';
 import { UserRole } from '@prisma/client';
 import { GetPartnersStatsDto } from './dto/get-partners-stats.dto';
+import { UpdatePartnerPaymentDto } from './dto/update-partner-payment.dto';
 
 @Controller('partner')
 @UseGuards(JwtAuthGuard, IsPartnerOrAffiliateGuard)
 export class PartnerController {
     constructor(private readonly partnerService: PartnerService) {}
+
+    @Put(':userId/payment')
+    @HttpCode(HttpStatus.NO_CONTENT)
+    async updatePartnerPayment(
+        @Body() dto: UpdatePartnerPaymentDto,
+        @Req() req: AuthRequest,
+        @Param('userId') userId: string,
+    ) {
+        const partner = await this.partnerService.getPartnerByUserId(userId);
+
+        if (!partner || req.user.id == userId) {
+            throw new NotFoundException(PARTNER_NOT_FOUND);
+        }
+
+        await this.partnerService.updatePartnerPayment(dto, userId);
+    }
 
     @Get(':userId')
     async getPartner(@Param('userId') userId: string, @Req() req: AuthRequest) {

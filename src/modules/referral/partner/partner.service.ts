@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { ClaimStatus, Partner, Prisma } from '@prisma/client';
+import { UpdatePartnerPaymentDto } from './dto/update-partner-payment.dto';
 
 @Injectable()
 export class PartnerService {
@@ -11,19 +12,28 @@ export class PartnerService {
         userEmail: string;
         referralCode: string;
     }) {
-        const settings = await this.prisma.partnerSettings.create({
-            data: {
-                email: partnerData.userEmail,
-            },
-        });
+        return this.prisma.$transaction(
+            async (tx: Prisma.TransactionClient) => {
+                const settings = await tx.partnerSettings.create({
+                    data: {
+                        email: partnerData.userEmail,
+                    },
+                });
 
-        return this.prisma.partner.create({
-            data: {
-                userId: partnerData.userId,
-                referralCode: partnerData.referralCode,
-                settingsId: settings.id,
+                const payment = await tx.partnerPayment.create({
+                    data: {},
+                });
+
+                return tx.partner.create({
+                    data: {
+                        userId: partnerData.userId,
+                        referralCode: partnerData.referralCode,
+                        settingsId: settings.id,
+                        paymentId: payment.id,
+                    },
+                });
             },
-        });
+        );
     }
 
     async getPartnerByUserId(userId: string): Promise<Partner | null> {
@@ -213,5 +223,24 @@ export class PartnerService {
             payoutsCount,
             claimsCount,
         };
+    }
+
+    async updatePartnerPayment(dto: UpdatePartnerPaymentDto, userId: string) {
+        return this.prisma.partnerPayment.updateMany({
+            data: {
+                paymentMethod: dto.paymentMethod,
+                accountName: dto.accountName,
+                accountNumber: dto.accountNumber,
+                email: dto.email,
+                iban: dto.iban,
+                paypalEmail: dto.paypalEmail,
+                bankName: dto.bankName,
+            },
+            where: {
+                partner: {
+                    userId,
+                },
+            },
+        });
     }
 }

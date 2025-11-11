@@ -8,6 +8,9 @@ model Partner {
   settingsId String?          @unique @map("settings_id")
   settings   PartnerSettings? @relation(fields: [settingsId], references: [id])
 
+  paymentId String?         @unique @map("payment_id")
+  payment   PartnerPayment? @relation(fields: [paymentId], references: [id])
+
   user                 User                  @relation(fields: [userId], references: [id])
   userId               String                @unique @map("user_id")
   referredClaims       Claim[]               @relation("Referrals")

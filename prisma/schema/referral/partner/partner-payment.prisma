@@ -1,0 +1,15 @@
+model PartnerPayment {
+  id            String         @id @default(cuid())
+  email         String?        @map("email")
+  termsAgreed   Boolean?       @map("terms_agreed")
+  paymentMethod PaymentMethod? @map("payment_method")
+  bankName      String?        @map("bank_name")
+  accountName   String?        @map("account_name")
+  accountNumber String?        @map("account_number")
+  iban          String?        @map("iban")
+  paypalEmail   String?        @map("paypal_email")
+
+  partner Partner?
+
+  @@map("partner_payments")
+}
