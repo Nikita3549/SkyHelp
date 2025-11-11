@@ -3,8 +3,8 @@ import {
     Claim,
     ClaimDetails,
     ClaimState,
-    OtherPassenger,
     DuplicatedClaim,
+    OtherPassenger,
 } from '@prisma/client';
 
 export interface IPartiallyClaim extends Claim {

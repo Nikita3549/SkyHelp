@@ -2,7 +2,6 @@ import {
     BadRequestException,
     Body,
     Controller,
-    Get,
     NotFoundException,
     Param,
     Post,
@@ -23,7 +22,6 @@ import {
     DocumentType,
     UserRole,
 } from '@prisma/client';
-import { validateClaimJwt } from '../../../utils/validate-claim-jwt';
 import { TokenService } from '../../token/token.service';
 import { generateAssignmentName } from '../../../utils/generate-assignment-name';
 import { RecentUpdatesService } from '../recent-updates/recent-updates.service';

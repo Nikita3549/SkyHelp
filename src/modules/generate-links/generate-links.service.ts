@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { DocumentType } from '@prisma/client';
 import { generateNumericId } from '../../utils/generateNumericId';
 import { UrlShortenerService } from './url-shortener/url-shortener.service';
 

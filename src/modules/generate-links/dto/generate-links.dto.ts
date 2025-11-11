@@ -1,4 +1,4 @@
-import { IsEnum, IsJWT, IsString } from 'class-validator';
+import { IsJWT, IsString } from 'class-validator';
 
 export class UploadDocumentsDto {
     @IsString()

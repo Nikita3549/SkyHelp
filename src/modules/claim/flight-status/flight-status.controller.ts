@@ -2,7 +2,6 @@ import {
     BadRequestException,
     Body,
     Controller,
-    ForbiddenException,
     NotFoundException,
     Param,
     Post,
@@ -11,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
 import { FlightStatusService } from './flight-status.service';
-import { FLIGHT_STATUS_NOT_FOUND, INVALID_FLIGHT_NUMBER } from './constants';
+import { FLIGHT_STATUS_NOT_FOUND } from './constants';
 import { ClaimService } from '../claim.service';
 import { ClaimFlightStatusSource, UserRole } from '@prisma/client';
 import { FlightService } from '../../flight/flight.service';

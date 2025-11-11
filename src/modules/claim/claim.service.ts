@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import {
     CancellationNotice,
-    ClaimFlightStatusSource,
     ClaimStatus,
     DelayCategory,
     Prisma,
@@ -35,7 +34,6 @@ import { TokenService } from '../token/token.service';
 import { normalizePhone } from '../../utils/normalizePhone';
 import { DAY, HOUR } from '../../common/constants/time.constants';
 import { getNextWorkTime } from '../../utils/getNextWorkTime';
-import { DefaultArgs } from '@prisma/client/runtime/library';
 import { generateNumericId } from '../../utils/generateNumericId';
 import { IPartiallyClaim } from './interfaces/partially-claim.interface';
 

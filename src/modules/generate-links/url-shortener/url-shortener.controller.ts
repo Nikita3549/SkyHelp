@@ -1,18 +1,11 @@
 import {
     BadRequestException,
-    Body,
     Controller,
     Get,
-    HttpCode,
-    HttpStatus,
     NotFoundException,
-    Param,
-    Post,
     Query,
 } from '@nestjs/common';
-import { CreateShortenLinkDto } from './dto/create-shorten-link.dto';
 import { UrlShortenerService } from './url-shortener.service';
-import { generateNumericId } from '../../../utils/generateNumericId';
 import { SHORTEN_URL_NOT_FOUND } from './constants';
 import { isOtherPassengerLinkJwt } from '../utils/isOtherPassengerLinkJwt';
 import { TokenService } from '../../token/token.service';
