@@ -14,7 +14,6 @@ import {
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
 import { ProgressService } from './progress.service';
-import { IsAgentOrLawyerGuardOrPartnerOrAccountant } from '../../../guards/isAgentOrLawyerGuardOrPartnerOrAccountant';
 import {
     PROGRESS_NOT_FOUND,
     SEND_NEW_PROGRESS_EMAIL_QUEUE_DELAY,
@@ -26,7 +25,7 @@ import { isLanguage } from '../../../utils/isLanguage';
 import { CreateProgressDto } from './dto/create-progress.dto';
 import { CLAIM_NOT_FOUND } from '../constants';
 import { ProgressVariants } from './constants/progresses/progressVariants';
-import { ClaimStatus } from '@prisma/client';
+import { ClaimStatus, UserRole } from '@prisma/client';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
 import { ISendNewProgressEmailJobData } from './interfaces/send-new-progress-email-job-data.interface';
@@ -35,9 +34,19 @@ import { LanguageService } from '../../language/language.service';
 import { AuthRequest } from '../../../interfaces/AuthRequest.interface';
 import { MINUTE } from '../../../common/constants/time.constants';
 import { UpdateProgressComments } from './dto/update-progress-comments';
+import { RoleGuard } from '../../../guards/role.guard';
 
 @Controller('claims/progresses')
-@UseGuards(JwtAuthGuard, IsAgentOrLawyerGuardOrPartnerOrAccountant)
+@UseGuards(
+    JwtAuthGuard,
+    new RoleGuard([
+        UserRole.ADMIN,
+        UserRole.LAWYER,
+        UserRole.AGENT,
+        UserRole.PARTNER,
+        UserRole.ACCOUNTANT,
+    ]),
+)
 export class ProgressController {
     constructor(
         private readonly progressesService: ProgressService,

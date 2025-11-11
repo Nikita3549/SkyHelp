@@ -10,7 +10,8 @@ import { CLAIM_NOT_FOUND } from '../constants';
 import { PaymentService } from './payment.service';
 import { ClaimService } from '../claim.service';
 import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
-import { IsAgentGuard } from '../../../guards/isAgent.guard';
+import { UserRole } from '@prisma/client';
+import { RoleGuard } from '../../../guards/role.guard';
 
 @Controller('claims/payment')
 @UseGuards(JwtAuthGuard)
@@ -20,7 +21,7 @@ export class PaymentController {
         private readonly claimService: ClaimService,
     ) {}
 
-    @UseGuards(IsAgentGuard)
+    @UseGuards(new RoleGuard([UserRole.ADMIN, UserRole.AGENT]))
     @Put('admin')
     async updatePayment(@Body() dto: PaymentDto) {
         const { claimId } = dto;

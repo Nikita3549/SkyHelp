@@ -33,13 +33,14 @@ import {
     ClaimRecentUpdatesType,
     DocumentRequestStatus,
     DocumentType,
+    UserRole,
 } from '@prisma/client';
 import { DocumentsUploadInterceptor } from '../../../interceptors/documents/documents-upload.interceptor';
 import { UploadOtherPassengerDto } from './dto/upload-other-passenger.dto';
-import { IsAgentGuard } from '../../../guards/isAgent.guard';
 import { generateAssignmentName } from '../../../utils/generate-assignment-name';
 import { RecentUpdatesService } from '../recent-updates/recent-updates.service';
 import { DocumentRequestService } from '../document-request/document-request.service';
+import { RoleGuard } from '../../../guards/role.guard';
 
 @Controller('claims/passengers')
 @UseGuards(JwtAuthGuard)
@@ -48,7 +49,7 @@ export class OtherPassengerController {
         private readonly otherPassengerService: OtherPassengerService,
     ) {}
 
-    @UseGuards(IsAgentGuard)
+    @UseGuards(new RoleGuard([UserRole.ADMIN, UserRole.AGENT]))
     @Put('admin')
     async updateOtherPassenger(@Body() dto: UpdatePassengerDto) {
         const { passengerId } = dto;
@@ -65,7 +66,7 @@ export class OtherPassengerController {
         );
     }
 
-    @UseGuards(IsAgentGuard)
+    @UseGuards(new RoleGuard([UserRole.ADMIN, UserRole.AGENT]))
     @Patch(`:passengerId/admin/minor`)
     async patchPassengerToMinor(@Param('passengerId') passengerId: string) {
         const passenger =

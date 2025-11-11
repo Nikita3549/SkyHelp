@@ -10,7 +10,8 @@ import { IssueDto } from './dto/issue.dto';
 import { CLAIM_NOT_FOUND } from '../constants';
 import { IssueService } from './issue.service';
 import { ClaimService } from '../claim.service';
-import { IsAgentGuard } from '../../../guards/isAgent.guard';
+import { UserRole } from '@prisma/client';
+import { RoleGuard } from '../../../guards/role.guard';
 
 @Controller('claims/issue')
 @UseGuards(JwtAuthGuard)
@@ -20,7 +21,7 @@ export class IssueController {
         private readonly claimService: ClaimService,
     ) {}
 
-    @UseGuards(IsAgentGuard)
+    @UseGuards(new RoleGuard([UserRole.ADMIN, UserRole.AGENT]))
     @Put('admin')
     async updateIssue(@Body() dto: IssueDto) {
         const { claimId } = dto;

@@ -11,7 +11,8 @@ import { JwtAuthGuard } from '../../guards/jwtAuth.guard';
 import { UserService } from './user.service';
 import { INCORRECT_USER_ID } from './constants';
 import { GetUsersDto } from './dto/get-users.dto';
-import { IsAgentOrLawyerGuardOrPartnerOrAccountant } from '../../guards/isAgentOrLawyerGuardOrPartnerOrAccountant';
+import { UserRole } from '@prisma/client';
+import { RoleGuard } from '../../guards/role.guard';
 
 @Controller('user')
 @UseGuards(JwtAuthGuard)
@@ -19,7 +20,7 @@ export class UserController {
     constructor(private readonly userService: UserService) {}
 
     @Get()
-    @UseGuards(IsAgentOrLawyerGuardOrPartnerOrAccountant)
+    @UseGuards(new RoleGuard([UserRole.ADMIN]))
     async getUsers(@Query() query: GetUsersDto): Promise<IPublicUserData[]> {
         const { role } = query;
 
@@ -27,7 +28,7 @@ export class UserController {
     }
 
     @Get(':id')
-    @UseGuards(IsAgentOrLawyerGuardOrPartnerOrAccountant)
+    @UseGuards(new RoleGuard([UserRole.ADMIN]))
     async getUser(@Param('id') id: string): Promise<IPublicUserData> {
         const user = await this.userService.getUserById(id);
 

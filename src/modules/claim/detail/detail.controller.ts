@@ -10,7 +10,8 @@ import { FlightDto } from './dto/flight.dto';
 import { CLAIM_NOT_FOUND } from '../constants';
 import { DetailService } from './detail.service';
 import { ClaimService } from '../claim.service';
-import { IsAgentGuard } from '../../../guards/isAgent.guard';
+import { UserRole } from '@prisma/client';
+import { RoleGuard } from '../../../guards/role.guard';
 
 @Controller('claims/details')
 @UseGuards(JwtAuthGuard)
@@ -20,7 +21,7 @@ export class DetailController {
         private readonly claimService: ClaimService,
     ) {}
 
-    @UseGuards(IsAgentGuard)
+    @UseGuards(new RoleGuard([UserRole.ADMIN, UserRole.AGENT]))
     @Put('admin')
     async updateFlight(@Body() dto: FlightDto) {
         const { claimId } = dto;

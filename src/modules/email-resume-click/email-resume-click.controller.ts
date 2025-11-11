@@ -14,7 +14,8 @@ import { EmailResumeClickService } from './email-resume-click.service';
 import { HttpStatusCode } from 'axios';
 import { NO_RECORD } from './constants';
 import { JwtAuthGuard } from '../../guards/jwtAuth.guard';
-import { IsAdminGuard } from '../../guards/isAdminGuard';
+import { UserRole } from '@prisma/client';
+import { RoleGuard } from '../../guards/role.guard';
 
 @Controller('track/email')
 export class EmailResumeClickController {
@@ -45,7 +46,7 @@ export class EmailResumeClickController {
     }
 
     @Get('stats')
-    @UseGuards(JwtAuthGuard, IsAdminGuard)
+    @UseGuards(JwtAuthGuard, new RoleGuard([UserRole.ADMIN]))
     async getStats() {
         return this.emailResumeClickService.getStats();
     }

@@ -21,13 +21,14 @@ import {
     ClaimRecentUpdatesType,
     DocumentRequestStatus,
     DocumentType,
+    UserRole,
 } from '@prisma/client';
 import { validateClaimJwt } from '../../../utils/validate-claim-jwt';
 import { TokenService } from '../../token/token.service';
-import { IsAgentGuard } from '../../../guards/isAgent.guard';
 import { generateAssignmentName } from '../../../utils/generate-assignment-name';
 import { RecentUpdatesService } from '../recent-updates/recent-updates.service';
 import { DocumentRequestService } from '../document-request/document-request.service';
+import { RoleGuard } from '../../../guards/role.guard';
 
 @Controller('claims/customer')
 @UseGuards(JwtAuthGuard)
@@ -37,7 +38,7 @@ export class CustomerController {
         private readonly claimService: ClaimService,
     ) {}
 
-    @UseGuards(IsAgentGuard)
+    @UseGuards(new RoleGuard([UserRole.ADMIN, UserRole.AGENT]))
     @Put('/admin/')
     async updateCustomer(@Body() dto: CustomerDto) {
         const { claimId } = dto;

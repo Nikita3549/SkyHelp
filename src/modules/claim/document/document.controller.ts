@@ -37,17 +37,18 @@ import { UploadDocumentsJwtQueryDto } from './dto/upload-documents-jwt-query.dto
 import { AuthRequest } from '../../../interfaces/AuthRequest.interface';
 import { UploadDocumentsQueryDto } from './dto/upload-documents-query.dto';
 import { UpdateDocumentTypeDto } from './dto/update-document-type.dto';
-import { IsAgentOrLawyerGuardOrPartnerOrAccountant } from '../../../guards/isAgentOrLawyerGuardOrPartnerOrAccountant';
 import { MergeDocumentsDto } from './dto/merge-documents.dto';
 import { RecentUpdatesService } from '../recent-updates/recent-updates.service';
 import {
     ClaimRecentUpdatesType,
     DocumentRequestStatus,
     DocumentType,
+    UserRole,
 } from '@prisma/client';
 import { DocumentRequestService } from '../document-request/document-request.service';
 import { PatchPassengerIdDto } from './dto/patch-passenger-id.dto';
 import { HttpStatusCode } from 'axios';
+import { RoleGuard } from '../../../guards/role.guard';
 
 @Controller('claims/documents')
 @UseGuards(JwtAuthGuard)
@@ -79,7 +80,15 @@ export class DocumentController {
 
     @Delete(':documentId/admin')
     @HttpCode(HttpStatusCode.NoContent)
-    @UseGuards(IsAgentOrLawyerGuardOrPartnerOrAccountant)
+    @UseGuards(
+        new RoleGuard([
+            UserRole.ADMIN,
+            UserRole.LAWYER,
+            UserRole.AGENT,
+            UserRole.PARTNER,
+            UserRole.ACCOUNTANT,
+        ]),
+    )
     async removeDocument(@Param('documentId') documentId: string) {
         const document = await this.documentService.getDocument(documentId);
 
@@ -91,7 +100,15 @@ export class DocumentController {
     }
 
     @Post('admin')
-    @UseGuards(IsAgentOrLawyerGuardOrPartnerOrAccountant)
+    @UseGuards(
+        new RoleGuard([
+            UserRole.ADMIN,
+            UserRole.LAWYER,
+            UserRole.AGENT,
+            UserRole.PARTNER,
+            UserRole.ACCOUNTANT,
+        ]),
+    )
     @DocumentsUploadInterceptor()
     async uploadAdminDocuments(
         @UploadedFiles() files: Express.Multer.File[],
@@ -133,7 +150,15 @@ export class DocumentController {
     }
 
     @Patch('/:documentId/admin')
-    @UseGuards(IsAgentOrLawyerGuardOrPartnerOrAccountant)
+    @UseGuards(
+        new RoleGuard([
+            UserRole.ADMIN,
+            UserRole.LAWYER,
+            UserRole.AGENT,
+            UserRole.PARTNER,
+            UserRole.ACCOUNTANT,
+        ]),
+    )
     async updateDocumentType(
         @Body() dto: UpdateDocumentTypeDto,
         @Param('documentId') documentId: string,
@@ -181,7 +206,15 @@ export class DocumentController {
     }
 
     @Get('admin')
-    @UseGuards(IsAgentOrLawyerGuardOrPartnerOrAccountant)
+    @UseGuards(
+        new RoleGuard([
+            UserRole.ADMIN,
+            UserRole.LAWYER,
+            UserRole.AGENT,
+            UserRole.PARTNER,
+            UserRole.ACCOUNTANT,
+        ]),
+    )
     async getDocumentAdmin(
         @Query() query: GetDocumentDto,
         @Res() res: Response,
@@ -264,7 +297,15 @@ export class DocumentController {
         return documents;
     }
 
-    @UseGuards(IsAgentOrLawyerGuardOrPartnerOrAccountant)
+    @UseGuards(
+        new RoleGuard([
+            UserRole.ADMIN,
+            UserRole.LAWYER,
+            UserRole.AGENT,
+            UserRole.PARTNER,
+            UserRole.ACCOUNTANT,
+        ]),
+    )
     @Patch('admin/passenger')
     async patchPassengerId(@Body() dto: PatchPassengerIdDto) {
         const { passengerId, documentId } = dto;

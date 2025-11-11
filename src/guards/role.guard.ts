@@ -2,13 +2,13 @@ import { CanActivate, ExecutionContext } from '@nestjs/common';
 import { AuthRequest } from '../interfaces/AuthRequest.interface';
 import { UserRole } from '@prisma/client';
 
-export class IsPartnerGuard implements CanActivate {
+export class RoleGuard implements CanActivate {
+    constructor(private readonly roles: UserRole[]) {}
+
     canActivate(ctx: ExecutionContext): boolean {
         const host = ctx.switchToHttp();
         const req: AuthRequest = host.getRequest();
 
-        return (
-            req.user.role == UserRole.ADMIN || req.user.role == UserRole.PARTNER
-        );
+        return this.roles.includes(req.user.role);
     }
 }

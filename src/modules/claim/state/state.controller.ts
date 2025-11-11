@@ -10,7 +10,8 @@ import { StateDto } from './dto/state.dto';
 import { CLAIM_NOT_FOUND } from '../constants';
 import { StateService } from './state.service';
 import { ClaimService } from '../claim.service';
-import { IsAgentGuard } from '../../../guards/isAgent.guard';
+import { UserRole } from '@prisma/client';
+import { RoleGuard } from '../../../guards/role.guard';
 
 @Controller('claims/state')
 @UseGuards(JwtAuthGuard)
@@ -20,7 +21,7 @@ export class StateController {
         private readonly claimService: ClaimService,
     ) {}
 
-    @UseGuards(IsAgentGuard)
+    @UseGuards(new RoleGuard([UserRole.ADMIN, UserRole.AGENT]))
     @Put('admin')
     async updateState(@Body() dto: StateDto) {
         const { claimId } = dto;

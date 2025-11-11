@@ -11,7 +11,6 @@ import {
     UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../../guards/jwtAuth.guard';
-import { IsAgentOrLawyerGuardOrPartnerOrAccountant } from '../../guards/isAgentOrLawyerGuardOrPartnerOrAccountant';
 import { TokenService } from '../token/token.service';
 import { GenerateLinksService } from './generate-links.service';
 import {
@@ -40,6 +39,7 @@ import { OtherPassengerService } from '../claim/other-passenger/other-passenger.
 import { OtherPassengerCopiedLinksService } from '../claim/other-passenger/other-passenger-copied-links/other-passenger-copied-links.service';
 import { isOtherPassengerLinkJwt } from './utils/isOtherPassengerLinkJwt';
 import { CustomerService } from '../claim/customer/customer.service';
+import { RoleGuard } from '../../guards/role.guard';
 
 @Controller('links')
 @UseGuards(JwtAuthGuard)
@@ -53,7 +53,15 @@ export class GenerateLinksController {
         private readonly customerService: CustomerService,
     ) {}
 
-    @UseGuards(IsAgentOrLawyerGuardOrPartnerOrAccountant)
+    @UseGuards(
+        new RoleGuard([
+            UserRole.ADMIN,
+            UserRole.LAWYER,
+            UserRole.AGENT,
+            UserRole.PARTNER,
+            UserRole.ACCOUNTANT,
+        ]),
+    )
     @Get('upload-documents')
     async copyUploadDocuments(
         @Query() query: UploadDocumentsDto,
@@ -112,7 +120,15 @@ export class GenerateLinksController {
         return { link };
     }
 
-    @UseGuards(IsAgentOrLawyerGuardOrPartnerOrAccountant)
+    @UseGuards(
+        new RoleGuard([
+            UserRole.ADMIN,
+            UserRole.LAWYER,
+            UserRole.AGENT,
+            UserRole.PARTNER,
+            UserRole.ACCOUNTANT,
+        ]),
+    )
     @Get('upload-passport')
     async copyUploadPassport(
         @Query() query: UploadDocumentsDto,

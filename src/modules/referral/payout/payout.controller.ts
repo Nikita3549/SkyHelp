@@ -9,14 +9,13 @@ import {
     UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
-import { IsAdminGuard } from '../../../guards/isAdminGuard';
 import { CreatePayoutDto } from './dto/create-payout.dto';
 import { PartnerService } from '../partner/partner.service';
 import { PARTNER_NOT_FOUND } from '../partner/constants';
 import { PayoutService } from './payout.service';
 import { AuthRequest } from '../../../interfaces/AuthRequest.interface';
 import { Prisma, UserRole } from '@prisma/client';
-import { IsPartnerOrAffiliateGuard } from '../../../guards/isPartnerOrAffiliateGuard';
+import { RoleGuard } from '../../../guards/role.guard';
 
 @Controller('payout')
 @UseGuards(JwtAuthGuard)
@@ -27,7 +26,7 @@ export class PayoutController {
     ) {}
 
     @Post()
-    @UseGuards(IsAdminGuard)
+    @UseGuards(new RoleGuard([UserRole.ADMIN]))
     async createPayout(@Body() dto: CreatePayoutDto) {
         let { amount, userId } = dto;
 
@@ -49,7 +48,9 @@ export class PayoutController {
     }
 
     @Get()
-    @UseGuards(IsPartnerOrAffiliateGuard)
+    @UseGuards(
+        new RoleGuard([UserRole.ADMIN, UserRole.PARTNER, UserRole.AFFILIATE]),
+    )
     async getPayouts(@Req() req: AuthRequest) {
         const userId =
             req.user.role == UserRole.ADMIN ? undefined : req.user.id;

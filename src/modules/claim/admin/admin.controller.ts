@@ -16,7 +16,6 @@ import {
     Req,
     UseGuards,
 } from '@nestjs/common';
-import { IsAdminGuard } from '../../../guards/isAdminGuard';
 import { GetClaimsQuery, IsYesOrNo } from './dto/get-claims.query';
 import { ArchiveClaimDto } from './dto/archive-claim.dto';
 import { CLAIM_NOT_FOUND, HAVE_NO_RIGHTS_ON_CLAIM } from '../constants';
@@ -27,18 +26,25 @@ import { AddAgentDto } from './dto/add-agent.dto';
 import { UserService } from '../../user/user.service';
 import { UserRole } from '@prisma/client';
 import { AGENT_NOT_FOUND } from './constants';
-import { IsAgentOrLawyerGuardOrPartnerOrAccountant } from '../../../guards/isAgentOrLawyerGuardOrPartnerOrAccountant';
 import { AuthRequest } from '../../../interfaces/AuthRequest.interface';
-import { IsAgentGuard } from '../../../guards/isAgent.guard';
 import { RecentUpdatesService } from '../recent-updates/recent-updates.service';
 import { GetAdminClaimsStatsQuery } from './dto/get-admin-claims-stats.query';
 import { DeleteDuplicatesDto } from './dto/delete-duplicates.dto';
 import { PartnerService } from '../../referral/partner/partner.service';
 import { CreatePartnerDto } from './dto/create-partner.dto';
-import { IsAgentOrLawyerGuardOrPartnerOrAffiliate } from '../../../guards/IsAgentOrLawyerGuardOrPartnerOrAffiliate';
+import { RoleGuard } from 'src/guards/role.guard';
 
 @Controller('claims/admin')
-@UseGuards(JwtAuthGuard, IsAgentOrLawyerGuardOrPartnerOrAffiliate)
+@UseGuards(
+    JwtAuthGuard,
+    new RoleGuard([
+        UserRole.ADMIN,
+        UserRole.AGENT,
+        UserRole.LAWYER,
+        UserRole.ACCOUNTANT,
+        UserRole.PARTNER,
+    ]),
+)
 export class AdminController {
     constructor(
         private readonly claimService: ClaimService,
@@ -48,8 +54,7 @@ export class AdminController {
     ) {}
 
     @Post('partner')
-    @UseGuards(IsAdminGuard)
-    @UseGuards(IsAgentOrLawyerGuardOrPartnerOrAccountant)
+    @UseGuards(new RoleGuard([UserRole.ADMIN]))
     async createPartner(@Body() dto: CreatePartnerDto) {
         const { referralCode, userId, userRole } = dto;
 
@@ -76,7 +81,14 @@ export class AdminController {
 
     @Delete('duplicate')
     @HttpCode(HttpStatus.NO_CONTENT)
-    @UseGuards(IsAgentOrLawyerGuardOrPartnerOrAccountant)
+    @UseGuards(
+        new RoleGuard([
+            UserRole.ADMIN,
+            UserRole.LAWYER,
+            UserRole.AGENT,
+            UserRole.ACCOUNTANT,
+        ]),
+    )
     async deleteDuplicates(@Body() dto: DeleteDuplicatesDto) {
         const { claimIds } = dto;
 
@@ -155,7 +167,15 @@ export class AdminController {
     }
 
     @Patch(':claimId/recent-updates')
-    @UseGuards(IsAgentOrLawyerGuardOrPartnerOrAccountant)
+    @UseGuards(
+        new RoleGuard([
+            UserRole.ADMIN,
+            UserRole.LAWYER,
+            UserRole.AGENT,
+            UserRole.PARTNER,
+            UserRole.ACCOUNTANT,
+        ]),
+    )
     async patchHasRecentUpdates(@Param('claimId') claimId: string) {
         const claim = await this.claimService.getClaim(claimId);
 
@@ -169,7 +189,14 @@ export class AdminController {
     }
 
     @Get('stats')
-    @UseGuards(IsAgentOrLawyerGuardOrPartnerOrAccountant)
+    @UseGuards(
+        new RoleGuard([
+            UserRole.ADMIN,
+            UserRole.LAWYER,
+            UserRole.AGENT,
+            UserRole.ACCOUNTANT,
+        ]),
+    )
     async getAdminClaimsStats(
         @Req() req: AuthRequest,
         @Query() query: GetAdminClaimsStatsQuery,
@@ -206,7 +233,7 @@ export class AdminController {
     }
 
     @Patch(':claimId/archive')
-    @UseGuards(IsAdminGuard)
+    @UseGuards(new RoleGuard([UserRole.ADMIN]))
     async archiveClaim(
         @Body() dto: ArchiveClaimDto,
         @Param('claimId') claimId: string,
@@ -228,7 +255,15 @@ export class AdminController {
     }
 
     @Get(':claimId')
-    @UseGuards(IsAgentOrLawyerGuardOrPartnerOrAccountant)
+    @UseGuards(
+        new RoleGuard([
+            UserRole.ADMIN,
+            UserRole.LAWYER,
+            UserRole.AGENT,
+            UserRole.PARTNER,
+            UserRole.ACCOUNTANT,
+        ]),
+    )
     async getAdminClaim(@Param('claimId') claimId: string) {
         const claim = await this.claimService.getClaim(claimId);
 
@@ -240,7 +275,7 @@ export class AdminController {
     }
 
     @Put(':claimId')
-    @UseGuards(IsAgentGuard)
+    @UseGuards(new RoleGuard([UserRole.ADMIN, UserRole.AGENT]))
     async updateClaim(
         @Body() dto: UpdateClaimDto,
         @Param('claimId') claimId: string,
@@ -253,7 +288,7 @@ export class AdminController {
     }
 
     @Patch(':claimId/agent')
-    @UseGuards(IsAdminGuard)
+    @UseGuards(new RoleGuard([UserRole.ADMIN]))
     async addAgent(
         @Body() dto: AddAgentDto,
         @Param('claimId') claimId: string,
