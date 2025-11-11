@@ -692,12 +692,26 @@ export class ClaimService {
             details: {
                 include: {
                     airlines: true,
+                    routes: {
+                        include: {
+                            ArrivalAirport: true,
+                            DepartureAirport: true,
+                        },
+                    },
                 },
             },
             state: {
                 select: {
+                    id: true,
                     status: true,
                     amount: true,
+                    updatedAt: true,
+                    comments: true,
+                    progress: {
+                        orderBy: {
+                            order: 'asc' as const,
+                        },
+                    },
                 },
             },
             customer: {
@@ -705,6 +719,11 @@ export class ClaimService {
                     firstName: true,
                     lastName: true,
                     email: true,
+                },
+            },
+            documents: {
+                omit: {
+                    path: true,
                 },
             },
             passengers: {

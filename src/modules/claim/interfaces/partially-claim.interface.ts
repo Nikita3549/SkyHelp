@@ -1,10 +1,15 @@
 import {
     Airline,
+    ArrivalAirport,
     Claim,
     ClaimDetails,
     ClaimState,
+    DepartureAirport,
+    Document,
     DuplicatedClaim,
     OtherPassenger,
+    Progress,
+    Route,
 } from '@prisma/client';
 
 export interface IPartiallyClaim extends Claim {
@@ -13,13 +18,26 @@ export interface IPartiallyClaim extends Claim {
     customer: IPartiallyClaimCustomer;
     passengers: IPartiallyClaimPassenger[];
     duplicates: DuplicatedClaim[];
+    documents: IPartiallyClaimDocument[];
 }
 
 interface IPartiallyClaimDetails extends Omit<ClaimDetails, 'id' | 'airline'> {
     airlines: Airline;
+    routes: IPartiallyClaimRoute[];
 }
 
-interface IPartiallyClaimState extends Pick<ClaimState, 'status' | 'amount'> {}
+interface IPartiallyClaimRoute extends Route {
+    ArrivalAirport: ArrivalAirport;
+    DepartureAirport: DepartureAirport;
+}
+
+interface IPartiallyClaimState
+    extends Pick<
+        ClaimState,
+        'id' | 'status' | 'amount' | 'updatedAt' | 'comments'
+    > {
+    progress: Progress[];
+}
 
 interface IPartiallyClaimCustomer {
     firstName: string;
@@ -29,3 +47,5 @@ interface IPartiallyClaimCustomer {
 
 interface IPartiallyClaimPassenger
     extends Pick<OtherPassenger, 'id' | 'isMinor'> {}
+
+interface IPartiallyClaimDocument extends Omit<Document, 'path'> {}
