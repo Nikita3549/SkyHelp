@@ -502,11 +502,8 @@ export class ClaimService {
                 where,
                 orderBy,
                 include: partiallyInfo
-                    ? this.fullClaimInclude()
-                    : this.partiallyClaimInclude(),
-
-                // ? this.partiallyClaimInclude()
-                // : this.fullClaimInclude(),
+                    ? this.partiallyClaimInclude()
+                    : this.fullClaimInclude(),
                 skip,
                 take: pageSize,
             }),
