@@ -6,13 +6,13 @@ import {
     Post,
     UseGuards,
 } from '@nestjs/common';
-import { ApiKeyAuthGuard } from '../../guards/ApiKeyAuthGuard';
 import { NotificationService } from '../notification/notification.service';
 import { SendMissingDocumentsEmailDto } from './dto/sendMissingDocumentsEmail.dto';
 import { ClaimService } from '../claim/claim.service';
 import { CLAIM_NOT_FOUND } from '../claim/constants';
 import { Languages } from '../language/enums/languages.enums';
 import { HttpStatusCode } from 'axios';
+import { ApiKeyAuthGuard } from '../../guards/apiKeyAuthGuard';
 
 @Controller('bot')
 export class BotController {

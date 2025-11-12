@@ -48,11 +48,11 @@ import { Languages } from '../language/enums/languages.enums';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
 import { IAddFlightStatusJobData } from './interfaces/add-flight-status-job-data.interface';
-import { ApiKeyAuthGuard } from '../../guards/ApiKeyAuthGuard';
 import { JwtOrApiKeyAuth } from '../../guards/jwtOrApiKeyAuth';
 import { GetClaimsQuery } from './dto/get-claims.query';
 import { normalizePhone } from '../../utils/normalizePhone';
 import { PartnerService } from '../referral/partner/partner.service';
+import { ApiKeyAuthGuard } from '../../guards/apiKeyAuthGuard';
 
 @Controller('claims')
 @UseGuards(JwtOrApiKeyAuth)
