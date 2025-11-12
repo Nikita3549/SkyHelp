@@ -302,6 +302,7 @@ export class AdminController {
             !agent ||
             (agent.role != UserRole.AGENT &&
                 agent.role != UserRole.LAWYER &&
+                agent.role != UserRole.ACCOUNTANT &&
                 agent.role != UserRole.PARTNER)
         ) {
             throw new NotFoundException(AGENT_NOT_FOUND);
