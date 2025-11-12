@@ -28,4 +28,8 @@ export class UpdatePartnerPaymentDto {
     @IsOptional()
     @IsString()
     bankName?: string;
+
+    @IsOptional()
+    @IsString()
+    bic?: string;
 }

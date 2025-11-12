@@ -235,6 +235,7 @@ export class PartnerService {
                 iban: dto.iban,
                 paypalEmail: dto.paypalEmail,
                 bankName: dto.bankName,
+                bic: dto.bic,
             },
             where: {
                 partner: {

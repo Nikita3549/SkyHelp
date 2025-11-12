@@ -8,6 +8,7 @@ model PartnerPayment {
   accountNumber String?        @map("account_number")
   iban          String?        @map("iban")
   paypalEmail   String?        @map("paypal_email")
+  bic           String?
 
   partner Partner?
 
