@@ -32,4 +32,8 @@ export class UpdatePartnerPaymentDto {
     @IsOptional()
     @IsString()
     bic?: string;
+
+    @IsOptional()
+    @IsString()
+    additionalInfo?: string;
 }
