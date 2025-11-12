@@ -39,8 +39,12 @@ export class PartnerController {
     ) {
         const partner = await this.partnerService.getPartnerByUserId(userId);
 
-        if (!partner || req.user.id != userId) {
+        if (!partner) {
             throw new NotFoundException(PARTNER_NOT_FOUND);
+        }
+
+        if (req.user.id != userId) {
+            throw new ForbiddenException(HAVE_NO_RIGHTS_ON_PARTNER_DATA);
         }
 
         await this.partnerService.updatePartnerPayment(dto, userId);

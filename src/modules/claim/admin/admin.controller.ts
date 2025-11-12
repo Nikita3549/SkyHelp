@@ -32,7 +32,7 @@ import { GetAdminClaimsStatsQuery } from './dto/get-admin-claims-stats.query';
 import { DeleteDuplicatesDto } from './dto/delete-duplicates.dto';
 import { PartnerService } from '../../referral/partner/partner.service';
 import { CreatePartnerDto } from './dto/create-partner.dto';
-import { RoleGuard } from 'src/guards/role.guard';
+import { RoleGuard } from '../../../guards/role.guard';
 
 @Controller('claims/admin')
 @UseGuards(
@@ -43,6 +43,7 @@ import { RoleGuard } from 'src/guards/role.guard';
         UserRole.LAWYER,
         UserRole.ACCOUNTANT,
         UserRole.PARTNER,
+        UserRole.AFFILIATE,
     ]),
 )
 export class AdminController {
@@ -116,7 +117,8 @@ export class AdminController {
         const requireReferralCode =
             req.user.role != UserRole.ADMIN &&
             req.user.role != UserRole.LAWYER &&
-            req.user.role != UserRole.AGENT;
+            req.user.role != UserRole.AGENT &&
+            req.user.role != UserRole.ACCOUNTANT;
 
         if (requireReferralCode && !referralCode) {
             throw new ForbiddenException('Missed required param referralCode');
@@ -172,7 +174,6 @@ export class AdminController {
             UserRole.ADMIN,
             UserRole.LAWYER,
             UserRole.AGENT,
-            UserRole.PARTNER,
             UserRole.ACCOUNTANT,
         ]),
     )
@@ -310,6 +311,14 @@ export class AdminController {
     }
 
     @Delete(':claimId/agent')
+    @UseGuards(
+        new RoleGuard([
+            UserRole.ADMIN,
+            UserRole.AGENT,
+            UserRole.LAWYER,
+            UserRole.ACCOUNTANT,
+        ]),
+    )
     async deleteAgent(@Param('claimId') claimId: string) {
         if (!(await this.claimService.getClaim(claimId))) {
             throw new BadRequestException(CLAIM_NOT_FOUND);
