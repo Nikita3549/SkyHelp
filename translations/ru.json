@@ -3878,6 +3878,9 @@
         "WiseFields.accountHolderNamePlaceholder": "Введите полное имя владельца счёта",
         "WiseFields.accountHolderPlaceholder": "Введите имя владельца счёта",
         "WiseFields.ibanOrAccountNumber": "IBAN или номер счёта",
-        "WiseFields.ibanOrAccountNumberPlaceholder": "Введите IBAN или номер банковского счёта"
-
+        "WiseFields.ibanOrAccountNumberPlaceholder": "Введите IBAN или номер банковского счёта",
+        "UserRolesSection.accountantLabel": "Бухгалтер",
+        "UserRolesSection.accountantDescription": "Управляет финансовыми сверками, отслеживает выплаты и формирует бухгалтерские отчёты.",
+        "UserRolesSection.affiliateLabel": "Аффилиат",
+        "UserRolesSection.affiliateDescription": "Ведёт партнёрские программы и отслеживает показатели аффилиатов."
 }

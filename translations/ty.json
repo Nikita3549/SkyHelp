@@ -3900,6 +3900,9 @@
     "WiseFields.accountHolderNamePlaceholder": "Hesap sahibinin tam adını girin",
     "WiseFields.accountHolderPlaceholder": "Hesap sahibinin adını girin",
     "WiseFields.ibanOrAccountNumber": "IBAN veya Hesap Numarası",
-    "WiseFields.ibanOrAccountNumberPlaceholder": "IBAN'ı veya banka hesap numarasını girin"
-
+    "WiseFields.ibanOrAccountNumberPlaceholder": "IBAN'ı veya banka hesap numarasını girin",
+    "UserRolesSection.accountantLabel": "Muhasebeci",
+    "UserRolesSection.accountantDescription": "Finansal mutabakatları, ödeme takibini ve muhasebe raporlarını yönetir.",
+    "UserRolesSection.affiliateLabel": "Affiliate",
+    "UserRolesSection.affiliateDescription": "Yönlendirme ortaklıklarını yönetir ve affiliate performans verilerini izler."
 }

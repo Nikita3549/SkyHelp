@@ -3880,5 +3880,9 @@
     "WiseFields.accountHolderNamePlaceholder": "Introdu numele complet al titularului contului",
     "WiseFields.accountHolderPlaceholder": "Introdu numele titularului contului",
     "WiseFields.ibanOrAccountNumber": "IBAN sau număr de cont",
-    "WiseFields.ibanOrAccountNumberPlaceholder": "Introdu IBAN-ul sau numărul contului bancar"
+    "WiseFields.ibanOrAccountNumberPlaceholder": "Introdu IBAN-ul sau numărul contului bancar",
+    "UserRolesSection.accountantLabel": "Contabil",
+    "UserRolesSection.accountantDescription": "Gestionează reconcilierea financiară, monitorizarea plăților și rapoartele contabile.",
+    "UserRolesSection.affiliateLabel": "Afiliat",
+    "UserRolesSection.affiliateDescription": "Administrează parteneriatele de recomandare și urmărește performanța afiliată."
 }

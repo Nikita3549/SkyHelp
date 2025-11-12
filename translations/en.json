@@ -3877,6 +3877,9 @@
     "WiseFields.accountHolderNamePlaceholder": "Enter the account holder's full name",
     "WiseFields.accountHolderPlaceholder": "Enter the account holder's name",
     "WiseFields.ibanOrAccountNumber": "IBAN or Account Number",
-    "WiseFields.ibanOrAccountNumberPlaceholder": "Enter the IBAN or bank account number"
-
+    "WiseFields.ibanOrAccountNumberPlaceholder": "Enter the IBAN or bank account number",
+    "UserRolesSection.accountantLabel": "Accountant",
+    "UserRolesSection.accountantDescription": "Manages financial reconciliations, payout tracking, and accounting reports.",
+    "UserRolesSection.affiliateLabel": "Affiliate",
+    "UserRolesSection.affiliateDescription": "Handles referral partnerships and monitors affiliate performance data."
 }
