@@ -39,7 +39,7 @@ export class PartnerController {
     ) {
         const partner = await this.partnerService.getPartnerByUserId(userId);
 
-        if (!partner || req.user.id == userId) {
+        if (!partner || req.user.id != userId) {
             throw new NotFoundException(PARTNER_NOT_FOUND);
         }
 
