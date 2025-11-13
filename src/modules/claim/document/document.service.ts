@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { Document, DocumentType } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import * as fs from 'fs/promises';
@@ -9,6 +9,7 @@ import { spawn } from 'child_process';
 import { PassThrough, Readable } from 'stream';
 import { formatDate } from '../../../utils/formatDate';
 import * as fontkit from 'fontkit';
+import { createCanvas, loadImage, Image } from 'canvas';
 
 @Injectable()
 export class DocumentService {
@@ -411,14 +412,32 @@ export class DocumentService {
                     height: img.height,
                 });
             } else if (ext === '.png') {
-                const img = await mergedPdf.embedPng(file.buffer);
-                const page = mergedPdf.addPage([img.width, img.height]);
-                page.drawImage(img, {
-                    x: 0,
-                    y: 0,
-                    width: img.width,
-                    height: img.height,
-                });
+                try {
+                    const img = await mergedPdf.embedPng(file.buffer);
+                    const page = mergedPdf.addPage([img.width, img.height]);
+                    page.drawImage(img, {
+                        x: 0,
+                        y: 0,
+                        width: img.width,
+                        height: img.height,
+                    });
+                } catch (error) {
+                    try {
+                        const jpegBuffer = await this.pngToJpeg(file.buffer);
+                        const img = await mergedPdf.embedJpg(jpegBuffer);
+                        const page = mergedPdf.addPage([img.width, img.height]);
+                        page.drawImage(img, {
+                            x: 0,
+                            y: 0,
+                            width: img.width,
+                            height: img.height,
+                        });
+                    } catch (jpegError) {
+                        throw new InternalServerErrorException(
+                            'Cannot merge png into pdf',
+                        );
+                    }
+                }
             } else if (ext === '.doc' || ext === '.docx') {
                 const tempInput = path.join('/tmp', file.originalname);
                 const tempOutput = tempInput.replace(ext, '.pdf');
@@ -442,6 +461,28 @@ export class DocumentService {
         const stream = new PassThrough();
         stream.end(Buffer.from(mergedBytes));
         return stream;
+    }
+
+    private async pngToJpeg(pngBuffer: Buffer): Promise<Buffer> {
+        return new Promise((resolve, reject) => {
+            loadImage(pngBuffer)
+                .then((image: Image) => {
+                    const canvas = createCanvas(image.width, image.height);
+                    const ctx = canvas.getContext('2d');
+
+                    ctx.fillStyle = '#FFFFFF';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                    ctx.drawImage(image, 0, 0);
+
+                    const jpegBuffer = canvas.toBuffer('image/jpeg', {
+                        quality: 0.9,
+                    });
+
+                    resolve(jpegBuffer);
+                })
+                .catch(reject);
+        });
     }
 
     async getExpressMulterFilesFromPaths(filePaths: string[]) {
