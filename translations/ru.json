@@ -3614,6 +3614,7 @@
     "DocumentsTab.toastAgreementLinkCopiedDescription": "Ссылка на договор была скопирована в буфер обмена.",
     "ClaimStatusCard.created_at": "Дата создания",
     "ClaimStatusCard.to_pay": "К оплате",
+    "ClaimStatusCard.label.skyHelpCommission": "Комиссия SkyHelp",
     "PassportSection.processingFiles": "Обработка файлов...",
     "PassportSection.validatingFiles": "Проверка файлов...",
     "PassportSection.filesReady": "Файлы готовы",

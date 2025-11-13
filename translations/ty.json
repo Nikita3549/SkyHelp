@@ -3636,6 +3636,7 @@
     "DocumentsTab.toastAgreementLinkCopiedDescription": "Sözleşme bağlantısı panoya kopyalandı.",
     "ClaimStatusCard.created_at": "Creation date",
     "ClaimStatusCard.to_pay": "Ödenecek",
+    "ClaimStatusCard.label.skyHelpCommission": "SkyHelp komisyonu",
     "PassportSection.processingFiles": "Dosyalar işleniyor...",
     "PassportSection.validatingFiles": "Dosyalar doğrulanıyor...",
     "PassportSection.filesReady": "Dosyalar hazır",

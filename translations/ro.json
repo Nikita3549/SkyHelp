@@ -3616,6 +3616,7 @@
     "DocumentsTab.toastAgreementLinkCopiedDescription": "Link-ul către contract a fost copiat în clipboard.",
     "ClaimStatusCard.created_at": "Data creării",
     "ClaimStatusCard.to_pay": "Spre plată",
+    "ClaimStatusCard.label.skyHelpCommission": "Comision SkyHelp",
     "PassportSection.processingFiles": "Se procesează fișierele...",
     "PassportSection.validatingFiles": "Se validează fișierele...",
     "PassportSection.filesReady": "Fișierele sunt gata",
