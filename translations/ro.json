@@ -3596,6 +3596,8 @@
     "notEligible.technicalExternal": "Probleme tehnice în afara controlului companiei aeriene — defecțiunile provenite de la furnizori sau producători terți sunt considerate circumstanțe extraordinare și nu sunt eligibile conform Regulamentului CE 261/2004.",
     "notEligible.security": "Întârziere legată de siguranță sau securitate — întârzierile cauzate de controale de siguranță obligatorii sau de amenințări de securitate sunt considerate circumstanțe extraordinare și nu sunt eligibile pentru compensație.",
     "notEligible.extraordinary": "Circumstanțe extraordinare — evenimente precum instabilitate politică, dezastre naturale sau greve care nu implică personalul companiei aeriene sunt exceptate de la compensație conform Regulamentului CE 261/2004.",
+    "paymentReceived.title": "Plata primită",
+    "paymentReceived.description": "Am primit plata compensației de la compania aeriană. Plata dvs. este acum în curs de procesare. Vă rugăm să așteptați câteva zile lucrătoare pentru ca transferul să ajungă în contul dvs. bancar.",
     "ClaimProgressTimeline.nextStep": "Următorii pași urmează...",
     "ClaimProgressTimeline.nextStepDescription": "Lucrăm la cererea ta și te vom actualiza în curând.",
     "StatusBadge.claimReceived": "Cerere primită",

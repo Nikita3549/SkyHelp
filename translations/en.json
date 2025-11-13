@@ -3593,6 +3593,8 @@
     "notEligible.technicalExternal": "Technical issue outside airline’s control — faults originating from third-party suppliers or manufacturers are classified as extraordinary circumstances and not eligible under EC Regulation 261/2004.",
     "notEligible.security": "Safety or security-related delay — delays caused by mandatory safety checks or security threats fall under extraordinary circumstances and are not eligible for compensation.",
     "notEligible.extraordinary": "Extraordinary circumstances — events such as political instability, natural disasters, or strikes not involving airline staff are exempt from compensation under EC Regulation 261/2004.",
+    "paymentReceived.title": "Payment Received",
+    "paymentReceived.description": "We have received the compensation payment from the airline. Your payout is now being processed. Please allow a few business days for the transfer to your bank account.",
     "ClaimProgressTimeline.nextStep": "Next steps coming...",
     "ClaimProgressTimeline.nextStepDescription": "We're working on your claim and will update you soon.",
     "StatusBadge.claimReceived": "Claim Received",

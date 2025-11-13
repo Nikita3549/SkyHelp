@@ -3,15 +3,16 @@ enum ClaimStatus {
   PENDING
   IN_PROGRESS
   ESCALATED
-  CLAIM_RECEIVED  @map("Claim Received")
-  MISSING_INFO    @map("Missing Info")
-  DOCS_REQUESTED  @map("Docs Requested")
-  SENT_TO_AIRLINE @map("Sent to Airline")
-  WAITING_AIRLINE @map("Waiting Airline")
-  APPROVED        @map("Approved")
-  PAID            @map("Paid")
-  REJECTED        @map("Rejected")
-  LEGAL_PROCESS   @map("Legal Process")
-  CLOSED          @map("Closed")
-  NOT_ELIGIBLE    @map("Not Eligible")
+  CLAIM_RECEIVED   @map("Claim Received")
+  MISSING_INFO     @map("Missing Info")
+  DOCS_REQUESTED   @map("Docs Requested")
+  SENT_TO_AIRLINE  @map("Sent to Airline")
+  WAITING_AIRLINE  @map("Waiting Airline")
+  APPROVED         @map("Approved")
+  PAID             @map("Paid")
+  REJECTED         @map("Rejected")
+  LEGAL_PROCESS    @map("Legal Process")
+  CLOSED           @map("Closed")
+  NOT_ELIGIBLE     @map("Not Eligible")
+  PAYMENT_RECEIVED
 }

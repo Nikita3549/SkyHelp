@@ -83,4 +83,9 @@ export const ProgressVariants: {
             'notEligible.extraordinary',
         ],
     },
+    paymentReceived: {
+        status: ClaimStatus.PAYMENT_RECEIVED,
+        title: 'paymentReceived.title',
+        descriptions: ['paymentReceived.description'],
+    },
 } as const;
