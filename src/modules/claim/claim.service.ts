@@ -35,7 +35,9 @@ import { normalizePhone } from '../../utils/normalizePhone';
 import { DAY, HOUR } from '../../common/constants/time.constants';
 import { getNextWorkTime } from '../../utils/getNextWorkTime';
 import { generateNumericId } from '../../utils/generateNumericId';
-import { IPartiallyClaim } from './interfaces/partially-claim.interface';
+import { IAffiliateClaim } from './interfaces/affiliate-claim.interface';
+import { IAccountantClaim } from './interfaces/accountant-claim.interface';
+import { ViewClaimType } from './enums/view-claim-type.enum';
 
 @Injectable()
 export class ClaimService {
@@ -392,15 +394,12 @@ export class ClaimService {
         }
     }
 
-    async getUserClaims<T extends boolean>(
+    async getUserClaims(
         userId?: string,
         page: number = 1,
         searchParams?: {
             archived?: boolean;
-            date?: {
-                start: Date;
-                end: Date;
-            };
+            date?: { start: Date; end: Date };
             status?: ClaimStatus;
             icao?: string;
             flightNumber?: string;
@@ -412,11 +411,11 @@ export class ClaimService {
             phone?: string;
             email?: string;
             referralCode?: string;
+            viewType?: ViewClaimType;
         },
-        partiallyInfo: T = false as T,
         pageSize: number = 20,
     ): Promise<{
-        claims: T extends true ? IPartiallyClaim[] : IFullClaim[];
+        claims: IFullClaim[] | IAffiliateClaim[] | IAccountantClaim[];
         total: number;
     }> {
         const skip = (page - 1) * pageSize;
@@ -425,95 +424,69 @@ export class ClaimService {
             userId,
             archived: searchParams?.archived,
             state: {},
-            details: {
-                airlines: {},
-            },
+            details: { airlines: {} },
             customer: {},
         };
+
         let orderBy: Prisma.ClaimOrderByWithRelationInput = {
             createdAt: 'desc',
         };
 
-        if (searchParams?.duplicated) {
-            where.duplicates = {
-                some: {},
-            };
-        }
-
-        if (searchParams?.referralCode) {
+        if (searchParams?.duplicated) where.duplicates = { some: {} };
+        if (searchParams?.referralCode)
             where.referrer = searchParams.referralCode;
-        }
-
-        if (searchParams?.phone) {
-            where.customer!.phone = searchParams.phone;
-        }
-        if (searchParams?.email) {
-            where.customer!.email = searchParams.email;
-        }
-
-        if (searchParams?.onlyRecentlyUpdates) {
+        if (searchParams?.phone) where.customer!.phone = searchParams.phone;
+        if (searchParams?.email) where.customer!.email = searchParams.email;
+        if (searchParams?.onlyRecentlyUpdates)
             where.state!.hasRecentUpdate = searchParams.onlyRecentlyUpdates;
-        }
-
-        if (searchParams?.status) {
-            where.state!.status = searchParams.status;
-        }
-
-        if (searchParams?.agentId) {
-            where.agentId = searchParams.agentId;
-        }
-
-        if (searchParams?.flightNumber) {
+        if (searchParams?.status) where.state!.status = searchParams.status;
+        if (searchParams?.agentId) where.agentId = searchParams.agentId;
+        if (searchParams?.flightNumber)
             where.details!.flightNumber = searchParams.flightNumber;
-        }
-
-        if (searchParams?.icao) {
+        if (searchParams?.icao)
             where.details!.airlines!.icao = searchParams.icao;
-        }
-
-        if (searchParams?.date) {
+        if (searchParams?.date)
             where.createdAt = {
                 gte: searchParams.date.start,
                 lt: searchParams.date.end,
             };
-        }
+        if (searchParams?.role) where.agent = { role: searchParams.role };
 
-        if (searchParams?.role) {
-            where.agent = {
-                role: searchParams.role,
-            };
-        }
+        if (searchParams?.onlyRecentlyUpdates)
+            orderBy = { recentUpdatedAt: 'desc' };
+        if (searchParams?.isOrderByAssignedAt) orderBy = { assignedAt: 'desc' };
 
-        if (searchParams?.onlyRecentlyUpdates) {
-            orderBy = {
-                recentUpdatedAt: 'desc',
-            };
-        }
-        if (searchParams?.isOrderByAssignedAt) {
-            orderBy = {
-                assignedAt: 'desc',
-            };
-        }
+        const include = this.getClaimInclude(searchParams?.viewType);
 
         const [claims, total] = await this.prisma.$transaction([
             this.prisma.claim.findMany({
                 where,
                 orderBy,
-                include: partiallyInfo
-                    ? this.partiallyClaimInclude()
-                    : this.fullClaimInclude(),
+                include,
                 skip,
                 take: pageSize,
             }),
-            this.prisma.claim.count({
-                where,
-            }),
+            this.prisma.claim.count({ where }),
         ]);
 
         return {
-            claims: claims as T extends true ? IPartiallyClaim[] : IFullClaim[],
+            claims: claims as
+                | IFullClaim[]
+                | IAffiliateClaim[]
+                | IAccountantClaim[],
             total,
         };
+    }
+
+    private getClaimInclude(viewType?: ViewClaimType) {
+        switch (viewType) {
+            case ViewClaimType.AFFILIATE:
+                return this.affiliateClaimInclude();
+            case ViewClaimType.ACCOUNTANT:
+                return this.accountantClaimInclude();
+            default:
+                return this.fullClaimInclude();
+        }
     }
 
     async getUserClaimsStats(
@@ -672,7 +645,54 @@ export class ClaimService {
         });
     }
 
-    private partiallyClaimInclude() {
+    private affiliateClaimInclude() {
+        return {
+            step: false,
+            formState: false,
+            userId: false,
+            agentId: false,
+            assignedAt: false,
+            detailsId: false,
+            stateId: false,
+            customerId: false,
+            issueId: false,
+            envelopeId: false,
+            continueLink: false,
+            paymentId: false,
+            updatedAt: false,
+            recentUpdatedAt: false,
+            referredById: false,
+            details: {
+                include: {
+                    airlines: true,
+                },
+            },
+            state: {
+                select: {
+                    id: true,
+                    status: true,
+                    amount: true,
+                    updatedAt: true,
+                },
+            },
+            customer: {
+                select: {
+                    firstName: true,
+                    lastName: true,
+                    email: true,
+                },
+            },
+            passengers: {
+                select: {
+                    id: true,
+                    isMinor: true,
+                },
+            },
+            duplicates: true,
+        };
+    }
+
+    private accountantClaimInclude() {
         return {
             step: false,
             formState: false,
@@ -714,13 +734,7 @@ export class ClaimService {
                     },
                 },
             },
-            customer: {
-                select: {
-                    firstName: true,
-                    lastName: true,
-                    email: true,
-                },
-            },
+            customer: true,
             documents: {
                 omit: {
                     path: true,
@@ -733,6 +747,7 @@ export class ClaimService {
                 },
             },
             duplicates: true,
+            payment: true,
         };
     }
 

@@ -33,6 +33,7 @@ import { DeleteDuplicatesDto } from './dto/delete-duplicates.dto';
 import { PartnerService } from '../../referral/partner/partner.service';
 import { CreatePartnerDto } from './dto/create-partner.dto';
 import { RoleGuard } from '../../../guards/role.guard';
+import { ViewClaimType } from '../enums/view-claim-type.enum';
 
 @Controller('claims/admin')
 @UseGuards(
@@ -124,48 +125,43 @@ export class AdminController {
             throw new ForbiddenException('Missed required param referralCode');
         }
 
-        const partiallyInfo =
-            req.user.role != UserRole.ADMIN &&
-            req.user.role != UserRole.LAWYER &&
-            req.user.role != UserRole.AGENT &&
-            req.user.role != UserRole.PARTNER;
+        let viewType =
+            req.user.role == UserRole.AFFILIATE
+                ? ViewClaimType.AFFILIATE
+                : req.user.role == UserRole.ACCOUNTANT
+                  ? ViewClaimType.ACCOUNTANT
+                  : ViewClaimType.FULL;
 
-        return this.claimService.getUserClaims(
-            userId,
-            +page,
-            {
-                archived:
-                    archived == undefined
-                        ? undefined
-                        : archived == IsYesOrNo.YES,
-                duplicated:
-                    duplicated == undefined
-                        ? undefined
-                        : duplicated == IsYesOrNo.YES,
-                onlyRecentlyUpdates:
-                    onlyRecentlyUpdates == undefined
-                        ? undefined
-                        : onlyRecentlyUpdates == IsYesOrNo.YES,
-                date: endDate &&
-                    startDate && {
-                        start: startDate,
-                        end: endDate,
-                    },
-                status,
-                icao,
-                flightNumber,
-                role,
-                referralCode,
-                agentId:
-                    agentId ||
-                    (req.user.role == UserRole.LAWYER ||
-                    req.user.role == UserRole.AGENT
-                        ? req.user.id
-                        : undefined),
-                isOrderByAssignedAt: req.user.role != UserRole.ADMIN,
-            },
-            partiallyInfo,
-        );
+        return this.claimService.getUserClaims(userId, +page, {
+            archived:
+                archived == undefined ? undefined : archived == IsYesOrNo.YES,
+            duplicated:
+                duplicated == undefined
+                    ? undefined
+                    : duplicated == IsYesOrNo.YES,
+            onlyRecentlyUpdates:
+                onlyRecentlyUpdates == undefined
+                    ? undefined
+                    : onlyRecentlyUpdates == IsYesOrNo.YES,
+            date: endDate &&
+                startDate && {
+                    start: startDate,
+                    end: endDate,
+                },
+            status,
+            icao,
+            flightNumber,
+            role,
+            referralCode,
+            agentId:
+                agentId ||
+                (req.user.role == UserRole.LAWYER ||
+                req.user.role == UserRole.AGENT
+                    ? req.user.id
+                    : undefined),
+            isOrderByAssignedAt: req.user.role != UserRole.ADMIN,
+            viewType,
+        });
     }
 
     @Patch(':claimId/recent-updates')
