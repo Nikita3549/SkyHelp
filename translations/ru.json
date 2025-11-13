@@ -3613,6 +3613,7 @@
     "DocumentsTab.toastAgreementLinkCopiedTitle": "Ссылка на договор скопирована",
     "DocumentsTab.toastAgreementLinkCopiedDescription": "Ссылка на договор была скопирована в буфер обмена.",
     "ClaimStatusCard.created_at": "Дата создания",
+    "ClaimStatusCard.to_pay": "К оплате",
     "PassportSection.processingFiles": "Обработка файлов...",
     "PassportSection.validatingFiles": "Проверка файлов...",
     "PassportSection.filesReady": "Файлы готовы",
@@ -3882,5 +3883,6 @@
         "UserRolesSection.accountantLabel": "Бухгалтер",
         "UserRolesSection.accountantDescription": "Управляет финансовыми сверками, отслеживает выплаты и формирует бухгалтерские отчёты.",
         "UserRolesSection.affiliateLabel": "Аффилиат",
-        "UserRolesSection.affiliateDescription": "Ведёт партнёрские программы и отслеживает показатели аффилиатов."
+        "UserRolesSection.affiliateDescription": "Ведёт партнёрские программы и отслеживает показатели аффилиатов.",
+        "ClaimsTable.actionMoveToAccountant": "Назначить бухгалтеру"
 }

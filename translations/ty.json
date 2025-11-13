@@ -3635,6 +3635,7 @@
     "DocumentsTab.toastAgreementLinkCopiedTitle": "Sözleşme bağlantısı kopyalandı",
     "DocumentsTab.toastAgreementLinkCopiedDescription": "Sözleşme bağlantısı panoya kopyalandı.",
     "ClaimStatusCard.created_at": "Creation date",
+    "ClaimStatusCard.to_pay": "Ödenecek",
     "PassportSection.processingFiles": "Dosyalar işleniyor...",
     "PassportSection.validatingFiles": "Dosyalar doğrulanıyor...",
     "PassportSection.filesReady": "Dosyalar hazır",
@@ -3904,5 +3905,6 @@
     "UserRolesSection.accountantLabel": "Muhasebeci",
     "UserRolesSection.accountantDescription": "Finansal mutabakatları, ödeme takibini ve muhasebe raporlarını yönetir.",
     "UserRolesSection.affiliateLabel": "Affiliate",
-    "UserRolesSection.affiliateDescription": "Yönlendirme ortaklıklarını yönetir ve affiliate performans verilerini izler."
+    "UserRolesSection.affiliateDescription": "Yönlendirme ortaklıklarını yönetir ve affiliate performans verilerini izler.",
+    "ClaimsTable.actionMoveToAccountant": "Muhasebeciye ata"
 }

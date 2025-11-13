@@ -3612,6 +3612,7 @@
     "DocumentsTab.toastAgreementLinkCopiedTitle": "Agreement link copied",
     "DocumentsTab.toastAgreementLinkCopiedDescription": "The agreement link has been copied to your clipboard.",
     "ClaimStatusCard.created_at": "Creation date",
+    "ClaimStatusCard.to_pay": "To pay",
     "PassportSection.processingFiles": "Processing files...",
     "PassportSection.validatingFiles": "Validating files...",
     "PassportSection.filesReady": "Files ready",
@@ -3881,5 +3882,7 @@
     "UserRolesSection.accountantLabel": "Accountant",
     "UserRolesSection.accountantDescription": "Manages financial reconciliations, payout tracking, and accounting reports.",
     "UserRolesSection.affiliateLabel": "Affiliate",
-    "UserRolesSection.affiliateDescription": "Handles referral partnerships and monitors affiliate performance data."
+    "UserRolesSection.affiliateDescription": "Handles referral partnerships and monitors affiliate performance data.",
+    "ClaimsTable.actionMoveToAccountant": "Assign to accountant"
+
 }
