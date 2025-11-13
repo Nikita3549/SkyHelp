@@ -52,4 +52,17 @@ export class ProgressService {
             },
         });
     }
+
+    async getMaxProgressOrder(claimStateId: string) {
+        const maxValue = await this.prisma.progress.aggregate({
+            where: {
+                claimStateId,
+            },
+            _max: {
+                order: true,
+            },
+        });
+
+        return maxValue._max.order;
+    }
 }

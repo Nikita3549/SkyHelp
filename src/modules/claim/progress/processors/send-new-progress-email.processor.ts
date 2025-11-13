@@ -32,6 +32,14 @@ export class SendNewProgressEmailProcessor extends WorkerHost {
             return;
         }
 
+        const maxProgressOrder = await this.progressService.getMaxProgressOrder(
+            progress.claimStateId,
+        );
+
+        if (!maxProgressOrder || maxProgressOrder > progress.order) {
+            return;
+        }
+
         const claim = await this.claimService.getClaim(emailData.claimId);
 
         if (!claim) {
