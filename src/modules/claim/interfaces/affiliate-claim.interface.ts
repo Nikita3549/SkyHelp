@@ -5,6 +5,7 @@ import {
     ClaimState,
     DuplicatedClaim,
     OtherPassenger,
+    Progress,
 } from '@prisma/client';
 
 export interface IAffiliateClaim extends Claim {
@@ -20,7 +21,12 @@ interface IAffiliateClaimDetails extends ClaimDetails {
 }
 
 interface IAffiliateClaimState
-    extends Pick<ClaimState, 'id' | 'status' | 'amount' | 'updatedAt'> {}
+    extends Pick<
+        ClaimState,
+        'id' | 'status' | 'amount' | 'updatedAt' | 'comments'
+    > {
+    progress: Progress[];
+}
 
 interface IAffiliateClaimCustomer {
     firstName: string;

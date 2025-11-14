@@ -673,6 +673,12 @@ export class ClaimService {
                     status: true,
                     amount: true,
                     updatedAt: true,
+                    comments: true,
+                    progress: {
+                        orderBy: {
+                            order: 'asc' as const,
+                        },
+                    },
                 },
             },
             customer: {
