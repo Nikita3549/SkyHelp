@@ -3895,5 +3895,12 @@
     "Dashboard.thereAreNotClaimsYet": "There are not claims yet",
     "ThankYouPage.paymentDetailsSubmitted.title": "Payment Details Submitted",
     "ThankYouPage.paymentDetailsSubmitted.description": "Your payment information has been successfully submitted and is being processed.",
-    "ThankYouPage.paymentDetailsSubmitted.continue": "Continue"
+    "ThankYouPage.paymentDetailsSubmitted.continue": "Continue",
+    "UploadPaymentDetails.title": "Payment Details",
+    "UploadPaymentDetails.description": "Fill in your payment information to proceed.",
+    "UploadPaymentDetails.paymentInfoTitle": "Your Payment Info",
+    "UploadPaymentDetails.toast.success.title": "Payment Submitted",
+    "UploadPaymentDetails.toast.success.description": "Your payment details were successfully submitted.",
+    "UploadPaymentDetails.toast.error.title": "Submission Failed",
+    "UploadPaymentDetails.toast.error.description": "There was an error submitting your payment details. Please try again."
 }

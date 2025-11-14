@@ -3895,5 +3895,15 @@
     "Dashboard.createClaimCta": "Creează reclamație",
     "Dashboard.noActiveClaimsMessage": "Nu există reclamații active în acest moment.",
     "Dashboard.submitFirstClaimMessage": "Trimiteți prima dvs. reclamație pentru a începe urmărirea statusurilor și actualizărilor aici.",
-    "Dashboard.thereAreNotClaimsYet": "Nu există încă reclamații"
+    "Dashboard.thereAreNotClaimsYet": "Nu există încă reclamații",
+    "ThankYouPage.paymentDetailsSubmitted.title": "Detalii de plată trimise",
+    "ThankYouPage.paymentDetailsSubmitted.description": "Informațiile tale de plată au fost trimise cu succes și sunt în curs de procesare.",
+    "ThankYouPage.paymentDetailsSubmitted.continue": "Continuă",
+    "UploadPaymentDetails.title": "Detalii de plată",
+    "UploadPaymentDetails.description": "Completează informațiile de plată pentru a continua.",
+    "UploadPaymentDetails.paymentInfoTitle": "Informațiile tale de plată",
+    "UploadPaymentDetails.toast.success.title": "Plată trimisă",
+    "UploadPaymentDetails.toast.success.description": "Detaliile tale de plată au fost trimise cu succes.",
+    "UploadPaymentDetails.toast.error.title": "Trimitere eșuată",
+    "UploadPaymentDetails.toast.error.description": "A apărut o eroare la trimiterea detaliilor de plată. Te rugăm să încerci din nou."
 }

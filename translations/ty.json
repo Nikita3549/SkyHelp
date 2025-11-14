@@ -3915,6 +3915,15 @@
     "Dashboard.createClaimCta": "Talep oluştur",
     "Dashboard.noActiveClaimsMessage": "Şu anda aktif talep yok.",
     "Dashboard.submitFirstClaimMessage": "Durum ve güncellemeleri burada takip etmeye başlamak için ilk talebinizi gönderin.",
-    "Dashboard.thereAreNotClaimsYet": "Henüz talep yok"
-
+    "Dashboard.thereAreNotClaimsYet": "Henüz talep yok",
+    "ThankYouPage.paymentDetailsSubmitted.title": "Ödeme Bilgileri Gönderildi",
+    "ThankYouPage.paymentDetailsSubmitted.description": "Ödeme bilgileriniz başarıyla gönderildi ve işleniyor.",
+    "ThankYouPage.paymentDetailsSubmitted.continue": "Devam Et",
+    "UploadPaymentDetails.title": "Ödeme Bilgileri",
+    "UploadPaymentDetails.description": "Devam etmek için ödeme bilgilerinizi doldurun.",
+    "UploadPaymentDetails.paymentInfoTitle": "Ödeme Bilgileriniz",
+    "UploadPaymentDetails.toast.success.title": "Ödeme Gönderildi",
+    "UploadPaymentDetails.toast.success.description": "Ödeme bilgileriniz başarıyla gönderildi.",
+    "UploadPaymentDetails.toast.error.title": "Gönderim Başarısız",
+    "UploadPaymentDetails.toast.error.description": "Ödeme bilgilerini gönderirken bir hata oluştu. Lütfen tekrar deneyin."
 }
