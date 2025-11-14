@@ -3889,5 +3889,11 @@
     "UserRolesSection.accountantDescription": "Gestionează reconcilierea financiară, monitorizarea plăților și rapoartele contabile.",
     "UserRolesSection.affiliateLabel": "Afiliat",
     "UserRolesSection.affiliateDescription": "Administrează parteneriatele de recomandare și urmărește performanța afiliată.",
-    "ClaimsTable.actionMoveToAccountant": "Atribuie contabilului"
+    "ClaimsTable.actionMoveToAccountant": "Atribuie contabilului",
+    "Dashboard.noClaimsNow": "Nu aveți reclamații acum",
+    "Dashboard.noClaimsAny": "Nu aveți nicio reclamație",
+    "Dashboard.createClaimCta": "Creează reclamație",
+    "Dashboard.noActiveClaimsMessage": "Nu există reclamații active în acest moment.",
+    "Dashboard.submitFirstClaimMessage": "Trimiteți prima dvs. reclamație pentru a începe urmărirea statusurilor și actualizărilor aici.",
+    "Dashboard.thereAreNotClaimsYet": "Nu există încă reclamații"
 }

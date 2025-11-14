@@ -3909,5 +3909,12 @@
     "UserRolesSection.accountantDescription": "Finansal mutabakatları, ödeme takibini ve muhasebe raporlarını yönetir.",
     "UserRolesSection.affiliateLabel": "Affiliate",
     "UserRolesSection.affiliateDescription": "Yönlendirme ortaklıklarını yönetir ve affiliate performans verilerini izler.",
-    "ClaimsTable.actionMoveToAccountant": "Muhasebeciye ata"
+    "ClaimsTable.actionMoveToAccountant": "Muhasebeciye ata",
+    "Dashboard.noClaimsNow": "Şu anda talebiniz yok",
+    "Dashboard.noClaimsAny": "Hiç talebiniz yok",
+    "Dashboard.createClaimCta": "Talep oluştur",
+    "Dashboard.noActiveClaimsMessage": "Şu anda aktif talep yok.",
+    "Dashboard.submitFirstClaimMessage": "Durum ve güncellemeleri burada takip etmeye başlamak için ilk talebinizi gönderin.",
+    "Dashboard.thereAreNotClaimsYet": "Henüz talep yok"
+
 }

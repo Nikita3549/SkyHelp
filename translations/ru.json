@@ -3887,5 +3887,11 @@
         "UserRolesSection.accountantDescription": "Управляет финансовыми сверками, отслеживает выплаты и формирует бухгалтерские отчёты.",
         "UserRolesSection.affiliateLabel": "Аффилиат",
         "UserRolesSection.affiliateDescription": "Ведёт партнёрские программы и отслеживает показатели аффилиатов.",
-        "ClaimsTable.actionMoveToAccountant": "Назначить бухгалтеру"
+        "ClaimsTable.actionMoveToAccountant": "Назначить бухгалтеру",
+        "Dashboard.noClaimsNow": "У вас сейчас нет претензий",
+        "Dashboard.noClaimsAny": "У вас нет никаких претензий",
+        "Dashboard.createClaimCta": "Создать претензию",
+        "Dashboard.noActiveClaimsMessage": "На данный момент нет активных претензий.",
+        "Dashboard.submitFirstClaimMessage": "Подайте свою первую претензию, чтобы начать отслеживать статусы и обновления здесь.",
+        "Dashboard.thereAreNotClaimsYet": "Претензий пока нет"
 }

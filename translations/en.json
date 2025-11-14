@@ -3886,6 +3886,12 @@
     "UserRolesSection.accountantDescription": "Manages financial reconciliations, payout tracking, and accounting reports.",
     "UserRolesSection.affiliateLabel": "Affiliate",
     "UserRolesSection.affiliateDescription": "Handles referral partnerships and monitors affiliate performance data.",
-    "ClaimsTable.actionMoveToAccountant": "Assign to accountant"
+    "ClaimsTable.actionMoveToAccountant": "Assign to accountant",
+    "Dashboard.noClaimsNow": "You do not have claims now",
+    "Dashboard.noClaimsAny": "You do not have any claims",
+    "Dashboard.createClaimCta": "Create claim",
+    "Dashboard.noActiveClaimsMessage": "No active claims at the moment.",
+    "Dashboard.submitFirstClaimMessage": "Submit your first claim to start tracking statuses and updates here.",
+    "Dashboard.thereAreNotClaimsYet": "There are not claims yet"
 
 }
