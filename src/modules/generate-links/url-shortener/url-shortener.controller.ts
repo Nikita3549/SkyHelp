@@ -29,7 +29,7 @@ export class UrlShortenerController {
         }
 
         const searchParams = new URLSearchParams(originalUrl.split('?')[1]);
-        const jwt = searchParams.get('claim');
+        const jwt = searchParams.get('claim') || searchParams.get('token');
 
         if (!jwt) {
             throw new BadRequestException(

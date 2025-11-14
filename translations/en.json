@@ -3892,6 +3892,8 @@
     "Dashboard.createClaimCta": "Create claim",
     "Dashboard.noActiveClaimsMessage": "No active claims at the moment.",
     "Dashboard.submitFirstClaimMessage": "Submit your first claim to start tracking statuses and updates here.",
-    "Dashboard.thereAreNotClaimsYet": "There are not claims yet"
-
+    "Dashboard.thereAreNotClaimsYet": "There are not claims yet",
+    "ThankYouPage.paymentDetailsSubmitted.title": "Payment Details Submitted",
+    "ThankYouPage.paymentDetailsSubmitted.description": "Your payment information has been successfully submitted and is being processed.",
+    "ThankYouPage.paymentDetailsSubmitted.continue": "Continue"
 }

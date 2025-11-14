@@ -2,8 +2,10 @@ import {
     WORK_END_HOUR,
     WORK_START_HOUR,
 } from '../common/constants/time.constants';
+import { isProd } from './isProd';
 
 export function getNextWorkTime(delay: number): number {
+    if (!isProd()) return delay;
     const now = Date.now();
     const target = new Date(now + delay);
 

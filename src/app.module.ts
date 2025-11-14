@@ -31,6 +31,7 @@ import { PartnerModule } from './modules/referral/partner/partner.module';
 import { ReferralTransactionModule } from './modules/referral/referral-transaction/referral-transaction.module';
 import { PayoutModule } from './modules/referral/payout/payout.module';
 import { ReferralLinksModule } from './modules/referral/referral-links/referral-links.module';
+import { PaymentModule } from './modules/claim/payment/payment.module';
 
 @Module({
     imports: [
@@ -44,6 +45,7 @@ import { ReferralLinksModule } from './modules/referral/referral-links/referral-
             },
         }),
         AuthModule,
+        PaymentModule,
         UserModule,
         TokenModule,
         PrismaModule,

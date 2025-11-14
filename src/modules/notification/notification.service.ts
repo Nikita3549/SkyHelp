@@ -14,6 +14,7 @@ import {
     MISSING_DOCUMENTS_FILENAME,
     NEW_STATUS_FILENAME,
     REGISTER_CODE_FILENAME,
+    REQUEST_PAYMENT_DETAILS_FILENAME,
     SEND_PARTNER_PAYOUT_FILENAME,
 } from './constants';
 import { LETTERS_DIRECTORY_PATH } from '../../common/constants/paths/LettersDirectoryPath';
@@ -526,6 +527,50 @@ This message was automatically generated.
                 path.join(LETTERS_DIRECTORY_PATH, `${language}/${fileName}`),
             )
         ).toString();
+    }
+
+    async sendPaymentRequest(
+        to: string,
+        letterData: {
+            customerName: string;
+            paymentDetailsLink: string;
+            claimId: string;
+        },
+        language: Languages = Languages.EN,
+    ) {
+        const emailCategory = EmailCategory.TRANSACTIONAL;
+
+        const layoutHtml = await this.getLayout(to, language, emailCategory);
+
+        const letterTemplateHtml = await this.getLetterContent(
+            REQUEST_PAYMENT_DETAILS_FILENAME,
+            language,
+        );
+
+        const letterContentHtml = letterTemplateHtml
+            .replace('{{customerName}}', letterData.customerName)
+            .replace('{{paymentDetailsLink}}', letterData.paymentDetailsLink);
+
+        const letterHtml = this.setContentInLayout(
+            letterContentHtml,
+            layoutHtml,
+        );
+
+        const subject = `Action Required: Payment Details Needed #${letterData.claimId}`;
+        const email = await this.gmailService.noreply.sendEmailHtml(
+            to,
+            subject,
+            letterHtml,
+            emailCategory,
+        );
+
+        await this.saveHtmlEmail({
+            email,
+            subject,
+            claimId: letterData.claimId,
+            contentHtml: letterHtml,
+            to,
+        });
     }
 
     private async getLayout(

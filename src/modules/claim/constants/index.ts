@@ -9,6 +9,9 @@ export const INVALID_JWT = 'Invalid jwt';
 
 export const DOCUMENT_NOT_FOUND = 'Document not found';
 
+export const PAYMENT_DETAILS_ALREADY_REQUESTED =
+    'Payment details already requested for this claim';
+
 export const FILE_DOESNT_ON_DISK = 'File does not exist on disk';
 
 export const INVALID_ICAO = 'Invalid ICAO code';
@@ -19,6 +22,7 @@ export const CUSTOMER_NOT_FOUND = 'Customer not found';
 
 export const CLAIM_FOLLOWUP_QUEUE_KEY = 'claims';
 export const ADD_FLIGHT_STATUS_QUEUE_KEY = 'add-flight-status';
+export const REQUEST_PAYMENT_DETAILS_QUEUE_KEY = 'request-payment-details';
 
 export const TWO_DAYS = 2 * DAY;
 export const THREE_DAYS = 3 * DAY;

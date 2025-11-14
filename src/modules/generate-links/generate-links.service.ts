@@ -53,6 +53,18 @@ export class GenerateLinksService {
         return link;
     }
 
+    async generatePaymentDetails(jwt: string) {
+        const url = `/payment-details?token=${encodeURIComponent(jwt)}`;
+
+        const shortenUrl = await this.urlShortenerService.saveShortenUrl(
+            url,
+            `/payment-details?id=${generateNumericId(10)}`,
+        );
+        const link = `${this.FRONTEND_URL}${shortenUrl}`;
+
+        return link;
+    }
+
     async generateSignOtherPassenger(
         passengerId: string,
         jwt: string,

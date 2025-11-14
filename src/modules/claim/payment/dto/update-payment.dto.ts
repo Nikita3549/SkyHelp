@@ -1,10 +1,7 @@
 import { IsEnum, IsOptional, IsString } from 'class-validator';
 import { PaymentMethod } from '@prisma/client';
 
-export class PaymentDto {
-    @IsString()
-    claimId: string;
-
+export class UpdatePaymentDto {
     @IsEnum(PaymentMethod)
     paymentMethod: PaymentMethod;
 

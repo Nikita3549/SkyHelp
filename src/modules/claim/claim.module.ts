@@ -39,7 +39,6 @@ import { FlightStatusModule } from './flight-status/flight-status.module';
         FlightModule,
         TokenModule,
         AirportModule,
-        ClaimModule,
         forwardRef(() => NotificationModule),
         BullModule.registerQueue(
             {

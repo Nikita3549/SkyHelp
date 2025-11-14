@@ -778,6 +778,7 @@ export class ClaimService {
                     updatedAt: true,
                     isDuplicate: true,
                     hasRecentUpdate: true,
+                    isPaymentRequested: true,
                     comments: true,
                     progress: {
                         orderBy: {
@@ -828,7 +829,7 @@ export class ClaimService {
     }
 
     async changeUpdatedAt(claimId: string) {
-        return this.prisma.claim.update({
+        return this.prisma.claim.updateMany({
             data: {
                 updatedAt: new Date(),
             },
@@ -1014,6 +1015,25 @@ export class ClaimService {
                     in: claimIds,
                 },
             },
+        });
+    }
+
+    async updateIsPaymentRequested(
+        isPaymentRequested: boolean,
+        claimId: string,
+    ): Promise<IFullClaim | null> {
+        return this.prisma.claim.update({
+            data: {
+                state: {
+                    update: {
+                        isPaymentRequested,
+                    },
+                },
+            },
+            where: {
+                id: claimId,
+            },
+            include: this.fullClaimInclude(),
         });
     }
 }

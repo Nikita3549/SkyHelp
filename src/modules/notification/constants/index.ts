@@ -15,3 +15,5 @@ export const SEND_PARTNER_PAYOUT_FILENAME = 'sendPartnerPayout.html';
 export const REGISTER_CODE_FILENAME = 'registerCode.html';
 
 export const FORGOT_PASSWORD_CODE_FILENAME = 'recoverPassword.html';
+
+export const REQUEST_PAYMENT_DETAILS_FILENAME = 'requestPaymentDetails.html';
