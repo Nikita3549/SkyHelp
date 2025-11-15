@@ -41,5 +41,7 @@ model Claim {
   referredById String?           @map("referred_by_id")
   referredBy   Partner?          @relation("Referrals", fields: [referredById], references: [id])
 
+  @@index([agentId])
+  @@index([agentId, createdAt])
   @@map("claims")
 }

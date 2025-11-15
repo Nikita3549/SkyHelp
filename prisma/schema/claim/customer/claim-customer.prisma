@@ -15,5 +15,8 @@ model ClaimCustomer {
   isSigned      Boolean? @default(false) @map("is_signed")
   Claim         Claim[]
 
+  @@index([phone])
+  @@index([email])
+  @@index([firstName, lastName])
   @@map("claim_customers")
 }

@@ -50,13 +50,14 @@ services:
       - ./.env:/opt/api/.env
       - ./uploads:/opt/api/uploads/
       - ./logs:/opt/api/logs/
+      - ./prisma.config.ts:/opt/api/prisma.config.ts
     networks:
       - main
     depends_on:
       - db
       - redis
       - db-static
-    command: sh -c "cd /opt/api/ && npx prisma migrate status --schema prisma/schema && npx prisma migrate deploy --schema prisma/schema && npm run start:prod"
+    command: sh -c "cd /opt/api/ && npx prisma migrate status && npx prisma migrate deploy && npm run start:prod"
 networks:
   main:
     driver: bridge
