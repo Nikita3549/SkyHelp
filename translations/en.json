@@ -3902,5 +3902,6 @@
     "UploadPaymentDetails.toast.success.title": "Payment Submitted",
     "UploadPaymentDetails.toast.success.description": "Your payment details were successfully submitted.",
     "UploadPaymentDetails.toast.error.title": "Submission Failed",
-    "UploadPaymentDetails.toast.error.description": "There was an error submitting your payment details. Please try again."
+    "UploadPaymentDetails.toast.error.description": "There was an error submitting your payment details. Please try again.",
+    "UsersList.affiliate" : "Affiliate"
 }

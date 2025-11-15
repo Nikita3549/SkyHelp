@@ -3905,5 +3905,6 @@
     "UploadPaymentDetails.toast.success.title": "Plată trimisă",
     "UploadPaymentDetails.toast.success.description": "Detaliile tale de plată au fost trimise cu succes.",
     "UploadPaymentDetails.toast.error.title": "Trimitere eșuată",
-    "UploadPaymentDetails.toast.error.description": "A apărut o eroare la trimiterea detaliilor de plată. Te rugăm să încerci din nou."
+    "UploadPaymentDetails.toast.error.description": "A apărut o eroare la trimiterea detaliilor de plată. Te rugăm să încerci din nou.",
+    "UsersList.affiliate": "Afiliat"
 }
