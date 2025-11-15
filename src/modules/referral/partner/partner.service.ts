@@ -128,6 +128,7 @@ export class PartnerService {
                 SELECT TO_CHAR(c.created_at::date, 'DD-MM-YYYY') as date, COUNT(c) as count FROM claims c
                   JOIN partners p ON p.id = c.referred_by_id
                   WHERE p.user_id = ${userId} AND
+                  c.archived = false AND
                   c.created_at >= NOW() - INTERVAL '30 days'
                   GROUP BY c.created_at::date
                   ORDER BY c.created_at::date DESC
@@ -139,6 +140,7 @@ export class PartnerService {
                 JOIN partners p ON p.id = c.referred_by_id
                 JOIN claim_states cs ON c.state_id = cs.id
                 WHERE p.user_id = ${userId} AND
+                c.archived = false AND
                 ${filters.partnerData ? Prisma.sql`c.referrer_source = ${filters.partnerData.referralSource} AND` : Prisma.empty}
                 c.created_at >= NOW() - INTERVAL '30 days' AND
                 cs.status = 'Paid'
@@ -174,6 +176,7 @@ export class PartnerService {
             // approved claims
             this.prisma.claim.count({
                 where: {
+                    archived: false,
                     referrer: filters.partnerData?.referralCode,
                     referrerSource: filters.partnerData?.referralSource,
                     state: {
@@ -200,6 +203,7 @@ export class PartnerService {
                     referredBy: {
                         userId,
                     },
+                    archived: false,
                 },
             }),
         ]);
