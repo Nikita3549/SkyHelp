@@ -863,23 +863,24 @@ export class ClaimService {
         const normalized = search.replace(/\s+/g, '');
 
         const ids = await this.prisma.$queryRaw<Array<{ id: string }>>`
-        SELECT "claims"."id"
-        FROM "claims"
-                 LEFT JOIN "claim_customers" ON "claims"."customer_id" = "claim_customers"."id"
-                 LEFT JOIN "claim_details" ON "claim_details"."id" = "claims"."details_id"
-        WHERE (
-            REPLACE("claim_details"."booking_ref", ' ', '') ILIKE ${`%${normalized}%`}
-                    OR REPLACE("claim_details"."flight_number", ' ', '') ILIKE ${`%${normalized}%`}
-                    OR REPLACE("claim_customers"."phone", ' ', '') ILIKE ${`%${normalized}%`}
-                    OR REPLACE("claim_customers"."email", ' ', '') ILIKE ${`%${normalized}%`}
-                    OR REPLACE("claim_customers"."first_name", ' ', '') ILIKE ${`%${normalized}%`}
-                    OR REPLACE("claim_customers"."last_name", ' ', '') ILIKE ${`%${normalized}%`}
-                    OR REPLACE("claims"."id"::text, ' ', '') ILIKE ${`%${normalized}%`}
-            )
+          SELECT "claims"."id"
+          FROM "claims"
+               LEFT JOIN "claim_customers" ON "claims"."customer_id" = "claim_customers"."id"
+               LEFT JOIN "claim_details" ON "claim_details"."id" = "claims"."details_id"
+          WHERE (
+              REPLACE("claim_details"."booking_ref", ' ', '') ILIKE ${`%${normalized}%`}
+              OR REPLACE("claim_details"."flight_number", ' ', '') ILIKE ${`%${normalized}%`}
+              OR REPLACE("claim_customers"."phone", ' ', '') ILIKE ${`%${normalized}%`}
+              OR REPLACE("claim_customers"."email", ' ', '') ILIKE ${`%${normalized}%`}
+              OR REPLACE("claim_customers"."first_name", ' ', '') ILIKE ${`%${normalized}%`}
+              OR REPLACE("claim_customers"."last_name", ' ', '') ILIKE ${`%${normalized}%`}
+              OR REPLACE("claims"."id"::text, ' ', '') ILIKE ${`%${normalized}%`}
+              OR REPLACE(CONCAT("claim_customers"."first_name", "claim_customers"."last_name"), ' ', '') ILIKE ${`%${normalized}%`}
+          )
           AND (${agentId ?? null}::text IS NULL OR "claims"."agent_id" = ${agentId ?? null}::text)
-        ORDER BY "claims"."created_at" DESC
-            LIMIT ${page}
-    `;
+          ORDER BY "claims"."created_at" DESC
+          LIMIT ${page}
+        `;
 
         return this.prisma.claim.findMany({
             where: { id: { in: ids.map((i) => i.id) } },
