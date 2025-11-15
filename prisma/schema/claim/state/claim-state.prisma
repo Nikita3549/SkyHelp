@@ -10,5 +10,6 @@ model ClaimState {
   comments           String?
   Claim              Claim[]
 
+  @@index([status])
   @@map("claim_states")
 }

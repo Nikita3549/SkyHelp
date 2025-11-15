@@ -57,7 +57,7 @@ services:
       - db
       - redis
       - db-static
-    command: sh -c "cd /opt/api/ && npx prisma migrate status && npx prisma migrate deploy && npx prisma generate && npm run start:prod"
+    command: sh -c "cd /opt/api/ && npx prisma migrate deploy && npx prisma generate && npm run start:prod"
 networks:
   main:
     driver: bridge

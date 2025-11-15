@@ -21,7 +21,7 @@ services:
       - main
     environment:
       - ./uploads:/opt/api/uploads/
-    command: sh -c "cd /opt/api/ && npx prisma migrate status && npx prisma migrate deploy && npx prisma generate && NODE_ENV=DEV node dist/main"
+    command: sh -c "cd /opt/api/ && npx prisma migrate deploy && npx prisma generate && NODE_ENV=DEV node dist/main"
 
 networks:
   main:

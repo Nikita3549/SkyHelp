@@ -43,5 +43,7 @@ model Claim {
 
   @@index([agentId])
   @@index([agentId, createdAt])
+  @@index([archived])
+  @@index([userId])
   @@map("claims")
 }
