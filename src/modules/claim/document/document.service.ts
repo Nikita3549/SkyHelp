@@ -1,4 +1,8 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+    Injectable,
+    InternalServerErrorException,
+    OnModuleInit,
+} from '@nestjs/common';
 import { Document, DocumentType } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import * as fs from 'fs/promises';
@@ -256,7 +260,7 @@ export class DocumentService {
         const fontRegular = await pdfDoc.embedFont(fontRegularBuffer);
 
         const firstPage = pdfDoc.getPages()[0];
-        const secondPage = pdfDoc.getPages()[1];
+        const thirdPage = pdfDoc.getPages()[2];
 
         const pngImage = await pdfDoc.embedPng(pngBuffer);
 
@@ -288,51 +292,51 @@ export class DocumentService {
         );
 
         firstPage.drawText(documentData.claimId, {
-            x: 140,
-            y: 531,
+            x: 130,
+            y: 526,
             size: 10.5,
             color: rgb(0, 0, 0),
             font: fontRegular,
         });
 
         firstPage.drawText(documentData.airlineName, {
-            x: 140,
-            y: 496,
+            x: 130,
+            y: 495,
             size: 10.5,
             color: rgb(0, 0, 0),
             font: fontRegular,
         });
 
         firstPage.drawText(documentData.flightNumber, {
-            x: 140,
-            y: 465,
+            x: 370,
+            y: 526,
             size: 10.5,
             color: rgb(0, 0, 0),
             font: fontRegular,
         });
 
         firstPage.drawText(formatDate(documentData.date, 'dd.mm.yyyy'), {
-            x: 140,
-            y: 434,
+            x: 370,
+            y: 495,
             size: 10.5,
             color: rgb(0, 0, 0),
             font: fontRegular,
         });
 
-        secondPage.drawText(
+        thirdPage.drawText(
             `${documentData.firstName} ${documentData.lastName}`,
             {
                 x: 55,
-                y: 542,
+                y: 332,
                 size: 10.5,
                 color: rgb(0, 0, 0),
                 font: fontRegular,
             },
         );
 
-        secondPage.drawImage(pngImage, {
+        thirdPage.drawImage(pngImage, {
             x: 105,
-            y: 435,
+            y: 225,
             width: 160,
             height: 70,
         });
