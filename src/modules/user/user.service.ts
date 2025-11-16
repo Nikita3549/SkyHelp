@@ -42,15 +42,11 @@ export class UserService {
 
     async getPublicUsers(role?: UserRole): Promise<IPublicUserData[]> {
         return this.prisma.user.findMany({
-            select: {
-                id: true,
-                email: true,
-                name: true,
-                secondName: true,
-                role: true,
-                isActive: true,
-                lastSign: true,
-                createdAt: true,
+            omit: {
+                hashedPassword: true,
+            },
+            include: {
+                partner: true,
             },
             where: {
                 role,
