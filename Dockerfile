@@ -3,7 +3,7 @@ WORKDIR opt/api
 RUN apt-get update -y && apt-get install -y openssl libssl-dev
 COPY package.json nest-cli.json ./
 RUN npm install
-COPY ./src  ./
+COPY ./src  ./src
 COPY ./prisma ./prisma
 RUN npx prisma generate --schema prisma/schema
 COPY tsconfig.json ./

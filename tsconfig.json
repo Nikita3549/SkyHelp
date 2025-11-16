@@ -12,5 +12,7 @@
     "baseUrl": "./",
     "strict": true,
     "strictPropertyInitialization": false
-  }
+  },
+  "exclude": ["prisma.config.ts"],
+  "include": ["src"]
 }
