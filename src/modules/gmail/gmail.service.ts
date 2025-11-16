@@ -41,13 +41,15 @@ export class GmailService implements OnModuleInit {
 
     async onModuleInit() {
         this.oauth2Client = new google.auth.OAuth2(
-            this.configService.getOrThrow('GMAIL_CLIENT_ID'),
-            this.configService.getOrThrow('GMAIL_CLIENT_SECRET'),
-            this.configService.getOrThrow('GMAIL_REDIRECT_URI'),
+            this.configService.getOrThrow('GMAIL_NOREPLY_CLIENT_ID'),
+            this.configService.getOrThrow('GMAIL_NOREPLY_CLIENT_SECRET'),
+            this.configService.getOrThrow('GMAIL_NOREPLY_REDIRECT_URI'),
         );
 
         this.oauth2Client.setCredentials({
-            refresh_token: this.configService.getOrThrow('GMAIL_REFRESH_TOKEN'),
+            refresh_token: this.configService.getOrThrow(
+                'GMAIL_NOREPLY_REFRESH_TOKEN',
+            ),
         });
 
         await this.refreshAccessToken();

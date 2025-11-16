@@ -168,8 +168,6 @@ export class GmailOfficeAccountService implements OnModuleInit {
     }
 
     async onModuleInit() {
-        if (!isProd()) return;
-
         try {
             this.oauth2Client = new google.auth.OAuth2(
                 this.configService.getOrThrow('GMAIL_OFFICE_CLIENT_ID'),
@@ -188,11 +186,13 @@ export class GmailOfficeAccountService implements OnModuleInit {
                 auth: this.oauth2Client,
             });
 
+            await this.refreshAccessToken();
+
+            if (!isProd()) return;
+
             await this.watchMailbox();
 
             this.pullMessages();
-
-            await this.refreshAccessToken();
         } catch (err) {
             throw err;
         }
