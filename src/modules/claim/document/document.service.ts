@@ -24,7 +24,7 @@ export class DocumentService implements OnModuleInit {
     ) {}
 
     async onModuleInit() {
-        (async () => {
+        await (async () => {
             const claims = await this.prisma.claim.findMany({
                 include: {
                     documents: true,
@@ -43,6 +43,7 @@ export class DocumentService implements OnModuleInit {
                 const assignments = claim.documents.filter(
                     (d) => d.type == DocumentType.ASSIGNMENT,
                 );
+                console.log(claim);
 
                 for (let k = 0; k < assignments.length; k++) {
                     const assignment = assignments[k];
