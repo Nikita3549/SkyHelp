@@ -43,7 +43,7 @@ export class DocumentService implements OnModuleInit {
                 const assignments = claim.documents.filter(
                     (d) => d.type == DocumentType.ASSIGNMENT,
                 );
-                console.log(claim);
+                console.log(i);
 
                 for (let k = 0; k < assignments.length; k++) {
                     const assignment = assignments[k];
@@ -70,7 +70,7 @@ export class DocumentService implements OnModuleInit {
                         isOldAssignment,
                     );
 
-                    this.prisma.document.create({
+                    await this.prisma.document.create({
                         data: {
                             name: `updated_${passenger.firstName}_${passenger.lastName}-${formatDate(claim.details.date, 'dd.mm.yyyy')}-assignment_agreement.pdf`,
                             path: filepath,
