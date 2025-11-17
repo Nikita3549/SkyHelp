@@ -1,8 +1,4 @@
-import {
-    Injectable,
-    InternalServerErrorException,
-    OnModuleInit,
-} from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { Document, DocumentType } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import * as fs from 'fs/promises';
@@ -17,79 +13,13 @@ import { createCanvas, loadImage, Image } from 'canvas';
 import { ClaimService } from '../claim.service';
 
 @Injectable()
-export class DocumentService implements OnModuleInit {
+export class DocumentService {
     constructor(
         private readonly prisma: PrismaService,
         private readonly claimService: ClaimService,
     ) {}
 
-    async onModuleInit() {
-        await (async () => {
-            const claims = await this.prisma.claim.findMany({
-                include: {
-                    documents: true,
-                    details: {
-                        include: {
-                            airlines: true,
-                        },
-                    },
-                    customer: true,
-                },
-            });
-
-            for (let i = 0; i < claims.length; i++) {
-                try {
-                    const claim = claims[i];
-                    const isOldAssignment =
-                        claim.createdAt <= new Date(9, 9, 2025);
-                    const assignments = claim.documents.filter(
-                        (d) => d.type == DocumentType.ASSIGNMENT,
-                    );
-                    console.log(i);
-
-                    for (let k = 0; k < assignments.length; k++) {
-                        try {
-                            const assignment = assignments[k];
-                            const passenger =
-                                await this.claimService.getCustomerOrOtherPassengerById(
-                                    assignment.passengerId,
-                                );
-
-                            if (!passenger || passenger.isMinor) {
-                                continue;
-                            }
-
-                            const filepath = await this.updateAssignment(
-                                assignment.path,
-                                {
-                                    claimId: claim.id,
-                                    airlineName: claim.details.airlines.name,
-                                    address: passenger.address,
-                                    lastName: passenger.lastName,
-                                    firstName: passenger.firstName,
-                                    date: claim.details.date,
-                                    flightNumber: claim.details.flightNumber,
-                                },
-                                isOldAssignment,
-                            );
-
-                            await this.prisma.document.create({
-                                data: {
-                                    name: `updated_${passenger.firstName}_${passenger.lastName}-${formatDate(claim.details.date, 'dd.mm.yyyy')}-assignment_agreement.pdf`,
-                                    path: filepath,
-                                    type: DocumentType.ASSIGNMENT,
-                                    claimId: claim.id,
-                                    passengerId: passenger.id,
-                                },
-                            });
-                        } catch (e) {}
-                    }
-                } catch (e) {}
-            }
-        })();
-    }
-
-    private async updateAssignment(
+    async updateAssignment(
         sourcePath: string,
         assignmentData: {
             claimId: string;
@@ -132,7 +62,7 @@ export class DocumentService implements OnModuleInit {
         return filepath;
     }
 
-    async insertSignatureFromSource(
+    private async insertSignatureFromSource(
         sourcePath: string,
         targetPath: string,
         outputPath: string,
@@ -144,14 +74,11 @@ export class DocumentService implements OnModuleInit {
         const sourcePdf = await PDFDocument.load(sourceBuffer);
         const targetPdf = await PDFDocument.load(targetBuffer);
 
-        // Берём вторую страницу (index = 1) — где подпись
         const sourcePageIndex = 1;
         const sourcePage = sourcePdf.getPage(sourcePageIndex);
 
-        // Вставляем в первую страницу целевого PDF (index = 0)
         const targetPage = targetPdf.getPage(2);
 
-        // Координаты области подписи в source (такие же, как ты вставлял)
         let signatureRect;
         if (isOldAssignment) {
             signatureRect = {
@@ -169,7 +96,6 @@ export class DocumentService implements OnModuleInit {
             };
         }
 
-        // Встраиваем фрагмент страницы как XObject
         const embeddedPage = await targetPdf.embedPage(sourcePage, {
             left: signatureRect.x,
             bottom: signatureRect.y,
@@ -177,17 +103,13 @@ export class DocumentService implements OnModuleInit {
             top: signatureRect.y + signatureRect.height,
         });
 
-        // Рисуем подпись в target в нужной позиции
-        // x: 105,
-        //   y: 225,
         targetPage.drawPage(embeddedPage, {
-            x: 100, // куда вставить
-            y: 225 - 68, // координаты на странице назначения
+            x: 100,
+            y: 157,
             xScale: 1,
             yScale: 1,
         });
 
-        // Сохраняем новый файл
         const updatedPdf = await targetPdf.save();
         await fs.writeFile(outputPath, updatedPdf);
 
@@ -515,7 +437,7 @@ export class DocumentService implements OnModuleInit {
             `${documentData.firstName} ${documentData.lastName}`,
             {
                 x: 55,
-                y: 332 - 68,
+                y: 264,
                 size: 10.5,
                 color: rgb(0, 0, 0),
                 font: fontMedium,
@@ -525,7 +447,7 @@ export class DocumentService implements OnModuleInit {
         if (pngImage) {
             thirdPage.drawImage(pngImage, {
                 x: 105,
-                y: 225 - 68,
+                y: 157,
                 width: 160,
                 height: 70,
             });
