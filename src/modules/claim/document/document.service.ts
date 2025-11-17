@@ -232,13 +232,16 @@ export class DocumentService {
             airlineName: string;
         },
     ) {
-        const today = formatDate(new Date(), 'dd.mm.yyyy');
+        const today = formatDate(new Date(), 'dd.MMMM.yyyy');
 
         const fontBoldBuffer = await fs.readFile(
             path.resolve(__dirname, '../../../../fonts/Inter', 'bold.ttf'),
         );
         const fontRegularBuffer = await fs.readFile(
             path.resolve(__dirname, '../../../../fonts/Inter', 'regular.ttf'),
+        );
+        const fontMediumBuffer = await fs.readFile(
+            path.resolve(__dirname, '../../../../fonts/Inter', 'medium.ttf'),
         );
 
         const base64 = signatureDataUrl.replace(/^data:image\/png;base64,/, '');
@@ -258,6 +261,7 @@ export class DocumentService {
 
         const fontBold = await pdfDoc.embedFont(fontBoldBuffer);
         const fontRegular = await pdfDoc.embedFont(fontRegularBuffer);
+        const fontMedium = await pdfDoc.embedFont(fontMediumBuffer);
 
         const firstPage = pdfDoc.getPages()[0];
         const thirdPage = pdfDoc.getPages()[2];
@@ -265,7 +269,7 @@ export class DocumentService {
         const pngImage = await pdfDoc.embedPng(pngBuffer);
 
         firstPage.drawText(today, {
-            x: 270,
+            x: 253,
             y: 685,
             size: 10.5,
             color: rgb(0.333, 0.333, 0.333),
@@ -273,8 +277,8 @@ export class DocumentService {
         });
 
         firstPage.drawText(documentData.address, {
-            x: 205,
-            y: 630,
+            x: 55,
+            y: 605,
             size: 10.5,
             color: rgb(0.333, 0.333, 0.333),
             font: fontRegular,
@@ -283,8 +287,8 @@ export class DocumentService {
         firstPage.drawText(
             `${documentData.firstName} ${documentData.lastName}`,
             {
-                x: 205,
-                y: 650,
+                x: 55,
+                y: 625,
                 size: 10.5,
                 color: rgb(0, 0, 0),
                 font: fontBold,
@@ -293,7 +297,7 @@ export class DocumentService {
 
         firstPage.drawText(documentData.claimId, {
             x: 130,
-            y: 526,
+            y: 521,
             size: 10.5,
             color: rgb(0, 0, 0),
             font: fontRegular,
@@ -301,7 +305,7 @@ export class DocumentService {
 
         firstPage.drawText(documentData.airlineName, {
             x: 130,
-            y: 495,
+            y: 490,
             size: 10.5,
             color: rgb(0, 0, 0),
             font: fontRegular,
@@ -309,7 +313,7 @@ export class DocumentService {
 
         firstPage.drawText(documentData.flightNumber, {
             x: 370,
-            y: 526,
+            y: 521,
             size: 10.5,
             color: rgb(0, 0, 0),
             font: fontRegular,
@@ -317,7 +321,7 @@ export class DocumentService {
 
         firstPage.drawText(formatDate(documentData.date, 'dd.mm.yyyy'), {
             x: 370,
-            y: 495,
+            y: 490,
             size: 10.5,
             color: rgb(0, 0, 0),
             font: fontRegular,
@@ -327,16 +331,16 @@ export class DocumentService {
             `${documentData.firstName} ${documentData.lastName}`,
             {
                 x: 55,
-                y: 332,
+                y: 332 - 68,
                 size: 10.5,
                 color: rgb(0, 0, 0),
-                font: fontRegular,
+                font: fontMedium,
             },
         );
 
         thirdPage.drawImage(pngImage, {
             x: 105,
-            y: 225,
+            y: 225 - 68,
             width: 160,
             height: 70,
         });

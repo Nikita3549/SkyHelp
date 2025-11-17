@@ -6,7 +6,8 @@ export function formatDate(
         | 'yyyy-mm-dd'
         | 'dd mmm yyyy'
         | 'dd-yy'
-        | 'dd-mm-yyyy' = 'dd.mm.yyyy',
+        | 'dd-mm-yyyy'
+        | 'dd.MMMM.yyyy' = 'dd.mm.yyyy',
 ): string {
     const d = date;
     const day = String(d.getDate()).padStart(2, '0');
@@ -16,9 +17,11 @@ export function formatDate(
     switch (format) {
         case 'mm/dd/yyyy':
             return `${month}/${day}/${year}`;
+
         case 'yyyy-mm-dd':
             return `${year}-${month}-${day}`;
-        case 'dd mmm yyyy':
+
+        case 'dd mmm yyyy': {
             const monthNames = [
                 'Jan',
                 'Feb',
@@ -34,10 +37,32 @@ export function formatDate(
                 'Dec',
             ];
             return `${day} ${monthNames[d.getMonth()]} ${year}`;
+        }
+
+        case 'dd.MMMM.yyyy': {
+            const monthLong = [
+                'January',
+                'February',
+                'March',
+                'April',
+                'May',
+                'June',
+                'July',
+                'August',
+                'September',
+                'October',
+                'November',
+                'December',
+            ];
+            return `${day}.${monthLong[d.getMonth()]}.${year}`;
+        }
+
         case 'dd-yy':
             return `${day}-${String(year).slice(-2)}`;
+
         case 'dd-mm-yyyy':
             return `${day}-${month}-${year}`;
+
         case 'dd.mm.yyyy':
         default:
             return `${day}.${month}.${year}`;
