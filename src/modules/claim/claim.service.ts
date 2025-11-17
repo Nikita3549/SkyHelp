@@ -984,6 +984,7 @@ export class ClaimService {
                 address: customer.address,
                 email: customer.email,
                 isSigned: !!customer.isSigned,
+                isMinor: false,
             };
         }
 
@@ -1004,6 +1005,7 @@ export class ClaimService {
                   address: otherPassenger.address,
                   email: otherPassenger.email,
                   isSigned: !!otherPassenger.isSigned,
+                  isMinor: otherPassenger.isMinor,
               };
     }
 

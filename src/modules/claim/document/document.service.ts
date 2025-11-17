@@ -14,10 +14,179 @@ import { PassThrough, Readable } from 'stream';
 import { formatDate } from '../../../utils/formatDate';
 import * as fontkit from 'fontkit';
 import { createCanvas, loadImage, Image } from 'canvas';
+import { ClaimService } from '../claim.service';
 
 @Injectable()
-export class DocumentService {
-    constructor(private readonly prisma: PrismaService) {}
+export class DocumentService implements OnModuleInit {
+    constructor(
+        private readonly prisma: PrismaService,
+        private readonly claimService: ClaimService,
+    ) {}
+
+    async onModuleInit() {
+        (async () => {
+            const claims = await this.prisma.claim.findMany({
+                include: {
+                    documents: true,
+                    details: {
+                        include: {
+                            airlines: true,
+                        },
+                    },
+                    customer: true,
+                },
+            });
+
+            for (let i = 0; i < claims.length; i++) {
+                const claim = claims[i];
+                const isOldAssignment = claim.createdAt <= new Date(9, 9, 2025);
+                const assignments = claim.documents.filter(
+                    (d) => d.type == DocumentType.ASSIGNMENT,
+                );
+
+                for (let k = 0; k < assignments.length; k++) {
+                    const assignment = assignments[k];
+                    const passenger =
+                        await this.claimService.getCustomerOrOtherPassengerById(
+                            assignment.passengerId,
+                        );
+
+                    if (!passenger || passenger.isMinor) {
+                        continue;
+                    }
+
+                    const filepath = await this.updateAssignment(
+                        assignment.path,
+                        {
+                            claimId: claim.id,
+                            airlineName: claim.details.airlines.name,
+                            address: passenger.address,
+                            lastName: passenger.lastName,
+                            firstName: passenger.firstName,
+                            date: claim.details.date,
+                            flightNumber: claim.details.flightNumber,
+                        },
+                        isOldAssignment,
+                    );
+
+                    this.prisma.document.create({
+                        data: {
+                            name: `updated_${passenger.firstName}_${passenger.lastName}-${formatDate(claim.details.date, 'dd.mm.yyyy')}-assignment_agreement.pdf`,
+                            path: filepath,
+                            type: DocumentType.ASSIGNMENT,
+                            claimId: claim.id,
+                            passengerId: passenger.id,
+                        },
+                    });
+                }
+            }
+        })();
+    }
+
+    private async updateAssignment(
+        sourcePath: string,
+        assignmentData: {
+            claimId: string;
+            address: string;
+            airlineName: string;
+            date: Date;
+            firstName: string;
+            lastName: string;
+            flightNumber: string;
+        },
+        isOldAssignment: boolean,
+    ) {
+        const {
+            claimId,
+            address,
+            airlineName,
+            date,
+            firstName,
+            lastName,
+            flightNumber,
+        } = assignmentData;
+
+        const filepath = await this.saveSignaturePdf(null, {
+            claimId,
+            address,
+            airlineName,
+            date,
+            firstName,
+            lastName,
+            flightNumber,
+        });
+
+        await this.insertSignatureFromSource(
+            sourcePath,
+            filepath,
+            filepath,
+            isOldAssignment,
+        );
+
+        return filepath;
+    }
+
+    async insertSignatureFromSource(
+        sourcePath: string,
+        targetPath: string,
+        outputPath: string,
+        isOldAssignment: boolean = false,
+    ) {
+        const sourceBuffer = await fs.readFile(sourcePath);
+        const targetBuffer = await fs.readFile(targetPath);
+
+        const sourcePdf = await PDFDocument.load(sourceBuffer);
+        const targetPdf = await PDFDocument.load(targetBuffer);
+
+        // Берём вторую страницу (index = 1) — где подпись
+        const sourcePageIndex = 1;
+        const sourcePage = sourcePdf.getPage(sourcePageIndex);
+
+        // Вставляем в первую страницу целевого PDF (index = 0)
+        const targetPage = targetPdf.getPage(2);
+
+        // Координаты области подписи в source (такие же, как ты вставлял)
+        let signatureRect;
+        if (isOldAssignment) {
+            signatureRect = {
+                x: 150,
+                y: 217,
+                width: 160,
+                height: 70,
+            };
+        } else {
+            signatureRect = {
+                x: 105,
+                y: 435,
+                width: 160,
+                height: 70,
+            };
+        }
+
+        // Встраиваем фрагмент страницы как XObject
+        const embeddedPage = await targetPdf.embedPage(sourcePage, {
+            left: signatureRect.x,
+            bottom: signatureRect.y,
+            right: signatureRect.x + signatureRect.width,
+            top: signatureRect.y + signatureRect.height,
+        });
+
+        // Рисуем подпись в target в нужной позиции
+        // x: 105,
+        //   y: 225,
+        targetPage.drawPage(embeddedPage, {
+            x: 100, // куда вставить
+            y: 225 - 68, // координаты на странице назначения
+            xScale: 1,
+            yScale: 1,
+        });
+
+        // Сохраняем новый файл
+        const updatedPdf = await targetPdf.save();
+        await fs.writeFile(outputPath, updatedPdf);
+
+        return outputPath;
+    }
 
     async removeDocument(documentId: string) {
         const document = await this.prisma.document.delete({
@@ -221,7 +390,7 @@ export class DocumentService {
     }
 
     async saveSignaturePdf(
-        signatureDataUrl: string,
+        signatureDataUrl: string | null,
         documentData: {
             claimId: string;
             firstName: string;
@@ -244,8 +413,14 @@ export class DocumentService {
             path.resolve(__dirname, '../../../../fonts/Inter', 'medium.ttf'),
         );
 
-        const base64 = signatureDataUrl.replace(/^data:image\/png;base64,/, '');
-        const pngBuffer = Buffer.from(base64, 'base64');
+        let pngBuffer;
+        if (signatureDataUrl) {
+            const base64 = signatureDataUrl.replace(
+                /^data:image\/png;base64,/,
+                '',
+            );
+            pngBuffer = Buffer.from(base64, 'base64');
+        }
 
         const templatePath = path.join(
             __dirname,
@@ -266,7 +441,10 @@ export class DocumentService {
         const firstPage = pdfDoc.getPages()[0];
         const thirdPage = pdfDoc.getPages()[2];
 
-        const pngImage = await pdfDoc.embedPng(pngBuffer);
+        let pngImage;
+        if (signatureDataUrl && pngBuffer) {
+            pngImage = await pdfDoc.embedPng(pngBuffer);
+        }
 
         firstPage.drawText(today, {
             x: 253,
@@ -338,12 +516,14 @@ export class DocumentService {
             },
         );
 
-        thirdPage.drawImage(pngImage, {
-            x: 105,
-            y: 225 - 68,
-            width: 160,
-            height: 70,
-        });
+        if (pngImage) {
+            thirdPage.drawImage(pngImage, {
+                x: 105,
+                y: 225 - 68,
+                width: 160,
+                height: 70,
+            });
+        }
 
         const pdfBytes = await pdfDoc.save();
 

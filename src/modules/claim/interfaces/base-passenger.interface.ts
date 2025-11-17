@@ -7,4 +7,5 @@ export interface BasePassenger {
     address: string;
     email?: string | null;
     isSigned: boolean;
+    isMinor: boolean;
 }
