@@ -38,48 +38,53 @@ export class DocumentService implements OnModuleInit {
             });
 
             for (let i = 0; i < claims.length; i++) {
-                const claim = claims[i];
-                const isOldAssignment = claim.createdAt <= new Date(9, 9, 2025);
-                const assignments = claim.documents.filter(
-                    (d) => d.type == DocumentType.ASSIGNMENT,
-                );
-                console.log(i);
-
-                for (let k = 0; k < assignments.length; k++) {
-                    const assignment = assignments[k];
-                    const passenger =
-                        await this.claimService.getCustomerOrOtherPassengerById(
-                            assignment.passengerId,
-                        );
-
-                    if (!passenger || passenger.isMinor) {
-                        continue;
-                    }
-
-                    const filepath = await this.updateAssignment(
-                        assignment.path,
-                        {
-                            claimId: claim.id,
-                            airlineName: claim.details.airlines.name,
-                            address: passenger.address,
-                            lastName: passenger.lastName,
-                            firstName: passenger.firstName,
-                            date: claim.details.date,
-                            flightNumber: claim.details.flightNumber,
-                        },
-                        isOldAssignment,
+                try {
+                    const claim = claims[i];
+                    const isOldAssignment =
+                        claim.createdAt <= new Date(9, 9, 2025);
+                    const assignments = claim.documents.filter(
+                        (d) => d.type == DocumentType.ASSIGNMENT,
                     );
+                    console.log(i);
 
-                    await this.prisma.document.create({
-                        data: {
-                            name: `updated_${passenger.firstName}_${passenger.lastName}-${formatDate(claim.details.date, 'dd.mm.yyyy')}-assignment_agreement.pdf`,
-                            path: filepath,
-                            type: DocumentType.ASSIGNMENT,
-                            claimId: claim.id,
-                            passengerId: passenger.id,
-                        },
-                    });
-                }
+                    for (let k = 0; k < assignments.length; k++) {
+                        try {
+                            const assignment = assignments[k];
+                            const passenger =
+                                await this.claimService.getCustomerOrOtherPassengerById(
+                                    assignment.passengerId,
+                                );
+
+                            if (!passenger || passenger.isMinor) {
+                                continue;
+                            }
+
+                            const filepath = await this.updateAssignment(
+                                assignment.path,
+                                {
+                                    claimId: claim.id,
+                                    airlineName: claim.details.airlines.name,
+                                    address: passenger.address,
+                                    lastName: passenger.lastName,
+                                    firstName: passenger.firstName,
+                                    date: claim.details.date,
+                                    flightNumber: claim.details.flightNumber,
+                                },
+                                isOldAssignment,
+                            );
+
+                            await this.prisma.document.create({
+                                data: {
+                                    name: `updated_${passenger.firstName}_${passenger.lastName}-${formatDate(claim.details.date, 'dd.mm.yyyy')}-assignment_agreement.pdf`,
+                                    path: filepath,
+                                    type: DocumentType.ASSIGNMENT,
+                                    claimId: claim.id,
+                                    passengerId: passenger.id,
+                                },
+                            });
+                        } catch (e) {}
+                    }
+                } catch (e) {}
             }
         })();
     }
