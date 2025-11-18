@@ -92,7 +92,11 @@ export class DocumentController {
 
         const oldAssignment = (
             await this.documentService.getDocumentsByPassengerId(passengerId)
-        ).find((a) => !a.name?.includes('updated'));
+        ).find(
+            (d) =>
+                d.type == DocumentType.ASSIGNMENT &&
+                !d.name?.includes('updated'),
+        );
 
         if (!oldAssignment) {
             throw new NotFoundException('Passenger has no assignments');
