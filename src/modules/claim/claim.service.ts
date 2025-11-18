@@ -968,13 +968,19 @@ export class ClaimService {
     async getCustomerOrOtherPassengerById(
         passengerId: string,
     ): Promise<BasePassenger | null> {
-        const customer = await this.prisma.claimCustomer.findFirst({
+        const claimCustomer = await this.prisma.claim.findFirst({
             where: {
-                id: passengerId,
+                customer: {
+                    id: passengerId,
+                },
+            },
+            include: {
+                customer: true,
             },
         });
 
-        if (customer) {
+        if (claimCustomer) {
+            const customer = claimCustomer.customer;
             return {
                 id: customer.id,
                 firstName: customer.firstName,
@@ -985,6 +991,7 @@ export class ClaimService {
                 email: customer.email,
                 isSigned: !!customer.isSigned,
                 isMinor: false,
+                claimId: claimCustomer.id,
             };
         }
 
@@ -1006,6 +1013,7 @@ export class ClaimService {
                   email: otherPassenger.email,
                   isSigned: !!otherPassenger.isSigned,
                   isMinor: otherPassenger.isMinor,
+                  claimId: otherPassenger.claimId,
               };
     }
 

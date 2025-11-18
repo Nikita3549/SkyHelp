@@ -8,4 +8,5 @@ export interface BasePassenger {
     email?: string | null;
     isSigned: boolean;
     isMinor: boolean;
+    claimId: string;
 }

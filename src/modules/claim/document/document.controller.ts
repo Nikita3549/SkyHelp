@@ -6,6 +6,7 @@ import {
     ForbiddenException,
     Get,
     HttpCode,
+    InternalServerErrorException,
     NotFoundException,
     Param,
     Patch,
@@ -21,6 +22,7 @@ import {
     CLAIM_NOT_FOUND,
     DOCUMENT_NOT_FOUND,
     FILE_DOESNT_ON_DISK,
+    PASSENGER_NOT_FOUND,
 } from '../constants';
 import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
 import { ClaimService } from '../claim.service';
@@ -49,6 +51,8 @@ import { DocumentRequestService } from '../document-request/document-request.ser
 import { PatchPassengerIdDto } from './dto/patch-passenger-id.dto';
 import { HttpStatusCode } from 'axios';
 import { RoleGuard } from '../../../guards/role.guard';
+import { GenerateAssignmentDto } from './dto/generate-assignment.dto';
+import { formatDate } from '../../../utils/formatDate';
 
 @Controller('claims/documents')
 @UseGuards(JwtAuthGuard)
@@ -59,6 +63,70 @@ export class DocumentController {
         private readonly recentUpdatesService: RecentUpdatesService,
         private readonly documentRequestService: DocumentRequestService,
     ) {}
+
+    @Post('assignment')
+    @UseGuards(new RoleGuard([UserRole.ADMIN, UserRole.LAWYER, UserRole.AGENT]))
+    async generateAssignment(@Body() dto: GenerateAssignmentDto) {
+        const { passengerId } = dto;
+
+        const passenger =
+            await this.claimService.getCustomerOrOtherPassengerById(
+                passengerId,
+            );
+
+        if (!passenger) {
+            throw new NotFoundException(PASSENGER_NOT_FOUND);
+        }
+        if (passenger.isMinor) {
+            throw new ForbiddenException(
+                'You cannot update the assignment of minor passengers',
+            );
+        }
+
+        const claim = await this.claimService.getClaim(passenger.claimId);
+
+        if (!claim) {
+            console.error(`Passenger ${passengerId} has invalid claimId`);
+            throw new InternalServerErrorException('Known error, check logs');
+        }
+
+        const oldAssignment = (
+            await this.documentService.getDocumentsByPassengerId(passengerId)
+        ).find((a) => !a.name?.includes('updated'));
+
+        if (!oldAssignment) {
+            throw new NotFoundException('Passenger has no assignments');
+        }
+
+        const assignmentFilePath = await this.documentService.updateAssignment(
+            oldAssignment.path,
+            {
+                claimId: claim.id,
+                airlineName: claim.details.airlines.name,
+                address: passenger.address,
+                lastName: passenger.lastName,
+                firstName: passenger.firstName,
+                date: claim.details.date,
+                flightNumber: claim.details.flightNumber,
+            },
+            claim.createdAt <= new Date(9, 9, 2025),
+        );
+
+        return (
+            await this.documentService.saveDocuments(
+                [
+                    {
+                        name: `updated_${passenger.firstName}_${passenger.lastName}-${formatDate(claim.details.date, 'dd.mm.yyyy')}-assignment_agreement.pdf`,
+                        path: assignmentFilePath,
+                        documentType: DocumentType.ASSIGNMENT,
+                        passengerId: passenger.id,
+                    },
+                ],
+                claim.id,
+                true,
+            )
+        )[0];
+    }
 
     @Post('merge')
     async mergeDocuments(@Res() res: Response, @Body() dto: MergeDocumentsDto) {

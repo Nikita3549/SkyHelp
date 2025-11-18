@@ -31,7 +31,7 @@ export class DocumentService {
             flightNumber: string;
         },
         isOldAssignment: boolean,
-    ) {
+    ): Promise<string> {
         const {
             claimId,
             address,
@@ -128,6 +128,14 @@ export class DocumentService {
         return this.prisma.document.findFirst({
             where: {
                 id: documentId,
+            },
+        });
+    }
+
+    async getDocumentsByPassengerId(passengerId: string): Promise<Document[]> {
+        return this.prisma.document.findMany({
+            where: {
+                passengerId,
             },
         });
     }
@@ -648,6 +656,7 @@ export class DocumentService {
             name: true,
             type: true,
             claimId: true,
+            passengerId: true,
         };
     }
 
