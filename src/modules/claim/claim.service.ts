@@ -500,7 +500,7 @@ export class ClaimService {
         completedAmount: number;
         claimsByDay: { date: string; count: number }[];
         successByMonth: { month: string; success: string }[];
-        airlines: { count: number; name: string }[];
+        airlines: { count: number; name: string; icao: string }[];
     }> {
         const dateWhere = dateFilter
             ? { gte: dateFilter.dateFrom, lte: dateFilter.dateTo }
@@ -596,7 +596,7 @@ export class ClaimService {
 
         // airlines
         const airlines = await this.prisma.airline.groupBy({
-            by: ['name'],
+            by: ['name', 'icao'],
             _count: { _all: true },
             where: {
                 Details: {
@@ -628,6 +628,7 @@ export class ClaimService {
             })),
             airlines: airlines.map((s) => ({
                 name: s.name,
+                icao: s.icao,
                 count: Number(s._count._all), // <- BIGINT FIX
             })),
         };

@@ -220,12 +220,7 @@ export class AdminController {
 
         return {
             ...stats,
-            airlines: stats.airlines.map(
-                (s: { count: number; name: string }) => ({
-                    airline: s.name,
-                    count: s.count,
-                }),
-            ),
+            airlines: stats.airlines,
         };
     }
 
