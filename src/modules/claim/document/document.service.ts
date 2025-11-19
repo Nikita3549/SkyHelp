@@ -1,4 +1,8 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+    Injectable,
+    InternalServerErrorException,
+    OnModuleInit,
+} from '@nestjs/common';
 import { Document, DocumentType } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import * as fs from 'fs/promises';
@@ -92,7 +96,7 @@ export class DocumentService {
                 x: 105,
                 y: 435,
                 width: 160,
-                height: 100,
+                height: 70,
             };
         }
 
