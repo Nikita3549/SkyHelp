@@ -495,7 +495,8 @@ export class ClaimService {
         dateFilter?: { dateFrom: Date; dateTo: Date },
     ): Promise<{
         total: number;
-        successful: number;
+        paid: number;
+        approved: number;
         active: number;
         completedAmount: number;
         claimsByDay: { date: string; count: number }[];
@@ -508,7 +509,8 @@ export class ClaimService {
 
         const [
             total,
-            successful,
+            paid,
+            approved,
             active,
             completedAmountAgg,
             claimsByDay,
@@ -524,13 +526,24 @@ export class ClaimService {
                 },
             }),
 
-            // successful claims
+            // paid claims
             this.prisma.claim.count({
                 where: {
                     userId,
                     agentId,
                     archived: false,
                     state: { status: ClaimStatus.PAID },
+                    ...(dateWhere ? { createdAt: dateWhere } : {}),
+                },
+            }),
+
+            // approved claims
+            this.prisma.claim.count({
+                where: {
+                    userId,
+                    agentId,
+                    archived: false,
+                    state: { status: ClaimStatus.APPROVED },
                     ...(dateWhere ? { createdAt: dateWhere } : {}),
                 },
             }),
@@ -615,7 +628,8 @@ export class ClaimService {
 
         return {
             total,
-            successful,
+            paid,
+            approved,
             active,
             completedAmount,
             claimsByDay: claimsByDay.map(({ date, count }) => ({
