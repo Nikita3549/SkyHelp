@@ -83,16 +83,16 @@ export class DocumentService {
         if (isOldAssignment) {
             signatureRect = {
                 x: 150,
-                y: 217,
+                y: 217 - 30,
                 width: 160,
-                height: 70,
+                height: 100,
             };
         } else {
             signatureRect = {
                 x: 105,
                 y: 435,
                 width: 160,
-                height: 70,
+                height: 100,
             };
         }
 
@@ -105,7 +105,7 @@ export class DocumentService {
 
         targetPage.drawPage(embeddedPage, {
             x: 100,
-            y: 157,
+            y: 157 - 30,
             xScale: 1,
             yScale: 1,
         });
