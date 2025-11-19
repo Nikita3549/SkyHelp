@@ -105,7 +105,7 @@ export class DocumentService {
 
         targetPage.drawPage(embeddedPage, {
             x: 100,
-            y: 157 - 30,
+            y: isOldAssignment ? 157 - 30 : 157,
             xScale: 1,
             yScale: 1,
         });
