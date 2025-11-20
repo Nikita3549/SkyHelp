@@ -3562,6 +3562,7 @@
     "UnsubscribePage.try-again-btn": "Попробовать снова",
     "claimReceived.title": "Заявка получена",
     "claimReceived.description": "Мы получили вашу заявку и начали её рассмотрение.",
+    "claimReceived.description2": "Мы получили и проверили ваши дополнительные документы. Ваша заявка снова находится в обработке, и наша команда продолжит дальнейшие шаги.",
     "missingInformation.title": "Отсутствует информация",
     "missingInformation.description": "Некоторой информации не хватает. Пожалуйста, загрузите запрошенные документы.",
     "additionalDocumentsRequired.title": "Требуются дополнительные документы",

@@ -3560,6 +3560,7 @@
     "UnsubscribePage.try-again-btn": "Try Again",
     "claimReceived.title": "Claim Received",
     "claimReceived.description": "We have received your claim and started reviewing it.",
+    "claimReceived.description2": "We have received and reviewed your additional documents. Your claim is now back in processing, and our team will continue the next steps.",
     "missingInformation.title": "Missing Information",
     "missingInformation.description": "Some information is missing. Please upload the requested documents.",
     "additionalDocumentsRequired.title": "Additional Documents Required",

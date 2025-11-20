@@ -3583,6 +3583,7 @@
     "UnsubscribePage.try-again-btn": "Tekrar dene",
     "claimReceived.title": "Talep Alındı",
     "claimReceived.description": "Talebinizi aldık ve incelemeye başladık.",
+    "claimReceived.description2": "Ek belgelerinizi aldık ve inceledik. Talebiniz tekrar işleme alındı ve ekibimiz sonraki adımlara devam edecektir.",
     "missingInformation.title": "Eksik Bilgi",
     "missingInformation.description": "Bazı bilgiler eksik. Lütfen istenen belgeleri yükleyin.",
     "additionalDocumentsRequired.title": "Ek Belgeler Gerekli",

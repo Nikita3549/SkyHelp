@@ -10,7 +10,10 @@ export const ProgressVariants: {
     claimReceived: {
         status: ClaimStatus.CLAIM_RECEIVED,
         title: 'claimReceived.title',
-        descriptions: ['claimReceived.description'],
+        descriptions: [
+            'claimReceived.description',
+            'claimReceived.description2',
+        ],
     },
     missingInformation: {
         status: ClaimStatus.MISSING_INFO,

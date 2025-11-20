@@ -3563,6 +3563,7 @@
     "UnsubscribePage.try-again-btn": "Încearcă din nou",
     "claimReceived.title": "Cerere primită",
     "claimReceived.description": "Am primit cererea dvs. și am început analiza acesteia.",
+    "claimReceived.description2": "Am primit și am revizuit documentele dvs. suplimentare. Cererea dvs. este acum din nou în procesare, iar echipa noastră va continua cu următorii pași.",
     "missingInformation.title": "Informații lipsă",
     "missingInformation.description": "Lipsesc anumite informații. Vă rugăm să încărcați documentele solicitate.",
     "additionalDocumentsRequired.title": "Sunt necesare documente suplimentare",
