@@ -110,7 +110,7 @@ export class DocumentController {
                     date: claim.details.date,
                     flightNumber: claim.details.flightNumber,
                 },
-                claim.createdAt <= new Date('2025-10-08'),
+                claim.createdAt <= new Date('2025-10-09'),
             );
         } else {
             assignmentFilePath =
