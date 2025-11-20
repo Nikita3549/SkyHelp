@@ -1,12 +1,5 @@
-export interface BasePassenger {
-    id: string;
-    firstName: string;
-    lastName: string;
-    city: string;
-    country?: string | null;
-    address: string;
-    email?: string | null;
-    isSigned: boolean;
-    isMinor: boolean;
-    claimId: string;
-}
+import { ClaimCustomer, OtherPassenger } from '@prisma/client';
+
+export type BasePassenger =
+    | (ClaimCustomer & { claimId: string; isMinor: false })
+    | OtherPassenger;

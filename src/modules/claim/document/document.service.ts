@@ -23,6 +23,99 @@ export class DocumentService {
         private readonly claimService: ClaimService,
     ) {}
 
+    async updateParentalAssignment(
+        sourcePath: string,
+        assignmentData: {
+            claimId: string;
+            address: string;
+            airlineName: string;
+            date: Date;
+            firstName: string;
+            lastName: string;
+            flightNumber: string;
+            minorBirthday: Date;
+            parentFirstName: string;
+            parentLastName: string;
+        },
+    ): Promise<string> {
+        const {
+            claimId,
+            address,
+            airlineName,
+            date,
+            firstName,
+            lastName,
+            flightNumber,
+            parentLastName,
+            parentFirstName,
+            minorBirthday,
+        } = assignmentData;
+
+        const filepath = await this.saveParentalSignaturePdf(null, {
+            claimId,
+            address,
+            airlineName,
+            date,
+            firstName,
+            lastName,
+            flightNumber,
+            parentLastName,
+            parentFirstName,
+            minorBirthday,
+        });
+
+        await this.insertParentalSignatureFromSource(
+            sourcePath,
+            filepath,
+            filepath,
+        );
+
+        return filepath;
+    }
+
+    private async insertParentalSignatureFromSource(
+        sourcePath: string,
+        targetPath: string,
+        outputPath: string,
+    ) {
+        const sourceBuffer = await fs.readFile(sourcePath);
+        const targetBuffer = await fs.readFile(targetPath);
+
+        const sourcePdf = await PDFDocument.load(sourceBuffer);
+        const targetPdf = await PDFDocument.load(targetBuffer);
+
+        const sourcePageIndex = 1;
+        const sourcePage = sourcePdf.getPage(sourcePageIndex);
+
+        const targetPage = targetPdf.getPage(3);
+
+        const signatureRect = {
+            x: 110,
+            y: 228,
+            width: 160,
+            height: 70,
+        };
+
+        const embeddedPage = await targetPdf.embedPage(sourcePage, {
+            left: signatureRect.x,
+            bottom: signatureRect.y,
+            right: signatureRect.x + signatureRect.width,
+            top: signatureRect.y + signatureRect.height,
+        });
+
+        targetPage.drawPage(embeddedPage, {
+            x: 110,
+            y: 445,
+            xScale: 1,
+            yScale: 1,
+        });
+
+        const updatedPdf = await targetPdf.save();
+        await fs.writeFile(outputPath, updatedPdf);
+
+        return outputPath;
+    }
+
     async updateAssignment(
         sourcePath: string,
         assignmentData: {
@@ -173,7 +266,7 @@ export class DocumentService {
     }
 
     async saveParentalSignaturePdf(
-        signatureDataUrl: string,
+        signatureDataUrl: string | null,
         documentData: {
             claimId: string;
             firstName: string;
@@ -196,8 +289,14 @@ export class DocumentService {
             path.resolve(__dirname, '../../../../fonts/Inter', 'regular.ttf'),
         );
 
-        const base64 = signatureDataUrl.replace(/^data:image\/png;base64,/, '');
-        const pngBuffer = Buffer.from(base64, 'base64');
+        let pngBuffer;
+        if (signatureDataUrl) {
+            const base64 = signatureDataUrl.replace(
+                /^data:image\/png;base64,/,
+                '',
+            );
+            pngBuffer = Buffer.from(base64, 'base64');
+        }
 
         const templatePath = path.join(
             __dirname,
@@ -215,9 +314,12 @@ export class DocumentService {
         const fontRegular = await pdfDoc.embedFont(fontRegularBuffer);
 
         const firstPage = pdfDoc.getPages()[0];
-        const secondPage = pdfDoc.getPages()[1];
+        const fourthPage = pdfDoc.getPages()[3];
 
-        const pngImage = await pdfDoc.embedPng(pngBuffer);
+        let pngImage;
+        if (pngBuffer) {
+            pngImage = await pdfDoc.embedPng(pngBuffer);
+        }
 
         firstPage.drawText(today, {
             x: 270,
@@ -270,7 +372,7 @@ export class DocumentService {
 
         firstPage.drawText(documentData.claimId, {
             x: 130,
-            y: 459,
+            y: 453,
             size: 10.5,
             color: rgb(0, 0, 0),
             font: fontRegular,
@@ -278,45 +380,47 @@ export class DocumentService {
 
         firstPage.drawText(documentData.airlineName, {
             x: 130,
-            y: 423,
+            y: 422,
             size: 10.5,
             color: rgb(0, 0, 0),
             font: fontRegular,
         });
 
         firstPage.drawText(documentData.flightNumber, {
-            x: 130,
-            y: 392,
+            x: 370,
+            y: 453,
             size: 10.5,
             color: rgb(0, 0, 0),
             font: fontRegular,
         });
 
         firstPage.drawText(formatDate(documentData.date, 'dd.mm.yyyy'), {
-            x: 130,
-            y: 361,
+            x: 370,
+            y: 422,
             size: 10.5,
             color: rgb(0, 0, 0),
             font: fontRegular,
         });
 
-        secondPage.drawText(
+        fourthPage.drawText(
             `${documentData.parentFirstName} ${documentData.parentLastName}`,
             {
                 x: 55,
-                y: 320,
+                y: 556,
                 size: 10.5,
                 color: rgb(0, 0, 0),
                 font: fontRegular,
             },
         );
 
-        secondPage.drawImage(pngImage, {
-            x: 110,
-            y: 230,
-            width: 160,
-            height: 70,
-        });
+        if (pngImage) {
+            fourthPage.drawImage(pngImage, {
+                x: 110,
+                y: 445,
+                width: 160,
+                height: 70,
+            });
+        }
 
         const pdfBytes = await pdfDoc.save();
 

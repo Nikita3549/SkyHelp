@@ -77,11 +77,6 @@ export class DocumentController {
         if (!passenger) {
             throw new NotFoundException(PASSENGER_NOT_FOUND);
         }
-        if (passenger.isMinor) {
-            throw new ForbiddenException(
-                'You cannot update the assignment of minor passengers',
-            );
-        }
 
         const claim = await this.claimService.getClaim(passenger.claimId);
 
@@ -102,19 +97,39 @@ export class DocumentController {
             throw new NotFoundException('Passenger has no assignments');
         }
 
-        const assignmentFilePath = await this.documentService.updateAssignment(
-            oldAssignment.path,
-            {
-                claimId: claim.id,
-                airlineName: claim.details.airlines.name,
-                address: passenger.address,
-                lastName: passenger.lastName,
-                firstName: passenger.firstName,
-                date: claim.details.date,
-                flightNumber: claim.details.flightNumber,
-            },
-            claim.createdAt <= new Date('2025-09-12'),
-        );
+        let assignmentFilePath;
+        if (!passenger.isMinor) {
+            assignmentFilePath = await this.documentService.updateAssignment(
+                oldAssignment.path,
+                {
+                    claimId: claim.id,
+                    airlineName: claim.details.airlines.name,
+                    address: passenger.address,
+                    lastName: passenger.lastName,
+                    firstName: passenger.firstName,
+                    date: claim.details.date,
+                    flightNumber: claim.details.flightNumber,
+                },
+                claim.createdAt <= new Date('2025-09-12'),
+            );
+        } else {
+            assignmentFilePath =
+                await this.documentService.updateParentalAssignment(
+                    oldAssignment.path,
+                    {
+                        claimId: claim.id,
+                        airlineName: claim.details.airlines.name,
+                        address: passenger.address,
+                        lastName: passenger.lastName,
+                        firstName: passenger.firstName,
+                        date: claim.details.date,
+                        flightNumber: claim.details.flightNumber,
+                        parentFirstName: passenger.parentFirstName!,
+                        parentLastName: passenger.lastName!,
+                        minorBirthday: passenger.birthday!,
+                    },
+                );
+        }
 
         return (
             await this.documentService.saveDocuments(

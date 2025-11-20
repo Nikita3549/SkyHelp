@@ -995,18 +995,10 @@ export class ClaimService {
         });
 
         if (claimCustomer) {
-            const customer = claimCustomer.customer;
             return {
-                id: customer.id,
-                firstName: customer.firstName,
-                lastName: customer.lastName,
-                city: customer.city,
-                country: customer.country,
-                address: customer.address,
-                email: customer.email,
-                isSigned: !!customer.isSigned,
-                isMinor: false,
+                ...claimCustomer.customer,
                 claimId: claimCustomer.id,
+                isMinor: false,
             };
         }
 
@@ -1016,20 +1008,7 @@ export class ClaimService {
             },
         });
 
-        return !otherPassenger
-            ? null
-            : {
-                  id: otherPassenger.id,
-                  firstName: otherPassenger.firstName,
-                  lastName: otherPassenger.lastName,
-                  city: otherPassenger.city,
-                  country: otherPassenger.country,
-                  address: otherPassenger.address,
-                  email: otherPassenger.email,
-                  isSigned: !!otherPassenger.isSigned,
-                  isMinor: otherPassenger.isMinor,
-                  claimId: otherPassenger.claimId,
-              };
+        return !otherPassenger ? null : otherPassenger;
     }
 
     async deleteDuplicates(claimIds: string[]) {
