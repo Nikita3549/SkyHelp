@@ -3774,6 +3774,8 @@
     "documents.uploadButton": "Загрузить",
     "documents.uploading": "Загрузка...",
     "documents.saveFile": "Сохранить",
+    "documents.take.Photo": "Сделать фото",
+    "documents.noFiles": "Файлы еще не загружены",
     "documents.remove": "Удалить",
     "documents.copyLink": "Копировать ссылку",
     "documents.copyLinkTooltip": "Вы можете отправить эту ссылку пассажиру",

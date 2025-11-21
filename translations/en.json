@@ -3773,6 +3773,8 @@
     "documents.uploadButton": "Upload",
     "documents.uploading": "Uploading...",
     "documents.saveFile": "Save",
+    "documents.take.Photo": "Take a photo",
+    "documents.noFiles": "No files uploaded yet",
     "documents.remove": "Remove",
     "documents.copyLink": "Copy Link",
     "documents.copyLinkTooltip": "You can send this link to this passenger",

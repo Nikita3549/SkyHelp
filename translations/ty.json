@@ -3796,6 +3796,8 @@
     "documents.uploadButton": "Yükle",
     "documents.uploading": "Yükleniyor...",
     "documents.saveFile": "Dosyayı",
+    "documents.take.Photo": "Fotoğraf çek",
+    "documents.noFiles": "Henüz dosya yüklenmedi",
     "documents.remove": "Kaldır",
     "documents.copyLink": "Bağlantıyı kopyala",
     "documents.copyLinkTooltip": "Bu bağlantıyı yolcuya gönderebilirsiniz",
