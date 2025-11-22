@@ -20,7 +20,7 @@ export class SendNewDocumentRequestsProcessor extends WorkerHost {
         const { claimId, to, language, customerName } = job.data;
 
         const documentRequests =
-            await this.documentRequestService.getNotSentByClaimId(claimId);
+            await this.documentRequestService.getActiveByClaimId(claimId);
 
         if (documentRequests.length == 0) {
             return;
@@ -47,7 +47,5 @@ export class SendNewDocumentRequestsProcessor extends WorkerHost {
             },
             language,
         );
-
-        this.documentRequestService.markDocumentRequestsAsSent(claimId);
     }
 }

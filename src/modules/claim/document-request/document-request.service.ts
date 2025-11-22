@@ -60,6 +60,15 @@ export class DocumentRequestService {
         });
     }
 
+    async getActiveByClaimId(claimId: string): Promise<DocumentRequest[]> {
+        return this.prisma.documentRequest.findMany({
+            where: {
+                claimId,
+                status: DocumentRequestStatus.ACTIVE,
+            },
+        });
+    }
+
     async updateStatus(
         documentRequestId: string,
         status: DocumentRequestStatus,
@@ -86,27 +95,6 @@ export class DocumentRequestService {
         return this.prisma.documentRequest.delete({
             where: {
                 id: documentRequestId,
-            },
-        });
-    }
-
-    async getNotSentByClaimId(claimId: string) {
-        return this.prisma.documentRequest.findMany({
-            where: {
-                claimId,
-                isSent: false,
-            },
-        });
-    }
-
-    async markDocumentRequestsAsSent(claimId: string) {
-        return this.prisma.documentRequest.updateMany({
-            where: {
-                claimId,
-                isSent: false,
-            },
-            data: {
-                isSent: true,
             },
         });
     }
