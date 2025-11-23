@@ -13,6 +13,7 @@ model ClaimCustomer {
   language      String?
   whatsapp      Boolean  @map("whatsapp")
   isSigned      Boolean? @default(false) @map("is_signed")
+  compensation  Int      @default(0)
   Claim         Claim[]
 
   @@index([phone])
