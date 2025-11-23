@@ -53,6 +53,7 @@ import { GetClaimsQuery } from './dto/get-claims.query';
 import { normalizePhone } from '../../utils/normalizePhone';
 import { PartnerService } from '../referral/partner/partner.service';
 import { ApiKeyAuthGuard } from '../../guards/apiKeyAuthGuard';
+import { UserService } from '../user/user.service';
 
 @Controller('claims')
 @UseGuards(JwtOrApiKeyAuth)
@@ -85,6 +86,7 @@ export class PublicClaimController {
         @InjectQueue(ADD_FLIGHT_STATUS_QUEUE_KEY)
         private readonly addFlightStatusQueue: Queue,
         private readonly partnerService: PartnerService,
+        private readonly userService: UserService,
     ) {}
 
     @Post()
@@ -166,6 +168,16 @@ export class PublicClaimController {
             flightNumber: dto.details.flightNumber,
             fullRoutes,
         });
+
+        if (!claim.userId) {
+            const user = await this.userService.getUserByEmail(
+                claim.customer.email,
+            );
+
+            if (user) {
+                await this.claimService.updateUserId(user.id, claim.id);
+            }
+        }
 
         this.claimService.scheduleClaimFollowUpEmails({
             email: claim.customer.email,

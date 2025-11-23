@@ -69,6 +69,17 @@ export class ClaimService {
         });
     }
 
+    async updateUserId(userId: string, claimId: string) {
+        return this.prisma.claim.update({
+            where: {
+                id: claimId,
+            },
+            data: {
+                userId,
+            },
+        });
+    }
+
     async getClaim(claimId: string): Promise<IFullClaim | null> {
         return this.prisma.claim.findFirst({
             where: {
