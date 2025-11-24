@@ -2073,7 +2073,7 @@
     "CommunicationTab.messages_log": "Журнал сообщений",
     "ClaimStatusCard.claim_status": "Статус заявки",
     "ClaimStatusCard.status": "Статус",
-    "ClaimStatusCard.amount": "Сумма",
+    "ClaimStatusCard.amount": "Общая Сумма",
     "ClaimStatusCard.last_updated": "Последнее обновление",
     "ClaimStatusCard.not_available": "Н/Д",
     "ClaimProgressManager.title": "Управление ходом заявки",

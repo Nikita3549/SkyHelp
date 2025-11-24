@@ -2074,7 +2074,7 @@
     "CommunicationTab.messages_log": " Mesaj Geçmişi",
     "ClaimStatusCard.claim_status": " Claim Status",
     "ClaimStatusCard.status": " Durum",
-    "ClaimStatusCard.amount": " Miktar",
+    "ClaimStatusCard.amount": " Total Miktar",
     "ClaimStatusCard.last_updated": " Son Güncellendi",
     "ClaimStatusCard.not_available": " N/A",
     "ClaimProgressManager.title": " Talep İlerleme Yönetimi",

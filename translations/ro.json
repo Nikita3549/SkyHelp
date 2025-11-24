@@ -2073,7 +2073,7 @@
     "CommunicationTab.messages_log": "Jurnal mesaje",
     "ClaimStatusCard.claim_status": "Statusul cererii",
     "ClaimStatusCard.status": "Status",
-    "ClaimStatusCard.amount": "Sumă",
+    "ClaimStatusCard.amount": "Suma Totala",
     "ClaimStatusCard.last_updated": "Ultima actualizare",
     "ClaimStatusCard.not_available": "N/A",
     "ClaimProgressManager.title": "Gestionarea progresului cererii",
