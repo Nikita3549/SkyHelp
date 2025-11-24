@@ -29,6 +29,7 @@ export class OtherPassengerService {
                     data: {
                         ...p,
                         claimId,
+                        compensation,
                     },
                 }),
             ),
