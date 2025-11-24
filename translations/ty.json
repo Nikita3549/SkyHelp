@@ -1405,7 +1405,7 @@
     "Index.faq5.question": "SkyHelp talebimi nasıl işler?",
     "Index.faq5.answer": "Uçuş detaylarınızı toplar ve uygunluğu doğrularız. Uygunsa, havayolu ile tüm iletişimi, ilk talebi sunmaktan tazminatınızı müzakere etmeye kadar ele alırız. Süreç boyunca sizi güncel tutarız ve tazminat alındığında, payınızı doğrudan hesabınıza transfer ederiz.",
     "Index.faq6.question": "SkyHelp ne kadar ücret alır?",
-    "Index.faq6.answer": "Kazan-yoksa-ücret-yok temelinde çalışırız. Tazminatınızı güvence altına alamazsak hiçbir şey ödemezsiniz. Başarılı olursak, tazminat miktarından %35 komisyon alırız (uygulanabilir KDV dahil).",
+    "Index.faq6.answer": "Kazan-yoksa-ücret-yok temelinde çalışırız. Tazminatınızı güvence altına alamazsak hiçbir şey ödemezsiniz. Başarılı olursak, tazminat miktarından %35 komisyon alırız (+ KDV dahil).",
     "Index.faq7.question": "Hangi bilgileri sağlamam gerekiyor?",
     "Index.faq7.answer": "Talebinizi işlemek için şunlara ihtiyacımız var: Uçuş detaylarınız (numara, tarih, rota), Rezervasyon referansı, Kişisel bilgileriniz, Ne olduğunun açıklaması ve Sahip olduğunuz ilgili belgeler (biniş kartları, havayolundan gelen e-postalar, vb.).",
     "Login.title": "Giriş",
