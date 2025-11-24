@@ -21,6 +21,7 @@ export class OtherPassengerService {
     async createOtherPassengers(
         passengers: OtherPassengerDto[],
         claimId: string,
+        compensation: number,
     ) {
         return Promise.all(
             passengers.map((p) =>

@@ -229,6 +229,7 @@ export class ClaimService {
                                 whatsapp: claimData.customer.whatsapp,
                                 country: claimData.customer.country,
                                 language,
+                                compensation: claimData.state.amount,
                             },
                         },
                         issue: {

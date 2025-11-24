@@ -246,6 +246,12 @@ export class PublicOtherPassengerController {
             this.tokenService.verifyJWT.bind(this.tokenService),
         );
 
+        const claim = await this.claimService.getClaim(claimId);
+
+        if (!claim) {
+            throw new NotFoundException(CLAIM_NOT_FOUND);
+        }
+
         const passengers = dto.passengers;
 
         const today = new Date();
@@ -269,6 +275,7 @@ export class PublicOtherPassengerController {
         return this.otherPassengerService.createOtherPassengers(
             passengers,
             claimId,
+            claim.customer.compensation,
         );
     }
 

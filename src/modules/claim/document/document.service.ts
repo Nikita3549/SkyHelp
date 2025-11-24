@@ -1,8 +1,4 @@
-import {
-    Injectable,
-    InternalServerErrorException,
-    OnModuleInit,
-} from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { Document, DocumentType } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import * as fs from 'fs/promises';
@@ -14,14 +10,12 @@ import { PassThrough, Readable } from 'stream';
 import { formatDate } from '../../../utils/formatDate';
 import * as fontkit from 'fontkit';
 import { createCanvas, loadImage, Image } from 'canvas';
-import { ClaimService } from '../claim.service';
+import { FontsDirectoryPath } from '../../../common/constants/paths/FontsDirectoryPath';
+import { AssignmentsDirectoryPath } from '../../../common/constants/paths/AssignmentsDirectoryPath';
 
 @Injectable()
 export class DocumentService {
-    constructor(
-        private readonly prisma: PrismaService,
-        private readonly claimService: ClaimService,
-    ) {}
+    constructor(private readonly prisma: PrismaService) {}
 
     async updateParentalAssignment(
         sourcePath: string,
@@ -283,10 +277,10 @@ export class DocumentService {
         const today = formatDate(new Date(), 'dd.mm.yyyy');
 
         const fontBoldBuffer = await fs.readFile(
-            path.resolve(__dirname, '../../../../fonts/Inter', 'bold.ttf'),
+            path.resolve(FontsDirectoryPath, 'Inter', 'bold.ttf'),
         );
         const fontRegularBuffer = await fs.readFile(
-            path.resolve(__dirname, '../../../../fonts/Inter', 'regular.ttf'),
+            path.resolve(FontsDirectoryPath, 'Inter', 'regular.ttf'),
         );
 
         let pngBuffer;
@@ -299,8 +293,7 @@ export class DocumentService {
         }
 
         const templatePath = path.join(
-            __dirname,
-            '../../../../assets',
+            AssignmentsDirectoryPath,
             'parental-assignment_agreement-template.pdf',
         );
         const templateBuffer = await fs.readFile(templatePath);
@@ -448,13 +441,13 @@ export class DocumentService {
         const today = formatDate(new Date(), 'dd.MMMM.yyyy');
 
         const fontBoldBuffer = await fs.readFile(
-            path.resolve(__dirname, '../../../../fonts/Inter', 'bold.ttf'),
+            path.resolve(FontsDirectoryPath, 'Inter', 'bold.ttf'),
         );
         const fontRegularBuffer = await fs.readFile(
-            path.resolve(__dirname, '../../../../fonts/Inter', 'regular.ttf'),
+            path.resolve(FontsDirectoryPath, 'Inter', 'regular.ttf'),
         );
         const fontMediumBuffer = await fs.readFile(
-            path.resolve(__dirname, '../../../../fonts/Inter', 'medium.ttf'),
+            path.resolve(FontsDirectoryPath, 'Inter', 'medium.ttf'),
         );
 
         let pngBuffer;
@@ -467,8 +460,7 @@ export class DocumentService {
         }
 
         const templatePath = path.join(
-            __dirname,
-            '../../../../assets',
+            AssignmentsDirectoryPath,
             'assignment_agreement-template.pdf',
         );
         const templateBuffer = await fs.readFile(templatePath);
