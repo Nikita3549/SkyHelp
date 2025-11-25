@@ -1,0 +1,188 @@
+import { rgb } from 'pdf-lib';
+import { ICoordinates } from '../interfaces/coordinates.interface';
+
+export const buildCancellationTemplateDataUtil = (dto: {
+    passengerName: string;
+    claimId: string;
+    date: Date;
+    flightNumber: string;
+    departureAirport: string;
+    arrivalAirport: string;
+}): ICoordinates[] => {
+    const formatDate = (date: Date) =>
+        date.toLocaleDateString('en-GB').replace(/\//g, '.');
+
+    return [
+        {
+            page: 1,
+            color: rgb(0, 0, 0),
+            size: 12,
+            text: dto.passengerName,
+            x: 290,
+            y: 584,
+            fontWeight: 'REGULAR',
+        },
+        {
+            page: 1,
+            color: rgb(0, 0, 0),
+            size: 10.5,
+            text: dto.claimId,
+            x: 422,
+            y: 551,
+            fontWeight: 'REGULAR',
+        },
+        {
+            page: 1,
+            color: rgb(0, 0, 0),
+            size: 10.5,
+            text: formatDate(dto.date),
+            x: 482,
+            y: 551,
+            fontWeight: 'REGULAR',
+        },
+        {
+            page: 1,
+            color: rgb(0, 0, 0),
+            size: 10.5,
+            text: dto.flightNumber,
+            x: 335,
+            y: 391,
+            fontWeight: 'BOLD',
+        },
+        {
+            page: 1,
+            color: rgb(0, 0, 0),
+            size: 10.5,
+            text: formatDate(dto.date),
+            x: 401,
+            y: 391,
+            fontWeight: 'BOLD',
+        },
+        {
+            page: 1,
+            color: rgb(0, 0, 0),
+            size: 10.5,
+            text: dto.passengerName,
+            x: 214,
+            y: 363,
+            fontWeight: 'BOLD',
+        },
+        {
+            page: 1,
+            color: rgb(0, 0, 0),
+            size: 10.5,
+            text: dto.flightNumber,
+            x: 185,
+            y: 306,
+            fontWeight: 'BOLD',
+        },
+        {
+            page: 1,
+            color: rgb(0, 0, 0),
+            size: 10.5,
+            text: dto.departureAirport,
+            x: 312,
+            y: 306,
+            fontWeight: 'BOLD',
+        },
+        {
+            page: 1,
+            color: rgb(0, 0, 0),
+            size: 10.5,
+            text: dto.departureAirport,
+            x: 108,
+            y: 292,
+            fontWeight: 'BOLD',
+        },
+        {
+            page: 1,
+            color: rgb(0, 0, 0),
+            size: 10.5,
+            text: formatDate(dto.date),
+            x: 359,
+            y: 292,
+            fontWeight: 'BOLD',
+        },
+        {
+            page: 1,
+            color: rgb(0, 0, 0),
+            size: 10.5,
+            text: dto.passengerName,
+            x: 154,
+            y: 238,
+            fontWeight: 'REGULAR',
+        },
+        {
+            page: 1,
+            color: rgb(0, 0, 0),
+            size: 10.5,
+            text: dto.flightNumber,
+            x: 364,
+            y: 212,
+            fontWeight: 'REGULAR',
+        },
+        {
+            page: 1,
+            color: rgb(0, 0, 0),
+            size: 10.5,
+            text: dto.departureAirport,
+            x: 169,
+            y: 186,
+            fontWeight: 'REGULAR',
+        },
+        {
+            page: 1,
+            color: rgb(0, 0, 0),
+            size: 10.5,
+            text: dto.arrivalAirport,
+            x: 101,
+            y: 161,
+            fontWeight: 'REGULAR',
+        },
+        {
+            page: 1,
+            color: rgb(0, 0, 0),
+            size: 10.5,
+            text: formatDate(dto.date),
+            x: 244,
+            y: 133,
+            fontWeight: 'REGULAR',
+        },
+        {
+            page: 2,
+            color: rgb(0, 0, 0),
+            size: 10.5,
+            text: formatDate(dto.date),
+            x: 176,
+            y: 525,
+            fontWeight: 'REGULAR',
+        },
+        {
+            page: 2,
+            color: rgb(0, 0, 0),
+            size: 10.5,
+            text: dto.claimId,
+            x: 224,
+            y: 509,
+            fontWeight: 'REGULAR',
+        },
+        {
+            page: 2,
+            color: rgb(0, 0, 0),
+            size: 10.5,
+            text: dto.date.getDate().toString().padStart(2, '0'),
+            x: 465,
+            y: 144,
+            fontWeight: 'REGULAR',
+        },
+        {
+            page: 2,
+            color: rgb(0, 0, 0),
+            size: 10.5,
+            text: (dto.date.getMonth() + 1).toString().padStart(2, '0'),
+            x: 481,
+            y: 144,
+            fontWeight: 'REGULAR',
+        },
+    ];
+};
