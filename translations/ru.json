@@ -169,6 +169,7 @@
     "rights.callToAction.title": "Нужна помощь с заявкой?",
     "rights.callToAction.description": "SkyHelp помогает получить положенную компенсацию. Простой процесс и подход «нет результата — нет оплаты» исключают риск.",
     "rights.callToAction.buttonText": "Начать оформление заявки",
+    "rights.section.whatSituationsQualifyForCompensation" : "В каких ситуациях вы имеете право на компенсацию?",
     "anac.relatedLinks.airPassengerRights": "Права авиапассажиров",
     "anac.relatedLinks.eu261FlightCompensation": "Компенсация по EU 261",
     "anac.relatedLinks.shyRegulationTurkey": "SHY Regulation Turkey",
