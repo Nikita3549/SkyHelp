@@ -3643,7 +3643,7 @@
     "DocsRequired.document_required": "document necesar:",
     "DocsRequired.upload_prompt": "Vă rugăm să încărcați acest document pentru a continua procesarea cererii dvs.",
     "DocsRequired.upload_button": "Încărcați",
-    "DocsRequired.sign_now": "Semnați acum",
+    "DocsRequired.sign_now": "Semnați",
     "DocsRequired.copy_link": "Copiați linkul",
     "PassengerDetailsStep.validation.adultPassengerRequired": "Prenumele, numele și emailul sunt obligatorii pentru pasagerii adulți",
     "PassengerDetailsStep.validation.invalidPhone": "Număr de telefon invalid",

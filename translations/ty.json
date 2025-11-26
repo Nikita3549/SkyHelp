@@ -3663,7 +3663,7 @@
     "DocsRequired.document_required": "gerekli belge:",
     "DocsRequired.upload_prompt": "Talebinizin işlenmeye devam etmesi için lütfen bu belgeyi yükleyin.",
     "DocsRequired.upload_button": "Yükle",
-    "DocsRequired.sign_now": "Hemen imzala",
+    "DocsRequired.sign_now": "Hemen",
     "DocsRequired.copy_link": "Bağlantıyı kopyala",
     "PassengerDetailsStep.validation.adultPassengerRequired": "Yetişkin yolcular için ad, soyad ve e-posta gereklidir",
     "PassengerDetailsStep.validation.invalidPhone": "Geçersiz telefon",

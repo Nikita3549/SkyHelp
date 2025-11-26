@@ -3641,7 +3641,7 @@
     "DocsRequired.document_required": "требуется документ:",
     "DocsRequired.upload_prompt": "Пожалуйста, загрузите этот документ, чтобы продолжить обработку вашей заявки.",
     "DocsRequired.upload_button": "Загрузить",
-    "DocsRequired.sign_now": "Подписать сейчас",
+    "DocsRequired.sign_now": "Подписать",
     "DocsRequired.copy_link": "Скопировать ссылку",
     "PassengerDetailsStep.validation.adultPassengerRequired": "Имя, фамилия и email обязательны для взрослых пассажиров",
     "PassengerDetailsStep.validation.invalidPhone": "Неверный номер телефона",

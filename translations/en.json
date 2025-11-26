@@ -3639,7 +3639,7 @@
     "DocsRequired.document_required": "document required:",
     "DocsRequired.upload_prompt": "Please upload this document to continue processing your claim.",
     "DocsRequired.upload_button": "Upload",
-    "DocsRequired.sign_now": "Sign now",
+    "DocsRequired.sign_now": "Sign",
     "DocsRequired.copy_link": "Copy link",
     "PassengerDetailsStep.validation.adultPassengerRequired": "First name, last name, and email are required for adult passengers",
     "PassengerDetailsStep.validation.invalidPhone": "Invalid phone",
