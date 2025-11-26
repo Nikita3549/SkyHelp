@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
-import { OtherPassenger } from '@prisma/client';
+import { OtherPassenger, PassengerPaymentStatus } from '@prisma/client';
 import { OtherPassengerDto } from './dto/create-other-passengers.dto';
 
 @Injectable()
@@ -64,6 +64,20 @@ export class OtherPassengerService {
         return this.prisma.otherPassenger.update({
             data: {
                 isMinor: true,
+            },
+            where: {
+                id: passengerId,
+            },
+        });
+    }
+
+    async updatePaymentStatus(
+        paymentStatus: PassengerPaymentStatus,
+        passengerId: string,
+    ) {
+        return this.prisma.otherPassenger.update({
+            data: {
+                paymentStatus,
             },
             where: {
                 id: passengerId,

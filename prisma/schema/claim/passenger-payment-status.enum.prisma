@@ -1,0 +1,5 @@
+enum PassengerPaymentStatus {
+  RECEIVED
+  PENDING
+  PAID
+}

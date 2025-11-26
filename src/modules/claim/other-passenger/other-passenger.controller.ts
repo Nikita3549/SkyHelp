@@ -40,6 +40,7 @@ import { generateAssignmentName } from '../../../utils/generate-assignment-name'
 import { RecentUpdatesService } from '../recent-updates/recent-updates.service';
 import { DocumentRequestService } from '../document-request/document-request.service';
 import { RoleGuard } from '../../../guards/role.guard';
+import { UpdatePaymentStatusDto } from '../customer/dto/update-payment-status.dto';
 
 @Controller('claims/passengers')
 @UseGuards(JwtAuthGuard)
@@ -47,6 +48,34 @@ export class OtherPassengerController {
     constructor(
         private readonly otherPassengerService: OtherPassengerService,
     ) {}
+
+    @Patch(':passengerId/payment-status')
+    @UseGuards(
+        new RoleGuard([
+            UserRole.ADMIN,
+            UserRole.AGENT,
+            UserRole.LAWYER,
+            UserRole.ACCOUNTANT,
+        ]),
+    )
+    async updatePaymentStatus(
+        @Param('passengerId') passengerId: string,
+        @Body() dto: UpdatePaymentStatusDto,
+    ) {
+        const { paymentStatus } = dto;
+
+        const passenger =
+            await this.otherPassengerService.getOtherPassenger(passengerId);
+
+        if (!passenger) {
+            throw new NotFoundException(PASSENGER_NOT_FOUND);
+        }
+
+        return await this.otherPassengerService.updatePaymentStatus(
+            paymentStatus,
+            passengerId,
+        );
+    }
 
     @UseGuards(new RoleGuard([UserRole.ADMIN, UserRole.AGENT]))
     @Put('admin')

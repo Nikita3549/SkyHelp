@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CustomerDto } from './dto/customer.dto';
 import { PrismaService } from '../../prisma/prisma.service';
 import { normalizePhone } from '../../../utils/normalizePhone';
+import { PassengerPaymentStatus } from '@prisma/client';
 
 @Injectable()
 export class CustomerService {
@@ -44,6 +45,20 @@ export class CustomerService {
         return this.prisma.claimCustomer.update({
             data: {
                 isSigned,
+            },
+            where: {
+                id: customerId,
+            },
+        });
+    }
+
+    async updatePaymentStatus(
+        paymentStatus: PassengerPaymentStatus,
+        customerId: string,
+    ) {
+        return this.prisma.claimCustomer.update({
+            data: {
+                paymentStatus,
             },
             where: {
                 id: customerId,

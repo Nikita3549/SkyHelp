@@ -4,6 +4,7 @@ import {
     Controller,
     NotFoundException,
     Param,
+    Patch,
     Post,
     Put,
     UnauthorizedException,
@@ -27,6 +28,7 @@ import { generateAssignmentName } from '../../../utils/generate-assignment-name'
 import { RecentUpdatesService } from '../recent-updates/recent-updates.service';
 import { DocumentRequestService } from '../document-request/document-request.service';
 import { RoleGuard } from '../../../guards/role.guard';
+import { UpdatePaymentStatusDto } from './dto/update-payment-status.dto';
 
 @Controller('claims/customer')
 @UseGuards(JwtAuthGuard)
@@ -48,6 +50,33 @@ export class CustomerController {
         await this.claimService.changeUpdatedAt(claimId);
 
         return await this.customerService.updateCustomer(dto, claimId);
+    }
+
+    @Patch(':customerId/payment-status')
+    @UseGuards(
+        new RoleGuard([
+            UserRole.ADMIN,
+            UserRole.AGENT,
+            UserRole.LAWYER,
+            UserRole.ACCOUNTANT,
+        ]),
+    )
+    async updatePaymentStatus(
+        @Param('customerId') customerId: string,
+        @Body() dto: UpdatePaymentStatusDto,
+    ) {
+        const { paymentStatus } = dto;
+
+        const customer = await this.customerService.getCustomer(customerId);
+
+        if (!customer) {
+            throw new NotFoundException(CUSTOMER_NOT_FOUND);
+        }
+
+        return await this.customerService.updatePaymentStatus(
+            paymentStatus,
+            customerId,
+        );
     }
 }
 
