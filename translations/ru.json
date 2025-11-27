@@ -3901,6 +3901,8 @@
     "Dashboard.allClaimsTitle": "Все заявки",
     "Dashboard.allClaimsDescription": "Выберите заявку, чтобы увидеть подробную информацию.",
     "Dashboard.noClaimsAvailable": "Нет доступных заявок.",
+    "Dashboard.documentUploadSuccessTitle": "Документ загружен",
+    "Dashboard.documentUploadSuccessDescription": "успешно загружен.",
     "ThankYouPage.paymentDetailsSubmitted.title": "Платёжные данные отправлены",
     "ThankYouPage.paymentDetailsSubmitted.description": "Ваша информация о платеже успешно отправлена и обрабатывается.",
     "ThankYouPage.paymentDetailsSubmitted.continue": "Продолжить",

@@ -3900,6 +3900,8 @@
     "Dashboard.allClaimsTitle": "All claims",
     "Dashboard.allClaimsDescription": "Select a claim to see detailed information.",
     "Dashboard.noClaimsAvailable": "No claims available.",
+    "Dashboard.documentUploadSuccessTitle": "Document uploaded",
+    "Dashboard.documentUploadSuccessDescription": "was uploaded successfully.",
     "ThankYouPage.paymentDetailsSubmitted.title": "Payment Details Submitted",
     "ThankYouPage.paymentDetailsSubmitted.description": "Your payment information has been successfully submitted and is being processed.",
     "ThankYouPage.paymentDetailsSubmitted.continue": "Continue",

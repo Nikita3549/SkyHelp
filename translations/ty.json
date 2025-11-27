@@ -3924,6 +3924,8 @@
     "Dashboard.allClaimsTitle": "Tüm talepler",
     "Dashboard.allClaimsDescription": "Ayrıntılı bilgileri görmek için bir talep seçin.",
     "Dashboard.noClaimsAvailable": "Kullanılabilir talep yok.",
+    "Dashboard.documentUploadSuccessTitle": "Belge yüklendi",
+    "Dashboard.documentUploadSuccessDescription": "başarıyla yüklendi.",
     "ThankYouPage.paymentDetailsSubmitted.title": "Ödeme Bilgileri Gönderildi",
     "ThankYouPage.paymentDetailsSubmitted.description": "Ödeme bilgileriniz başarıyla gönderildi ve işleniyor.",
     "ThankYouPage.paymentDetailsSubmitted.continue": "Devam Et",
