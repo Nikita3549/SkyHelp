@@ -1,7 +1,7 @@
 import { IsDate, IsString } from 'class-validator';
 import { Transform } from 'class-transformer';
 
-export class GenerateCancellationDto {
+export class GenerateTemplateDto {
     @IsString()
     passengerName: string;
 

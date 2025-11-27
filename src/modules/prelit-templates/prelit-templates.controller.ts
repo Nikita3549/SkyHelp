@@ -1,13 +1,17 @@
 import { Body, Controller, Post, Res, UseGuards } from '@nestjs/common';
-import { GenerateCancellationDto } from './dto/generate-cancellation.dto';
+import { GenerateTemplateDto } from './dto/generate-template.dto';
 import { PrelitTemplatesService } from './prelit-templates.service';
 import { Readable } from 'stream';
 import { Response } from 'express';
 import { buildCancellationTemplateDataUtil } from './utils/buildCancellationTemplateData.util';
-import { FLYONE_RO_250_CANCELLATION_FILENAME } from './consants';
+import {
+    FLYONE_RO_250_CANCELLATION_FILENAME,
+    FLYONE_RO_250_DELAY_FILENAME,
+} from './consants';
 import { RoleGuard } from '../../guards/role.guard';
 import { UserRole } from '@prisma/client';
 import { JwtAuthGuard } from '../../guards/jwtAuth.guard';
+import { buildDelayTemplateDataUtil } from './utils/buildDelayTemplateData.util';
 
 @Controller('prelit')
 @UseGuards(
@@ -20,12 +24,34 @@ export class PrelitTemplatesController {
     ) {}
     @Post('cancellation')
     async generateCancellation(
-        @Body() dto: GenerateCancellationDto,
+        @Body() dto: GenerateTemplateDto,
         @Res() res: Response,
     ) {
         const pdfBytes = await this.prelitTemplatesService.fillTemplate(
             buildCancellationTemplateDataUtil(dto),
             FLYONE_RO_250_CANCELLATION_FILENAME,
+        );
+
+        const buffer = Buffer.from(pdfBytes);
+
+        const stream = Readable.from(buffer);
+
+        res.set({
+            'Content-Type': 'application/pdf',
+            'Content-Length': buffer.length,
+        });
+
+        stream.pipe(res);
+    }
+
+    @Post('delay')
+    async generateDelay(
+        @Body() dto: GenerateTemplateDto,
+        @Res() res: Response,
+    ) {
+        const pdfBytes = await this.prelitTemplatesService.fillTemplate(
+            buildDelayTemplateDataUtil(dto),
+            FLYONE_RO_250_DELAY_FILENAME,
         );
 
         const buffer = Buffer.from(pdfBytes);
