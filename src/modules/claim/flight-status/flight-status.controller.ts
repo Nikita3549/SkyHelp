@@ -108,13 +108,13 @@ export class FlightStatusController {
         let newFlightStatus: IFlightStatus | null;
 
         switch (source) {
-            case ClaimFlightStatusSource.OAG:
-                newFlightStatus = await this.flightService.getFlightFromOAG(
-                    flightCode,
-                    airlineIcao,
-                    flightDate,
-                );
-                break;
+            // case ClaimFlightStatusSource.OAG:
+            //     newFlightStatus = await this.flightService.getFlightFromOAG(
+            //         flightCode,
+            //         airlineIcao,
+            //         flightDate,
+            //     );
+            //     break;
             case ClaimFlightStatusSource.FLIGHT_STATS:
                 newFlightStatus =
                     await this.flightService.getFlightFromFlightStats(
