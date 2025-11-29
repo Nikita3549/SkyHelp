@@ -1,5 +1,6 @@
 import { rgb } from 'pdf-lib';
 import { ICoordinates } from '../interfaces/coordinates.interface';
+import { formatDate } from '../../../utils/formatDate';
 
 export const buildCancellationTemplateDataUtil = (dto: {
     passengerName: string;
@@ -9,9 +10,6 @@ export const buildCancellationTemplateDataUtil = (dto: {
     departureAirport: string;
     arrivalAirport: string;
 }): ICoordinates[] => {
-    const formatDate = (date: Date) =>
-        date.toLocaleDateString('en-GB').replace(/\//g, '.');
-
     return [
         {
             page: 1,
@@ -35,7 +33,7 @@ export const buildCancellationTemplateDataUtil = (dto: {
             page: 1,
             color: rgb(0, 0, 0),
             size: 10.5,
-            text: formatDate(dto.date),
+            text: formatDate(dto.date, 'dd.mm.yyyy'),
             x: 482,
             y: 551,
             fontWeight: 'REGULAR',
@@ -53,7 +51,7 @@ export const buildCancellationTemplateDataUtil = (dto: {
             page: 1,
             color: rgb(0, 0, 0),
             size: 10.5,
-            text: formatDate(dto.date),
+            text: formatDate(dto.date, 'dd.mm.yyyy'),
             x: 401,
             y: 391,
             fontWeight: 'BOLD',
@@ -98,7 +96,7 @@ export const buildCancellationTemplateDataUtil = (dto: {
             page: 1,
             color: rgb(0, 0, 0),
             size: 10.5,
-            text: formatDate(dto.date),
+            text: formatDate(dto.date, 'dd.mm.yyyy'),
             x: 359,
             y: 292,
             fontWeight: 'BOLD',
@@ -143,7 +141,7 @@ export const buildCancellationTemplateDataUtil = (dto: {
             page: 1,
             color: rgb(0, 0, 0),
             size: 10.5,
-            text: formatDate(dto.date),
+            text: formatDate(dto.date, 'dd.mm.yyyy'),
             x: 244,
             y: 133,
             fontWeight: 'REGULAR',
@@ -152,7 +150,7 @@ export const buildCancellationTemplateDataUtil = (dto: {
             page: 2,
             color: rgb(0, 0, 0),
             size: 10.5,
-            text: formatDate(dto.date),
+            text: formatDate(dto.date, 'dd.mm.yyyy'),
             x: 176,
             y: 525,
             fontWeight: 'REGULAR',
@@ -170,19 +168,10 @@ export const buildCancellationTemplateDataUtil = (dto: {
             page: 2,
             color: rgb(0, 0, 0),
             size: 10.5,
-            text: new Date().getDate().toString().padStart(2, '0'),
-            x: 465,
+            text: formatDate(new Date()),
+            x: 466,
             y: 144,
-            fontWeight: 'REGULAR',
-        },
-        {
-            page: 2,
-            color: rgb(0, 0, 0),
-            size: 10.5,
-            text: (new Date().getMonth() + 1).toString().padStart(2, '0'),
-            x: 481,
-            y: 144,
-            fontWeight: 'REGULAR',
+            fontWeight: 'BOLD',
         },
     ];
 };
