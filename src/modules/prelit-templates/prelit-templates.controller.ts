@@ -52,7 +52,7 @@ export class PrelitTemplatesController {
         @Res() res: Response,
     ) {
         const pdfBytes = await this.prelitTemplatesService.fillTemplate(
-            buildOverbookingTemplateDataUtil(dto),
+            buildDelayTemplateDataUtil(dto),
             FLYONE_RO_250_DELAY_FILENAME,
         );
 
