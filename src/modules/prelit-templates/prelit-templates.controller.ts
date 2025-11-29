@@ -7,11 +7,13 @@ import { buildCancellationTemplateDataUtil } from './utils/buildCancellationTemp
 import {
     FLYONE_RO_250_CANCELLATION_FILENAME,
     FLYONE_RO_250_DELAY_FILENAME,
+    FLYONE_RO_250_OVERBOOKING_FILENAME,
 } from './consants';
 import { RoleGuard } from '../../guards/role.guard';
 import { UserRole } from '@prisma/client';
 import { JwtAuthGuard } from '../../guards/jwtAuth.guard';
 import { buildDelayTemplateDataUtil } from './utils/buildDelayTemplateData.util';
+import { buildOverbookingTemplateDataUtil } from './utils/buildOverbookingTemplateData.util';
 
 @Controller('prelit')
 @UseGuards(
@@ -50,8 +52,30 @@ export class PrelitTemplatesController {
         @Res() res: Response,
     ) {
         const pdfBytes = await this.prelitTemplatesService.fillTemplate(
-            buildDelayTemplateDataUtil(dto),
+            buildOverbookingTemplateDataUtil(dto),
             FLYONE_RO_250_DELAY_FILENAME,
+        );
+
+        const buffer = Buffer.from(pdfBytes);
+
+        const stream = Readable.from(buffer);
+
+        res.set({
+            'Content-Type': 'application/pdf',
+            'Content-Length': buffer.length,
+        });
+
+        stream.pipe(res);
+    }
+
+    @Post('overbooking')
+    async generateOverbooking(
+        @Body() dto: GenerateTemplateDto,
+        @Res() res: Response,
+    ) {
+        const pdfBytes = await this.prelitTemplatesService.fillTemplate(
+            buildOverbookingTemplateDataUtil(dto),
+            FLYONE_RO_250_OVERBOOKING_FILENAME,
         );
 
         const buffer = Buffer.from(pdfBytes);
