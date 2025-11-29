@@ -3600,6 +3600,8 @@
     "compensationPaid.description": "Havayolu tazminatı ödedi. Ödeme zaten banka hesabınıza gönderildi.\nTransferin tamamlanması için lütfen en fazla 7 iş günü bekleyin.",
     "claimRejected.title": "Talep Reddedildi",
     "claimRejected.description": "Havayolu tazminatı reddetti. Sonraki adımları değerlendiriyoruz.",
+    "paymentFailed.title": "Ödeme Başarısız",
+    "paymentFailed.description": "Lütfen aşağıdaki bağlantı üzerinden banka bilgilerinizi gönderin veya doğrulayın. Bilgileriniz güncellendikten sonra, ödeme işlemini gecikme olmadan gerçekleştireceğiz.",
     "legalActionInProgress.title": "Hukuki Süreç Devam Ediyor",
     "legalActionInProgress.description": "Dosyanız hukuki sürece aktarılmıştır. Sizi bilgilendirmeye devam edeceğiz.",
     "legalActionInProgress.first-stage": "Davanız yasal işlemin ilk aşamasına resmi olarak geçmiştir. Hukuk ekibimiz haklarınızı savunmak için belgeler üzerinde halihazırda çalışıyor.",

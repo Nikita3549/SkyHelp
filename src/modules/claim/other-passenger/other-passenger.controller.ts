@@ -17,6 +17,7 @@ import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
 import { UpdatePassengerDto } from './dto/update-passenger.dto';
 import {
     CLAIM_NOT_FOUND,
+    CONTINUE_LINKS_EXP,
     INVALID_JWT,
     PASSENGER_NOT_FOUND,
 } from '../constants';
@@ -30,8 +31,10 @@ import { validateClaimJwt } from '../../../utils/validate-claim-jwt';
 import { TokenService } from '../../token/token.service';
 import {
     ClaimRecentUpdatesType,
+    ClaimStatus,
     DocumentRequestStatus,
     DocumentType,
+    PassengerPaymentStatus,
     UserRole,
 } from '@prisma/client';
 import { DocumentsUploadInterceptor } from '../../../interceptors/documents/documents-upload.interceptor';
@@ -41,12 +44,19 @@ import { RecentUpdatesService } from '../recent-updates/recent-updates.service';
 import { DocumentRequestService } from '../document-request/document-request.service';
 import { RoleGuard } from '../../../guards/role.guard';
 import { UpdatePaymentStatusDto } from '../customer/dto/update-payment-status.dto';
+import { Languages } from '../../language/enums/languages.enums';
+import { GenerateLinksService } from '../../generate-links/generate-links.service';
+import { NotificationService } from '../../notification/notification.service';
 
 @Controller('claims/passengers')
 @UseGuards(JwtAuthGuard)
 export class OtherPassengerController {
     constructor(
         private readonly otherPassengerService: OtherPassengerService,
+        private readonly tokenService: TokenService,
+        private readonly generateLinksService: GenerateLinksService,
+        private readonly notificationService: NotificationService,
+        private readonly claimService: ClaimService,
     ) {}
 
     @Patch(':passengerId/payment-status')
@@ -69,6 +79,36 @@ export class OtherPassengerController {
 
         if (!passenger) {
             throw new NotFoundException(PASSENGER_NOT_FOUND);
+        }
+
+        if (paymentStatus == PassengerPaymentStatus.FAILED) {
+            const linkJwt = this.tokenService.generateJWT(
+                {
+                    claimId: passenger.claimId,
+                },
+                { expiresIn: CONTINUE_LINKS_EXP },
+            );
+            const claim = (await this.claimService.getClaim(
+                passenger.claimId,
+            ))!;
+
+            const paymentDetailsLink =
+                await this.generateLinksService.generatePaymentDetails(linkJwt);
+
+            await this.notificationService.sendPaymentRequest(
+                claim.customer.email,
+                {
+                    customerName: claim.customer.firstName,
+                    claimId: claim.id,
+                    paymentDetailsLink,
+                },
+                Languages.EN,
+            );
+
+            await this.claimService.updateStatus(
+                ClaimStatus.PAYMENT_FAILED,
+                claim.id,
+            );
         }
 
         return await this.otherPassengerService.updatePaymentStatus(

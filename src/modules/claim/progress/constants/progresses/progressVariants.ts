@@ -91,4 +91,9 @@ export const ProgressVariants: {
         title: 'paymentReceived.title',
         descriptions: ['paymentReceived.description'],
     },
+    paymentFailed: {
+        status: ClaimStatus.PAYMENT_FAILED,
+        title: 'paymentFailed.title',
+        descriptions: ['paymentFailed.description'],
+    },
 } as const;

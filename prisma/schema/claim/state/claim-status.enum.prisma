@@ -15,4 +15,5 @@ enum ClaimStatus {
   CLOSED           @map("Closed")
   NOT_ELIGIBLE     @map("Not Eligible")
   PAYMENT_RECEIVED
+  PAYMENT_FAILED
 }

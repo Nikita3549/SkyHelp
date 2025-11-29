@@ -8,7 +8,7 @@ import { GmailNoreplyAccountModule } from './accounts/gmail-noreply-account/gmai
 
 @Module({
     imports: [
-        ClaimModule,
+        forwardRef(() => ClaimModule),
         forwardRef(() => GmailOfficeAccountModule),
         forwardRef(() => GmailNoreplyAccountModule),
         AttachmentModule,

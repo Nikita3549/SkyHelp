@@ -9,6 +9,8 @@ import { DocumentModule } from '../document/document.module';
 import { TokenModule } from '../../token/token.module';
 import { RecentUpdatesModule } from '../recent-updates/recent-updates.module';
 import { DocumentRequestModule } from '../document-request/document-request.module';
+import { NotificationModule } from '../../notification/notification.module';
+import { GenerateLinksModule } from '../../generate-links/generate-links.module';
 
 @Module({
     imports: [
@@ -17,6 +19,8 @@ import { DocumentRequestModule } from '../document-request/document-request.modu
         TokenModule,
         RecentUpdatesModule,
         DocumentRequestModule,
+        forwardRef(() => GenerateLinksModule),
+        forwardRef(() => NotificationModule),
     ],
     controllers: [CustomerController, PublicCustomerController],
     providers: [CustomerService],

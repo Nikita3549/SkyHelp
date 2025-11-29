@@ -3576,6 +3576,8 @@
     "compensationPaid.description": "The airline has paid the compensation. The payment has already been sent to your bank account.\nPlease allow up to 7 business days for the transfer to be completed.",
     "claimRejected.title": "Claim Rejected",
     "claimRejected.description": "The airline refused to compensate. We’re reviewing next steps.",
+    "paymentFailed.title": "Payment Failed",
+    "paymentFailed.description": "Please submit or verify your bank information via the link below. Once updated, we will proceed with the payment without delay.",
     "legalActionInProgress.title": "Legal Action In Progress",
     "legalActionInProgress.description": "Your case was escalated to legal. We'll keep you updated.",
     "legalActionInProgress.first-stage": "Your case has officially entered the first stage of legal action. Our legal team is already working on the documents to defend your rights.",

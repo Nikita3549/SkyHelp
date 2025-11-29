@@ -38,6 +38,8 @@ import { generateNumericId } from '../../utils/generateNumericId';
 import { IAffiliateClaim } from './interfaces/affiliate-claim.interface';
 import { IAccountantClaim } from './interfaces/accountant-claim.interface';
 import { ViewClaimType } from './enums/view-claim-type.enum';
+import { Languages } from '../language/enums/languages.enums';
+import { NotificationService } from '../notification/notification.service';
 
 @Injectable()
 export class ClaimService {
@@ -1052,5 +1054,47 @@ export class ClaimService {
             },
             include: this.fullClaimInclude(),
         });
+    }
+
+    async setPaymentFailed(
+        letterData: {
+            customerEmail: string;
+            customerName: string;
+            customerLanguage: Languages;
+        },
+        claimId: string,
+    ) {
+        // const linkJwt = this.tokenService.generateJWT(
+        //     {
+        //         claimId,
+        //     },
+        //     { expiresIn: CONTINUE_LINKS_EXP },
+        // );
+        //
+        // const paymentDetailsLink =
+        //     await this.generateLinksService.generatePaymentDetails(linkJwt);
+        //
+        // await this.notificationService.sendPaymentRequest(
+        //     letterData.customerEmail,
+        //     {
+        //         customerName: letterData.customerName,
+        //         claimId,
+        //         paymentDetailsLink,
+        //     },
+        //     letterData.customerLanguage,
+        // );
+        //
+        // return this.prisma.claim.update({
+        //     data: {
+        //         state: {
+        //             update: {
+        //                 status: ClaimStatus.PAYMENT_FAILED,
+        //             },
+        //         },
+        //     },
+        //     where: {
+        //         id: claimId,
+        //     },
+        // });
     }
 }

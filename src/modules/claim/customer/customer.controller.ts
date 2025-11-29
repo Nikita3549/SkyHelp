@@ -12,15 +12,22 @@ import {
 } from '@nestjs/common';
 import { ClaimService } from '../claim.service';
 import { CustomerDto } from './dto/customer.dto';
-import { CLAIM_NOT_FOUND, CUSTOMER_NOT_FOUND, INVALID_JWT } from '../constants';
+import {
+    CLAIM_NOT_FOUND,
+    CONTINUE_LINKS_EXP,
+    CUSTOMER_NOT_FOUND,
+    INVALID_JWT,
+} from '../constants';
 import { CustomerService } from './customer.service';
 import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
 import { UploadSignDto } from './dto/upload-sign.dto';
 import { DocumentService } from '../document/document.service';
 import {
     ClaimRecentUpdatesType,
+    ClaimStatus,
     DocumentRequestStatus,
     DocumentType,
+    PassengerPaymentStatus,
     UserRole,
 } from '@prisma/client';
 import { TokenService } from '../../token/token.service';
@@ -29,6 +36,9 @@ import { RecentUpdatesService } from '../recent-updates/recent-updates.service';
 import { DocumentRequestService } from '../document-request/document-request.service';
 import { RoleGuard } from '../../../guards/role.guard';
 import { UpdatePaymentStatusDto } from './dto/update-payment-status.dto';
+import { GenerateLinksService } from '../../generate-links/generate-links.service';
+import { NotificationService } from '../../notification/notification.service';
+import { Languages } from '../../language/enums/languages.enums';
 
 @Controller('claims/customer')
 @UseGuards(JwtAuthGuard)
@@ -36,6 +46,9 @@ export class CustomerController {
     constructor(
         private readonly customerService: CustomerService,
         private readonly claimService: ClaimService,
+        private readonly generateLinksService: GenerateLinksService,
+        private readonly tokenService: TokenService,
+        private readonly notificationService: NotificationService,
     ) {}
 
     @UseGuards(new RoleGuard([UserRole.ADMIN, UserRole.AGENT]))
@@ -73,6 +86,32 @@ export class CustomerController {
             throw new NotFoundException(CUSTOMER_NOT_FOUND);
         }
 
+        if (paymentStatus == PassengerPaymentStatus.FAILED) {
+            const linkJwt = this.tokenService.generateJWT(
+                {
+                    claimId: customer.Claim[0].id,
+                },
+                { expiresIn: CONTINUE_LINKS_EXP },
+            );
+
+            const paymentDetailsLink =
+                await this.generateLinksService.generatePaymentDetails(linkJwt);
+
+            await this.notificationService.sendPaymentRequest(
+                customer.email,
+                {
+                    customerName: customer.firstName,
+                    claimId: customer.Claim[0].id,
+                    paymentDetailsLink,
+                },
+                Languages.EN,
+            );
+
+            await this.claimService.updateStatus(
+                ClaimStatus.PAYMENT_FAILED,
+                customer.Claim[0].id,
+            );
+        }
         return await this.customerService.updatePaymentStatus(
             paymentStatus,
             customerId,

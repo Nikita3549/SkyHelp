@@ -3580,6 +3580,8 @@
     "compensationPaid.description": "Compania aeriană a efectuat plata compensației. Fondurile au fost deja trimise în contul dvs. bancar.\nVă rugăm să permiteți până la 7 zile lucrătoare pentru finalizarea transferului.",
     "claimRejected.title": "Cerere respinsă",
     "claimRejected.description": "Compania aeriană a refuzat compensația. Analizăm următorii pași.",
+    "paymentFailed.title": "Plata a eșuat",
+    "paymentFailed.description": "Vă rugăm să trimiteți sau să verificați datele dumneavoastră bancare prin linkul de mai jos. Odată actualizate, vom proceda la plată fără întârziere.",
     "legalActionInProgress.title": "Acțiune legală în curs",
     "legalActionInProgress.description": "Cazul dvs. a fost escaladat către departamentul juridic. Vă vom ține la curent.",
     "legalActionInProgress.first-stage": "Cazul dvs. a intrat oficial în prima etapă a acțiunii legale. Echipa noastră juridică lucrează deja la documentele pentru a vă apăra drepturile.",
