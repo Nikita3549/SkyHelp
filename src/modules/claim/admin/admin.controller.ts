@@ -34,6 +34,8 @@ import { PartnerService } from '../../referral/partner/partner.service';
 import { CreatePartnerDto } from './dto/create-partner.dto';
 import { RoleGuard } from '../../../guards/role.guard';
 import { ViewClaimType } from '../enums/view-claim-type.enum';
+import { OtherPassengerService } from '../other-passenger/other-passenger.service';
+import { OtherPassengerDto } from '../other-passenger/dto/create-other-passengers.dto';
 
 @Controller('claims/admin')
 @UseGuards(
@@ -53,7 +55,26 @@ export class AdminController {
         private readonly userService: UserService,
         private readonly recentUpdatesService: RecentUpdatesService,
         private readonly partnerService: PartnerService,
+        private readonly otherPassengersService: OtherPassengerService,
     ) {}
+
+    @Post(':claimId/passenger')
+    async createOtherPassenger(
+        @Body() dto: OtherPassengerDto,
+        @Param('claimId') claimId: string,
+    ) {
+        const claim = await this.claimService.getClaim(claimId);
+
+        if (!claim) {
+            throw new NotFoundException(CLAIM_NOT_FOUND);
+        }
+
+        return this.otherPassengersService.createOtherPassengers(
+            [dto],
+            claimId,
+            claim.customer.compensation,
+        );
+    }
 
     @Post('partner')
     @UseGuards(new RoleGuard([UserRole.ADMIN]))

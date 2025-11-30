@@ -4,6 +4,7 @@ import { ClaimModule } from '../claim.module';
 import { UserModule } from '../../user/user.module';
 import { RecentUpdatesModule } from '../recent-updates/recent-updates.module';
 import { PartnerModule } from '../../referral/partner/partner.module';
+import { OtherPassengerModule } from '../other-passenger/other-passenger.module';
 
 @Module({
     imports: [
@@ -11,6 +12,7 @@ import { PartnerModule } from '../../referral/partner/partner.module';
         UserModule,
         RecentUpdatesModule,
         PartnerModule,
+        OtherPassengerModule,
     ],
     controllers: [AdminController],
 })
