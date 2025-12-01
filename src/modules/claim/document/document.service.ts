@@ -1,5 +1,10 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { Document, DocumentType } from '@prisma/client';
+import {
+    ClaimCustomer,
+    Document,
+    DocumentType,
+    OtherPassenger,
+} from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import * as fs from 'fs/promises';
 import * as path from 'path';
@@ -12,10 +17,105 @@ import * as fontkit from 'fontkit';
 import { createCanvas, loadImage, Image } from 'canvas';
 import { FontsDirectoryPath } from '../../../common/constants/paths/FontsDirectoryPath';
 import { AssignmentsDirectoryPath } from '../../../common/constants/paths/AssignmentsDirectoryPath';
+import { generateAssignmentName } from '../../../utils/generate-assignment-name';
+import { ClaimService } from '../claim.service';
 
 @Injectable()
 export class DocumentService {
-    constructor(private readonly prisma: PrismaService) {}
+    constructor(
+        private readonly prisma: PrismaService,
+        private readonly claimService: ClaimService,
+    ) {}
+
+    async updateAssignmentData(claimId: string, passengerIds: string[]) {
+        const claim = await this.claimService.getClaim(claimId, {
+            documentsWithPath: true,
+        });
+
+        if (!claim) {
+            return;
+        }
+
+        for (const passengerId of passengerIds) {
+            const passenger:
+                | (ClaimCustomer & { isMinor: false })
+                | OtherPassenger
+                | undefined =
+                claim.customer.id == passengerId
+                    ? {
+                          isMinor: false,
+                          ...claim.customer,
+                      }
+                    : claim.passengers.find((p) => p.id == passengerId);
+
+            if (!passenger) {
+                continue;
+            }
+
+            const assignments = claim.documents.filter(
+                (a) =>
+                    a.passengerId == passengerId &&
+                    a.type == DocumentType.ASSIGNMENT &&
+                    !a.deletedAt,
+            );
+
+            for (const assignment of assignments) {
+                let filepath: string;
+
+                if (!passenger.isMinor) {
+                    filepath = await this.saveSignaturePdf(
+                        null,
+                        {
+                            address: passenger.address,
+                            airlineName: claim.details.airlines.name,
+                            firstName: passenger.firstName,
+                            date: claim.details.date,
+                            claimId: claim.id,
+                            lastName: passenger.lastName,
+                            flightNumber: claim.details.flightNumber,
+                        },
+                        assignment.path,
+                    );
+                } else {
+                    const otherPassenger = passenger as OtherPassenger;
+
+                    filepath = await this.saveParentalSignaturePdf(
+                        null,
+                        {
+                            address: otherPassenger.address,
+                            airlineName: claim.details.airlines.name,
+                            firstName: otherPassenger.firstName,
+                            date: claim.details.date,
+                            claimId: claim.id,
+                            lastName: otherPassenger.lastName,
+                            flightNumber: claim.details.flightNumber,
+                            parentLastName: otherPassenger.parentLastName!,
+                            parentFirstName: otherPassenger.parentFirstName!,
+                            minorBirthday: otherPassenger.birthday!,
+                        },
+                        assignment.path,
+                    );
+                }
+
+                await this.removeDocument(assignment.id);
+
+                await this.saveDocuments(
+                    [
+                        {
+                            name: generateAssignmentName(
+                                passenger.firstName,
+                                passenger.lastName,
+                            ),
+                            path: filepath,
+                            passengerId: assignment.passengerId,
+                            documentType: assignment.type,
+                        },
+                    ],
+                    claim.id,
+                );
+            }
+        }
+    }
 
     async updateParentalAssignment(
         sourcePath: string,
@@ -71,6 +171,14 @@ export class DocumentService {
         sourcePath: string,
         targetPath: string,
         outputPath: string,
+        isOldAssignment: boolean = false,
+        signatureRect?: {
+            x: number;
+            y: number;
+            width: number;
+            height: number;
+            page?: number;
+        },
     ) {
         const sourceBuffer = await fs.readFile(sourcePath);
         const targetBuffer = await fs.readFile(targetPath);
@@ -78,17 +186,26 @@ export class DocumentService {
         const sourcePdf = await PDFDocument.load(sourceBuffer);
         const targetPdf = await PDFDocument.load(targetBuffer);
 
-        const sourcePageIndex = 1;
+        const sourcePageIndex = signatureRect?.page || 1;
         const sourcePage = sourcePdf.getPage(sourcePageIndex);
 
         const targetPage = targetPdf.getPage(3);
 
-        const signatureRect = {
-            x: 110,
-            y: 228,
-            width: 160,
-            height: 70,
-        };
+        if (!signatureRect && isOldAssignment) {
+            signatureRect = {
+                x: 110,
+                y: 228 - 30,
+                width: 160,
+                height: 100,
+            };
+        } else if (!signatureRect) {
+            signatureRect = {
+                x: 110,
+                y: 228,
+                width: 160,
+                height: 70,
+            };
+        }
 
         const embeddedPage = await targetPdf.embedPage(sourcePage, {
             left: signatureRect.x,
@@ -99,7 +216,7 @@ export class DocumentService {
 
         targetPage.drawPage(embeddedPage, {
             x: 110,
-            y: 445,
+            y: isOldAssignment ? 445 - 30 : 445,
             xScale: 1,
             yScale: 1,
         });
@@ -158,6 +275,13 @@ export class DocumentService {
         targetPath: string,
         outputPath: string,
         isOldAssignment: boolean = false,
+        signatureRect?: {
+            x: number;
+            y: number;
+            width: number;
+            height: number;
+            page?: number;
+        },
     ) {
         const sourceBuffer = await fs.readFile(sourcePath);
         const targetBuffer = await fs.readFile(targetPath);
@@ -165,20 +289,19 @@ export class DocumentService {
         const sourcePdf = await PDFDocument.load(sourceBuffer);
         const targetPdf = await PDFDocument.load(targetBuffer);
 
-        const sourcePageIndex = 1;
+        const sourcePageIndex = signatureRect?.page || 1;
         const sourcePage = sourcePdf.getPage(sourcePageIndex);
 
         const targetPage = targetPdf.getPage(2);
 
-        let signatureRect;
-        if (isOldAssignment) {
+        if (!signatureRect && isOldAssignment) {
             signatureRect = {
                 x: 150,
                 y: 217 - 30,
                 width: 160,
                 height: 100,
             };
-        } else {
+        } else if (!signatureRect) {
             signatureRect = {
                 x: 105,
                 y: 435,
@@ -208,17 +331,19 @@ export class DocumentService {
     }
 
     async removeDocument(documentId: string) {
-        const document = await this.prisma.document.delete({
+        await this.prisma.document.update({
+            data: {
+                deletedAt: new Date(),
+            },
             where: { id: documentId },
         });
-
-        await fs.unlink(document.path);
     }
 
     async getDocument(documentId: string): Promise<Document | null> {
         return this.prisma.document.findFirst({
             where: {
                 id: documentId,
+                deletedAt: null,
             },
         });
     }
@@ -227,6 +352,7 @@ export class DocumentService {
         return this.prisma.document.findMany({
             where: {
                 passengerId,
+                deletedAt: null,
             },
         });
     }
@@ -273,7 +399,9 @@ export class DocumentService {
             parentLastName: string;
             minorBirthday: Date;
         },
-    ): Promise<string> {
+        signatureTemplatePath?: string,
+        isOldAssignment: boolean = false,
+    ) {
         const today = formatDate(new Date(), 'dd.mm.yyyy');
 
         const fontBoldBuffer = await fs.readFile(
@@ -281,6 +409,9 @@ export class DocumentService {
         );
         const fontRegularBuffer = await fs.readFile(
             path.resolve(FontsDirectoryPath, 'Inter', 'regular.ttf'),
+        );
+        const fontMediumBuffer = await fs.readFile(
+            path.resolve(FontsDirectoryPath, 'Inter', 'medium.ttf'),
         );
 
         let pngBuffer;
@@ -305,12 +436,13 @@ export class DocumentService {
 
         const fontBold = await pdfDoc.embedFont(fontBoldBuffer);
         const fontRegular = await pdfDoc.embedFont(fontRegularBuffer);
+        const fontMedium = await pdfDoc.embedFont(fontMediumBuffer);
 
         const firstPage = pdfDoc.getPages()[0];
         const fourthPage = pdfDoc.getPages()[3];
 
         let pngImage;
-        if (pngBuffer) {
+        if (signatureDataUrl && pngBuffer) {
             pngImage = await pdfDoc.embedPng(pngBuffer);
         }
 
@@ -402,7 +534,7 @@ export class DocumentService {
                 y: 556,
                 size: 10.5,
                 color: rgb(0, 0, 0),
-                font: fontRegular,
+                font: fontMedium,
             },
         );
 
@@ -423,6 +555,22 @@ export class DocumentService {
 
         await fs.writeFile(filePath, pdfBytes);
 
+        if (signatureTemplatePath) {
+            await this.insertParentalSignatureFromSource(
+                signatureTemplatePath,
+                filePath,
+                filePath,
+                isOldAssignment,
+                {
+                    width: 160,
+                    height: 70,
+                    x: 110,
+                    y: 445,
+                    page: 3,
+                },
+            );
+        }
+
         return filePath;
     }
 
@@ -437,6 +585,7 @@ export class DocumentService {
             flightNumber: string;
             airlineName: string;
         },
+        signatureTemplatePath?: string,
     ) {
         const today = formatDate(new Date(), 'dd.MMMM.yyyy');
 
@@ -459,13 +608,14 @@ export class DocumentService {
             pngBuffer = Buffer.from(base64, 'base64');
         }
 
-        const templatePath = path.join(
-            AssignmentsDirectoryPath,
-            'assignment_agreement-template.pdf',
+        const sourceBuffer = await fs.readFile(
+            path.join(
+                AssignmentsDirectoryPath,
+                'assignment_agreement-template.pdf',
+            ),
         );
-        const templateBuffer = await fs.readFile(templatePath);
 
-        const pdfDoc = await PDFDocument.load(templateBuffer);
+        const pdfDoc = await PDFDocument.load(sourceBuffer);
 
         // @ts-ignore
         pdfDoc.registerFontkit(fontkit);
@@ -568,6 +718,22 @@ export class DocumentService {
         const filePath = path.join(UPLOAD_DIRECTORY_PATH, fileName);
 
         await fs.writeFile(filePath, pdfBytes);
+
+        if (signatureTemplatePath) {
+            await this.insertSignatureFromSource(
+                signatureTemplatePath,
+                filePath,
+                filePath,
+                false,
+                {
+                    width: 160,
+                    height: 70,
+                    x: 105,
+                    y: 157,
+                    page: 2,
+                },
+            );
+        }
 
         return filePath;
     }
@@ -746,6 +912,7 @@ export class DocumentService {
         return this.prisma.document.findMany({
             where: {
                 id: { in: ids },
+                deletedAt: null,
             },
         });
     }
@@ -764,6 +931,7 @@ export class DocumentService {
         return this.prisma.document.update({
             where: {
                 id: documentId,
+                deletedAt: null,
             },
             data: {
                 passengerId,

@@ -82,12 +82,15 @@ export class ClaimService {
         });
     }
 
-    async getClaim(claimId: string): Promise<IFullClaim | null> {
+    async getClaim(
+        claimId: string,
+        filters?: { documentsWithPath: boolean },
+    ): Promise<IFullClaim | null> {
         return this.prisma.claim.findFirst({
             where: {
                 id: claimId,
             },
-            include: this.fullClaimInclude(),
+            include: this.fullClaimInclude(filters),
         });
     }
 
@@ -786,7 +789,10 @@ export class ClaimService {
         };
     }
 
-    private fullClaimInclude(config?: { fullDuplicates: boolean }) {
+    private fullClaimInclude(config?: {
+        fullDuplicates?: boolean;
+        documentsWithPath?: boolean;
+    }) {
         return {
             details: {
                 include: {
@@ -821,7 +827,7 @@ export class ClaimService {
             payment: true,
             documents: {
                 omit: {
-                    path: true,
+                    path: !config?.documentsWithPath,
                 },
             },
             passengers: {
@@ -1054,47 +1060,5 @@ export class ClaimService {
             },
             include: this.fullClaimInclude(),
         });
-    }
-
-    async setPaymentFailed(
-        letterData: {
-            customerEmail: string;
-            customerName: string;
-            customerLanguage: Languages;
-        },
-        claimId: string,
-    ) {
-        // const linkJwt = this.tokenService.generateJWT(
-        //     {
-        //         claimId,
-        //     },
-        //     { expiresIn: CONTINUE_LINKS_EXP },
-        // );
-        //
-        // const paymentDetailsLink =
-        //     await this.generateLinksService.generatePaymentDetails(linkJwt);
-        //
-        // await this.notificationService.sendPaymentRequest(
-        //     letterData.customerEmail,
-        //     {
-        //         customerName: letterData.customerName,
-        //         claimId,
-        //         paymentDetailsLink,
-        //     },
-        //     letterData.customerLanguage,
-        // );
-        //
-        // return this.prisma.claim.update({
-        //     data: {
-        //         state: {
-        //             update: {
-        //                 status: ClaimStatus.PAYMENT_FAILED,
-        //             },
-        //         },
-        //     },
-        //     where: {
-        //         id: claimId,
-        //     },
-        // });
     }
 }

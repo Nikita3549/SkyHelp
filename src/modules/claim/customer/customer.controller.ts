@@ -49,6 +49,7 @@ export class CustomerController {
         private readonly generateLinksService: GenerateLinksService,
         private readonly tokenService: TokenService,
         private readonly notificationService: NotificationService,
+        private readonly documentService: DocumentService,
     ) {}
 
     @UseGuards(new RoleGuard([UserRole.ADMIN, UserRole.AGENT]))
@@ -56,13 +57,23 @@ export class CustomerController {
     async updateCustomer(@Body() dto: CustomerDto) {
         const { claimId } = dto;
 
-        if (!(await this.claimService.getClaim(claimId))) {
+        const claim = await this.claimService.getClaim(claimId);
+
+        if (!claim) {
             throw new BadRequestException(CLAIM_NOT_FOUND);
         }
 
-        await this.claimService.changeUpdatedAt(claimId);
+        const customer = await this.customerService.updateCustomer(
+            dto,
+            claimId,
+        );
 
-        return await this.customerService.updateCustomer(dto, claimId);
+        await this.claimService.changeUpdatedAt(claimId);
+        await this.documentService.updateAssignmentData(claim.id, [
+            claim.customer.id,
+        ]);
+
+        return customer;
     }
 
     @Patch(':customerId/payment-status')

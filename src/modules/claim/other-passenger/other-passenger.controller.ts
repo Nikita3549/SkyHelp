@@ -57,6 +57,7 @@ export class OtherPassengerController {
         private readonly generateLinksService: GenerateLinksService,
         private readonly notificationService: NotificationService,
         private readonly claimService: ClaimService,
+        private readonly documentService: DocumentService,
     ) {}
 
     @Patch(':passengerId/payment-status')
@@ -122,16 +123,21 @@ export class OtherPassengerController {
     async updateOtherPassenger(@Body() dto: UpdatePassengerDto) {
         const { passengerId } = dto;
 
-        if (
-            !(await this.otherPassengerService.getOtherPassenger(passengerId))
-        ) {
+        const passenger =
+            await this.otherPassengerService.getOtherPassenger(passengerId);
+
+        if (!passenger) {
             throw new BadRequestException(PASSENGER_NOT_FOUND);
         }
+        const claim = (await this.claimService.getClaim(passenger.claimId))!;
 
-        return await this.otherPassengerService.updatePassenger(
-            dto,
-            passengerId,
-        );
+        const updatedPassenger =
+            await this.otherPassengerService.updatePassenger(dto, passenger.id);
+        await this.documentService.updateAssignmentData(claim.id, [
+            ...claim.passengers.map((p) => p.id),
+        ]);
+
+        return updatedPassenger;
     }
 
     @UseGuards(new RoleGuard([UserRole.ADMIN, UserRole.AGENT]))

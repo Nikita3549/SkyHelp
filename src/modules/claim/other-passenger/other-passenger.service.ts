@@ -42,7 +42,15 @@ export class OtherPassengerService {
     ) {
         return this.prisma.otherPassenger.update({
             data: {
-                ...passenger,
+                firstName: passenger.firstName,
+                lastName: passenger.lastName,
+                address: passenger.address,
+                city: passenger.city,
+                country: passenger.country,
+                birthday: passenger.birthday,
+                email: passenger.email,
+                parentLastName: passenger.parentLastName,
+                parentFirstName: passenger.firstName,
             },
             where: {
                 id: passengerId,

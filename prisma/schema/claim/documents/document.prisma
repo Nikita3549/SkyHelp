@@ -6,6 +6,7 @@ model Document {
   claimId     String       @map("claim_id")
   passengerId String       @default("") @map("passenger_id")
   claim       Claim        @relation(fields: [claimId], references: [id], onDelete: Cascade)
+  deletedAt   DateTime?    @map("deleted_at")
 
   @@map("documents")
 }
