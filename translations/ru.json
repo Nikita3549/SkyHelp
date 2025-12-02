@@ -3918,5 +3918,8 @@
     "UploadPaymentDetails.toast.success.description": "Ваши платёжные данные успешно отправлены.",
     "UploadPaymentDetails.toast.error.title": "Ошибка отправки",
     "UploadPaymentDetails.toast.error.description": "Произошла ошибка при отправке платёжных данных. Пожалуйста, попробуйте снова.",
-    "UsersList.affiliate": "Аффилиат"
+    "UsersList.affiliate": "Аффилиат",
+    "IssueDetailsForm.label.hasContactedAirline": "Вы уже обращались в авиакомпанию?",
+    "IssueDetailsForm.label.contactedYes": "Да",
+    "IssueDetailsForm.label.contactedNo": "Нет"
 }

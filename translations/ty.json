@@ -3941,5 +3941,8 @@
     "UploadPaymentDetails.toast.success.description": "Ödeme bilgileriniz başarıyla gönderildi.",
     "UploadPaymentDetails.toast.error.title": "Gönderim Başarısız",
     "UploadPaymentDetails.toast.error.description": "Ödeme bilgilerini gönderirken bir hata oluştu. Lütfen tekrar deneyin.",
-    "UsersList.affiliate": "Affiliate"
+    "UsersList.affiliate": "Affiliate",
+    "IssueDetailsForm.label.hasContactedAirline": "Havayoluna zaten başvurdunuz mu?",
+    "IssueDetailsForm.label.contactedYes": "Evet",
+    "IssueDetailsForm.label.contactedNo": "Hayır"
 }

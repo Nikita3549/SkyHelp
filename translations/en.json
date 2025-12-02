@@ -3918,5 +3918,8 @@
     "UploadPaymentDetails.toast.error.title": "Submission Failed",
     "UploadPaymentDetails.toast.error.description": "There was an error submitting your payment details. Please try again.",
     "UsersList.affiliate" : "Affiliate",
-    "rights.section.whatSituationsQualifyForCompensation" : "What situations qualify for compensation"
+    "rights.section.whatSituationsQualifyForCompensation" : "What situations qualify for compensation",
+    "IssueDetailsForm.label.hasContactedAirline": "Have you already contacted the airline?",
+    "IssueDetailsForm.label.contactedYes": "Yes",
+    "IssueDetailsForm.label.contactedNo": "No"
 }
