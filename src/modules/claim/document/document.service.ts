@@ -37,83 +37,89 @@ export class DocumentService {
         }
 
         for (const passengerId of passengerIds) {
-            const passenger:
-                | (ClaimCustomer & { isMinor: false })
-                | OtherPassenger
-                | undefined =
-                claim.customer.id == passengerId
-                    ? {
-                          isMinor: false,
-                          ...claim.customer,
-                      }
-                    : claim.passengers.find((p) => p.id == passengerId);
+            try {
+                const passenger:
+                    | (ClaimCustomer & { isMinor: false })
+                    | OtherPassenger
+                    | undefined =
+                    claim.customer.id == passengerId
+                        ? {
+                              isMinor: false,
+                              ...claim.customer,
+                          }
+                        : claim.passengers.find((p) => p.id == passengerId);
 
-            if (!passenger) {
-                continue;
-            }
-
-            const assignments = claim.documents.filter(
-                (a) =>
-                    a.passengerId == passengerId &&
-                    a.type == DocumentType.ASSIGNMENT &&
-                    !a.deletedAt,
-            );
-
-            for (const assignment of assignments) {
-                let filepath: string;
-
-                if (!passenger.isMinor) {
-                    filepath = await this.saveSignaturePdf(
-                        null,
-                        {
-                            address: passenger.address,
-                            airlineName: claim.details.airlines.name,
-                            firstName: passenger.firstName,
-                            date: claim.details.date,
-                            claimId: claim.id,
-                            lastName: passenger.lastName,
-                            flightNumber: claim.details.flightNumber,
-                        },
-                        assignment.path,
-                    );
-                } else {
-                    const otherPassenger = passenger as OtherPassenger;
-
-                    filepath = await this.saveParentalSignaturePdf(
-                        null,
-                        {
-                            address: otherPassenger.address,
-                            airlineName: claim.details.airlines.name,
-                            firstName: otherPassenger.firstName,
-                            date: claim.details.date,
-                            claimId: claim.id,
-                            lastName: otherPassenger.lastName,
-                            flightNumber: claim.details.flightNumber,
-                            parentLastName: otherPassenger.parentLastName!,
-                            parentFirstName: otherPassenger.parentFirstName!,
-                            minorBirthday: otherPassenger.birthday!,
-                        },
-                        assignment.path,
-                    );
+                if (!passenger) {
+                    continue;
                 }
 
-                await this.removeDocument(assignment.id);
-
-                await this.saveDocuments(
-                    [
-                        {
-                            name: generateAssignmentName(
-                                passenger.firstName,
-                                passenger.lastName,
-                            ),
-                            path: filepath,
-                            passengerId: assignment.passengerId,
-                            documentType: assignment.type,
-                        },
-                    ],
-                    claim.id,
+                const assignments = claim.documents.filter(
+                    (a) =>
+                        a.passengerId == passengerId &&
+                        a.type == DocumentType.ASSIGNMENT &&
+                        !a.deletedAt,
                 );
-            }
+
+                for (const assignment of assignments) {
+                    try {
+                        let filepath: string;
+
+                        if (!passenger.isMinor) {
+                            filepath = await this.saveSignaturePdf(
+                                null,
+                                {
+                                    address: passenger.address,
+                                    airlineName: claim.details.airlines.name,
+                                    firstName: passenger.firstName,
+                                    date: claim.details.date,
+                                    claimId: claim.id,
+                                    lastName: passenger.lastName,
+                                    flightNumber: claim.details.flightNumber,
+                                },
+                                assignment.path,
+                            );
+                        } else {
+                            const otherPassenger = passenger as OtherPassenger;
+
+                            filepath = await this.saveParentalSignaturePdf(
+                                null,
+                                {
+                                    address: otherPassenger.address,
+                                    airlineName: claim.details.airlines.name,
+                                    firstName: otherPassenger.firstName,
+                                    date: claim.details.date,
+                                    claimId: claim.id,
+                                    lastName: otherPassenger.lastName,
+                                    flightNumber: claim.details.flightNumber,
+                                    parentLastName:
+                                        otherPassenger.parentLastName!,
+                                    parentFirstName:
+                                        otherPassenger.parentFirstName!,
+                                    minorBirthday: otherPassenger.birthday!,
+                                },
+                                assignment.path,
+                            );
+                        }
+
+                        await this.removeDocument(assignment.id);
+
+                        await this.saveDocuments(
+                            [
+                                {
+                                    name: generateAssignmentName(
+                                        passenger.firstName,
+                                        passenger.lastName,
+                                    ),
+                                    path: filepath,
+                                    passengerId: assignment.passengerId,
+                                    documentType: assignment.type,
+                                },
+                            ],
+                            claim.id,
+                        );
+                    } catch (_e) {}
+                }
+            } catch (_e) {}
         }
     }
 
