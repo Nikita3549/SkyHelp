@@ -108,7 +108,7 @@ export class ProgressController {
                 language: customerLanguage,
             },
             referralCode: claim.referrer,
-            newClaimStatus: status,
+            newClaimStatus: progressVariant.status,
         };
 
         await this.sendNewProgressEmailQueue.add(
