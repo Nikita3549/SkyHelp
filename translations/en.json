@@ -3921,5 +3921,6 @@
     "rights.section.whatSituationsQualifyForCompensation" : "What situations qualify for compensation",
     "IssueDetailsForm.label.hasContactedAirline": "Have you already contacted the airline?",
     "IssueDetailsForm.label.contactedYes": "Yes",
-    "IssueDetailsForm.label.contactedNo": "No"
+    "IssueDetailsForm.label.contactedNo": "No",
+    "PassengerRights.regulations.moldova" : "MD Regulations  HG 836/2012"
 }
