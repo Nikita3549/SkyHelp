@@ -78,12 +78,14 @@ export class ProgressController {
         const translations =
             await this.languageService.getTranslationsJson(customerLanguage);
         let translatedDescription = translations[description] || description;
-        Object.keys(additionalData).forEach((key) => {
-            translatedDescription = translatedDescription.replaceAll(
-                key,
-                additionalData[key],
-            );
-        });
+        if (additionalData) {
+            Object.keys(additionalData).forEach((key) => {
+                translatedDescription = translatedDescription.replaceAll(
+                    key,
+                    additionalData[key],
+                );
+            });
+        }
 
         const progressVariant = this.getProgressVariantByStatus(
             status,
