@@ -71,6 +71,20 @@ export class ProgressController {
             throw new NotFoundException(CLAIM_NOT_FOUND);
         }
 
+        const customerLanguage = isLanguage(claim.customer.language)
+            ? claim.customer.language
+            : Languages.EN;
+
+        const translations =
+            await this.languageService.getTranslationsJson(customerLanguage);
+        let translatedDescription = translations[description] || description;
+        Object.keys(additionalData).forEach((key) => {
+            translatedDescription = translatedDescription.replaceAll(
+                key,
+                additionalData[key],
+            );
+        });
+
         const progressVariant = this.getProgressVariantByStatus(
             status,
             description,
@@ -87,22 +101,7 @@ export class ProgressController {
             claim.stateId,
         );
 
-        const customerLanguage = isLanguage(claim.customer.language)
-            ? claim.customer.language
-            : Languages.EN;
-
-        const translations =
-            await this.languageService.getTranslationsJson(customerLanguage);
-
         let translatedTitle = translations[progress.title] || progress.title;
-        let translatedDescription =
-            translations[progress.description] || progress.description;
-        Object.keys(additionalData).forEach((key) => {
-            translatedDescription = translatedDescription.replaceAll(
-                key,
-                additionalData[key],
-            );
-        });
 
         const jobData: ISendNewProgressEmailJobData = {
             progressId: progress.id,

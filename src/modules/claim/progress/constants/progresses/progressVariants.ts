@@ -48,7 +48,7 @@ export const ProgressVariants: {
         title: 'compensationPaid.title',
         descriptions: [
             'compensationPaid.description',
-            'The compensation for {{passengerName}} has been approved. We are now waiting for the airline to send the payment.',
+            'compensationPaid.description2',
         ],
     },
     claimRejected: {
