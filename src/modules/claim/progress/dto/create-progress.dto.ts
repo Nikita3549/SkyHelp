@@ -24,8 +24,5 @@ export class CreateProgressDto {
 
     @IsObject()
     @IsOptional()
-    @Validate((value: object) => {
-        return Object.values(value).every((v) => typeof v === 'string');
-    })
-    additionalData: Record<string, string>;
+    additionalData?: Record<string, string>;
 }
