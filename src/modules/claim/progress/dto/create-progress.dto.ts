@@ -23,6 +23,7 @@ export class CreateProgressDto {
     comments?: string;
 
     @IsObject()
+    @IsOptional()
     @Validate((value: object) => {
         return Object.values(value).every((v) => typeof v === 'string');
     })
