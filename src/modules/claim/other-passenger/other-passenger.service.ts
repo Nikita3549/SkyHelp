@@ -51,6 +51,7 @@ export class OtherPassengerService {
                 email: passenger.email,
                 parentLastName: passenger.parentLastName,
                 parentFirstName: passenger.firstName,
+                compensation: passenger.compensation,
             },
             where: {
                 id: passengerId,

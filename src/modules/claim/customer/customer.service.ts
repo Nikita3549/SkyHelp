@@ -26,6 +26,7 @@ export class CustomerService {
                 address: dto.address,
                 country: dto.country,
                 city: dto.city,
+                compensation: dto.compensation,
             },
         });
     }

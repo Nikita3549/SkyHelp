@@ -1,4 +1,4 @@
-import { IsDate, IsOptional, IsString } from 'class-validator';
+import { IsDate, IsNumber, IsOptional, IsString } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class UpdatePassengerDto {
@@ -13,6 +13,10 @@ export class UpdatePassengerDto {
 
     @IsString()
     address: string;
+
+    @IsNumber()
+    @IsString()
+    compensation?: number;
 
     @IsString()
     city: string;

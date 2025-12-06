@@ -1,4 +1,4 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CustomerDto {
     @IsString()
@@ -27,4 +27,8 @@ export class CustomerDto {
     @IsOptional()
     @IsString()
     city?: string;
+
+    @IsOptional()
+    @IsNumber()
+    compensation?: number;
 }

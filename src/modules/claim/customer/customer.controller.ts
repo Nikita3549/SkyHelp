@@ -53,7 +53,7 @@ export class CustomerController {
     ) {}
 
     @UseGuards(new RoleGuard([UserRole.ADMIN, UserRole.AGENT]))
-    @Put('/admin/')
+    @Put('admin')
     async updateCustomer(@Body() dto: CustomerDto) {
         const { claimId } = dto;
 
