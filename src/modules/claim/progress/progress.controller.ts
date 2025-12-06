@@ -62,7 +62,7 @@ export class ProgressController {
         @Param('claimId') claimId: string,
         @Req() req: AuthRequest,
     ) {
-        const { status, order, description, comments } = dto;
+        const { status, order, description, comments, additionalData } = dto;
         const user = req.user;
 
         const claim = await this.claimService.getClaim(claimId);
@@ -94,8 +94,15 @@ export class ProgressController {
         const translations =
             await this.languageService.getTranslationsJson(customerLanguage);
 
-        let translatedTitle = translations[progress.title];
-        let translatedDescription = translations[progress.description];
+        let translatedTitle = translations[progress.title] || progress.title;
+        let translatedDescription =
+            translations[progress.description] || progress.description;
+        Object.keys(additionalData).forEach((key) => {
+            translatedDescription = translatedDescription.replaceAll(
+                key,
+                additionalData[key],
+            );
+        });
 
         const jobData: ISendNewProgressEmailJobData = {
             progressId: progress.id,

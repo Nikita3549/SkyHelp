@@ -1,4 +1,11 @@
-import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+    IsEnum,
+    IsNumber,
+    IsObject,
+    IsOptional,
+    IsString,
+    Validate,
+} from 'class-validator';
 import { ClaimStatus } from '@prisma/client';
 
 export class CreateProgressDto {
@@ -14,4 +21,10 @@ export class CreateProgressDto {
     @IsOptional()
     @IsString()
     comments?: string;
+
+    @IsObject()
+    @Validate((value: object) => {
+        return Object.values(value).every((v) => typeof v === 'string');
+    })
+    additionalData: Record<string, string>;
 }
