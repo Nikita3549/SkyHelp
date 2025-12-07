@@ -3923,5 +3923,6 @@
     "IssueDetailsForm.label.hasContactedAirline": "Have you already contacted the airline?",
     "IssueDetailsForm.label.contactedYes": "Yes",
     "IssueDetailsForm.label.contactedNo": "No",
-    "PassengerRights.regulations.moldova" : "MD Regulations"
+    "PassengerRights.regulations.moldova" : "MD Regulations",
+    "LatinInput.latinOnlyWarning": "Only Latin letters are allowed"
 }

@@ -3926,5 +3926,6 @@
     "IssueDetailsForm.label.hasContactedAirline": "Ai contactat deja compania aeriană?",
     "IssueDetailsForm.label.contactedYes": "Da",
     "IssueDetailsForm.label.contactedNo": "Nu",
-    "PassengerRights.regulations.moldova": "Regulamente MD"
+    "PassengerRights.regulations.moldova": "Regulamente MD",
+    "LatinInput.latinOnlyWarning": "Doar literele latine sunt permise"
 }

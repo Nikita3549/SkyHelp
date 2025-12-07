@@ -3946,5 +3946,6 @@
     "IssueDetailsForm.label.hasContactedAirline": "Havayoluna zaten başvurdunuz mu?",
     "IssueDetailsForm.label.contactedYes": "Evet",
     "IssueDetailsForm.label.contactedNo": "Hayır",
-    "PassengerRights.regulations.moldova": "MD Düzenlemeleri"
+    "PassengerRights.regulations.moldova": "MD Düzenlemeleri",
+    "LatinInput.latinOnlyWarning": "Yalnızca Latin harfleri (Romence ve İngilizce) izin verilir"
 }
