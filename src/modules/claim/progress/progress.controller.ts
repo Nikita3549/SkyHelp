@@ -81,7 +81,7 @@ export class ProgressController {
         if (additionalData) {
             Object.keys(additionalData).forEach((key) => {
                 translatedDescription = translatedDescription.replaceAll(
-                    key,
+                    `{{${key}}}`,
                     additionalData[key],
                 );
             });
@@ -129,7 +129,10 @@ export class ProgressController {
             },
         );
 
-        return progress;
+        return {
+            ...progress,
+            description: translatedDescription,
+        };
     }
 
     @Patch(':progressId/comments')
