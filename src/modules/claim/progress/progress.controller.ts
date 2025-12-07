@@ -95,7 +95,9 @@ export class ProgressController {
         const progress = await this.progressesService.createProgressByClaimId(
             {
                 title: progressVariant.title,
-                description: translatedDescription,
+                description: additionalData
+                    ? translatedDescription
+                    : description,
                 order,
                 updatedBy: user.id,
                 comments,
@@ -129,10 +131,7 @@ export class ProgressController {
             },
         );
 
-        return {
-            ...progress,
-            description: translatedDescription,
-        };
+        return progress;
     }
 
     @Patch(':progressId/comments')
