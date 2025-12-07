@@ -95,7 +95,7 @@ export class ProgressController {
         const progress = await this.progressesService.createProgressByClaimId(
             {
                 title: progressVariant.title,
-                description: description,
+                description: translatedDescription,
                 order,
                 updatedBy: user.id,
                 comments,
