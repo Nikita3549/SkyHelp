@@ -65,6 +65,31 @@ export class PartnerController {
         return partner;
     }
 
+    @Get('stats/admin')
+    async getAdminPartnersStats(@Query() query: GetPartnersStatsDto) {
+        const { referralCode, referralSource } = query;
+
+        if (
+            (!referralCode && referralSource) ||
+            (referralCode && !referralSource)
+        ) {
+            throw new BadRequestException(
+                'You must provide both referralCode and referralSource or neither',
+            );
+        }
+
+        return await this.partnerService.getPartnerStats({
+            userId: undefined,
+            partnerData:
+                referralSource && referralCode
+                    ? {
+                          referralSource,
+                          referralCode,
+                      }
+                    : undefined,
+        });
+    }
+
     @Get(':userId/stats')
     async getPartnersStats(
         @Param('userId') userId: string,
@@ -92,7 +117,8 @@ export class PartnerController {
             throw new NotFoundException(PARTNER_NOT_FOUND);
         }
 
-        return await this.partnerService.getPartnerStats(userId, {
+        return await this.partnerService.getPartnerStats({
+            userId,
             partnerData:
                 referralSource && referralCode
                     ? {

@@ -92,15 +92,18 @@ export class PartnerService {
         });
     }
 
-    async getPartnerStats(
-        userId: string,
-        filters: {
-            partnerData?: {
-                referralCode: string;
-                referralSource: string;
-            };
-        },
-    ) {
+    async getPartnerStats(filters: {
+        partnerData?: {
+            referralCode: string;
+            referralSource: string;
+        };
+        userId?: string;
+    }) {
+        const { userId, partnerData } = filters;
+        const userFilter = userId
+            ? Prisma.sql`p.user_id = ${userId} AND`
+            : Prisma.empty;
+
         const [
             clicksByDay,
             claimsByDay,
@@ -113,59 +116,67 @@ export class PartnerService {
         ] = await this.prisma.$transaction([
             // clicks/day 30days back
             this.prisma.$queryRaw<{ date: string; count: number }[]>`
-            SELECT TO_CHAR(rlc.date::date, 'DD-MM-YYYY') as date, SUM(rlc.clicks) as count FROM referral_links rl
-                JOIN partners p ON p.id = rl.partner_id
-                JOIN referral_link_clicks rlc ON rlc.link_id = rl.id
-                WHERE p.user_id = ${userId} AND
-                ${filters.partnerData ? Prisma.sql`rl.source = ${filters.partnerData.referralSource} AND` : Prisma.empty}
+            SELECT TO_CHAR(rlc.date::date, 'DD-MM-YYYY') as date, SUM(rlc.clicks) as count 
+            FROM referral_links rl
+            JOIN partners p ON p.id = rl.partner_id
+            JOIN referral_link_clicks rlc ON rlc.link_id = rl.id
+            WHERE ${userFilter}
+                ${partnerData ? Prisma.sql`rl.source = ${partnerData.referralSource} AND` : Prisma.empty}
                 rlc.date >= NOW() - INTERVAL '30 days'
-                GROUP BY rlc.date::date
-                ORDER BY rlc.date::date DESC;
-            `,
+            GROUP BY rlc.date::date
+            ORDER BY rlc.date::date DESC;
+        `,
 
             // claims/day 30days back
             this.prisma.$queryRaw<{ date: string; count: number }[]>`
-                SELECT TO_CHAR(c.created_at::date, 'DD-MM-YYYY') as date, COUNT(c) as count FROM claims c
-                  JOIN partners p ON p.id = c.referred_by_id
-                  WHERE p.user_id = ${userId} AND
-                  c.archived = false AND
-                  c.created_at >= NOW() - INTERVAL '30 days'
-                  GROUP BY c.created_at::date
-                  ORDER BY c.created_at::date DESC
-            `,
+            SELECT TO_CHAR(c.created_at::date, 'DD-MM-YYYY') as date, COUNT(c) as count 
+            FROM claims c
+            JOIN partners p ON p.id = c.referred_by_id
+            WHERE ${userFilter}
+                c.archived = false AND
+                c.created_at >= NOW() - INTERVAL '30 days'
+            GROUP BY c.created_at::date
+            ORDER BY c.created_at::date DESC
+        `,
 
             // approved claims/day 30days back
             this.prisma.$queryRaw<{ date: string; count: number }[]>`
-            SELECT TO_CHAR(c.created_at::date, 'DD-MM-YYYY') as date, COUNT(c) as count FROM claims c
-                JOIN partners p ON p.id = c.referred_by_id
-                JOIN claim_states cs ON c.state_id = cs.id
-                WHERE p.user_id = ${userId} AND
+            SELECT TO_CHAR(c.created_at::date, 'DD-MM-YYYY') as date, COUNT(c) as count 
+            FROM claims c
+            JOIN partners p ON p.id = c.referred_by_id
+            JOIN claim_states cs ON c.state_id = cs.id
+            WHERE ${userFilter}
                 c.archived = false AND
-                ${filters.partnerData ? Prisma.sql`c.referrer_source = ${filters.partnerData.referralSource} AND` : Prisma.empty}
+                ${partnerData ? Prisma.sql`c.referrer_source = ${partnerData.referralSource} AND` : Prisma.empty}
                 c.created_at >= NOW() - INTERVAL '30 days' AND
                 cs.status = 'Paid'
-                GROUP BY c.created_at::date
-                ORDER BY c.created_at::date DESC`,
+            GROUP BY c.created_at::date
+            ORDER BY c.created_at::date DESC
+        `,
 
             // total revenue
-            this.prisma.partner.findUniqueOrThrow({
-                where: {
-                    userId: userId,
-                },
-                select: {
-                    totalEarnings: true,
-                },
-            }),
+            userId
+                ? this.prisma.partner.findUniqueOrThrow({
+                      where: {
+                          userId: userId,
+                      },
+                      select: {
+                          totalEarnings: true,
+                      },
+                  })
+                : this.prisma.partner.findFirst({
+                      select: {
+                          totalEarnings: true,
+                      },
+                  }),
 
             // clicks on links
             this.prisma.referralLinkClick.aggregate({
                 where: {
                     link: {
-                        referralCode: filters.partnerData?.referralCode,
-                        source: filters.partnerData?.referralSource,
-                        partner: {
-                            userId,
-                        },
+                        referralCode: partnerData?.referralCode,
+                        source: partnerData?.referralSource,
+                        partner: userId ? { userId } : undefined,
                     },
                 },
                 _sum: {
@@ -177,32 +188,26 @@ export class PartnerService {
             this.prisma.claim.count({
                 where: {
                     archived: false,
-                    referrer: filters.partnerData?.referralCode,
-                    referrerSource: filters.partnerData?.referralSource,
+                    referrer: partnerData?.referralCode,
+                    referrerSource: partnerData?.referralSource,
                     state: {
                         status: ClaimStatus.PAID,
                     },
-                    referredBy: {
-                        userId,
-                    },
+                    referredBy: userId ? { userId } : undefined,
                 },
             }),
 
             // payouts count
             this.prisma.referralPayout.count({
                 where: {
-                    partner: {
-                        userId,
-                    },
+                    partner: userId ? { userId } : undefined,
                 },
             }),
 
             // claims count
             this.prisma.claim.count({
                 where: {
-                    referredBy: {
-                        userId,
-                    },
+                    referredBy: userId ? { userId } : undefined,
                     archived: false,
                 },
             }),
@@ -221,14 +226,13 @@ export class PartnerService {
                 date: row.date,
                 count: Number(row.count),
             })),
-            totalRevenue: partnerEarnings.totalEarnings,
+            totalRevenue: partnerEarnings?.totalEarnings ?? 0,
             totalClicks: totalClicks._sum.clicks ?? 0,
             approvedClaimsCount,
             payoutsCount,
             claimsCount,
         };
     }
-
     async updatePartnerPayment(dto: UpdatePartnerPaymentDto, userId: string) {
         return this.prisma.partnerPayment.updateMany({
             data: {
