@@ -3657,7 +3657,7 @@
     "PassengerDetailsStep.parentFirstNameLabel": "Parent First Name",
     "PassengerDetailsStep.parentLastNameLabel": "Parent Last Name",
     "LegalLinks.minorAgreement": "Minor Agreement",
-    "PassengerDetailsStep.passengerCategory": "Passenger category on the day of flight:",
+    "PassengerDetailsStep.passengerCategory": "Passenger category:",
     "PassengerDetailsStep.minor": "Minor",
     "PassengerDetailsStep.yearsOld": "years old",
     "PassengerDetailsStep.legalGuardianFirstName": "Legal guardian's first name",
