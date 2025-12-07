@@ -3577,6 +3577,8 @@
     "compensationApproved.title": "Compensație aprobată",
     "compensationApproved.description": "Compensația dvs. a fost aprobată. Așteptăm plata de la compania aeriană.",
     "compensationApproved.description.one-person": "Compensația a fost aprobată doar pentru un pasager, așteptăm ca compania aeriană să trimită plata",
+    "compensationApproved.description2": "Compensația pentru {{passengerName}} a fost aprobată. Așteptăm acum ca compania aeriană să trimită plata.",
+    "paymentReceived.description2": "Am primit compensația pentru {{passengerName}} de la compania aeriană. Plata dvs. este în curs de procesare și va fi transferată în contul bancar în următoarele câteva zile lucrătoare.",
     "compensationPaid.title": "Compensație plătită",
     "compensationPaid.description": "Compania aeriană a efectuat plata compensației. Fondurile au fost deja trimise în contul dvs. bancar.\nVă rugăm să permiteți până la 7 zile lucrătoare pentru finalizarea transferului.",
     "compensationPaid.description2": "Compensația pentru {{passengerName}} a fost aprobată. Acum așteptăm ca compania aeriană să trimită plata.",

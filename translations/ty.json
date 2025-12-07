@@ -3597,6 +3597,8 @@
     "compensationApproved.title": "Tazminat Onaylandı",
     "compensationApproved.description": "Tazminatınız onaylandı. Havayolundan ödeme bekleniyor.",
     "compensationApproved.description.one-person": "Tazminat yalnızca bir yolcu için onaylandı, havayolunun ödemeyi göndermesi bekleniyor",
+    "compensationApproved.description2": "{{passengerName}} için tazminat onaylandı. Şu anda havayolunun ödemeyi göndermesini bekliyoruz.",
+    "paymentReceived.description2": "{{passengerName}} için tazminatı havayolundan aldık. Ödemeniz şu anda işleniyor ve önümüzdeki birkaç iş günü içinde banka hesabınıza aktarılacaktır.",
     "compensationPaid.title": "Tazminat Ödendi",
     "compensationPaid.description2": "{{passengerName}} için tazminat onaylandı. Şu anda havayolunun ödemeyi göndermesini bekliyoruz.",
     "compensationPaid.description": "Havayolu tazminatı ödedi. Ödeme zaten banka hesabınıza gönderildi.\nTransferin tamamlanması için lütfen en fazla 7 iş günü bekleyin.",

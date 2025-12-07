@@ -41,6 +41,7 @@ export const ProgressVariants: {
         descriptions: [
             'compensationApproved.description',
             'compensationApproved.description.one-person',
+            'compensationApproved.description2',
         ],
     },
     compensationPaid: {
@@ -92,7 +93,10 @@ export const ProgressVariants: {
     paymentReceived: {
         status: ClaimStatus.PAYMENT_RECEIVED,
         title: 'paymentReceived.title',
-        descriptions: ['paymentReceived.description'],
+        descriptions: [
+            'paymentReceived.description',
+            'paymentReceived.description2',
+        ],
     },
     paymentFailed: {
         status: ClaimStatus.PAYMENT_FAILED,
