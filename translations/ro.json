@@ -2573,6 +2573,7 @@
     "DocumentInfoSection.dataProtection": "Respectăm pe deplin legislația privind protecția datelor, iar informațiile tale sunt în siguranță cu noi.",
     "FileDropZone.dragDrop": "Trage fișierul aici pentru a-l încărca",
     "FileDropZone.orBrowse": "Sau caută un fișier (pdf, doc, jpeg, png) de până la 10 MB",
+    "FileDropZone.formats": " (pdf, doc, jpeg, png) de până la 10 MB",
     "HeaderSection.title": "Adaugă documente de zbor",
     "HeaderSection.subtitle": "Pentru a trimite cererea, avem nevoie doar de câteva documente:",
     "HeaderSection.description": "Emailul de confirmare a rezervării, biletul de îmbarcare sau orice alt document care confirmă rezervarea biletului.",

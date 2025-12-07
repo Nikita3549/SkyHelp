@@ -2573,6 +2573,7 @@
     "DocumentInfoSection.dataProtection": "Мы полностью соблюдаем законы о защите данных, и ваши данные находятся в безопасности.",
     "FileDropZone.dragDrop": "Перетащите файл для загрузки",
     "FileDropZone.orBrowse": "Или выберите файл вручную (pdf, doc, jpeg, png) до 10 МБ",
+    "FileDropZone.formats": " (pdf, doc, jpeg, png) до 10 МБ",
     "HeaderSection.title": "Загрузите документы по рейсу",
     "HeaderSection.subtitle": "Чтобы подать заявку, нужны лишь некоторые документы:",
     "HeaderSection.description": "Подтверждение бронирования, посадочный талон или другой документ, подтверждающий вашу бронь.",
