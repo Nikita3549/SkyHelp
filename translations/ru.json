@@ -3662,7 +3662,7 @@
     "PassengerDetailsStep.parentFirstNameLabel": "Имя родителя",
     "PassengerDetailsStep.parentLastNameLabel": "Фамилия родителя",
     "LegalLinks.minorAgreement": "Соглашение для несовершеннолетних",
-    "PassengerDetailsStep.passengerCategory": "Категория пассажира:",
+    "PassengerDetailsStep.passengerCategory": "Пассажир:",
     "PassengerDetailsStep.minor": "Несовершеннолетний",
     "PassengerDetailsStep.yearsOld": "лет",
     "PassengerDetailsStep.legalGuardianFirstName": "Имя законного представителя",
