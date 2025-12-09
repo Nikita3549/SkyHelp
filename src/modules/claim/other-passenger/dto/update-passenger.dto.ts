@@ -15,7 +15,7 @@ export class UpdatePassengerDto {
     address: string;
 
     @IsNumber()
-    @IsString()
+    @IsOptional()
     compensation?: number;
 
     @IsString()
