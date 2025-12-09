@@ -5,6 +5,7 @@ import {
     Get,
     NotFoundException,
     Post,
+    Query,
     Req,
     UseGuards,
 } from '@nestjs/common';
@@ -16,6 +17,7 @@ import { PayoutService } from './payout.service';
 import { AuthRequest } from '../../../interfaces/AuthRequest.interface';
 import { Prisma, UserRole } from '@prisma/client';
 import { RoleGuard } from '../../../guards/role.guard';
+import { GetPayoutsDto } from './dto/get-payouts.dto';
 
 @Controller('payout')
 @UseGuards(JwtAuthGuard)
@@ -51,9 +53,9 @@ export class PayoutController {
     @UseGuards(
         new RoleGuard([UserRole.ADMIN, UserRole.PARTNER, UserRole.AFFILIATE]),
     )
-    async getPayouts(@Req() req: AuthRequest) {
+    async getPayouts(@Req() req: AuthRequest, @Query() dto: GetPayoutsDto) {
         const userId =
-            req.user.role == UserRole.ADMIN ? undefined : req.user.id;
+            req.user.role == UserRole.ADMIN ? dto.userId : req.user.id;
 
         return this.payoutService.getPayouts({
             userId,
