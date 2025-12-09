@@ -3950,5 +3950,7 @@
     "IssueDetailsForm.label.contactedYes": "Evet",
     "IssueDetailsForm.label.contactedNo": "Hayır",
     "PassengerRights.regulations.moldova": "MD Düzenlemeleri",
-    "LatinInput.latinOnlyWarning": "Yalnızca Latin harfleri (Romence ve İngilizce) izin verilir"
+    "LatinInput.latinOnlyWarning": "Yalnızca Latin harfleri (Romence ve İngilizce) izin verilir",
+    "IssueDetailsForm.contacted.yes": "Evet",
+    "IssueDetailsForm.contacted.no": "Hayır"
 }

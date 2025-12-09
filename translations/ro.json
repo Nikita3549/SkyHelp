@@ -3930,5 +3930,7 @@
     "IssueDetailsForm.label.contactedYes": "Da",
     "IssueDetailsForm.label.contactedNo": "Nu",
     "PassengerRights.regulations.moldova": "Regulamente MD",
-    "LatinInput.latinOnlyWarning": "Doar literele latine sunt permise"
+    "LatinInput.latinOnlyWarning": "Doar literele latine sunt permise",
+    "IssueDetailsForm.contacted.yes": "Da",
+    "IssueDetailsForm.contacted.no": "Nu"
 }

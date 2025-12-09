@@ -3927,5 +3927,7 @@
     "IssueDetailsForm.label.contactedYes": "Yes",
     "IssueDetailsForm.label.contactedNo": "No",
     "PassengerRights.regulations.moldova" : "MD Regulations",
-    "LatinInput.latinOnlyWarning": "Only Latin letters are allowed"
+    "LatinInput.latinOnlyWarning": "Only Latin letters are allowed",
+    "IssueDetailsForm.contacted.yes": "Yes",
+    "IssueDetailsForm.contacted.no": "No"
 }
