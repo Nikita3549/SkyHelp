@@ -340,6 +340,7 @@ export class ClaimService {
             wasDeniedBoarding,
             wasAlternativeFlightOffered,
             arrivalTimeDelayOfAlternative,
+            airlineIcao,
         } = compensation;
 
         if (!flightDistanceKm) {
@@ -393,6 +394,11 @@ export class ClaimService {
             )
         ) {
             baseCompensation = baseCompensation / 2;
+        }
+
+        if (airlineIcao == 'WMT') {
+            // Wizz Air Malta
+            baseCompensation -= 50;
         }
 
         return baseCompensation;

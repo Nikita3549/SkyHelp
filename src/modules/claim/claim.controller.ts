@@ -30,7 +30,6 @@ import { IClaimWithJwt } from './interfaces/claimWithJwt.interface';
 import { JwtStepQueryDto } from './dto/jwt-step-query.dto';
 import { JwtQueryDto } from './dto/jwt-query.dto';
 import { IJwtPayload } from '../token/interfaces/jwtPayload';
-import { GetCompensationQueryDto } from './dto/get-compensation-query.dto';
 import { AirportService } from '../airport/airport.service';
 import { NotificationService } from '../notification/notification.service';
 import { ConfigService } from '@nestjs/config';
@@ -357,11 +356,8 @@ export class PublicClaimController {
     }
 
     @Post('/compensation')
-    async getCompensation(
-        @Body() dto: GetCompensationDto,
-        @Query() query: GetCompensationQueryDto,
-    ) {
-        const { depIcao, arrIcao } = query;
+    async getCompensation(@Body() dto: GetCompensationDto) {
+        const { depIcao, arrIcao } = dto;
 
         const arrivalAirport =
             await this.airportService.getAirportByIcao(arrIcao);

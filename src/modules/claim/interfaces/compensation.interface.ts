@@ -8,4 +8,5 @@ export interface IGetCompensation {
     wasAlternativeFlightOffered: boolean;
     arrivalTimeDelayOfAlternative: number;
     wasDisruptionDuoExtraordinaryCircumstances: boolean;
+    airlineIcao: string;
 }
