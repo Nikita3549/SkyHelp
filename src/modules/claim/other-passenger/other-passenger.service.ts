@@ -50,7 +50,7 @@ export class OtherPassengerService {
                 birthday: passenger.birthday,
                 email: passenger.email,
                 parentLastName: passenger.parentLastName,
-                parentFirstName: passenger.firstName,
+                parentFirstName: passenger.parentFirstName,
                 compensation: passenger.compensation,
             },
             where: {
