@@ -13,4 +13,8 @@ export class SendLetterDto {
     @IsOptional()
     @IsString()
     claimId?: string;
+
+    @IsOptional()
+    @IsString()
+    replyToMessageId?: string;
 }

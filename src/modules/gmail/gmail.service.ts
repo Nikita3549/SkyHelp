@@ -195,19 +195,47 @@ export class GmailService implements OnModuleInit {
         from: string,
         attachments: { filename: string; content: Buffer; mimeType: string }[],
         gmail: gmail_v1.Gmail = this.gmail,
+        internalReplyToId?: string,
     ): Promise<gmail_v1.Schema$Message> {
         const boundary = '__MAIL__BOUNDARY__';
         const newline = '\r\n';
 
         const mimeParts: string[] = [];
 
+        // ---------------------
+        // HEADERS
+        // ---------------------
         mimeParts.push(`From: ${from}`);
         mimeParts.push(`To: ${to}`);
-        mimeParts.push(`Subject: ${subject}`);
         mimeParts.push(`MIME-Version: 1.0`);
         mimeParts.push(`Content-Type: multipart/mixed; boundary="${boundary}"`);
+
+        let replyThreadId: string | null | undefined;
+        if (internalReplyToId) {
+            const { rfcMessageId, threadId } = await this.getRFCMessageId(
+                gmail,
+                internalReplyToId,
+            );
+            replyThreadId = threadId;
+
+            if (!rfcMessageId || !replyThreadId) {
+                throw new Error(
+                    'Cannot get Message-ID or Thread-ID from source letter',
+                );
+            }
+
+            mimeParts.push(`In-Reply-To: ${rfcMessageId}`);
+
+            mimeParts.push(`References: ${rfcMessageId}`);
+        }
+
+        mimeParts.push(`Subject: ${subject}`);
+
         mimeParts.push('');
 
+        // ---------------------
+        // MESSAGE BODY
+        // ---------------------
         mimeParts.push(`--${boundary}`);
         mimeParts.push(`Content-Type: text/plain; charset="UTF-8"`);
         mimeParts.push(`Content-Transfer-Encoding: 7bit`);
@@ -215,6 +243,9 @@ export class GmailService implements OnModuleInit {
         mimeParts.push(content);
         mimeParts.push('');
 
+        // ---------------------
+        // ATTACHMENTS
+        // ---------------------
         for (const attachment of attachments) {
             const encodedContent = attachment.content.toString('base64');
 
@@ -231,21 +262,51 @@ export class GmailService implements OnModuleInit {
             mimeParts.push('');
         }
 
+        // ---------------------
+        // END
+        // ---------------------
         mimeParts.push(`--${boundary}--`);
         mimeParts.push('');
 
-        const rawMessage = Buffer.from(mimeParts.join(newline)).toString(
-            'base64',
-        );
+        const rawMessage = Buffer.from(mimeParts.join(newline))
+            .toString('base64')
+            .replace(/\+/g, '-')
+            .replace(/\//g, '_')
+            .replace(/=+$/, '');
 
         const res = await gmail.users.messages.send({
             userId: 'me',
-            requestBody: {
-                raw: rawMessage,
-            },
+            requestBody: { raw: rawMessage, threadId: replyThreadId },
         });
 
         return res.data;
+    }
+    async getRFCMessageId(
+        gmail: gmail_v1.Gmail,
+        internalMessageId: string,
+    ): Promise<{
+        rfcMessageId: string | null | undefined;
+        threadId: string | null | undefined;
+    }> {
+        try {
+            const originalMessage = await gmail.users.messages.get({
+                userId: 'me',
+                id: internalMessageId,
+                format: 'metadata',
+                metadataHeaders: ['Message-ID'],
+            });
+
+            const headers = originalMessage.data.payload?.headers || [];
+            const rfcMessageId = headers.find(
+                (h) => h.name === 'Message-ID',
+            )?.value;
+            const threadId = originalMessage.data.threadId;
+
+            return { rfcMessageId, threadId };
+        } catch (error) {
+            console.error('Error getting message-id:', error);
+            return { rfcMessageId: undefined, threadId: undefined };
+        }
     }
 
     async sendEmail(

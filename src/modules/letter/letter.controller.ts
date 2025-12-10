@@ -79,7 +79,11 @@ export class LetterController {
         @UploadedFiles() files: Express.Multer.File[] = [],
         @Body() dto: SendLetterDto,
     ) {
-        const { to, subject, content, claimId } = dto;
+        let { to, subject, content, claimId, replyToMessageId } = dto;
+
+        if (replyToMessageId) {
+            subject = subject.startsWith('Re: ') ? subject : `Re: ${subject}`;
+        }
 
         const claim = await this.claimService.getClaim(claimId || '');
 
@@ -101,14 +105,15 @@ export class LetterController {
                 mimeType: file.mimetype,
                 content: file.buffer,
             })),
+            replyToMessageId,
         );
 
         const email = await this.gmailService.email.saveEmail({
             id: message.id!,
             threadId: message.threadId!,
             messageId: message.id,
-            inReplyTo: null,
-            references: undefined,
+            inReplyTo: replyToMessageId || null,
+            references: replyToMessageId ? [replyToMessageId] : undefined,
             subject: subject,
             normalizedSubject: this.gmailService.normalizeSubject(subject),
             fromName: undefined,

@@ -49,6 +49,7 @@ export class GmailOfficeAccountService implements OnModuleInit {
         content: string,
         from: string,
         attachments: { filename: string; content: Buffer; mimeType: string }[],
+        replyToMessageId?: string,
     ): Promise<gmail_v1.Schema$Message> {
         return this.gmailService.sendEmailWithAttachments(
             to,
@@ -57,6 +58,7 @@ export class GmailOfficeAccountService implements OnModuleInit {
             from,
             attachments,
             this.gmail,
+            replyToMessageId,
         );
     }
 
