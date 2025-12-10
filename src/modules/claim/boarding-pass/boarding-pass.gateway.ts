@@ -38,6 +38,7 @@ export class BoardingPassGateway implements OnGatewayConnection {
             return;
         }
 
+        this.server.to(sessionId).emit('new_connection', 1);
         client.join(sessionId);
         client.data.sessionId = sessionId;
     }
