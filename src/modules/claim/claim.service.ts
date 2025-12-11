@@ -835,6 +835,9 @@ export class ClaimService {
                 omit: {
                     path: !config?.documentsWithPath,
                 },
+                where: {
+                    deletedAt: null,
+                },
             },
             passengers: {
                 include: {
