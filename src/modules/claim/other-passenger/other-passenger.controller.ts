@@ -22,7 +22,7 @@ import {
     PASSENGER_NOT_FOUND,
 } from '../constants';
 import { OtherPassengerService } from './other-passenger.service';
-import { DocumentService } from '../document/document.service';
+import { DocumentService } from '../document/services/document.service';
 import { ClaimService } from '../claim.service';
 import { UploadSignDto } from '../customer/dto/upload-sign.dto';
 import { JwtQueryDto } from '../dto/jwt-query.dto';

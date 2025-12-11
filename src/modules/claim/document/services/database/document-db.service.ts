@@ -1,0 +1,94 @@
+import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../../../../prisma/prisma.service';
+import { Document, DocumentType } from '@prisma/client';
+
+@Injectable()
+export class DocumentDbService {
+    constructor(private readonly prisma: PrismaService) {}
+
+    async remove(documentId: string): Promise<Document> {
+        return this.prisma.document.update({
+            data: {
+                deletedAt: new Date(),
+            },
+            where: { id: documentId },
+        });
+    }
+
+    async get(documentId: string): Promise<Document | null> {
+        return this.prisma.document.findFirst({
+            where: {
+                id: documentId,
+                deletedAt: null,
+            },
+        });
+    }
+
+    async getByPassengerId(passengerId: string): Promise<Document[]> {
+        return this.prisma.document.findMany({
+            where: {
+                passengerId,
+                deletedAt: null,
+            },
+        });
+    }
+
+    async getMany(ids: string[]): Promise<Document[]> {
+        return this.prisma.document.findMany({
+            where: {
+                id: { in: ids },
+                deletedAt: null,
+            },
+        });
+    }
+
+    async saveMany(
+        documents: {
+            name: string;
+            path: string;
+            passengerId: string;
+            documentType: DocumentType;
+        }[],
+        claimId: string,
+        isPublic: boolean = false,
+    ): Promise<Document[]> {
+        return Promise.all(
+            documents.map((doc) =>
+                this.prisma.document.create({
+                    data: {
+                        name: doc.name,
+                        path: doc.path,
+                        claimId,
+                        passengerId: doc.passengerId,
+                        type: doc.documentType,
+                    },
+                    select: isPublic ? this.getPublicDataSelect() : undefined,
+                }),
+            ),
+        );
+    }
+
+    async update(
+        updateData: Partial<Document>,
+        documentId: string,
+        isPublicData: boolean = false,
+    ): Promise<Document> {
+        return this.prisma.document.update({
+            data: updateData,
+            where: {
+                id: documentId,
+            },
+            select: isPublicData ? this.getPublicDataSelect() : undefined,
+        });
+    }
+
+    getPublicDataSelect() {
+        return {
+            id: true,
+            name: true,
+            type: true,
+            claimId: true,
+            passengerId: true,
+        };
+    }
+}

@@ -1,31 +1,136 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import {
-    ClaimCustomer,
-    Document,
-    DocumentType,
-    OtherPassenger,
-} from '@prisma/client';
-import { PrismaService } from '../../prisma/prisma.service';
+import { Injectable } from '@nestjs/common';
+import { PDFDocument, rgb } from 'pdf-lib';
+import { DocumentType, OtherPassenger } from '@prisma/client';
+import { generateAssignmentName } from '../../../../../utils/generate-assignment-name';
+import { formatDate } from '../../../../../utils/formatDate';
 import * as fs from 'fs/promises';
 import * as path from 'path';
-import { PDFDocument, rgb } from 'pdf-lib';
-import { UPLOAD_DIRECTORY_PATH } from '../../../common/constants/paths/UploadsDirectoryPath';
-import { spawn } from 'child_process';
-import { PassThrough, Readable } from 'stream';
-import { formatDate } from '../../../utils/formatDate';
+import { FontsDirectoryPath } from '../../../../../common/constants/paths/FontsDirectoryPath';
+import { AssignmentsDirectoryPath } from '../../../../../common/constants/paths/AssignmentsDirectoryPath';
 import * as fontkit from 'fontkit';
-import { createCanvas, loadImage, Image } from 'canvas';
-import { FontsDirectoryPath } from '../../../common/constants/paths/FontsDirectoryPath';
-import { AssignmentsDirectoryPath } from '../../../common/constants/paths/AssignmentsDirectoryPath';
-import { generateAssignmentName } from '../../../utils/generate-assignment-name';
-import { ClaimService } from '../claim.service';
+import { UPLOAD_DIRECTORY_PATH } from '../../../../../common/constants/paths/UploadsDirectoryPath';
+import { ClaimService } from '../../../claim.service';
+import { DocumentDbService } from '../database/document-db.service';
+import {
+    IAssignmentData,
+    IAssignmentPassenger,
+    IParentalAssignmentData,
+    ISignatureRectangle,
+} from './interfaces/assignment.interfaces';
 
 @Injectable()
-export class DocumentService {
+export class DocumentAssignmentService {
     constructor(
-        private readonly prisma: PrismaService,
         private readonly claimService: ClaimService,
+        private readonly documentDbService: DocumentDbService,
     ) {}
+
+    private async insertSignatureFromSource(
+        sourcePath: string,
+        targetPath: string,
+        outputPath: string,
+        isOldAssignment: boolean = false,
+        signatureRect?: ISignatureRectangle,
+    ) {
+        const sourceBuffer = await fs.readFile(sourcePath);
+        const targetBuffer = await fs.readFile(targetPath);
+
+        const sourcePdf = await PDFDocument.load(sourceBuffer);
+        const targetPdf = await PDFDocument.load(targetBuffer);
+
+        const sourcePageIndex = signatureRect?.page || 1;
+        const sourcePage = sourcePdf.getPage(sourcePageIndex);
+
+        const targetPage = targetPdf.getPage(2);
+
+        if (!signatureRect && isOldAssignment) {
+            signatureRect = {
+                x: 150,
+                y: 217 - 30,
+                width: 160,
+                height: 100,
+            };
+        } else if (!signatureRect) {
+            signatureRect = {
+                x: 105,
+                y: 435,
+                width: 160,
+                height: 70,
+            };
+        }
+
+        const embeddedPage = await targetPdf.embedPage(sourcePage, {
+            left: signatureRect.x,
+            bottom: signatureRect.y,
+            right: signatureRect.x + signatureRect.width,
+            top: signatureRect.y + signatureRect.height,
+        });
+
+        targetPage.drawPage(embeddedPage, {
+            x: 100,
+            y: isOldAssignment ? 157 - 30 : 157,
+            xScale: 1,
+            yScale: 1,
+        });
+
+        const updatedPdf = await targetPdf.save();
+        await fs.writeFile(outputPath, updatedPdf);
+
+        return outputPath;
+    }
+    private async insertParentalSignatureFromSource(
+        sourcePath: string,
+        targetPath: string,
+        outputPath: string,
+        isOldAssignment: boolean = false,
+        signatureRect?: ISignatureRectangle,
+    ) {
+        const sourceBuffer = await fs.readFile(sourcePath);
+        const targetBuffer = await fs.readFile(targetPath);
+
+        const sourcePdf = await PDFDocument.load(sourceBuffer);
+        const targetPdf = await PDFDocument.load(targetBuffer);
+
+        const sourcePageIndex = signatureRect?.page || 1;
+        const sourcePage = sourcePdf.getPage(sourcePageIndex);
+
+        const targetPage = targetPdf.getPage(3);
+
+        if (!signatureRect && isOldAssignment) {
+            signatureRect = {
+                x: 110,
+                y: 228 - 30,
+                width: 160,
+                height: 100,
+            };
+        } else if (!signatureRect) {
+            signatureRect = {
+                x: 110,
+                y: 228,
+                width: 160,
+                height: 70,
+            };
+        }
+
+        const embeddedPage = await targetPdf.embedPage(sourcePage, {
+            left: signatureRect.x,
+            bottom: signatureRect.y,
+            right: signatureRect.x + signatureRect.width,
+            top: signatureRect.y + signatureRect.height,
+        });
+
+        targetPage.drawPage(embeddedPage, {
+            x: 110,
+            y: isOldAssignment ? 445 - 30 : 445,
+            xScale: 1,
+            yScale: 1,
+        });
+
+        const updatedPdf = await targetPdf.save();
+        await fs.writeFile(outputPath, updatedPdf);
+
+        return outputPath;
+    }
 
     async updateAssignmentData(claimId: string, passengerIds: string[]) {
         const claim = await this.claimService.getClaim(claimId, {
@@ -38,10 +143,7 @@ export class DocumentService {
 
         for (const passengerId of passengerIds) {
             try {
-                const passenger:
-                    | (ClaimCustomer & { isMinor: false })
-                    | OtherPassenger
-                    | undefined =
+                const passenger: IAssignmentPassenger | undefined =
                     claim.customer.id == passengerId
                         ? {
                               isMinor: false,
@@ -101,9 +203,9 @@ export class DocumentService {
                             );
                         }
 
-                        await this.removeDocument(assignment.id);
+                        await this.documentDbService.remove(assignment.id);
 
-                        await this.saveDocuments(
+                        await this.documentDbService.saveMany(
                             [
                                 {
                                     name: generateAssignmentName(
@@ -125,18 +227,7 @@ export class DocumentService {
 
     async updateParentalAssignment(
         sourcePath: string,
-        assignmentData: {
-            claimId: string;
-            address: string;
-            airlineName: string;
-            date: Date;
-            firstName: string;
-            lastName: string;
-            flightNumber: string;
-            minorBirthday: Date;
-            parentFirstName: string;
-            parentLastName: string;
-        },
+        assignmentData: IParentalAssignmentData,
     ): Promise<string> {
         const {
             claimId,
@@ -173,77 +264,9 @@ export class DocumentService {
         return filepath;
     }
 
-    private async insertParentalSignatureFromSource(
-        sourcePath: string,
-        targetPath: string,
-        outputPath: string,
-        isOldAssignment: boolean = false,
-        signatureRect?: {
-            x: number;
-            y: number;
-            width: number;
-            height: number;
-            page?: number;
-        },
-    ) {
-        const sourceBuffer = await fs.readFile(sourcePath);
-        const targetBuffer = await fs.readFile(targetPath);
-
-        const sourcePdf = await PDFDocument.load(sourceBuffer);
-        const targetPdf = await PDFDocument.load(targetBuffer);
-
-        const sourcePageIndex = signatureRect?.page || 1;
-        const sourcePage = sourcePdf.getPage(sourcePageIndex);
-
-        const targetPage = targetPdf.getPage(3);
-
-        if (!signatureRect && isOldAssignment) {
-            signatureRect = {
-                x: 110,
-                y: 228 - 30,
-                width: 160,
-                height: 100,
-            };
-        } else if (!signatureRect) {
-            signatureRect = {
-                x: 110,
-                y: 228,
-                width: 160,
-                height: 70,
-            };
-        }
-
-        const embeddedPage = await targetPdf.embedPage(sourcePage, {
-            left: signatureRect.x,
-            bottom: signatureRect.y,
-            right: signatureRect.x + signatureRect.width,
-            top: signatureRect.y + signatureRect.height,
-        });
-
-        targetPage.drawPage(embeddedPage, {
-            x: 110,
-            y: isOldAssignment ? 445 - 30 : 445,
-            xScale: 1,
-            yScale: 1,
-        });
-
-        const updatedPdf = await targetPdf.save();
-        await fs.writeFile(outputPath, updatedPdf);
-
-        return outputPath;
-    }
-
     async updateAssignment(
         sourcePath: string,
-        assignmentData: {
-            claimId: string;
-            address: string;
-            airlineName: string;
-            date: Date;
-            firstName: string;
-            lastName: string;
-            flightNumber: string;
-        },
+        assignmentData: IAssignmentData,
         isOldAssignment: boolean,
     ): Promise<string> {
         const {
@@ -274,121 +297,6 @@ export class DocumentService {
         );
 
         return filepath;
-    }
-
-    private async insertSignatureFromSource(
-        sourcePath: string,
-        targetPath: string,
-        outputPath: string,
-        isOldAssignment: boolean = false,
-        signatureRect?: {
-            x: number;
-            y: number;
-            width: number;
-            height: number;
-            page?: number;
-        },
-    ) {
-        const sourceBuffer = await fs.readFile(sourcePath);
-        const targetBuffer = await fs.readFile(targetPath);
-
-        const sourcePdf = await PDFDocument.load(sourceBuffer);
-        const targetPdf = await PDFDocument.load(targetBuffer);
-
-        const sourcePageIndex = signatureRect?.page || 1;
-        const sourcePage = sourcePdf.getPage(sourcePageIndex);
-
-        const targetPage = targetPdf.getPage(2);
-
-        if (!signatureRect && isOldAssignment) {
-            signatureRect = {
-                x: 150,
-                y: 217 - 30,
-                width: 160,
-                height: 100,
-            };
-        } else if (!signatureRect) {
-            signatureRect = {
-                x: 105,
-                y: 435,
-                width: 160,
-                height: 70,
-            };
-        }
-
-        const embeddedPage = await targetPdf.embedPage(sourcePage, {
-            left: signatureRect.x,
-            bottom: signatureRect.y,
-            right: signatureRect.x + signatureRect.width,
-            top: signatureRect.y + signatureRect.height,
-        });
-
-        targetPage.drawPage(embeddedPage, {
-            x: 100,
-            y: isOldAssignment ? 157 - 30 : 157,
-            xScale: 1,
-            yScale: 1,
-        });
-
-        const updatedPdf = await targetPdf.save();
-        await fs.writeFile(outputPath, updatedPdf);
-
-        return outputPath;
-    }
-
-    async removeDocument(documentId: string) {
-        await this.prisma.document.update({
-            data: {
-                deletedAt: new Date(),
-            },
-            where: { id: documentId },
-        });
-    }
-
-    async getDocument(documentId: string): Promise<Document | null> {
-        return this.prisma.document.findFirst({
-            where: {
-                id: documentId,
-                deletedAt: null,
-            },
-        });
-    }
-
-    async getDocumentsByPassengerId(passengerId: string): Promise<Document[]> {
-        return this.prisma.document.findMany({
-            where: {
-                passengerId,
-                deletedAt: null,
-            },
-        });
-    }
-
-    async saveDocuments(
-        documents: {
-            name: string;
-            path: string;
-            passengerId: string;
-            documentType: DocumentType;
-        }[],
-        claimId: string,
-        isPublicData: boolean = false,
-    ): Promise<Document[]> {
-        return Promise.all(
-            documents.map((doc) =>
-                this.prisma.document.create({
-                    data: {
-                        name: doc.name,
-                        path: doc.path,
-                        claimId,
-                        passengerId: doc.passengerId,
-                        type: doc.documentType,
-                    },
-                    select: isPublicData
-                        ? this.getPublicDataSelect()
-                        : undefined,
-                }),
-            ),
-        );
     }
 
     async saveParentalSignaturePdf(
@@ -742,207 +650,5 @@ export class DocumentService {
         }
 
         return filePath;
-    }
-
-    async updateType(
-        newType: DocumentType,
-        documentId: string,
-        isPublicData: boolean = false,
-    ): Promise<Document> {
-        return this.prisma.document.update({
-            data: {
-                type: newType,
-            },
-            where: {
-                id: documentId,
-            },
-            select: isPublicData ? this.getPublicDataSelect() : undefined,
-        });
-    }
-
-    private async convertDocToPdf(inputPath: string, outputPath: string) {
-        return new Promise<void>((resolve, reject) => {
-            const libre = spawn('soffice', [
-                '--headless',
-                '--convert-to',
-                'pdf',
-                '--outdir',
-                path.dirname(outputPath),
-                inputPath,
-            ]);
-
-            libre.on('exit', (code: number) => {
-                if (code === 0) resolve();
-                else
-                    reject(
-                        new Error(
-                            `LibreOffice conversion failed with code ${code}`,
-                        ),
-                    );
-            });
-        });
-    }
-
-    async mergeFiles(
-        files: Express.Multer.File[],
-    ): Promise<NodeJS.ReadableStream> {
-        const mergedPdf = await PDFDocument.create();
-
-        for (const file of files) {
-            const ext = path.extname(file.originalname).toLowerCase();
-
-            if (ext === '.pdf') {
-                const pdf = await PDFDocument.load(file.buffer);
-                const copiedPages = await mergedPdf.copyPages(
-                    pdf,
-                    pdf.getPageIndices(),
-                );
-                copiedPages.forEach((p) => mergedPdf.addPage(p));
-            } else if (ext === '.jpg' || ext === '.jpeg') {
-                const img = await mergedPdf.embedJpg(file.buffer);
-                const page = mergedPdf.addPage([img.width, img.height]);
-                page.drawImage(img, {
-                    x: 0,
-                    y: 0,
-                    width: img.width,
-                    height: img.height,
-                });
-            } else if (ext === '.png') {
-                try {
-                    const img = await mergedPdf.embedPng(file.buffer);
-                    const page = mergedPdf.addPage([img.width, img.height]);
-                    page.drawImage(img, {
-                        x: 0,
-                        y: 0,
-                        width: img.width,
-                        height: img.height,
-                    });
-                } catch (error) {
-                    try {
-                        const jpegBuffer = await this.pngToJpeg(file.buffer);
-                        const img = await mergedPdf.embedJpg(jpegBuffer);
-                        const page = mergedPdf.addPage([img.width, img.height]);
-                        page.drawImage(img, {
-                            x: 0,
-                            y: 0,
-                            width: img.width,
-                            height: img.height,
-                        });
-                    } catch (jpegError) {
-                        throw new InternalServerErrorException(
-                            'Cannot merge png into pdf',
-                        );
-                    }
-                }
-            } else if (ext === '.doc' || ext === '.docx') {
-                const tempInput = path.join('/tmp', file.originalname);
-                const tempOutput = tempInput.replace(ext, '.pdf');
-                await fs.writeFile(tempInput, file.buffer);
-                await this.convertDocToPdf(tempInput, tempOutput);
-
-                const pdfBuffer = await fs.readFile(tempOutput);
-                const pdf = await PDFDocument.load(pdfBuffer);
-                const copiedPages = await mergedPdf.copyPages(
-                    pdf,
-                    pdf.getPageIndices(),
-                );
-                copiedPages.forEach((p) => mergedPdf.addPage(p));
-
-                await fs.unlink(tempInput).catch(() => null);
-                await fs.unlink(tempOutput).catch(() => null);
-            }
-        }
-
-        const mergedBytes = await mergedPdf.save();
-        const stream = new PassThrough();
-        stream.end(Buffer.from(mergedBytes));
-        return stream;
-    }
-
-    private async pngToJpeg(pngBuffer: Buffer): Promise<Buffer> {
-        return new Promise((resolve, reject) => {
-            loadImage(pngBuffer)
-                .then((image: Image) => {
-                    const canvas = createCanvas(image.width, image.height);
-                    const ctx = canvas.getContext('2d');
-
-                    ctx.fillStyle = '#FFFFFF';
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-                    ctx.drawImage(image, 0, 0);
-
-                    const jpegBuffer = canvas.toBuffer('image/jpeg', {
-                        quality: 0.9,
-                    });
-
-                    resolve(jpegBuffer);
-                })
-                .catch(reject);
-        });
-    }
-
-    async getExpressMulterFilesFromPaths(filePaths: string[]) {
-        const files: Express.Multer.File[] = [];
-
-        for (const filePath of filePaths) {
-            const buffer = await fs.readFile(filePath);
-            const ext = path.extname(filePath).toLowerCase();
-
-            let mimetype = 'application/octet-stream';
-            if (ext === '.pdf') mimetype = 'application/pdf';
-            else if (ext === '.jpg' || ext === '.jpeg') mimetype = 'image/jpeg';
-            else if (ext === '.png') mimetype = 'image/png';
-            else if (ext === '.doc') mimetype = 'application/msword';
-            else if (ext === '.docx')
-                mimetype =
-                    'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
-
-            files.push({
-                fieldname: 'files',
-                originalname: path.basename(filePath),
-                encoding: '7bit',
-                mimetype,
-                buffer,
-                size: buffer.length,
-                path: filePath,
-                stream: Readable.from(buffer),
-                destination: filePath,
-                filename: path.basename(filePath),
-            });
-        }
-
-        return files;
-    }
-
-    async getDocumentByIds(ids: string[]) {
-        return this.prisma.document.findMany({
-            where: {
-                id: { in: ids },
-                deletedAt: null,
-            },
-        });
-    }
-
-    getPublicDataSelect() {
-        return {
-            id: true,
-            name: true,
-            type: true,
-            claimId: true,
-            passengerId: true,
-        };
-    }
-
-    async updatePassengerId(documentId: string, passengerId: string) {
-        return this.prisma.document.update({
-            where: {
-                id: documentId,
-                deletedAt: null,
-            },
-            data: {
-                passengerId,
-            },
-            select: this.getPublicDataSelect(),
-        });
     }
 }

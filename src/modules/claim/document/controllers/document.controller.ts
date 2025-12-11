@@ -1,5 +1,4 @@
 import {
-    BadRequestException,
     Body,
     Controller,
     Delete,
@@ -17,42 +16,39 @@ import {
     UploadedFiles,
     UseGuards,
 } from '@nestjs/common';
-import { DocumentsUploadInterceptor } from '../../../interceptors/documents/documents-upload.interceptor';
+import { DocumentsUploadInterceptor } from '../../../../interceptors/documents/documents-upload.interceptor';
 import {
     CLAIM_NOT_FOUND,
     DOCUMENT_NOT_FOUND,
     FILE_DOESNT_ON_DISK,
     PASSENGER_NOT_FOUND,
-} from '../constants';
-import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
-import { ClaimService } from '../claim.service';
-import { UploadAdminDocumentsDto } from './dto/upload-admin-documents.dto';
-import { DocumentService } from './document.service';
-import { GetDocumentDto } from './dto/get-document.dto';
+} from '../../constants';
+import { JwtAuthGuard } from '../../../../guards/jwtAuth.guard';
+import { ClaimService } from '../../claim.service';
+import { UploadAdminDocumentsDto } from '../dto/upload-admin-documents.dto';
+import { DocumentService } from '../services/document.service';
+import { GetDocumentDto } from '../dto/get-document.dto';
 import { Response } from 'express';
 import * as path from 'path';
 import * as fs from 'fs';
 import { lookup as mimeLookup } from 'mime-types';
-import { validateClaimJwt } from '../../../utils/validate-claim-jwt';
-import { TokenService } from '../../token/token.service';
-import { UploadDocumentsJwtQueryDto } from './dto/upload-documents-jwt-query.dto';
-import { AuthRequest } from '../../../interfaces/AuthRequest.interface';
-import { UploadDocumentsQueryDto } from './dto/upload-documents-query.dto';
-import { UpdateDocumentTypeDto } from './dto/update-document-type.dto';
-import { MergeDocumentsDto } from './dto/merge-documents.dto';
-import { RecentUpdatesService } from '../recent-updates/recent-updates.service';
+import { AuthRequest } from '../../../../interfaces/AuthRequest.interface';
+import { UploadDocumentsQueryDto } from '../dto/upload-documents-query.dto';
+import { UpdateDocumentTypeDto } from '../dto/update-document-type.dto';
+import { MergeDocumentsDto } from '../dto/merge-documents.dto';
+import { RecentUpdatesService } from '../../recent-updates/recent-updates.service';
 import {
     ClaimRecentUpdatesType,
     DocumentRequestStatus,
     DocumentType,
     UserRole,
 } from '@prisma/client';
-import { DocumentRequestService } from '../document-request/document-request.service';
-import { PatchPassengerIdDto } from './dto/patch-passenger-id.dto';
+import { DocumentRequestService } from '../../document-request/document-request.service';
+import { PatchPassengerIdDto } from '../dto/patch-passenger-id.dto';
 import { HttpStatusCode } from 'axios';
-import { RoleGuard } from '../../../guards/role.guard';
-import { GenerateAssignmentDto } from './dto/generate-assignment.dto';
-import { formatDate } from '../../../utils/formatDate';
+import { RoleGuard } from '../../../../guards/role.guard';
+import { GenerateAssignmentDto } from '../dto/generate-assignment.dto';
+import { formatDate } from '../../../../utils/formatDate';
 
 @Controller('claims/documents')
 @UseGuards(JwtAuthGuard)
@@ -252,7 +248,13 @@ export class DocumentController {
     ) {
         const { type } = dto;
 
-        return await this.documentService.updateType(type, documentId, true);
+        return this.documentService.updateDocument(
+            {
+                type,
+            },
+            documentId,
+            true,
+        );
     }
 
     @Get('download')
@@ -397,76 +399,11 @@ export class DocumentController {
     async patchPassengerId(@Body() dto: PatchPassengerIdDto) {
         const { passengerId, documentId } = dto;
 
-        return await this.documentService.updatePassengerId(
+        return this.documentService.updateDocument(
+            {
+                passengerId,
+            },
             documentId,
-            passengerId,
-        );
-    }
-}
-
-@Controller('claims/documents/public')
-export class PublicDocumentController {
-    constructor(
-        private readonly documentService: DocumentService,
-        private readonly claimService: ClaimService,
-        private readonly tokenService: TokenService,
-    ) {}
-
-    @Post()
-    @DocumentsUploadInterceptor()
-    async uploadDocuments(
-        @UploadedFiles() files: Express.Multer.File[] = [],
-        @Query() query: UploadDocumentsJwtQueryDto,
-        @Body('documentTypes') documentTypes: string,
-    ) {
-        const { jwt, claimId, step, passengerId } = query;
-
-        let parsed: DocumentType[];
-
-        try {
-            parsed = JSON.parse(documentTypes);
-        } catch {
-            throw new BadRequestException('Invalid JSON in documentTypes');
-        }
-
-        const allowedValues = Object.values(DocumentType);
-        const invalid = parsed.filter((v) => !allowedValues.includes(v));
-        if (invalid.length > 0) {
-            throw new BadRequestException(
-                `Invalid documentTypes: ${invalid.join(', ')}`,
-            );
-        }
-
-        if (!parsed || parsed.length != files.length) {
-            throw new BadRequestException(
-                'Files count must match documentTypes count',
-            );
-        }
-
-        await validateClaimJwt(
-            jwt,
-            claimId,
-            this.tokenService.verifyJWT.bind(this.tokenService),
-        );
-
-        if (!(await this.claimService.getClaim(claimId))) {
-            throw new NotFoundException(CLAIM_NOT_FOUND);
-        }
-
-        if (step) {
-            await this.claimService.updateStep(claimId, step);
-        }
-
-        return await this.documentService.saveDocuments(
-            files.map((doc, index) => {
-                return {
-                    name: doc.originalname,
-                    path: doc.path,
-                    passengerId,
-                    documentType: parsed[index],
-                };
-            }),
-            claimId,
             true,
         );
     }

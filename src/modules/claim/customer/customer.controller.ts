@@ -21,7 +21,7 @@ import {
 import { CustomerService } from './customer.service';
 import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
 import { UploadSignDto } from './dto/upload-sign.dto';
-import { DocumentService } from '../document/document.service';
+import { DocumentService } from '../document/services/document.service';
 import {
     ClaimRecentUpdatesType,
     ClaimStatus,

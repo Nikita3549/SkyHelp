@@ -36,7 +36,7 @@ import { AirportService } from '../airport/airport.service';
 import { NotificationService } from '../notification/notification.service';
 import { ConfigService } from '@nestjs/config';
 import { UpdateFormStateDto } from './dto/update-form-state.dto';
-import { DocumentService } from './document/document.service';
+import { DocumentService } from './document/services/document.service';
 import { CustomerService } from './customer/customer.service';
 import { validateClaimJwt } from '../../utils/validate-claim-jwt';
 import { IFullClaim } from './interfaces/full-claim.interface';

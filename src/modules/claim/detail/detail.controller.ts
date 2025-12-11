@@ -12,7 +12,7 @@ import { DetailService } from './detail.service';
 import { ClaimService } from '../claim.service';
 import { UserRole } from '@prisma/client';
 import { RoleGuard } from '../../../guards/role.guard';
-import { DocumentService } from '../document/document.service';
+import { DocumentService } from '../document/services/document.service';
 
 @Controller('claims/details')
 @UseGuards(JwtAuthGuard)
