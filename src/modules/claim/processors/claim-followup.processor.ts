@@ -6,7 +6,7 @@ import {
     PAYMENT_STEP,
 } from '../constants';
 import { NotificationService } from '../../notification/notification.service';
-import { IJobClaimFollowupData } from '../interfaces/job-data.interface';
+import { IJobClaimFollowupData } from '../interfaces/job-data/job-data.interface';
 import { ClaimService } from '../claim.service';
 import { EmailResumeClickService } from '../../email-resume-click/email-resume-click.service';
 

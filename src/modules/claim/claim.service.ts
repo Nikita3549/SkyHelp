@@ -26,7 +26,7 @@ import {
     TWO_DAYS,
 } from './constants';
 import { Queue } from 'bullmq';
-import { IJobClaimFollowupData } from './interfaces/job-data.interface';
+import { IJobClaimFollowupData } from './interfaces/job-data/job-data.interface';
 import { BasePassenger } from './interfaces/base-passenger.interface';
 import { ConfigService } from '@nestjs/config';
 import { IClaimJwt } from './interfaces/claim-jwt.interface';

@@ -1,0 +1,68 @@
+import { InjectQueue, Processor, WorkerHost } from '@nestjs/bullmq';
+import { Job, Queue } from 'bullmq';
+import {
+    CLAIM_REMINDER_INTERVAL,
+    CLAIM_REMINDER_QUEUE_KEY,
+} from '../constants';
+import { NotificationService } from '../../notification/notification.service';
+import { ClaimService } from '../claim.service';
+import { ClaimReminderJobDataInterface } from '../interfaces/job-data/claim-reminder-job-data.interface';
+import { ClaimStatus } from '@prisma/client';
+import { ReminderTypeEnum } from '../../notification/enums/reminder-type.enum';
+import { Languages } from '../../language/enums/languages.enums';
+import { getNextWorkTime } from '../../../utils/getNextWorkTime';
+
+@Processor(CLAIM_REMINDER_QUEUE_KEY)
+export class ClaimReminderProcessor extends WorkerHost {
+    constructor(
+        private readonly notificationService: NotificationService,
+        private readonly claimService: ClaimService,
+        @InjectQueue(CLAIM_REMINDER_QUEUE_KEY)
+        private readonly claimReminderQueue: Queue,
+    ) {
+        super();
+    }
+
+    async process(job: Job<ClaimReminderJobDataInterface>) {
+        const { claimId } = job.data;
+
+        const claim = await this.claimService.getClaim(claimId);
+
+        if (!claim) {
+            return;
+        }
+
+        const claimStatus = claim.state.status;
+        if (
+            claimStatus != ClaimStatus.CLAIM_RECEIVED &&
+            claimStatus != ClaimStatus.LEGAL_PROCESS &&
+            claimStatus != ClaimStatus.SENT_TO_AIRLINE
+        ) {
+            return;
+        }
+
+        await this.notificationService.sendClaimReminder(
+            claim.customer.email,
+            {
+                customerName: claim.customer.firstName,
+                claimId: claim.id,
+                reminderType:
+                    claimStatus == ClaimStatus.CLAIM_RECEIVED
+                        ? ReminderTypeEnum.CLAIM_RECEIVED
+                        : claimStatus == ClaimStatus.SENT_TO_AIRLINE
+                          ? ReminderTypeEnum.SENT_TO_AIRLINE
+                          : ReminderTypeEnum.LEGAL_PROCESS,
+            },
+            claim.customer.language as Languages,
+        );
+
+        const jobData: ClaimReminderJobDataInterface = {
+            claimId: claim.id,
+        };
+
+        await this.claimReminderQueue.add('claimReminder', jobData, {
+            delay: getNextWorkTime(CLAIM_REMINDER_INTERVAL),
+            attempts: 1,
+        });
+    }
+}

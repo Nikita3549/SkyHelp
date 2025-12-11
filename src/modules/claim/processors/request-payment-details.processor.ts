@@ -5,7 +5,7 @@ import {
     REQUEST_PAYMENT_DETAILS_QUEUE_KEY,
 } from '../constants';
 import { NotificationService } from '../../notification/notification.service';
-import { IPaymentDetailsRequestJobData } from '../interfaces/payment-details-request-job-data.interface';
+import { IPaymentDetailsRequestJobData } from '../interfaces/job-data/payment-details-request-job-data.interface';
 import { GenerateLinksService } from '../../generate-links/generate-links.service';
 import { TokenService } from '../../token/token.service';
 

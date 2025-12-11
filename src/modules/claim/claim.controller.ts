@@ -16,6 +16,8 @@ import { ClaimService } from './claim.service';
 import {
     ADD_FLIGHT_STATUS_QUEUE_KEY,
     CLAIM_NOT_FOUND,
+    CLAIM_REMINDER_INTERVAL,
+    CLAIM_REMINDER_QUEUE_KEY,
     FINAL_STEP,
     INVALID_ICAO,
 } from './constants';
@@ -46,13 +48,14 @@ import { LanguageWithReferrerDto } from './dto/language-with-referrer.dto';
 import { Languages } from '../language/enums/languages.enums';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
-import { IAddFlightStatusJobData } from './interfaces/add-flight-status-job-data.interface';
+import { IAddFlightStatusJobData } from './interfaces/job-data/add-flight-status-job-data.interface';
 import { JwtOrApiKeyAuth } from '../../guards/jwtOrApiKeyAuth';
 import { GetClaimsQuery } from './dto/get-claims.query';
 import { normalizePhone } from '../../utils/normalizePhone';
 import { PartnerService } from '../referral/partner/partner.service';
 import { ApiKeyAuthGuard } from '../../guards/apiKeyAuthGuard';
 import { UserService } from '../user/user.service';
+import { getNextWorkTime } from '../../utils/getNextWorkTime';
 
 @Controller('claims')
 @UseGuards(JwtOrApiKeyAuth)
@@ -86,6 +89,8 @@ export class PublicClaimController {
         private readonly addFlightStatusQueue: Queue,
         private readonly partnerService: PartnerService,
         private readonly userService: UserService,
+        @InjectQueue(CLAIM_REMINDER_QUEUE_KEY)
+        private readonly claimReminderQueue: Queue,
     ) {}
 
     @Post()
@@ -193,6 +198,15 @@ export class PublicClaimController {
             flightDate: claim.details.date,
             claimId: claim.id,
         };
+
+        await this.claimReminderQueue.add(
+            'claimReminder',
+            { claimId: claim.id },
+            {
+                delay: getNextWorkTime(CLAIM_REMINDER_INTERVAL),
+                attempts: 1,
+            },
+        );
 
         await this.addFlightStatusQueue.add(
             'addFlightStatus',

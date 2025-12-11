@@ -17,3 +17,7 @@ export const REGISTER_CODE_FILENAME = 'registerCode.html';
 export const FORGOT_PASSWORD_CODE_FILENAME = 'recoverPassword.html';
 
 export const REQUEST_PAYMENT_DETAILS_FILENAME = 'requestPaymentDetails.html';
+
+export const REMINDER_CLAIM_RECEIVED_FILENAME = 'reminders/claimReceived.html';
+export const REMINDER_LEGAL_PROCESS_FILENAME = 'reminders/legalProcess.html';
+export const REMINDER_SENT_TO_AIRLINE_FILENAME = 'reminders/sentToAirline.html';

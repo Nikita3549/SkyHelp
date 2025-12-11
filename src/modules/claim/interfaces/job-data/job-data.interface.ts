@@ -1,4 +1,4 @@
-import { Languages } from '../../language/enums/languages.enums';
+import { Languages } from '../../../language/enums/languages.enums';
 
 export interface IJobClaimFollowupData {
     email: string;

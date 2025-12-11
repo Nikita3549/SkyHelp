@@ -9,6 +9,7 @@ import { BullModule } from '@nestjs/bullmq';
 import {
     ADD_FLIGHT_STATUS_QUEUE_KEY,
     CLAIM_FOLLOWUP_QUEUE_KEY,
+    CLAIM_REMINDER_QUEUE_KEY,
 } from './constants';
 import { ClaimFollowupProcessor } from './processors/claim-followup.processor';
 import { ProgressModule } from './progress/progress.module';
@@ -33,6 +34,7 @@ import { BoardingPassModule } from './boarding-pass/boarding-pass.module';
 import { AddFlightStatusProcessor } from './processors/add-flight-status.processor';
 import { PartnerModule } from '../referral/partner/partner.module';
 import { FlightStatusModule } from './flight-status/flight-status.module';
+import { ClaimReminderProcessor } from './processors/claim-reminder.processor';
 
 @Module({
     imports: [
@@ -46,6 +48,9 @@ import { FlightStatusModule } from './flight-status/flight-status.module';
             },
             {
                 name: ADD_FLIGHT_STATUS_QUEUE_KEY,
+            },
+            {
+                name: CLAIM_REMINDER_QUEUE_KEY,
             },
         ),
         forwardRef(() => ProgressModule),
@@ -74,6 +79,7 @@ import { FlightStatusModule } from './flight-status/flight-status.module';
         ClaimFollowupProcessor,
         ClaimGateway,
         AddFlightStatusProcessor,
+        ClaimReminderProcessor,
     ],
     exports: [ClaimService],
 })

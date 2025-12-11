@@ -8,7 +8,7 @@ import {
     THREE_DAYS,
 } from '../constants';
 import { Queue } from 'bullmq';
-import { IPaymentDetailsRequestJobData } from '../interfaces/payment-details-request-job-data.interface';
+import { IPaymentDetailsRequestJobData } from '../interfaces/job-data/payment-details-request-job-data.interface';
 import { getNextWorkTime } from '../../../utils/getNextWorkTime';
 import { UpdatePaymentDto } from './dto/update-payment.dto';
 

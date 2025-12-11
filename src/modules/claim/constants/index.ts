@@ -1,4 +1,4 @@
-import { DAY } from '../../../common/constants/time.constants';
+import { DAY, MINUTE } from '../../../common/constants/time.constants';
 
 export const CLAIM_NOT_FOUND = 'Claim not found';
 
@@ -21,6 +21,8 @@ export const PASSENGER_NOT_FOUND = 'Passenger not found';
 export const CUSTOMER_NOT_FOUND = 'Customer not found';
 
 export const CLAIM_FOLLOWUP_QUEUE_KEY = 'claims';
+export const CLAIM_REMINDER_QUEUE_KEY = 'claims-reminder';
+export const CLAIM_REMINDER_INTERVAL = DAY * 14;
 export const ADD_FLIGHT_STATUS_QUEUE_KEY = 'add-flight-status';
 export const REQUEST_PAYMENT_DETAILS_QUEUE_KEY = 'request-payment-details';
 

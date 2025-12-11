@@ -2,7 +2,7 @@ import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
 import { ADD_FLIGHT_STATUS_QUEUE_KEY } from '../constants';
 import { ClaimService } from '../claim.service';
-import { IAddFlightStatusJobData } from '../interfaces/add-flight-status-job-data.interface';
+import { IAddFlightStatusJobData } from '../interfaces/job-data/add-flight-status-job-data.interface';
 import { FlightService } from '../../flight/flight.service';
 import { FlightStatusService } from '../flight-status/flight-status.service';
 

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import * as fs from 'fs/promises';
 import * as path from 'node:path';
 import { Languages } from '../language/enums/languages.enums';
@@ -14,6 +14,9 @@ import {
     MISSING_DOCUMENTS_FILENAME,
     NEW_STATUS_FILENAME,
     REGISTER_CODE_FILENAME,
+    REMINDER_CLAIM_RECEIVED_FILENAME,
+    REMINDER_LEGAL_PROCESS_FILENAME,
+    REMINDER_SENT_TO_AIRLINE_FILENAME,
     REQUEST_PAYMENT_DETAILS_FILENAME,
     SEND_PARTNER_PAYOUT_FILENAME,
 } from './constants';
@@ -25,6 +28,7 @@ import { UnsubscribeEmailService } from '../unsubscribe-email/unsubscribe-email.
 import { gmail_v1 } from 'googleapis';
 import { DocumentType } from '@prisma/client';
 import Handlebars from 'handlebars';
+import { ReminderTypeEnum } from './enums/reminder-type.enum';
 
 @Injectable()
 export class NotificationService {
@@ -557,6 +561,55 @@ This message was automatically generated.
         );
 
         const subject = `Action Required: Payment Details Needed #${letterData.claimId}`;
+        const email = await this.gmailService.noreply.sendEmailHtml(
+            to,
+            subject,
+            letterHtml,
+            emailCategory,
+        );
+
+        await this.saveHtmlEmail({
+            email,
+            subject,
+            claimId: letterData.claimId,
+            contentHtml: letterHtml,
+            to,
+        });
+    }
+
+    async sendClaimReminder(
+        to: string,
+        letterData: {
+            customerName: string;
+            claimId: string;
+            reminderType: ReminderTypeEnum;
+        },
+        language: Languages = Languages.EN,
+    ) {
+        const emailCategory = EmailCategory.TRANSACTIONAL;
+
+        const layoutHtml = await this.getLayout(to, language, emailCategory);
+
+        const letterTemplateHtml = await this.getLetterContent(
+            letterData.reminderType == ReminderTypeEnum.CLAIM_RECEIVED
+                ? REMINDER_CLAIM_RECEIVED_FILENAME
+                : letterData.reminderType == ReminderTypeEnum.SENT_TO_AIRLINE
+                  ? REMINDER_SENT_TO_AIRLINE_FILENAME
+                  : REMINDER_LEGAL_PROCESS_FILENAME,
+            language,
+        );
+
+        const letterContentHtml = letterTemplateHtml.replace(
+            '{{clientName}}',
+            letterData.customerName,
+        );
+
+        const letterHtml = this.setContentInLayout(
+            letterContentHtml,
+            layoutHtml,
+        );
+
+        const subject = `Current Progress on Your Claim #${letterData.claimId}`;
         const email = await this.gmailService.noreply.sendEmailHtml(
             to,
             subject,
