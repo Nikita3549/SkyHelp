@@ -4,7 +4,9 @@ import {
     CancellationNotice,
     ClaimStatus,
     DelayCategory,
+    DocumentType,
     Prisma,
+    Progress,
     UserRole,
 } from '@prisma/client';
 import { CreateClaimDto } from './dto/create-claim.dto';
@@ -38,8 +40,8 @@ import { generateNumericId } from '../../utils/generateNumericId';
 import { IAffiliateClaim } from './interfaces/affiliate-claim.interface';
 import { IAccountantClaim } from './interfaces/accountant-claim.interface';
 import { ViewClaimType } from './enums/view-claim-type.enum';
-import { Languages } from '../language/enums/languages.enums';
-import { NotificationService } from '../notification/notification.service';
+import { ProgressService } from './progress/progress.service';
+import { ProgressVariants } from './progress/constants/progresses/progressVariants';
 
 @Injectable()
 export class ClaimService {
@@ -49,7 +51,78 @@ export class ClaimService {
         private readonly claimFollowupQueue: Queue,
         private readonly configService: ConfigService,
         private readonly tokenService: TokenService,
+        private readonly progressService: ProgressService,
     ) {}
+
+    async handleAllDocumentsUploaded(claimId: string) {
+        type RequiredDocumentGroups = {
+            [key: string]: DocumentType[];
+        };
+
+        const requiredDocumentGroups: RequiredDocumentGroups = {
+            Document: [
+                DocumentType.ETICKET,
+                DocumentType.DOCUMENT,
+                DocumentType.BOARDING_PASS,
+            ],
+            Passport: [DocumentType.PASSPORT],
+            Assignment: [DocumentType.ASSIGNMENT],
+        };
+
+        const claim = await this.getClaim(claimId);
+
+        if (!claim) {
+            return;
+        }
+
+        const allPassengers = [claim.customer, ...claim.passengers];
+
+        const allDocumentsPresent = allPassengers.every((passenger) => {
+            const passengerDocs = claim.documents.filter(
+                (d) => d.passengerId === passenger.id,
+            );
+
+            return Object.values(requiredDocumentGroups).every(
+                (requiredTypes) =>
+                    passengerDocs.some((doc) =>
+                        requiredTypes.includes(doc.type),
+                    ),
+            );
+        });
+
+        if (!allDocumentsPresent) {
+            return;
+        }
+
+        await this.prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+            const progressVariant = Object.values(ProgressVariants).find(
+                (v) => v.status == ClaimStatus.CLAIM_RECEIVED,
+            );
+            if (!progressVariant) {
+                return;
+            }
+            await this.progressService.createProgressByClaimId(
+                {
+                    title: progressVariant.title,
+                    description: progressVariant.descriptions[1],
+                    order:
+                        claim.state.progress.reduce(
+                            (max: Progress, current: Progress) => {
+                                if (!max || current.order > max.order) {
+                                    return current;
+                                }
+                                return max;
+                            },
+                            claim.state.progress[0],
+                        ).order + 1,
+                },
+                claim.state.id,
+                tx,
+            );
+
+            await this.updateStatus(ClaimStatus.CLAIM_RECEIVED, claimId, tx);
+        });
+    }
 
     scheduleClaimFollowUpEmails(jobData: IJobClaimFollowupData) {
         const delays = [

@@ -33,6 +33,12 @@ export class PublicDocumentController {
     ) {
         const { jwt, claimId, step, passengerId } = query;
 
+        const claim = await this.claimService.getClaim(claimId);
+
+        if (!claim) {
+            throw new NotFoundException(CLAIM_NOT_FOUND);
+        }
+
         let parsed: DocumentType[];
 
         try {
@@ -69,7 +75,7 @@ export class PublicDocumentController {
             await this.claimService.updateStep(claimId, step);
         }
 
-        return await this.documentService.saveDocuments(
+        const documents = await this.documentService.saveDocuments(
             files.map((doc, index) => {
                 return {
                     name: doc.originalname,
@@ -81,5 +87,9 @@ export class PublicDocumentController {
             claimId,
             true,
         );
+
+        await this.claimService.handleAllDocumentsUploaded(claimId);
+
+        return documents;
     }
 }

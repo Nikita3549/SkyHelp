@@ -383,6 +383,8 @@ export class DocumentController {
             );
         });
 
+        await this.claimService.handleAllDocumentsUploaded(claim.id);
+
         return documents;
     }
 

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Progress, ProgressStatus } from '@prisma/client';
+import { Prisma, Progress, ProgressStatus } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 
 @Injectable()
@@ -27,12 +27,15 @@ export class ProgressService {
             title: string;
             description: string;
             order: number;
-            updatedBy: string;
+            updatedBy?: string;
             comments?: string;
         },
         claimStateId: string,
+        tx?: Prisma.TransactionClient,
     ) {
-        return this.prisma.progress.create({
+        const client = tx ?? this.prisma;
+
+        return client.progress.create({
             data: {
                 ...progress,
                 claimStateId,

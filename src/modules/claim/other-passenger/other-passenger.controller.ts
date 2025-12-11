@@ -305,6 +305,8 @@ export class PublicOtherPassengerController {
             passengerId,
             true,
         );
+
+        await this.claimService.handleAllDocumentsUploaded(claim.id);
     }
 
     @Post()
@@ -399,6 +401,8 @@ export class PublicOtherPassengerController {
                 claimId,
             );
         });
+
+        await this.claimService.handleAllDocumentsUploaded(claim.id);
 
         return documents;
     }

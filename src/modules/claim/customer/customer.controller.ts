@@ -216,5 +216,7 @@ export class PublicCustomerController {
         });
 
         await this.customerService.setIsSignedCustomer(customerId, true);
+
+        await this.claimService.handleAllDocumentsUploaded(claim.id);
     }
 }

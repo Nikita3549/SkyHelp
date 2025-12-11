@@ -21,5 +21,6 @@ import { ReferralTransactionModule } from '../../referral/referral-transaction/r
     ],
     controllers: [ProgressController],
     providers: [ProgressService, SendNewProgressEmailProcessor],
+    exports: [ProgressService],
 })
 export class ProgressModule {}
