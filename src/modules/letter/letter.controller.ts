@@ -96,7 +96,7 @@ export class LetterController {
             }
 
             subject = (replyEmail.subject || subject).startsWith('Re: ')
-                ? subject
+                ? replyEmail.subject || subject
                 : `Re: ${subject}`;
         }
 
