@@ -11,6 +11,7 @@ import {
     Query,
     Req,
     Res,
+    UnprocessableEntityException,
     UploadedFiles,
     UseGuards,
     UseInterceptors,
@@ -28,7 +29,7 @@ import { UpdateStatusDto } from './dto/update-status.dto';
 import { AGENT_MUST_HAVE_CLAIM_ID, LETTER_NOT_FOUND } from './constants';
 import { UpdateLetterDto } from './dto/update-letter.dto';
 import { AuthRequest } from '../../interfaces/AuthRequest.interface';
-import { UserRole } from '@prisma/client';
+import { EmailType, UserRole } from '@prisma/client';
 import { CLAIM_NOT_FOUND } from '../claim/constants';
 import { RoleGuard } from '../../guards/role.guard';
 
@@ -82,7 +83,21 @@ export class LetterController {
         let { to, subject, content, claimId, replyToMessageId } = dto;
 
         if (replyToMessageId) {
-            subject = subject.startsWith('Re: ') ? subject : `Re: ${subject}`;
+            const replyEmail =
+                await this.gmailService.email.getEmailById(replyToMessageId);
+
+            if (!replyEmail) {
+                throw new NotFoundException('Letter for reply not found');
+            }
+            if (replyEmail.type == EmailType.SENT) {
+                throw new UnprocessableEntityException(
+                    'Reply can only be created for letters type INBOX. This letter has SENT type',
+                );
+            }
+
+            subject = (replyEmail.subject || subject).startsWith('Re: ')
+                ? subject
+                : `Re: ${subject}`;
         }
 
         const claim = await this.claimService.getClaim(claimId || '');
