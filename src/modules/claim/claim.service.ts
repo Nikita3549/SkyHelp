@@ -4,6 +4,7 @@ import {
     CancellationNotice,
     ClaimStatus,
     DelayCategory,
+    DocumentRequestStatus,
     DocumentType,
     Prisma,
     Progress,
@@ -42,6 +43,7 @@ import { IAccountantClaim } from './interfaces/accountant-claim.interface';
 import { ViewClaimType } from './enums/view-claim-type.enum';
 import { ProgressService } from './progress/progress.service';
 import { ProgressVariants } from './progress/constants/progresses/progressVariants';
+import { DocumentRequestService } from './document-request/document-request.service';
 
 @Injectable()
 export class ClaimService {
@@ -52,6 +54,7 @@ export class ClaimService {
         private readonly configService: ConfigService,
         private readonly tokenService: TokenService,
         private readonly progressService: ProgressService,
+        private readonly documentRequestService: DocumentRequestService,
     ) {}
 
     async handleAllDocumentsUploaded(claimId: string) {
@@ -74,6 +77,8 @@ export class ClaimService {
         if (!claim) {
             return;
         }
+        const documentRequests =
+            await this.documentRequestService.getByClaimId(claimId);
 
         const allPassengers = [claim.customer, ...claim.passengers];
 
@@ -91,6 +96,16 @@ export class ClaimService {
         });
 
         if (!allDocumentsPresent) {
+            return;
+        }
+
+        if (
+            claim.state.status != ClaimStatus.LEGAL_PROCESS &&
+            claim.state.status != ClaimStatus.DOCS_REQUESTED &&
+            documentRequests.some(
+                (d) => d.status === DocumentRequestStatus.ACTIVE,
+            )
+        ) {
             return;
         }
 
