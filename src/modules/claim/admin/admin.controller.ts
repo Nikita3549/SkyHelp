@@ -102,7 +102,7 @@ export class AdminController {
         });
     }
 
-    @Delete('duplicate')
+    @Post('revoke')
     @HttpCode(HttpStatus.NO_CONTENT)
     @UseGuards(
         new RoleGuard([
@@ -112,10 +112,18 @@ export class AdminController {
             UserRole.ACCOUNTANT,
         ]),
     )
-    async deleteDuplicates(@Body() dto: DeleteDuplicatesDto) {
-        const { claimIds } = dto;
+    async revokeClaim(@Body() dto: DeleteDuplicatesDto) {
+        const { claimId } = dto;
 
-        await this.claimService.deleteDuplicates(claimIds);
+        const duplicates = await this.claimService.getDuplicates(claimId);
+
+        const claimsIdsToRevoke = duplicates.map((d) => d.duplicatedClaimId);
+
+        await this.claimService.archiveMany(claimsIdsToRevoke);
+        await this.claimService.deleteDuplicates([
+            ...claimsIdsToRevoke,
+            claimId,
+        ]);
     }
 
     @Get()

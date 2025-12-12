@@ -1130,6 +1130,27 @@ export class ClaimService {
         return !otherPassenger ? null : otherPassenger;
     }
 
+    async getDuplicates(claimId: string) {
+        return this.prisma.duplicatedClaim.findMany({
+            where: {
+                claimId,
+            },
+        });
+    }
+
+    async archiveMany(claimIds: string[]) {
+        return this.prisma.claim.updateMany({
+            where: {
+                id: {
+                    in: claimIds,
+                },
+            },
+            data: {
+                archived: true,
+            },
+        });
+    }
+
     async deleteDuplicates(claimIds: string[]) {
         if (!claimIds.length) return;
 
