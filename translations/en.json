@@ -3930,5 +3930,8 @@
     "PassengerRights.regulations.moldova" : "MD Regulations",
     "LatinInput.latinOnlyWarning": "Only Latin letters are allowed",
     "IssueDetailsForm.contacted.yes": "Yes",
-    "IssueDetailsForm.contacted.no": "No"
+    "IssueDetailsForm.contacted.no": "No",
+    "HeroForm.qrScannedTitle": "QR Code is scanned successfully",
+    "HeroForm.pointCamera" : "Point your camera at the boarding pass",
+    "HeroForm.scanInstructions" : "Scan the boarding pass to continue"
 }

@@ -3953,5 +3953,8 @@
     "PassengerRights.regulations.moldova": "MD Düzenlemeleri",
     "LatinInput.latinOnlyWarning": "Yalnızca Latin harfleri (Romence ve İngilizce) izin verilir",
     "IssueDetailsForm.contacted.yes": "Evet",
-    "IssueDetailsForm.contacted.no": "Hayır"
+    "IssueDetailsForm.contacted.no": "Hayır",
+    "HeroForm.qrScannedTitle": "QR Kod başarıyla tarandı",
+    "HeroForm.pointCamera": "Kameranızı biniş kartına doğrultun",
+    "HeroForm.scanInstructions": "Devam etmek için biniş kartını tarayın"
 }

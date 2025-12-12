@@ -3930,5 +3930,8 @@
     "PassengerRights.regulations.moldova": "Регламенты МД",
     "LatinInput.latinOnlyWarning": "Допустимы только латинские буквы",
     "IssueDetailsForm.contacted.yes": "Да",
-    "IssueDetailsForm.contacted.no": "Нет"
+    "IssueDetailsForm.contacted.no": "Нет",
+    "HeroForm.qrScannedTitle": "QR-код успешно отсканирован",
+    "HeroForm.pointCamera": "Наведите камеру на посадочный талон",
+    "HeroForm.scanInstructions": "Отсканируйте посадочный талон, чтобы продолжить"
 }

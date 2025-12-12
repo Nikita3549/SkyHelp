@@ -3933,5 +3933,8 @@
     "PassengerRights.regulations.moldova": "Regulamente MD",
     "LatinInput.latinOnlyWarning": "Doar literele latine sunt permise",
     "IssueDetailsForm.contacted.yes": "Da",
-    "IssueDetailsForm.contacted.no": "Nu"
+    "IssueDetailsForm.contacted.no": "Nu",
+    "HeroForm.qrScannedTitle": "Codul QR a fost scanat cu succes",
+    "HeroForm.pointCamera": "Îndreaptă camera către cartea de îmbarcare",
+    "HeroForm.scanInstructions": "Scanează cartea de îmbarcare pentru a continua"
 }
