@@ -50,6 +50,7 @@ import { AuthRequest } from '../../interfaces/AuthRequest.interface';
 import { IClaimJwt } from '../claim/interfaces/claim-jwt.interface';
 import { ClaimService } from '../claim/claim.service';
 import { RoleGuard } from '../../guards/role.guard';
+import { hashPassword } from './utils/hashPassword';
 
 @Controller('auth')
 export class AuthController {
@@ -76,7 +77,7 @@ export class AuthController {
 
         const code = this.authService.generateCode();
 
-        const hashedPassword = await this.authService.hashPassword(password);
+        const hashedPassword = await hashPassword(password);
 
         try {
             await this.authService.saveRegisterDataInRedis({
@@ -250,8 +251,7 @@ export class AuthController {
 
         await this.getAndCompareResetCode(email, code);
 
-        const newHashedPassword =
-            await this.authService.hashPassword(newPassword);
+        const newHashedPassword = await hashPassword(newPassword);
 
         await this.userService.changePassword(email, newHashedPassword);
 

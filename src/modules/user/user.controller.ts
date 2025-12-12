@@ -1,8 +1,10 @@
 import {
+    Body,
     Controller,
     Get,
     NotFoundException,
     Param,
+    Post,
     Query,
     UseGuards,
 } from '@nestjs/common';
@@ -13,6 +15,8 @@ import { INCORRECT_USER_ID } from './constants';
 import { GetUsersDto } from './dto/get-users.dto';
 import { UserRole } from '@prisma/client';
 import { RoleGuard } from '../../guards/role.guard';
+import { CreateUserDto } from './dto/create-user.dto';
+import { hashPassword } from '../auth/utils/hashPassword';
 
 @Controller('user')
 @UseGuards(JwtAuthGuard)
@@ -37,5 +41,21 @@ export class UserController {
         }
 
         return user;
+    }
+
+    @Post('admin')
+    @UseGuards(new RoleGuard([UserRole.ADMIN]))
+    async createUser(@Body() dto: CreateUserDto) {
+        const { password, secondName, name, email, role } = dto;
+
+        const hashedPassword = await hashPassword(password);
+
+        return await this.userService.saveUser({
+            hashedPassword,
+            secondName,
+            name,
+            email,
+            role,
+        });
     }
 }

@@ -15,6 +15,7 @@ import { UserService } from '../user/user.service';
 import { NotificationService } from '../notification/notification.service';
 import { TokenService } from '../token/token.service';
 import { Languages } from '../language/enums/languages.enums';
+import { hashPassword } from './utils/hashPassword';
 
 @Injectable()
 export class AuthService {
@@ -81,10 +82,6 @@ export class AuthService {
         return Math.floor(100000 + Math.random() * 900000);
     }
 
-    public async hashPassword(password: string): Promise<string> {
-        return await bcrypt.hash(password, 10);
-    }
-
     public async comparePasswords(
         password: string,
         hashedPassword: string,
@@ -121,7 +118,7 @@ export class AuthService {
         if (!user) {
             const password = this.generatePassword();
 
-            const hashedPassword = await this.hashPassword(password);
+            const hashedPassword = await hashPassword(password);
 
             const newUser = await this.userService.saveUser({
                 email,

@@ -54,28 +54,6 @@ export class UserService {
         });
     }
 
-    async updateUser(
-        userId: string,
-        updateData: IUpdateData,
-    ): Promise<IPublicUserData> {
-        return this.prisma.user.update({
-            data: updateData,
-            where: {
-                id: userId,
-            },
-            select: {
-                id: true,
-                email: true,
-                name: true,
-                secondName: true,
-                role: true,
-                isActive: true,
-                lastSign: true,
-                createdAt: true,
-            },
-        });
-    }
-
     async saveUser(registerData: ISaveUserData): Promise<IPublicUserData> {
         return this.prisma.user.create({
             data: {
