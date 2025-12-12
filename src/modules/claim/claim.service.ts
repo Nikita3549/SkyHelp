@@ -512,7 +512,7 @@ export class ClaimService {
             archived?: boolean;
             date?: { start: Date; end: Date };
             status?: ClaimStatus;
-            icao?: string;
+            airlineIcaos?: string[];
             flightNumber?: string;
             role?: UserRole;
             agentId?: string;
@@ -554,8 +554,10 @@ export class ClaimService {
         if (searchParams?.agentId) where.agentId = searchParams.agentId;
         if (searchParams?.flightNumber)
             where.details!.flightNumber = searchParams.flightNumber;
-        if (searchParams?.icao)
-            where.details!.airlines!.icao = searchParams.icao;
+        if (searchParams?.airlineIcaos && searchParams.airlineIcaos.length > 0)
+            where.details!.airlines!.icao = {
+                in: searchParams.airlineIcaos,
+            };
         if (searchParams?.date)
             where.createdAt = {
                 gte: searchParams.date.start,

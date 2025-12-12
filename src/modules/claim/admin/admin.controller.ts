@@ -170,7 +170,7 @@ export class AdminController {
                     end: endDate,
                 },
             status,
-            icao,
+            airlineIcaos: icao?.split(','),
             flightNumber,
             role,
             referralCode,
