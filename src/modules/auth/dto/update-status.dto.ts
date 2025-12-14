@@ -1,9 +1,6 @@
-import { IsBoolean, IsUUID } from 'class-validator';
+import { IsBoolean } from 'class-validator';
 
 export class UpdateStatusDto {
-    @IsUUID()
-    userUuid: string;
-
     @IsBoolean()
     isActive: boolean;
 }

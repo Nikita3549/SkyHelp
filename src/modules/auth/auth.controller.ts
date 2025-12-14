@@ -28,7 +28,6 @@ import {
     EXPIRE_CODE_OR_WRONG_EMAIL_ERROR,
     PASSWORD_WAS_CHANGED_SUCCESS,
     SEND_FORGOT_PASSWORD_CODE_SUCCESS,
-    USER_NOT_FOUND,
     WRONG_CODE_ERROR,
     WRONG_EMAIL,
     WRONG_EMAIL_OR_PASSWORD,
@@ -51,6 +50,7 @@ import { IClaimJwt } from '../claim/interfaces/claim-jwt.interface';
 import { ClaimService } from '../claim/claim.service';
 import { RoleGuard } from '../../common/guards/role.guard';
 import { hashPassword } from './utils/hashPassword';
+import { USER_NOT_FOUND } from '../chat/constants';
 
 @Controller('auth')
 export class AuthController {
@@ -270,30 +270,6 @@ export class AuthController {
         if (code != +compareCode) {
             throw new BadRequestException(CODE_IS_WRONG_OR_EXPIRED);
         }
-    }
-
-    @Put('/role')
-    @UseGuards(JwtAuthGuard, new RoleGuard([UserRole.ADMIN]))
-    async updateRole(@Body() dto: UpdateRoleDto) {
-        const { userUuid, newRole } = dto;
-
-        if (!(await this.userService.getUserById(userUuid))) {
-            throw new NotFoundException(USER_NOT_FOUND);
-        }
-
-        await this.userService.updateRole(newRole, userUuid);
-    }
-
-    @Patch('/status')
-    @UseGuards(JwtAuthGuard, new RoleGuard([UserRole.ADMIN]))
-    async updateStatus(@Body() dto: UpdateStatusDto) {
-        const { userUuid, isActive } = dto;
-
-        if (!(await this.userService.getUserById(userUuid))) {
-            throw new NotFoundException(USER_NOT_FOUND);
-        }
-
-        await this.userService.updateStatus(isActive, userUuid);
     }
 
     @Get('/me')

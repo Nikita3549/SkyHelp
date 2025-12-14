@@ -31,6 +31,4 @@ export const CORRECT_CODE = 'Code is correct';
 
 export const PASSWORD_WAS_CHANGED_SUCCESS = 'Password was changed successful';
 
-export const USER_NOT_FOUND = 'User not found';
-
 export const DEFAULT_GENERATED_PASSWORD_LENGTH = 16;
