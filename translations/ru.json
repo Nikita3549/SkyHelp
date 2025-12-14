@@ -3937,5 +3937,7 @@
     "HeroForm.scanInstructions": "Отсканируйте посадочный талон, чтобы продолжить",
     "cookieBanner.preferences": "Файлы cookie предпочтений",
     "cookieBanner.preferencesDesc": "Запоминают ваши настройки и предпочтения для улучшения пользовательского опыта.",
-    "cookieBanner.alwaysActive": "Всегда активны"
+    "cookieBanner.alwaysActive": "Всегда активны",
+    "ThankYouPage.boardingPassScanned.title": "Посадочный талон успешно отсканирован",
+    "ThankYouPage.boardingPassScanned.description": "Пожалуйста, продолжите на компьютере, чтобы завершить вашу заявку."
 }

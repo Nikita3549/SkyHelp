@@ -3940,5 +3940,7 @@
     "HeroForm.scanInstructions": "Scanează cartea de îmbarcare pentru a continua",
     "cookieBanner.preferences": "Cookie-uri de preferințe",
     "cookieBanner.preferencesDesc": "Rețin setările și preferințele dvs. pentru a îmbunătăți experiența utilizatorului.",
-    "cookieBanner.alwaysActive": "Întotdeauna active"
+    "cookieBanner.alwaysActive": "Întotdeauna active",
+    "ThankYouPage.boardingPassScanned.title": "Cartea de îmbarcare a fost scanată cu succes",
+    "ThankYouPage.boardingPassScanned.description": "Te rugăm să continuiți pe calculatorul tău pentru a finaliza cererea ta."
 }

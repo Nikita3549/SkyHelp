@@ -3937,5 +3937,7 @@
     "HeroForm.scanInstructions" : "Scan the boarding pass to continue",
     "cookieBanner.preferences": "Preferences Cookies",
     "cookieBanner.preferencesDesc": "Remember your settings and preferences to enhance your user experience.",
-    "cookieBanner.alwaysActive": "Always Active"
+    "cookieBanner.alwaysActive": "Always Active",
+    "ThankYouPage.boardingPassScanned.title": "Boarding pass successfully scanned",
+    "ThankYouPage.boardingPassScanned.description": "Please continue on your computer to complete your claim."
 }

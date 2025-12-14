@@ -3960,5 +3960,7 @@
     "HeroForm.scanInstructions": "Devam etmek için biniş kartını tarayın",
     "cookieBanner.preferences": "Tercih Çerezleri",
     "cookieBanner.preferencesDesc": "Kullanıcı deneyiminizi geliştirmek için ayarlarınızı ve tercihlerinizi hatırlar.",
-    "cookieBanner.alwaysActive": "Her zaman aktif"
+    "cookieBanner.alwaysActive": "Her zaman aktif",
+    "ThankYouPage.boardingPassScanned.title": "Biniş kartı başarıyla tarandı",
+    "ThankYouPage.boardingPassScanned.description": "Lütfen hesabınıza devam ederek talebinizi tamamlayın."
 }
