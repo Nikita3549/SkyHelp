@@ -6,6 +6,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { SocketIoAdapter } from './common/adapters/socket-io.adapter';
 import * as express from 'express';
 import { isProd } from './utils/isProd';
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
     const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -36,6 +37,7 @@ async function bootstrap() {
         app.useWebSocketAdapter(new SocketIoAdapter(app, configService));
 
     app.setGlobalPrefix('v1');
+    app.use(cookieParser());
     app.useGlobalPipes(
         new ValidationPipe({
             whitelist: true,
