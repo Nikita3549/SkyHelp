@@ -1,4 +1,0 @@
-enum MessageStatus {
-  READ
-  UNREAD
-}

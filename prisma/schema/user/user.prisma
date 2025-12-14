@@ -12,8 +12,6 @@ model User {
 
   claims            Claim[]      @relation("UserClaims")
   claimsAsAgent     Claim[]      @relation("AgentClaims")
-  messages          Message[]
-  membership        ChatMember[]
   updatedProgresses Progress[]
 
   partner Partner?

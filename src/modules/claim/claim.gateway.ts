@@ -8,12 +8,12 @@ import { UseFilters, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ValidationFilter } from '../../common/filters/validation.filter';
 import { TokenService } from '../token/token.service';
 import { Server, Socket } from 'socket.io';
-import { INVALID_TOKEN } from '../chat/constants';
 import { IJwtPayload } from '../token/interfaces/jwtPayload';
 import { UserRole } from '@prisma/client';
 import { ClaimService } from './claim.service';
 import { AuthSocket } from '../auth/interfaces/authSocket.interface';
 import { SearchClaimsDto } from './dto/search-claims.dto';
+import { INVALID_TOKEN } from '../token/constants';
 
 @WebSocketGateway({
     namespace: '/ws/claims',

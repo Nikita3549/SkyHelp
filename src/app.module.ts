@@ -13,7 +13,6 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { AirportModule } from './modules/airport/airport.module';
 import { CacheModule } from './modules/cache/cache.module';
 import { FlightModule } from './modules/flight/flight.module';
-import { ChatModule } from './modules/chat/chat.module';
 import { AirlineModule } from './modules/airline/airline.module';
 import { LanguageModule } from './modules/language/language.module';
 import { ContactUsModule } from './modules/contact-us/contact-us.module';
@@ -57,7 +56,6 @@ import { PrelitTemplatesModule } from './modules/prelit-templates/prelit-templat
         AirportModule,
         CacheModule,
         FlightModule,
-        ChatModule,
         AirlineModule,
         LanguageModule,
         ContactUsModule,

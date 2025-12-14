@@ -44,13 +44,10 @@ import { ResetPasswordDto } from './dto/reset-password.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { JwtAuthGuard } from '../../common/guards/jwtAuth.guard';
 import { UserRole } from '@prisma/client';
-import { UpdateStatusDto } from './dto/update-status.dto';
 import { AuthRequest } from '../../common/interfaces/AuthRequest.interface';
 import { IClaimJwt } from '../claim/interfaces/claim-jwt.interface';
 import { ClaimService } from '../claim/claim.service';
-import { RoleGuard } from '../../common/guards/role.guard';
 import { hashPassword } from './utils/hashPassword';
-import { USER_NOT_FOUND } from '../chat/constants';
 
 @Controller('auth')
 export class AuthController {
