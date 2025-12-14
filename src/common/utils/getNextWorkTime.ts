@@ -1,7 +1,4 @@
-import {
-    WORK_END_HOUR,
-    WORK_START_HOUR,
-} from '../common/constants/time.constants';
+import { WORK_END_HOUR, WORK_START_HOUR } from '../constants/time.constants';
 import { isProd } from './isProd';
 
 export function getNextWorkTime(delay: number): number {

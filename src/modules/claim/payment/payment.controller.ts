@@ -18,15 +18,15 @@ import {
 } from '../constants';
 import { PaymentService } from './payment.service';
 import { ClaimService } from '../claim.service';
-import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
+import { JwtAuthGuard } from '../../../common/guards/jwtAuth.guard';
 import { UserRole } from '@prisma/client';
-import { RoleGuard } from '../../../guards/role.guard';
+import { RoleGuard } from '../../../common/guards/role.guard';
 import { RequestPaymentDetailsDto } from './dto/request-payment-details.dto';
 import { Languages } from '../../language/enums/languages.enums';
 import { JwtQueryDto } from '../dto/jwt-query.dto';
 import { TokenService } from '../../token/token.service';
 import { UpdatePaymentDto } from './dto/update-payment.dto';
-import { omit } from '../../../utils/omit';
+import { omit } from '../../../common/utils/omit';
 
 @Controller('claims/payment')
 @UseGuards(JwtAuthGuard)

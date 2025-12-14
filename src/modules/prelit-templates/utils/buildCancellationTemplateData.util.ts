@@ -1,6 +1,6 @@
 import { rgb } from 'pdf-lib';
 import { ICoordinates } from '../interfaces/coordinates.interface';
-import { formatDate } from '../../../utils/formatDate';
+import { formatDate } from '../../../common/utils/formatDate';
 
 export const buildCancellationTemplateDataUtil = (dto: {
     passengerName: string;

@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PDFDocument, rgb } from 'pdf-lib';
 import { DocumentType, OtherPassenger } from '@prisma/client';
-import { generateAssignmentName } from '../../../../../utils/generate-assignment-name';
-import { formatDate } from '../../../../../utils/formatDate';
+import { generateAssignmentName } from '../../../../../common/utils/generate-assignment-name';
+import { formatDate } from '../../../../../common/utils/formatDate';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import { FontsDirectoryPath } from '../../../../../common/constants/paths/FontsDirectoryPath';

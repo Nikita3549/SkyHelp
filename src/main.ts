@@ -5,7 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import { ValidationPipe } from '@nestjs/common';
 import { SocketIoAdapter } from './common/adapters/socket-io.adapter';
 import * as express from 'express';
-import { isProd } from './utils/isProd';
+import { isProd } from './common/utils/isProd';
 import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {

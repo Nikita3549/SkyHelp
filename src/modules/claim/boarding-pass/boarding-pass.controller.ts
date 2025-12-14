@@ -1,5 +1,5 @@
 import { Controller, Post, UploadedFiles } from '@nestjs/common';
-import { BoardingPassUploadMultiInterceptor } from '../../../interceptors/boarding-pass/boarding-pass-upload.interceptor';
+import { BoardingPassUploadMultiInterceptor } from '../../../common/interceptors/boarding-pass/boarding-pass-upload.interceptor';
 import { BoardingPassService } from './boarding-pass.service';
 import { IBoardingPassData } from './interfaces/boarding-pass-data.interface';
 

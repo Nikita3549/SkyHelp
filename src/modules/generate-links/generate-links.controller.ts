@@ -10,7 +10,7 @@ import {
     UnauthorizedException,
     UseGuards,
 } from '@nestjs/common';
-import { JwtAuthGuard } from '../../guards/jwtAuth.guard';
+import { JwtAuthGuard } from '../../common/guards/jwtAuth.guard';
 import { TokenService } from '../token/token.service';
 import { GenerateLinksService } from './generate-links.service';
 import {
@@ -27,7 +27,7 @@ import {
     PASSENGER_NOT_FOUND,
 } from '../claim/constants';
 import { ClaimService } from '../claim/claim.service';
-import { AuthRequest } from '../../interfaces/AuthRequest.interface';
+import { AuthRequest } from '../../common/interfaces/AuthRequest.interface';
 import {
     DocumentType,
     OtherPassengerCopiedLinkType,
@@ -37,7 +37,7 @@ import { v4 as uuid } from 'uuid';
 import { OtherPassengerService } from '../claim/other-passenger/other-passenger.service';
 import { OtherPassengerCopiedLinksService } from '../claim/other-passenger/other-passenger-copied-links/other-passenger-copied-links.service';
 import { CustomerService } from '../claim/customer/customer.service';
-import { RoleGuard } from '../../guards/role.guard';
+import { RoleGuard } from '../../common/guards/role.guard';
 
 @Controller('links')
 @UseGuards(JwtAuthGuard)

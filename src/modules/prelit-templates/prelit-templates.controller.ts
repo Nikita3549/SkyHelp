@@ -9,9 +9,9 @@ import {
     FLYONE_RO_250_DELAY_FILENAME,
     FLYONE_RO_250_OVERBOOKING_FILENAME,
 } from './consants';
-import { RoleGuard } from '../../guards/role.guard';
+import { RoleGuard } from '../../common/guards/role.guard';
 import { UserRole } from '@prisma/client';
-import { JwtAuthGuard } from '../../guards/jwtAuth.guard';
+import { JwtAuthGuard } from '../../common/guards/jwtAuth.guard';
 import { buildDelayTemplateDataUtil } from './utils/buildDelayTemplateData.util';
 import { buildOverbookingTemplateDataUtil } from './utils/buildOverbookingTemplateData.util';
 

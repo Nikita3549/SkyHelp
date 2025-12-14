@@ -5,7 +5,7 @@ import { gmail_v1, google } from 'googleapis';
 import { Interval } from '@nestjs/schedule';
 import { PubSub } from '@google-cloud/pubsub';
 import { GmailService } from '../../gmail.service';
-import { isProd } from '../../../../utils/isProd';
+import { isProd } from '../../../../common/utils/isProd';
 import { ClaimRecentUpdatesType } from '@prisma/client';
 import { RecentUpdatesService } from '../../../claim/recent-updates/recent-updates.service';
 import { DAY, HOUR, MINUTE } from '../../../../common/constants/time.constants';

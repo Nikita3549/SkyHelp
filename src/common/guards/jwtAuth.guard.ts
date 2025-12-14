@@ -1,7 +1,7 @@
 import { ExecutionContext, Injectable } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthRequest } from '../interfaces/AuthRequest.interface';
-import { IJwtPayload } from '../modules/token/interfaces/jwtPayload';
+import { IJwtPayload } from '../../modules/token/interfaces/jwtPayload';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {

@@ -10,10 +10,10 @@ import {
 import { DocumentService } from '../services/document.service';
 import { ClaimService } from '../../claim.service';
 import { TokenService } from '../../../token/token.service';
-import { DocumentsUploadInterceptor } from '../../../../interceptors/documents/documents-upload.interceptor';
+import { DocumentsUploadInterceptor } from '../../../../common/interceptors/documents/documents-upload.interceptor';
 import { UploadDocumentsJwtQueryDto } from '../dto/upload-documents-jwt-query.dto';
 import { DocumentType } from '@prisma/client';
-import { validateClaimJwt } from '../../../../utils/validate-claim-jwt';
+import { validateClaimJwt } from '../../../../common/utils/validate-claim-jwt';
 import { CLAIM_NOT_FOUND } from '../../constants';
 
 @Controller('claims/documents/public')

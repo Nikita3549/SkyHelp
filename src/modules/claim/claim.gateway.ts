@@ -5,7 +5,7 @@ import {
     WebSocketServer,
 } from '@nestjs/websockets';
 import { UseFilters, UsePipes, ValidationPipe } from '@nestjs/common';
-import { ValidationFilter } from '../../filters/validation.filter';
+import { ValidationFilter } from '../../common/filters/validation.filter';
 import { TokenService } from '../token/token.service';
 import { Server, Socket } from 'socket.io';
 import { INVALID_TOKEN } from '../chat/constants';

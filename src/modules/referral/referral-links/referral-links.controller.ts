@@ -15,8 +15,8 @@ import {
     UseGuards,
 } from '@nestjs/common';
 import { ReferralLinksService } from './referral-links.service';
-import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
-import { AuthRequest } from '../../../interfaces/AuthRequest.interface';
+import { JwtAuthGuard } from '../../../common/guards/jwtAuth.guard';
+import { AuthRequest } from '../../../common/interfaces/AuthRequest.interface';
 import { Partner, UserRole } from '@prisma/client';
 import { CreateReferralLinkDto } from './dto/create-referral-link.dto';
 import { PartnerService } from '../partner/partner.service';
@@ -27,7 +27,7 @@ import {
 import { SaveReferralLinkClickDto } from './dto/save-referral-link-click.dto';
 import { GetReferralLinksDto } from './dto/get-referral-links.dto';
 import { REFERRAL_LINK_NOT_FOUND } from './constants';
-import { RoleGuard } from '../../../guards/role.guard';
+import { RoleGuard } from '../../../common/guards/role.guard';
 
 @Controller('referral-links')
 @UseGuards(

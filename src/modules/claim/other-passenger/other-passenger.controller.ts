@@ -13,7 +13,7 @@ import {
     UploadedFiles,
     UseGuards,
 } from '@nestjs/common';
-import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
+import { JwtAuthGuard } from '../../../common/guards/jwtAuth.guard';
 import { UpdatePassengerDto } from './dto/update-passenger.dto';
 import {
     CLAIM_NOT_FOUND,
@@ -27,7 +27,7 @@ import { ClaimService } from '../claim.service';
 import { UploadSignDto } from '../customer/dto/upload-sign.dto';
 import { JwtQueryDto } from '../dto/jwt-query.dto';
 import { CreateOtherPassengersDto } from './dto/create-other-passengers.dto';
-import { validateClaimJwt } from '../../../utils/validate-claim-jwt';
+import { validateClaimJwt } from '../../../common/utils/validate-claim-jwt';
 import { TokenService } from '../../token/token.service';
 import {
     ClaimRecentUpdatesType,
@@ -37,12 +37,12 @@ import {
     PassengerPaymentStatus,
     UserRole,
 } from '@prisma/client';
-import { DocumentsUploadInterceptor } from '../../../interceptors/documents/documents-upload.interceptor';
+import { DocumentsUploadInterceptor } from '../../../common/interceptors/documents/documents-upload.interceptor';
 import { UploadOtherPassengerDto } from './dto/upload-other-passenger.dto';
-import { generateAssignmentName } from '../../../utils/generate-assignment-name';
+import { generateAssignmentName } from '../../../common/utils/generate-assignment-name';
 import { RecentUpdatesService } from '../recent-updates/recent-updates.service';
 import { DocumentRequestService } from '../document-request/document-request.service';
-import { RoleGuard } from '../../../guards/role.guard';
+import { RoleGuard } from '../../../common/guards/role.guard';
 import { UpdatePaymentStatusDto } from '../customer/dto/update-payment-status.dto';
 import { Languages } from '../../language/enums/languages.enums';
 import { GenerateLinksService } from '../../generate-links/generate-links.service';

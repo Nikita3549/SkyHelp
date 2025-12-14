@@ -9,7 +9,7 @@ import {
 } from '../constants';
 import { Queue } from 'bullmq';
 import { IPaymentDetailsRequestJobData } from '../interfaces/job-data/payment-details-request-job-data.interface';
-import { getNextWorkTime } from '../../../utils/getNextWorkTime';
+import { getNextWorkTime } from '../../../common/utils/getNextWorkTime';
 import { UpdatePaymentDto } from './dto/update-payment.dto';
 
 @Injectable()

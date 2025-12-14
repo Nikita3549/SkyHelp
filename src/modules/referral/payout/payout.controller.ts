@@ -9,14 +9,14 @@ import {
     Req,
     UseGuards,
 } from '@nestjs/common';
-import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
+import { JwtAuthGuard } from '../../../common/guards/jwtAuth.guard';
 import { CreatePayoutDto } from './dto/create-payout.dto';
 import { PartnerService } from '../partner/partner.service';
 import { PARTNER_NOT_FOUND } from '../partner/constants';
 import { PayoutService } from './payout.service';
-import { AuthRequest } from '../../../interfaces/AuthRequest.interface';
+import { AuthRequest } from '../../../common/interfaces/AuthRequest.interface';
 import { Prisma, UserRole } from '@prisma/client';
-import { RoleGuard } from '../../../guards/role.guard';
+import { RoleGuard } from '../../../common/guards/role.guard';
 import { GetPayoutsDto } from './dto/get-payouts.dto';
 
 @Controller('payout')

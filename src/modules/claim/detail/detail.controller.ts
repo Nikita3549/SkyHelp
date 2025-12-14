@@ -5,13 +5,13 @@ import {
     Put,
     UseGuards,
 } from '@nestjs/common';
-import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
+import { JwtAuthGuard } from '../../../common/guards/jwtAuth.guard';
 import { FlightDto } from './dto/flight.dto';
 import { CLAIM_NOT_FOUND } from '../constants';
 import { DetailService } from './detail.service';
 import { ClaimService } from '../claim.service';
 import { UserRole } from '@prisma/client';
-import { RoleGuard } from '../../../guards/role.guard';
+import { RoleGuard } from '../../../common/guards/role.guard';
 import { DocumentService } from '../document/services/document.service';
 
 @Controller('claims/details')

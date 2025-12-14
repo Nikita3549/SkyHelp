@@ -14,18 +14,18 @@ import {
 } from '@nestjs/common';
 import { DocumentRequestService } from './document-request.service';
 import { CreateDocumentRequestDto } from './dto/create-document-request.dto';
-import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
+import { JwtAuthGuard } from '../../../common/guards/jwtAuth.guard';
 import { GetDocumentRequestsQuery } from './dto/get-document-requests.query';
 import { ClaimService } from '../claim.service';
 import { CLAIM_NOT_FOUND, HAVE_NO_RIGHTS_ON_CLAIM } from '../constants';
-import { AuthRequest } from '../../../interfaces/AuthRequest.interface';
+import { AuthRequest } from '../../../common/interfaces/AuthRequest.interface';
 import { UserRole } from '@prisma/client';
 import { DOCUMENT_REQUEST_NOT_FOUND } from './constants';
 import { IFullClaim } from '../interfaces/full-claim.interface';
 import { HttpStatusCode } from 'axios';
 import { RedisService } from '../../redis/redis.service';
 import { DAY } from '../../../common/constants/time.constants';
-import { RoleGuard } from '../../../guards/role.guard';
+import { RoleGuard } from '../../../common/guards/role.guard';
 
 @Controller('claims/document-requests')
 @UseGuards(JwtAuthGuard)

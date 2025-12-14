@@ -17,7 +17,7 @@ import {
     UseInterceptors,
 } from '@nestjs/common';
 import { GmailService } from '../gmail/gmail.service';
-import { JwtAuthGuard } from '../../guards/jwtAuth.guard';
+import { JwtAuthGuard } from '../../common/guards/jwtAuth.guard';
 import { GetLettersQueryDto } from './dto/get-letters-query.dto';
 import { SendLetterDto } from './dto/send-letter.dto';
 import { ConfigService } from '@nestjs/config';
@@ -28,10 +28,10 @@ import { ClaimService } from '../claim/claim.service';
 import { UpdateStatusDto } from './dto/update-status.dto';
 import { AGENT_MUST_HAVE_CLAIM_ID, LETTER_NOT_FOUND } from './constants';
 import { UpdateLetterDto } from './dto/update-letter.dto';
-import { AuthRequest } from '../../interfaces/AuthRequest.interface';
+import { AuthRequest } from '../../common/interfaces/AuthRequest.interface';
 import { EmailType, UserRole } from '@prisma/client';
 import { CLAIM_NOT_FOUND } from '../claim/constants';
-import { RoleGuard } from '../../guards/role.guard';
+import { RoleGuard } from '../../common/guards/role.guard';
 import { PatchFavoriteLetter } from './dto/patch-favorite-letter';
 
 @Controller('letters')

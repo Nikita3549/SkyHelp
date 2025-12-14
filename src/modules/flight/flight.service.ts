@@ -8,7 +8,7 @@ import {
     FlightAwareFlightsResponse,
 } from './interfaces/flight-aware-flight';
 import { IFlight } from './interfaces/flight';
-import { formatDate } from '../../utils/formatDate';
+import { formatDate } from '../../common/utils/formatDate';
 import { FlightStatsResponse } from './interfaces/fight-stats-flight';
 import { IFlightStatus } from './interfaces/flight-status.interface';
 import { ClaimFlightStatusSource } from '@prisma/client';

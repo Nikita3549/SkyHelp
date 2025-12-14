@@ -3,7 +3,7 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import * as path from 'path';
 import { ALLOWED_EXTENSIONS, MAX_FILE_SIZE, MAX_FILES } from './constants';
-import { UPLOAD_DIRECTORY_PATH } from '../../common/constants/paths/UploadsDirectoryPath';
+import { UPLOAD_DIRECTORY_PATH } from '../../constants/paths/UploadsDirectoryPath';
 
 export function DocumentsUploadInterceptor() {
     return UseInterceptors(

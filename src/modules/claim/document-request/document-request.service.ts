@@ -14,7 +14,7 @@ import { SendNewDocumentRequestJobDataInterface } from './interfaces/send-new-do
 import { Languages } from '../../language/enums/languages.enums';
 import { IFullClaim } from '../interfaces/full-claim.interface';
 import { DAY, MINUTE } from '../../../common/constants/time.constants';
-import { getNextWorkTime } from '../../../utils/getNextWorkTime';
+import { getNextWorkTime } from '../../../common/utils/getNextWorkTime';
 
 @Injectable()
 export class DocumentRequestService {

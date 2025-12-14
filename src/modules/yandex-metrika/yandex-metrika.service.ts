@@ -14,8 +14,8 @@ import {
 } from './constants';
 import { GoogleSheetsService } from '../google-sheets/google-sheets.service';
 import { YandexMetrikaRow } from './interfaces/yandex-metrika-row';
-import { getYesterdayDate } from '../../utils/getYesterdayDate';
-import { isProd } from '../../utils/isProd';
+import { getYesterdayDate } from '../../common/utils/getYesterdayDate';
+import { isProd } from '../../common/utils/isProd';
 
 @Injectable()
 export class YandexMetrikaService implements OnModuleInit {

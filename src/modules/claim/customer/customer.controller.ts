@@ -19,7 +19,7 @@ import {
     INVALID_JWT,
 } from '../constants';
 import { CustomerService } from './customer.service';
-import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
+import { JwtAuthGuard } from '../../../common/guards/jwtAuth.guard';
 import { UploadSignDto } from './dto/upload-sign.dto';
 import { DocumentService } from '../document/services/document.service';
 import {
@@ -31,10 +31,10 @@ import {
     UserRole,
 } from '@prisma/client';
 import { TokenService } from '../../token/token.service';
-import { generateAssignmentName } from '../../../utils/generate-assignment-name';
+import { generateAssignmentName } from '../../../common/utils/generate-assignment-name';
 import { RecentUpdatesService } from '../recent-updates/recent-updates.service';
 import { DocumentRequestService } from '../document-request/document-request.service';
-import { RoleGuard } from '../../../guards/role.guard';
+import { RoleGuard } from '../../../common/guards/role.guard';
 import { UpdatePaymentStatusDto } from './dto/update-payment-status.dto';
 import { GenerateLinksService } from '../../generate-links/generate-links.service';
 import { NotificationService } from '../../notification/notification.service';

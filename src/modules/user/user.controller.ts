@@ -9,12 +9,12 @@ import {
     UseGuards,
 } from '@nestjs/common';
 import { IPublicUserData } from './interfaces/publicUserData.interface';
-import { JwtAuthGuard } from '../../guards/jwtAuth.guard';
+import { JwtAuthGuard } from '../../common/guards/jwtAuth.guard';
 import { UserService } from './user.service';
 import { INCORRECT_USER_ID } from './constants';
 import { GetUsersDto } from './dto/get-users.dto';
 import { UserRole } from '@prisma/client';
-import { RoleGuard } from '../../guards/role.guard';
+import { RoleGuard } from '../../common/guards/role.guard';
 import { CreateUserDto } from './dto/create-user.dto';
 import { hashPassword } from '../auth/utils/hashPassword';
 

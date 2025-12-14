@@ -12,7 +12,7 @@ import { ClaimService } from '../claim/claim.service';
 import { CLAIM_NOT_FOUND } from '../claim/constants';
 import { Languages } from '../language/enums/languages.enums';
 import { HttpStatusCode } from 'axios';
-import { ApiKeyAuthGuard } from '../../guards/apiKeyAuthGuard';
+import { ApiKeyAuthGuard } from '../../common/guards/apiKeyAuthGuard';
 
 @Controller('bot')
 export class BotController {

@@ -1,5 +1,5 @@
 import { MINUTE } from '../../../../common/constants/time.constants';
-import { isProd } from '../../../../utils/isProd';
+import { isProd } from '../../../../common/utils/isProd';
 
 export const PROGRESS_NOT_FOUND = 'Progress not found';
 

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { generateNumericId } from '../../utils/generateNumericId';
+import { generateNumericId } from '../../common/utils/generateNumericId';
 import { UrlShortenerService } from './url-shortener/url-shortener.service';
 
 @Injectable()

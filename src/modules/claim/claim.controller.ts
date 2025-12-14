@@ -21,7 +21,7 @@ import {
     FINAL_STEP,
     INVALID_ICAO,
 } from './constants';
-import { AuthRequest } from '../../interfaces/AuthRequest.interface';
+import { AuthRequest } from '../../common/interfaces/AuthRequest.interface';
 import { GetCompensationDto } from './dto/get-compensation.dto';
 import { FlightService } from '../flight/flight.service';
 import { UpdateClaimDto } from './dto/update-claim.dto';
@@ -38,24 +38,24 @@ import { ConfigService } from '@nestjs/config';
 import { UpdateFormStateDto } from './dto/update-form-state.dto';
 import { DocumentService } from './document/services/document.service';
 import { CustomerService } from './customer/customer.service';
-import { validateClaimJwt } from '../../utils/validate-claim-jwt';
+import { validateClaimJwt } from '../../common/utils/validate-claim-jwt';
 import { IFullClaim } from './interfaces/full-claim.interface';
 import { DocumentType } from '@prisma/client';
 import { UploadFormSignDto } from './dto/upload-form-sign-dto';
 import { AuthService } from '../auth/auth.service';
-import { generateAssignmentName } from '../../utils/generate-assignment-name';
+import { generateAssignmentName } from '../../common/utils/generate-assignment-name';
 import { LanguageWithReferrerDto } from './dto/language-with-referrer.dto';
 import { Languages } from '../language/enums/languages.enums';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
 import { IAddFlightStatusJobData } from './interfaces/job-data/add-flight-status-job-data.interface';
-import { JwtOrApiKeyAuth } from '../../guards/jwtOrApiKeyAuth';
+import { JwtOrApiKeyAuth } from '../../common/guards/jwtOrApiKeyAuth';
 import { GetClaimsQuery } from './dto/get-claims.query';
-import { normalizePhone } from '../../utils/normalizePhone';
+import { normalizePhone } from '../../common/utils/normalizePhone';
 import { PartnerService } from '../referral/partner/partner.service';
-import { ApiKeyAuthGuard } from '../../guards/apiKeyAuthGuard';
+import { ApiKeyAuthGuard } from '../../common/guards/apiKeyAuthGuard';
 import { UserService } from '../user/user.service';
-import { getNextWorkTime } from '../../utils/getNextWorkTime';
+import { getNextWorkTime } from '../../common/utils/getNextWorkTime';
 
 @Controller('claims')
 @UseGuards(JwtOrApiKeyAuth)

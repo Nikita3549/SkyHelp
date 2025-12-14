@@ -10,7 +10,7 @@ import { ClaimReminderJobDataInterface } from '../interfaces/job-data/claim-remi
 import { ClaimStatus } from '@prisma/client';
 import { ReminderTypeEnum } from '../../notification/enums/reminder-type.enum';
 import { Languages } from '../../language/enums/languages.enums';
-import { getNextWorkTime } from '../../../utils/getNextWorkTime';
+import { getNextWorkTime } from '../../../common/utils/getNextWorkTime';
 
 @Processor(CLAIM_REMINDER_QUEUE_KEY)
 export class ClaimReminderProcessor extends WorkerHost {

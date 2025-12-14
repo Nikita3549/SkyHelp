@@ -7,15 +7,15 @@ import {
     Put,
     UseGuards,
 } from '@nestjs/common';
-import { validateClaimJwt } from '../../utils/validate-claim-jwt';
+import { validateClaimJwt } from '../../common/utils/validate-claim-jwt';
 import { SaveClickDto } from './dto/save-click.dto';
 import { TokenService } from '../token/token.service';
 import { EmailResumeClickService } from './email-resume-click.service';
 import { HttpStatusCode } from 'axios';
 import { NO_RECORD } from './constants';
-import { JwtAuthGuard } from '../../guards/jwtAuth.guard';
+import { JwtAuthGuard } from '../../common/guards/jwtAuth.guard';
 import { UserRole } from '@prisma/client';
-import { RoleGuard } from '../../guards/role.guard';
+import { RoleGuard } from '../../common/guards/role.guard';
 
 @Controller('track/email')
 export class EmailResumeClickController {

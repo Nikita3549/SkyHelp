@@ -3,7 +3,7 @@ import * as fs from 'fs/promises';
 import * as path from 'node:path';
 import { Languages } from '../language/enums/languages.enums';
 import { ConfigService } from '@nestjs/config';
-import { isProd } from '../../utils/isProd';
+import { isProd } from '../../common/utils/isProd';
 import { GmailService } from '../gmail/gmail.service';
 import {
     CREATE_CLAIM_FILENAME,

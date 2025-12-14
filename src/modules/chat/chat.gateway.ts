@@ -21,7 +21,7 @@ import {
 } from './constants';
 import { MessageReadDto } from './dto/message-read.dto';
 import { CreateChatDto } from './dto/create-chat.dto';
-import { ValidationFilter } from '../../filters/validation.filter';
+import { ValidationFilter } from '../../common/filters/validation.filter';
 import { FollowStatusDto } from './dto/follow-status.dto';
 import { IJwtPayload } from '../token/interfaces/jwtPayload';
 

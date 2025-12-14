@@ -1,6 +1,6 @@
-import { IClaimJwt } from '../modules/claim/interfaces/claim-jwt.interface';
+import { IClaimJwt } from '../../modules/claim/interfaces/claim-jwt.interface';
 import { UnauthorizedException } from '@nestjs/common';
-import { INVALID_JWT } from '../modules/claim/constants';
+import { INVALID_JWT } from '../../modules/claim/constants';
 import { JwtPayload } from 'jsonwebtoken';
 
 export const validateClaimJwt = async (

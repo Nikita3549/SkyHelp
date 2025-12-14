@@ -1,5 +1,5 @@
 import { Controller, Get, Req } from '@nestjs/common';
-import { AuthRequest } from '../../interfaces/AuthRequest.interface';
+import { AuthRequest } from '../../common/interfaces/AuthRequest.interface';
 import { ChatService } from './chat.service';
 import { IUserChatsWithMessages } from './interfaces/IUserChatsWithMessages';
 

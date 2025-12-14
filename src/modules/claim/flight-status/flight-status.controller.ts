@@ -8,7 +8,7 @@ import {
     Put,
     UseGuards,
 } from '@nestjs/common';
-import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
+import { JwtAuthGuard } from '../../../common/guards/jwtAuth.guard';
 import { FlightStatusService } from './flight-status.service';
 import { FLIGHT_STATUS_NOT_FOUND } from './constants';
 import { ClaimService } from '../claim.service';
@@ -17,7 +17,7 @@ import { FlightService } from '../../flight/flight.service';
 import { IFlightStatus } from '../../flight/interfaces/flight-status.interface';
 import { CreateFlightStatusDto } from './dto/create-flight-status.dto';
 import { CLAIM_NOT_FOUND } from '../constants';
-import { RoleGuard } from '../../../guards/role.guard';
+import { RoleGuard } from '../../../common/guards/role.guard';
 
 @Controller('claims/flight-statuses')
 @UseGuards(JwtAuthGuard, new RoleGuard([UserRole.ADMIN]))

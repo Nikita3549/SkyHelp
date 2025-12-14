@@ -1,7 +1,7 @@
 import { rgb } from 'pdf-lib';
 import { ICoordinates } from '../interfaces/coordinates.interface';
 import { GenerateTemplateDto } from '../dto/generate-template.dto';
-import { formatDate } from '../../../utils/formatDate';
+import { formatDate } from '../../../common/utils/formatDate';
 
 export const buildOverbookingTemplateDataUtil = (
     dto: GenerateTemplateDto,

@@ -16,14 +16,14 @@ import {
     UploadedFiles,
     UseGuards,
 } from '@nestjs/common';
-import { DocumentsUploadInterceptor } from '../../../../interceptors/documents/documents-upload.interceptor';
+import { DocumentsUploadInterceptor } from '../../../../common/interceptors/documents/documents-upload.interceptor';
 import {
     CLAIM_NOT_FOUND,
     DOCUMENT_NOT_FOUND,
     FILE_DOESNT_ON_DISK,
     PASSENGER_NOT_FOUND,
 } from '../../constants';
-import { JwtAuthGuard } from '../../../../guards/jwtAuth.guard';
+import { JwtAuthGuard } from '../../../../common/guards/jwtAuth.guard';
 import { ClaimService } from '../../claim.service';
 import { UploadAdminDocumentsDto } from '../dto/upload-admin-documents.dto';
 import { DocumentService } from '../services/document.service';
@@ -32,7 +32,7 @@ import { Response } from 'express';
 import * as path from 'path';
 import * as fs from 'fs';
 import { lookup as mimeLookup } from 'mime-types';
-import { AuthRequest } from '../../../../interfaces/AuthRequest.interface';
+import { AuthRequest } from '../../../../common/interfaces/AuthRequest.interface';
 import { UploadDocumentsQueryDto } from '../dto/upload-documents-query.dto';
 import { UpdateDocumentTypeDto } from '../dto/update-document-type.dto';
 import { MergeDocumentsDto } from '../dto/merge-documents.dto';
@@ -46,9 +46,9 @@ import {
 import { DocumentRequestService } from '../../document-request/document-request.service';
 import { PatchPassengerIdDto } from '../dto/patch-passenger-id.dto';
 import { HttpStatusCode } from 'axios';
-import { RoleGuard } from '../../../../guards/role.guard';
+import { RoleGuard } from '../../../../common/guards/role.guard';
 import { GenerateAssignmentDto } from '../dto/generate-assignment.dto';
-import { formatDate } from '../../../../utils/formatDate';
+import { formatDate } from '../../../../common/utils/formatDate';
 
 @Controller('claims/documents')
 @UseGuards(JwtAuthGuard)

@@ -6,7 +6,7 @@ import {
 } from '@prisma/client';
 import { ClaimService } from '../claim.service';
 import { ActivityService } from '../activity/activity.service';
-import { omit } from '../../../utils/omit';
+import { omit } from '../../../common/utils/omit';
 import { FINAL_STEP } from '../constants';
 
 @Injectable()

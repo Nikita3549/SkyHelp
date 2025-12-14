@@ -12,7 +12,7 @@ import {
     Req,
     UseGuards,
 } from '@nestjs/common';
-import { JwtAuthGuard } from '../../../guards/jwtAuth.guard';
+import { JwtAuthGuard } from '../../../common/guards/jwtAuth.guard';
 import { ProgressService } from './progress.service';
 import {
     PROGRESS_NOT_FOUND,
@@ -21,7 +21,7 @@ import {
 } from './constants';
 import { ClaimService } from '../claim.service';
 import { Languages } from '../../language/enums/languages.enums';
-import { isLanguage } from '../../../utils/isLanguage';
+import { isLanguage } from '../../../common/utils/isLanguage';
 import { CreateProgressDto } from './dto/create-progress.dto';
 import { CLAIM_NOT_FOUND } from '../constants';
 import { ProgressVariants } from './constants/progresses/progressVariants';
@@ -31,10 +31,10 @@ import { Queue } from 'bullmq';
 import { ISendNewProgressEmailJobData } from './interfaces/send-new-progress-email-job-data.interface';
 import { HttpStatusCode } from 'axios';
 import { LanguageService } from '../../language/language.service';
-import { AuthRequest } from '../../../interfaces/AuthRequest.interface';
+import { AuthRequest } from '../../../common/interfaces/AuthRequest.interface';
 import { MINUTE } from '../../../common/constants/time.constants';
 import { UpdateProgressComments } from './dto/update-progress-comments';
-import { RoleGuard } from '../../../guards/role.guard';
+import { RoleGuard } from '../../../common/guards/role.guard';
 
 @Controller('claims/progresses')
 @UseGuards(

@@ -1,4 +1,4 @@
-import { Languages } from '../modules/language/enums/languages.enums';
+import { Languages } from '../../modules/language/enums/languages.enums';
 
 export function isLanguage(language: unknown): language is Languages {
     return (
