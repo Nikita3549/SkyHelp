@@ -143,4 +143,11 @@ export class EmailService {
             },
         });
     }
+
+    async patchFavorite(letterId: string, favorite: boolean) {
+        return this.prisma.email.update({
+            data: { favorite },
+            where: { id: letterId },
+        });
+    }
 }

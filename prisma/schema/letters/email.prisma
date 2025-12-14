@@ -18,6 +18,7 @@ model Email {
   headersJson       Json         @map("headers_json")
   type              EmailType    @default(INBOX)
   status            EmailStatus  @default(UNREAD)
+  favorite          Boolean      @default(false)
   attachments       Attachment[]
   claimId           String?      @map("claim_id")
   claim             Claim?       @relation(fields: [claimId], references: [id])

@@ -32,6 +32,7 @@ import { AuthRequest } from '../../interfaces/AuthRequest.interface';
 import { EmailType, UserRole } from '@prisma/client';
 import { CLAIM_NOT_FOUND } from '../claim/constants';
 import { RoleGuard } from '../../guards/role.guard';
+import { PatchFavoriteLetter } from './dto/patch-favorite-letter';
 
 @Controller('letters')
 @UseGuards(
@@ -280,5 +281,22 @@ export class LetterController {
         }
 
         return await this.gmailService.email.updateClaimId(claimId, letterId);
+    }
+
+    @Patch(':letterId/favorite')
+    async patchFavoriteLetter(
+        @Body() dto: PatchFavoriteLetter,
+        @Param('letterId') letterId: string,
+    ) {
+        const letter = await this.gmailService.email.getEmailById(letterId);
+
+        if (!letter) {
+            throw new NotFoundException(LETTER_NOT_FOUND);
+        }
+
+        return await this.gmailService.email.patchFavorite(
+            letter.id,
+            dto.favorite,
+        );
     }
 }
