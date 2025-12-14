@@ -3934,5 +3934,8 @@
     "IssueDetailsForm.contacted.no": "Нет",
     "HeroForm.qrScannedTitle": "QR-код успешно отсканирован",
     "HeroForm.pointCamera": "Наведите камеру на посадочный талон",
-    "HeroForm.scanInstructions": "Отсканируйте посадочный талон, чтобы продолжить"
+    "HeroForm.scanInstructions": "Отсканируйте посадочный талон, чтобы продолжить",
+    "cookieBanner.preferences": "Файлы cookie предпочтений",
+    "cookieBanner.preferencesDesc": "Запоминают ваши настройки и предпочтения для улучшения пользовательского опыта.",
+    "cookieBanner.alwaysActive": "Всегда активны"
 }

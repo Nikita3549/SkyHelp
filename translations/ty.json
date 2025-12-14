@@ -3957,5 +3957,8 @@
     "IssueDetailsForm.contacted.no": "Hayır",
     "HeroForm.qrScannedTitle": "QR Kod başarıyla tarandı",
     "HeroForm.pointCamera": "Kameranızı biniş kartına doğrultun",
-    "HeroForm.scanInstructions": "Devam etmek için biniş kartını tarayın"
+    "HeroForm.scanInstructions": "Devam etmek için biniş kartını tarayın",
+    "cookieBanner.preferences": "Tercih Çerezleri",
+    "cookieBanner.preferencesDesc": "Kullanıcı deneyiminizi geliştirmek için ayarlarınızı ve tercihlerinizi hatırlar.",
+    "cookieBanner.alwaysActive": "Her zaman aktif"
 }

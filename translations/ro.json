@@ -3937,5 +3937,8 @@
     "IssueDetailsForm.contacted.no": "Nu",
     "HeroForm.qrScannedTitle": "Codul QR a fost scanat cu succes",
     "HeroForm.pointCamera": "Îndreaptă camera către cartea de îmbarcare",
-    "HeroForm.scanInstructions": "Scanează cartea de îmbarcare pentru a continua"
+    "HeroForm.scanInstructions": "Scanează cartea de îmbarcare pentru a continua",
+    "cookieBanner.preferences": "Cookie-uri de preferințe",
+    "cookieBanner.preferencesDesc": "Rețin setările și preferințele dvs. pentru a îmbunătăți experiența utilizatorului.",
+    "cookieBanner.alwaysActive": "Întotdeauna active"
 }

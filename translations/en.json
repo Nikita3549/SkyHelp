@@ -3934,5 +3934,8 @@
     "IssueDetailsForm.contacted.no": "No",
     "HeroForm.qrScannedTitle": "QR Code is scanned successfully",
     "HeroForm.pointCamera" : "Point your camera at the boarding pass",
-    "HeroForm.scanInstructions" : "Scan the boarding pass to continue"
+    "HeroForm.scanInstructions" : "Scan the boarding pass to continue",
+    "cookieBanner.preferences": "Preferences Cookies",
+    "cookieBanner.preferencesDesc": "Remember your settings and preferences to enhance your user experience.",
+    "cookieBanner.alwaysActive": "Always Active"
 }
