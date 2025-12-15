@@ -3777,7 +3777,7 @@
     "documents.pageTitle": "Загрузите свои документы",
     "documents.pageSubtitle": "Пожалуйста, загрузите необходимые документы для подтверждения вашего обращения",
     "documents.documentTypes.eTicketOrBoardingPass": "Электронный билет или посадочный талон",
-    "documents.documentTypes.eTicketOrBoardingPassDescription": "Электронного билета на рейс или посадочный талон",
+    "documents.documentTypes.eTicketOrBoardingPassDescription": "электронного билета на рейс или посадочный талон",
     "documents.documentTypes.identificationDocument": "Удостоверение личности",
     "documents.documentTypes.identificationDocumentDescription": "Паспорт или удостоверение личности",
     "documents.documentTypes.otherDocuments": "Другие подтверждающие документы",
