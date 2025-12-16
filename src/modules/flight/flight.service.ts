@@ -6,18 +6,44 @@ import { EARTH_RADIUS, KM, RADIAN } from './constants';
 import {
     FlightAwareFlight,
     FlightAwareFlightsResponse,
-} from './interfaces/flight-aware-flight';
+} from './interfaces/flight-aware/flight-aware-flight';
 import { IFlight } from './interfaces/flight';
 import { formatDate } from '../../common/utils/formatDate';
-import { FlightStatsResponse } from './interfaces/fight-stats-flight';
+import { FlightStatsResponse } from './interfaces/flight-stats/fight-stats-flight';
 import { IFlightStatus } from './interfaces/flight-status.interface';
 import { ClaimFlightStatusSource } from '@prisma/client';
-import { IOAGFlightInfo } from './interfaces/oag-flight-info.interface';
-import { IFullOAGFlight } from './interfaces/oag-flight-full-info.interface';
+import { IOAGFlightInfo } from './interfaces/oag/oag-flight-info.interface';
+import { IFullOAGFlight } from './interfaces/oag/oag-flight-full-info.interface';
+import { FlightIoFlightData } from './interfaces/flight-io/flight-io-flight-data';
 
 @Injectable()
 export class FlightService {
     constructor(private readonly configService: ConfigService) {}
+
+    async getFlightsFromFlightIo(data: GetFlightsDto) {
+        const { arrival, date, departure, company } = data;
+        const url = this.configService.getOrThrow('FLIGHT_IO_URL');
+        const accessToken = this.configService.getOrThrow(
+            'FLIGHT_IO_ACCESS_TOKEN',
+        );
+
+        try {
+            const res = await axios.get<FlightIoFlightData>(
+                `${url}/trackbyroute/${accessToken}`,
+                {
+                    params: {
+                        date: `${date.getFullYear()}${date.getMonth() + 1}${date.getDate()}`,
+                        airport1: departure,
+                        airport2: arrival,
+                    },
+                },
+            );
+
+            return res.data.flights.filter((f) => f.airlineCode == company);
+        } catch (e) {
+            return [];
+        }
+    }
 
     async getFlightFromFlightAware(
         flightCode: string,
@@ -211,43 +237,17 @@ export class FlightService {
     async getFlightsByDateAirportsCompany(
         dto: GetFlightsDto,
     ): Promise<IFlight[]> {
-        const { date: isoDate, company, departure, arrival } = dto;
-        const date = new Date(isoDate);
-
-        const { start: flightDateStart, end: flightDateEnd } =
-            this.getFlightDateRange(date);
-
-        const flightAwareResponse: AxiosResponse<any> = await axios
-            .get(
-                `${this.configService.getOrThrow('FLIGHTAWARE_BASE_URL')}/schedules/${flightDateStart.toISOString().split('T')[0]}/${flightDateEnd.toISOString().split('T')[0]}`,
-                {
-                    params: {
-                        origin: departure,
-                        destination: arrival,
-                        airline: company,
-                    },
-                    headers: {
-                        'x-apikey': this.configService.getOrThrow(
-                            'FLIGHTAWARE_API_KEY',
-                        ),
-                        Accept: 'application/json',
-                    },
-                },
-            )
-            .catch();
-
-        const scheduled = flightAwareResponse.data?.scheduled ?? [];
-
-        return scheduled.map((f: any): IFlight => {
-            return {
-                id: f.ident_iata || f.ident || '',
-                flightNumber: f.ident_iata || f.ident || '',
-                departureTime: f.scheduled_out,
-                arrivalTime: f.scheduled_in,
-                departureAirport: f.origin_icao,
-                arrivalAirport: f.destination_icao,
-            };
-        });
+        return (await this.getFlightsFromFlightIo(dto)).map((f) => ({
+            id: `${f.airlineCode}${f.flightNumber}`,
+            flightNumber: `${f.airlineCode}${f.flightNumber}`,
+            departureTime: (f.scheduledTime
+                ? f.scheduledTime
+                : f.departureTime
+            ).split(',')[0],
+            arrivalTime: f.arrivalTime.split(',')[0],
+            departureAirport: dto.departure,
+            arrivalAirport: dto.arrival,
+        }));
     }
 
     calculateDistanceBetweenAirports(
