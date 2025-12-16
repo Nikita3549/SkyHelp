@@ -16,7 +16,7 @@ import {
     Req,
     UseGuards,
 } from '@nestjs/common';
-import { GetClaimsQuery, IsYesOrNo } from './dto/get-claims.query';
+import { GetClaimsQuery, YesOrNo } from './dto/get-claims.query';
 import { ArchiveClaimDto } from './dto/archive-claim.dto';
 import { CLAIM_NOT_FOUND, HAVE_NO_RIGHTS_ON_CLAIM } from '../constants';
 import { UpdateClaimDto } from '../dto/update-claim.dto';
@@ -142,6 +142,7 @@ export class AdminController {
             duplicated,
             onlyRecentlyUpdates,
             referralCode,
+            withPartner,
         } = query;
 
         const requireReferralCode =
@@ -163,15 +164,13 @@ export class AdminController {
 
         return this.claimService.getUserClaims(userId, +page, {
             archived:
-                archived == undefined ? undefined : archived == IsYesOrNo.YES,
+                archived == undefined ? undefined : archived == YesOrNo.YES,
             duplicated:
-                duplicated == undefined
-                    ? undefined
-                    : duplicated == IsYesOrNo.YES,
+                duplicated == undefined ? undefined : duplicated == YesOrNo.YES,
             onlyRecentlyUpdates:
                 onlyRecentlyUpdates == undefined
                     ? undefined
-                    : onlyRecentlyUpdates == IsYesOrNo.YES,
+                    : onlyRecentlyUpdates == YesOrNo.YES,
             date: endDate &&
                 startDate && {
                     start: startDate,
@@ -190,6 +189,7 @@ export class AdminController {
                     : undefined),
             isOrderByAssignedAt: req.user.role != UserRole.ADMIN,
             viewType,
+            withPartner: withPartner == YesOrNo.YES,
         });
     }
 

@@ -9,7 +9,7 @@ import {
 import { Type } from 'class-transformer';
 import { ClaimStatus, UserRole } from '@prisma/client';
 
-export enum IsYesOrNo {
+export enum YesOrNo {
     YES = 'yes',
     NO = 'no',
 }
@@ -25,12 +25,12 @@ export class GetClaimsQuery {
     page: number;
 
     @IsOptional()
-    @IsEnum(IsYesOrNo)
-    archived: IsYesOrNo;
+    @IsEnum(YesOrNo)
+    archived: YesOrNo;
 
     @IsOptional()
-    @IsEnum(IsYesOrNo)
-    duplicated: IsYesOrNo;
+    @IsEnum(YesOrNo)
+    duplicated: YesOrNo;
 
     @IsOptional()
     @Type(() => Date)
@@ -63,10 +63,14 @@ export class GetClaimsQuery {
     agentId?: string;
 
     @IsOptional()
-    @IsEnum(IsYesOrNo)
-    onlyRecentlyUpdates: IsYesOrNo;
+    @IsEnum(YesOrNo)
+    onlyRecentlyUpdates: YesOrNo;
 
     @IsOptional()
     @IsString()
     referralCode?: string;
+
+    @IsOptional()
+    @IsEnum(YesOrNo)
+    withPartner?: YesOrNo;
 }

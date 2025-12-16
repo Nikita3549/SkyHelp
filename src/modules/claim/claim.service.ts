@@ -523,6 +523,7 @@ export class ClaimService {
             email?: string;
             referralCode?: string;
             viewType?: ViewClaimType;
+            withPartner?: boolean;
         },
         pageSize: number = 20,
     ): Promise<{
@@ -564,6 +565,7 @@ export class ClaimService {
                 lt: searchParams.date.end,
             };
         if (searchParams?.role) where.agent = { role: searchParams.role };
+        if (searchParams?.withPartner) where.referrer = { not: null };
 
         if (searchParams?.onlyRecentlyUpdates)
             orderBy = { recentUpdatedAt: 'desc' };
