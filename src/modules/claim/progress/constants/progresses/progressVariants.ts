@@ -42,6 +42,7 @@ export const ProgressVariants: {
             'compensationApproved.description',
             'compensationApproved.description.one-person',
             'compensationApproved.description2',
+            'compensationApproved.description3',
         ],
     },
     compensationPaid: {
@@ -50,6 +51,7 @@ export const ProgressVariants: {
         descriptions: [
             'compensationPaid.description',
             'compensationPaid.description2',
+            'compensationPaid.description3',
         ],
     },
     claimRejected: {

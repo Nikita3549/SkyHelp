@@ -3587,6 +3587,8 @@
     "compensationPaid.title": "Compensation Paid",
     "compensationPaid.description": "The airline has paid the compensation. The payment has already been sent to your bank account.\nPlease allow up to 7 business days for the transfer to be completed.",
     "compensationPaid.description2": "The compensation for {{passengerName}} has been approved. We are now waiting for the airline to send the payment.",
+    "compensationPaid.description3": "The compensation for next passengers: {{passengerNames}} has been approved. We are now waiting for the airline to send the payment.",
+    "compensationApproved.description3": "The compensation for next passengers: {{passengerNames}} has been approved. We are now waiting for the airline to send the payment.",
     "claimRejected.title": "Claim Rejected",
     "claimRejected.description": "The airline refused to compensate. We’re reviewing next steps.",
     "paymentFailed.title": "Payment Failed",
