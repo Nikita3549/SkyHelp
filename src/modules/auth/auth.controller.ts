@@ -13,9 +13,11 @@ import {
     Put,
     Query,
     Req,
+    Res,
     UnauthorizedException,
     UseGuards,
 } from '@nestjs/common';
+import type { Response } from 'express';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { UserService } from '../user/user.service';
@@ -294,6 +296,17 @@ export class AuthController {
         return { ...user, jwt };
     }
 
+    @Post('logout')
+    logout(@Res({ passthrough: true }) res: Response) {
+        res.clearCookie('accessToken', {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'strict',
+        });
+
+        return { success: true };
+    }
+
     private async connectWithClaim(userId: string, claimToken?: string) {
         if (claimToken) {
             try {
@@ -307,4 +320,5 @@ export class AuthController {
             } catch (_e: unknown) {}
         }
     }
+
 }
