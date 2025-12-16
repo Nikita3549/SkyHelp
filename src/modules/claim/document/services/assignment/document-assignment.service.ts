@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { PDFDocument, rgb } from 'pdf-lib';
 import { DocumentType, OtherPassenger } from '@prisma/client';
 import { generateAssignmentName } from '../../../../../common/utils/generate-assignment-name';
@@ -17,12 +17,14 @@ import {
     IParentalAssignmentData,
     ISignatureRectangle,
 } from './interfaces/assignment.interfaces';
+import { DocumentService } from '../document.service';
 
 @Injectable()
 export class DocumentAssignmentService {
     constructor(
         private readonly claimService: ClaimService,
-        private readonly documentDbService: DocumentDbService,
+        @Inject(forwardRef(() => DocumentService))
+        private readonly documentService: DocumentService,
     ) {}
 
     private async insertSignatureFromSource(
@@ -164,10 +166,10 @@ export class DocumentAssignmentService {
 
                 for (const assignment of assignments) {
                     try {
-                        let filepath: string;
+                        let file: { path: string; buffer: Buffer };
 
                         if (!passenger.isMinor) {
-                            filepath = await this.saveSignaturePdf(
+                            file = await this.saveSignaturePdf(
                                 null,
                                 {
                                     address: passenger.address,
@@ -183,7 +185,7 @@ export class DocumentAssignmentService {
                         } else {
                             const otherPassenger = passenger as OtherPassenger;
 
-                            filepath = await this.saveParentalSignaturePdf(
+                            file = await this.saveParentalSignaturePdf(
                                 null,
                                 {
                                     address: otherPassenger.address,
@@ -203,16 +205,19 @@ export class DocumentAssignmentService {
                             );
                         }
 
-                        await this.documentDbService.remove(assignment.id);
+                        await this.documentService.removeDocument(
+                            assignment.id,
+                        );
 
-                        await this.documentDbService.saveMany(
+                        await this.documentService.saveDocuments(
                             [
                                 {
                                     name: generateAssignmentName(
                                         passenger.firstName,
                                         passenger.lastName,
                                     ),
-                                    path: filepath,
+                                    path: file.path,
+                                    buffer: file.buffer,
                                     passengerId: assignment.passengerId,
                                     documentType: assignment.type,
                                 },
@@ -228,7 +233,7 @@ export class DocumentAssignmentService {
     async updateParentalAssignment(
         sourcePath: string,
         assignmentData: IParentalAssignmentData,
-    ): Promise<string> {
+    ): Promise<{ path: string; buffer: Buffer }> {
         const {
             claimId,
             address,
@@ -242,7 +247,7 @@ export class DocumentAssignmentService {
             minorBirthday,
         } = assignmentData;
 
-        const filepath = await this.saveParentalSignaturePdf(null, {
+        const file = await this.saveParentalSignaturePdf(null, {
             claimId,
             address,
             airlineName,
@@ -257,18 +262,18 @@ export class DocumentAssignmentService {
 
         await this.insertParentalSignatureFromSource(
             sourcePath,
-            filepath,
-            filepath,
+            file.path,
+            file.path,
         );
 
-        return filepath;
+        return file;
     }
 
     async updateAssignment(
         sourcePath: string,
         assignmentData: IAssignmentData,
         isOldAssignment: boolean,
-    ): Promise<string> {
+    ): Promise<{ path: string; buffer: Buffer }> {
         const {
             claimId,
             address,
@@ -279,7 +284,7 @@ export class DocumentAssignmentService {
             flightNumber,
         } = assignmentData;
 
-        const filepath = await this.saveSignaturePdf(null, {
+        const file = await this.saveSignaturePdf(null, {
             claimId,
             address,
             airlineName,
@@ -291,12 +296,12 @@ export class DocumentAssignmentService {
 
         await this.insertSignatureFromSource(
             sourcePath,
-            filepath,
-            filepath,
+            file.path,
+            file.path,
             isOldAssignment,
         );
 
-        return filepath;
+        return file;
     }
 
     async saveParentalSignaturePdf(
@@ -315,7 +320,7 @@ export class DocumentAssignmentService {
         },
         signatureTemplatePath?: string,
         isOldAssignment: boolean = false,
-    ) {
+    ): Promise<{ path: string; buffer: Buffer }> {
         const today = formatDate(new Date(), 'dd.mm.yyyy');
 
         const fontBoldBuffer = await fs.readFile(
@@ -485,7 +490,10 @@ export class DocumentAssignmentService {
             );
         }
 
-        return filePath;
+        return {
+            path: filePath,
+            buffer: Buffer.from(pdfBytes),
+        };
     }
 
     async saveSignaturePdf(
@@ -500,7 +508,7 @@ export class DocumentAssignmentService {
             airlineName: string;
         },
         signatureTemplatePath?: string,
-    ) {
+    ): Promise<{ path: string; buffer: Buffer }> {
         const today = formatDate(new Date(), 'dd.MMMM.yyyy');
 
         const fontBoldBuffer = await fs.readFile(
@@ -649,6 +657,6 @@ export class DocumentAssignmentService {
             );
         }
 
-        return filePath;
+        return { path: filePath, buffer: Buffer.from(pdfBytes) };
     }
 }

@@ -11,10 +11,6 @@ export function DocumentsUploadInterceptor() {
             storage: diskStorage({
                 destination: UPLOAD_DIRECTORY_PATH,
                 filename: (_req, file, cb) => {
-                    file.originalname = Buffer.from(
-                        file.originalname,
-                        'latin1',
-                    ).toString('utf8');
                     const uniqueSuffix =
                         Date.now() + '-' + Math.round(Math.random() * 1e9);
                     const ext = path.extname(file.originalname);

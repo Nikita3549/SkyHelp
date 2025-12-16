@@ -93,9 +93,9 @@ export class DocumentController {
             throw new NotFoundException('Passenger has no assignments');
         }
 
-        let assignmentFilePath;
+        let assignmentFile: { path: string; buffer: Buffer };
         if (!passenger.isMinor) {
-            assignmentFilePath = await this.documentService.updateAssignment(
+            assignmentFile = await this.documentService.updateAssignment(
                 oldAssignment.path,
                 {
                     claimId: claim.id,
@@ -109,7 +109,7 @@ export class DocumentController {
                 claim.createdAt <= new Date('2025-10-09'),
             );
         } else {
-            assignmentFilePath =
+            assignmentFile =
                 await this.documentService.updateParentalAssignment(
                     oldAssignment.path,
                     {
@@ -132,7 +132,8 @@ export class DocumentController {
                 [
                     {
                         name: `updated_${passenger.firstName}_${passenger.lastName}-${formatDate(claim.details.date, 'dd.mm.yyyy')}-assignment_agreement.pdf`,
-                        path: assignmentFilePath,
+                        path: assignmentFile.path,
+                        buffer: assignmentFile.buffer,
                         documentType: DocumentType.ASSIGNMENT,
                         passengerId: passenger.id,
                     },
@@ -212,6 +213,7 @@ export class DocumentController {
                     path: doc.path,
                     passengerId,
                     documentType,
+                    buffer: doc.buffer,
                 };
             }),
             claimId,
@@ -354,6 +356,7 @@ export class DocumentController {
                     path: doc.path,
                     passengerId,
                     documentType,
+                    buffer: doc.buffer,
                 };
             }),
             claimId,

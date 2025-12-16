@@ -82,6 +82,7 @@ export class PublicDocumentController {
                     path: doc.path,
                     passengerId,
                     documentType: parsed[index],
+                    buffer: doc.buffer,
                 };
             }),
             claimId,

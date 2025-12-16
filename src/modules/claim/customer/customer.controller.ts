@@ -166,7 +166,7 @@ export class PublicCustomerController {
             throw new NotFoundException(CLAIM_NOT_FOUND);
         }
 
-        const path = await this.documentService.saveSignaturePdf(signature, {
+        const file = await this.documentService.saveSignaturePdf(signature, {
             firstName: customer.firstName,
             lastName: customer.lastName,
             flightNumber: claim.details.flightNumber,
@@ -179,7 +179,8 @@ export class PublicCustomerController {
         const documents = await this.documentService.saveDocuments(
             [
                 {
-                    path,
+                    path: file.path,
+                    buffer: file.buffer,
                     name: generateAssignmentName(
                         customer.firstName,
                         customer.lastName,

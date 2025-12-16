@@ -9,6 +9,7 @@ import { PublicDocumentController } from './controllers/public-document.controll
 import { DocumentDbService } from './services/database/document-db.service';
 import { DocumentAssignmentService } from './services/assignment/document-assignment.service';
 import { DocumentFileService } from './services/file/document-file.service';
+import { S3Module } from '../../s3/s3.module';
 
 @Module({
     imports: [
@@ -16,6 +17,7 @@ import { DocumentFileService } from './services/file/document-file.service';
         TokenModule,
         RecentUpdatesModule,
         DocumentRequestModule,
+        S3Module,
     ],
     controllers: [DocumentController, PublicDocumentController],
     providers: [

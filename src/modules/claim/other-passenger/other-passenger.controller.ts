@@ -233,7 +233,7 @@ export class PublicOtherPassengerController {
             }
         }
 
-        let path: string;
+        let file: { path: string; buffer: Buffer };
 
         if (passenger.isMinor) {
             if (
@@ -247,7 +247,7 @@ export class PublicOtherPassengerController {
                 throw new InternalServerErrorException();
             }
 
-            path = await this.documentService.saveParentalSignaturePdf(
+            file = await this.documentService.saveParentalSignaturePdf(
                 signature,
                 {
                     firstName: passenger.firstName,
@@ -263,7 +263,7 @@ export class PublicOtherPassengerController {
                 },
             );
         } else {
-            path = await this.documentService.saveSignaturePdf(signature, {
+            file = await this.documentService.saveSignaturePdf(signature, {
                 firstName: passenger.firstName,
                 lastName: passenger.lastName,
                 flightNumber: claim.details.flightNumber,
@@ -277,13 +277,14 @@ export class PublicOtherPassengerController {
         const documents = await this.documentService.saveDocuments(
             [
                 {
-                    path,
                     name: generateAssignmentName(
                         passenger.firstName,
                         passenger.lastName,
                     ),
                     passengerId: passenger.id,
                     documentType: DocumentType.ASSIGNMENT,
+                    path: file.path,
+                    buffer: file.buffer,
                 },
             ],
             passenger.claimId,
@@ -385,6 +386,7 @@ export class PublicOtherPassengerController {
                     path: doc.path,
                     passengerId,
                     documentType: documentTypes[index],
+                    buffer: doc.buffer,
                 };
             }),
             claimId,

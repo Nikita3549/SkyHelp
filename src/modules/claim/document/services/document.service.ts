@@ -3,6 +3,7 @@ import { Document, DocumentType } from '@prisma/client';
 import { DocumentDbService } from './database/document-db.service';
 import { DocumentAssignmentService } from './assignment/document-assignment.service';
 import { DocumentFileService } from './file/document-file.service';
+import { S3Service } from '../../../s3/s3.service';
 
 @Injectable()
 export class DocumentService {
@@ -10,6 +11,7 @@ export class DocumentService {
         private readonly documentDbService: DocumentDbService,
         private readonly documentFileService: DocumentFileService,
         private readonly documentAssignmentService: DocumentAssignmentService,
+        private readonly S3Service: S3Service,
     ) {}
 
     // ------------------ ASSIGNMENT ------------------
@@ -34,7 +36,7 @@ export class DocumentService {
             parentFirstName: string;
             parentLastName: string;
         },
-    ): Promise<string> {
+    ): Promise<{ path: string; buffer: Buffer }> {
         return this.documentAssignmentService.updateParentalAssignment(
             sourcePath,
             assignmentData,
@@ -53,7 +55,7 @@ export class DocumentService {
             flightNumber: string;
         },
         isOldAssignment: boolean,
-    ): Promise<string> {
+    ): Promise<{ path: string; buffer: Buffer }> {
         return this.documentAssignmentService.updateAssignment(
             sourcePath,
             assignmentData,
@@ -156,10 +158,19 @@ export class DocumentService {
             path: string;
             passengerId: string;
             documentType: DocumentType;
+            buffer: Buffer;
         }[],
         claimId: string,
         isPublic: boolean = false,
     ): Promise<Document[]> {
+        // for (let document of documents) {
+        //     await this.S3Service.uploadFile({
+        //         claimId,
+        //         filename: document.name,
+        //         buffer: document.buffer,
+        //     });
+        // }
+
         return this.documentDbService.saveMany(documents, claimId, isPublic);
     }
 }
