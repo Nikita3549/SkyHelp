@@ -96,6 +96,7 @@ export const ProgressVariants: {
         descriptions: [
             'paymentReceived.description',
             'paymentReceived.description2',
+            'paymentReceived.description3',
         ],
     },
     paymentFailed: {
