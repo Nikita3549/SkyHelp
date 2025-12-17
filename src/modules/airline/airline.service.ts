@@ -24,6 +24,36 @@ export class AirlineService implements OnModuleInit {
         });
     }
 
+    async getAirlineByIcao(icao: string): Promise<IAirline | null> {
+        const result = await this.pool.query<IDbAirline>(
+            `SELECT
+            id,
+            name,
+            alias,
+            iata_code,
+            icao_code,
+            callsign,
+            country,
+            active
+         FROM airlines
+         WHERE active = true
+           AND icao_code = $1
+         LIMIT 1;`,
+            [icao.toUpperCase()],
+        );
+
+        const row = result.rows[0];
+        if (!row || !row?.icao_code || !row?.iata_code) {
+            return null;
+        }
+
+        return {
+            icao: row.icao_code,
+            iata: row.iata_code,
+            name: row.name,
+        };
+    }
+
     async getAirlineByIata(iata: string): Promise<IAirline | null> {
         const result = await this.pool.query<IDbAirline>(
             `SELECT

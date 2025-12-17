@@ -69,6 +69,14 @@ export class FlightStatusController {
                         flightDate,
                     );
                 break;
+            case ClaimFlightStatusSource.FLIGHT_IO:
+                newFlightStatus =
+                    await this.flightService.getFlightStatusFromFlightIo(
+                        flightCode,
+                        airlineIcao,
+                        flightDate,
+                    );
+                break;
         }
 
         if (newFlightStatus) {

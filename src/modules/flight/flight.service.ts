@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios, { AxiosResponse } from 'axios';
 import { GetFlightsDto } from './dto/get-flights.dto';
@@ -15,10 +15,57 @@ import { ClaimFlightStatusSource } from '@prisma/client';
 import { IOAGFlightInfo } from './interfaces/oag/oag-flight-info.interface';
 import { IFullOAGFlight } from './interfaces/oag/oag-flight-full-info.interface';
 import { FlightIoFlightData } from './interfaces/flight-io/flight-io-flight-data';
+import { parseFlightIoFlightStatus } from './utils/parse-flight-io-flight-status';
+import {
+    FlightIoFlightStatus,
+    IFlightIoFlightStatus,
+} from './interfaces/flight-io/flight-io-flight-status';
 
 @Injectable()
 export class FlightService {
     constructor(private readonly configService: ConfigService) {}
+
+    async onModulpeInit() {
+        console.log(
+            await this.getFlightStatusFromFlightIo(
+                '4635',
+                'FR',
+                new Date(2025, 10, 23),
+            ),
+        );
+    }
+
+    async getFlightStatusFromFlightIo(
+        flightCode: string,
+        airlineCode: string,
+        date: Date,
+    ): Promise<IFlightStatus | null> {
+        try {
+            const url = this.configService.getOrThrow('FLIGHT_IO_URL');
+            const accessToken = this.configService.getOrThrow(
+                'FLIGHT_IO_ACCESS_TOKEN',
+            );
+
+            const res = await axios.get<FlightIoFlightStatus>(
+                `${url}/airline/${accessToken}`,
+                {
+                    params: {
+                        num: flightCode,
+                        name: airlineCode,
+                        date: `${date.getFullYear()}${date.getMonth() + 1}${date.getDate()}`,
+                    },
+                },
+            );
+
+            return {
+                ...parseFlightIoFlightStatus(res.data),
+                source: ClaimFlightStatusSource.FLIGHT_IO,
+            };
+        } catch (e) {
+            console.error(e);
+            return null;
+        }
+    }
 
     async getFlightsFromFlightIo(data: GetFlightsDto) {
         const { arrival, date, departure, company } = data;

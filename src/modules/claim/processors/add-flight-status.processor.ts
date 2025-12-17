@@ -5,6 +5,7 @@ import { ClaimService } from '../claim.service';
 import { IAddFlightStatusJobData } from '../interfaces/job-data/add-flight-status-job-data.interface';
 import { FlightService } from '../../flight/flight.service';
 import { FlightStatusService } from '../flight-status/flight-status.service';
+import { AirlineService } from '../../airline/airline.service';
 
 @Processor(ADD_FLIGHT_STATUS_QUEUE_KEY)
 export class AddFlightStatusProcessor extends WorkerHost {
@@ -12,12 +13,14 @@ export class AddFlightStatusProcessor extends WorkerHost {
         private readonly claimService: ClaimService,
         private readonly flightService: FlightService,
         private readonly flightStatusService: FlightStatusService,
+        private readonly airlineService: AirlineService,
     ) {
         super();
     }
 
     async process(job: Job<IAddFlightStatusJobData>) {
         const { airlineIcao, flightNumber, flightDate, claimId } = job.data;
+        const airline = await this.airlineService.getAirlineByIcao(airlineIcao);
 
         const flightCode = flightNumber.slice(2);
 
@@ -41,6 +44,24 @@ export class AddFlightStatusProcessor extends WorkerHost {
         //         claimId,
         //     );
         // }
+
+        const flightFromFlightIo =
+            await this.flightService.getFlightStatusFromFlightIo(
+                flightCode,
+                airline ? airline.iata : airlineIcao,
+                new Date(flightDate),
+            );
+
+        if (flightFromFlightIo) {
+            await this.flightStatusService.createFlightStatus(
+                {
+                    isCancelled: flightFromFlightIo.isCancelled,
+                    delayMinutes: flightFromFlightIo.delayMinutes,
+                    source: flightFromFlightIo.source,
+                },
+                claimId,
+            );
+        }
 
         const flightFromFlightStats =
             await this.flightService.getFlightFromFlightStats(
