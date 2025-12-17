@@ -273,7 +273,10 @@ export class AuthController {
 
     @Get('/me')
     @UseGuards(JwtAuthGuard)
-    async decodeToken(@Req() req: AuthRequest) {
+    async decodeToken(
+        @Req() req: AuthRequest,
+        @Res({ passthrough: true }) res: Response,
+    ) {
         const user = await this.userService.getUserById(req.user.id);
 
         if (!user) {
@@ -293,6 +296,19 @@ export class AuthController {
 
         const jwt = this.tokenService.generateJWT(publicUserData);
 
+        res.clearCookie('accessToken', {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'lax',
+        });
+
+        res.cookie('accessToken', jwt, {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'lax',
+            path: '/',
+        });
+
         return { ...user, jwt };
     }
 
@@ -301,7 +317,7 @@ export class AuthController {
         res.clearCookie('accessToken', {
             httpOnly: true,
             secure: true,
-            sameSite: 'strict',
+            sameSite: 'lax',
         });
 
         return { success: true };
@@ -320,5 +336,4 @@ export class AuthController {
             } catch (_e: unknown) {}
         }
     }
-
 }
