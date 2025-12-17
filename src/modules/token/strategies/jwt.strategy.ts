@@ -12,9 +12,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
             jwtFromRequest: ExtractJwt.fromExtractors([
                 (req: Request) => {
                     // New variant httpOnly cookie
-                    if (req?.cookies?.accessToken) {
-                        return req.cookies.accessToken;
-                    }
+                    // if (req?.cookies?.accessToken) {
+                    //     return req.cookies.accessToken;
+                    // }
 
                     // Deprecated - Bearer
                     const auth = req?.headers?.authorization;
