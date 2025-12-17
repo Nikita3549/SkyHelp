@@ -1395,6 +1395,7 @@
     "Forgot.resetPassword": "Reset password",
     "Forgot.noAccount": "Don't Have an Account?",
     "Forgot.register": "Register",
+    "Forgot.instruction": "Enter your work email address and we'll send you a link to reset your password.",
     "Index.faq1.question": "What is EU Regulation 261/2004?",
     "Index.faq1.answer": "EU Regulation 261/2004 is a European law that establishes common rules on compensation and assistance to passengers in the event of denied boarding, flight cancellations, or long delays. It applies to all flights departing from an EU airport and flights arriving in the EU with an EU-based carrier.",
     "Index.faq2.question": "How much compensation can I claim?",
@@ -3951,6 +3952,7 @@
     "cookieBanner.alwaysActive": "Always Active",
     "ThankYouPage.boardingPassScanned.title": "Boarding pass successfully scanned",
     "ThankYouPage.boardingPassScanned.description": "Please continue on your computer to complete your claim.",
+    "Terms.prefix": "By continuing, you agree",
     "Terms.termsOfService": "Terms of Service",
     "Terms.and": "and",
     "Terms.privacyPolicy": "Privacy Policy."

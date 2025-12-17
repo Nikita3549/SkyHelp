@@ -1396,6 +1396,7 @@
     "Forgot.resetPassword": "Resetează parola",
     "Forgot.noAccount": "Nu ai un cont?",
     "Forgot.register": "Înregistrează-te",
+    "Forgot.instruction": "Introdu adresa ta de email de serviciu și îți vom trimite un link pentru a-ți reseta parola.",
     "Index.faq1.question": "Ce este Regulamentul UE 261/2004?",
     "Index.faq1.answer": "Regulamentul UE 261/2004 este o lege europeană care stabilește reguli comune privind compensațiile și asistența pentru pasageri în caz de refuz la îmbarcare, anulări sau întârzieri mari ale zborurilor. Se aplică tuturor zborurilor care pleacă de pe un aeroport din UE și celor care sosesc în UE cu o companie aeriană din UE.",
     "Index.faq2.question": "Ce sumă pot solicita ca despăgubire?",
@@ -3952,6 +3953,7 @@
     "cookieBanner.alwaysActive": "Întotdeauna active",
     "ThankYouPage.boardingPassScanned.title": "Cartea de îmbarcare a fost scanată cu succes",
     "ThankYouPage.boardingPassScanned.description": "Te rugăm să continuiți pe calculatorul tău pentru a finaliza cererea ta.",
+    "Terms.prefix": "Continuând, ești de acord cu",
     "Terms.termsOfService": "Termeni și Condiții",
     "Terms.and": "și",
     "Terms.privacyPolicy": "Politica de Confidențialitate."
