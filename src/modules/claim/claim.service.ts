@@ -876,12 +876,7 @@ export class ClaimService {
                     path: true,
                 },
             },
-            passengers: {
-                select: {
-                    id: true,
-                    isMinor: true,
-                },
-            },
+            passengers: true,
             duplicates: true,
             payment: true,
         };

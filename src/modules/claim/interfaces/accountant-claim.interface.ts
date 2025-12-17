@@ -43,6 +43,6 @@ interface IAccountantClaimState
 }
 
 interface IAccountantClaimPassenger
-    extends Pick<OtherPassenger, 'id' | 'isMinor'> {}
+    extends Pick<OtherPassenger, 'id' | 'isMinor' | 'firstName' | 'lastName'> {}
 
 interface IAccountantClaimDocument extends Omit<Document, 'path'> {}
