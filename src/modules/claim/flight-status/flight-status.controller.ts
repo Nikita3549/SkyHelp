@@ -18,6 +18,7 @@ import { IFlightStatus } from '../../flight/interfaces/flight-status.interface';
 import { CreateFlightStatusDto } from './dto/create-flight-status.dto';
 import { CLAIM_NOT_FOUND } from '../constants';
 import { RoleGuard } from '../../../common/guards/role.guard';
+import { AirlineService } from '../../airline/airline.service';
 
 @Controller('claims/flight-statuses')
 @UseGuards(JwtAuthGuard, new RoleGuard([UserRole.ADMIN]))
@@ -26,6 +27,7 @@ export class FlightStatusController {
         private readonly flightStatusService: FlightStatusService,
         private readonly claimService: ClaimService,
         private readonly flightService: FlightService,
+        private readonly airlinesService: AirlineService,
     ) {}
 
     @Put(':flightStatusId')
@@ -70,10 +72,15 @@ export class FlightStatusController {
                     );
                 break;
             case ClaimFlightStatusSource.FLIGHT_IO:
+                const airline =
+                    await this.airlinesService.getAirlineByIcao(airlineIcao);
+                if (!airline) {
+                    throw new NotFoundException(FLIGHT_STATUS_NOT_FOUND);
+                }
                 newFlightStatus =
                     await this.flightService.getFlightStatusFromFlightIo(
                         flightCode,
-                        airlineIcao,
+                        airline.iata,
                         flightDate,
                     );
                 break;

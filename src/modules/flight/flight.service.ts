@@ -25,16 +25,6 @@ import {
 export class FlightService {
     constructor(private readonly configService: ConfigService) {}
 
-    async onModulpeInit() {
-        console.log(
-            await this.getFlightStatusFromFlightIo(
-                '4635',
-                'FR',
-                new Date(2025, 10, 23),
-            ),
-        );
-    }
-
     async getFlightStatusFromFlightIo(
         flightCode: string,
         airlineCode: string,
