@@ -55,7 +55,7 @@ export class ClaimService {
         private readonly tokenService: TokenService,
         private readonly progressService: ProgressService,
         private readonly documentRequestService: DocumentRequestService,
-    ) {}
+    ) { }
 
     async handleAllDocumentsUploaded(claimId: string) {
         type RequiredDocumentGroups = {
@@ -401,15 +401,15 @@ export class ClaimService {
                 payment: {
                     update: newClaim.payment
                         ? {
-                              email: newClaim.payment.email,
-                              termsAgreed: newClaim.payment.termsAgreed,
-                              paymentMethod: newClaim.payment.paymentMethod,
-                              bankName: newClaim.payment.bankName,
-                              accountName: newClaim.payment.accountName,
-                              accountNumber: newClaim.payment.accountNumber,
-                              iban: newClaim.payment.iban,
-                              paypalEmail: newClaim.payment.paypalEmail,
-                          }
+                            email: newClaim.payment.email,
+                            termsAgreed: newClaim.payment.termsAgreed,
+                            paymentMethod: newClaim.payment.paymentMethod,
+                            bankName: newClaim.payment.bankName,
+                            accountName: newClaim.payment.accountName,
+                            accountNumber: newClaim.payment.accountNumber,
+                            iban: newClaim.payment.iban,
+                            paypalEmail: newClaim.payment.paypalEmail,
+                        }
                         : undefined,
                 },
             },
@@ -862,6 +862,7 @@ export class ClaimService {
                     status: true,
                     amount: true,
                     updatedAt: true,
+                    isPaymentRequested: true,
                     comments: true,
                     progress: {
                         orderBy: {
