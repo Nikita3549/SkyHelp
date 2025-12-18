@@ -340,7 +340,7 @@ id,name,city,country,iata_code,icao_code,latitude,longitude,altitude,timezone_of
 342,"Hamburg Airport","Hamburg","Germany","HAM","EDDH",53.630401611328,9.9882297515869,53,1,"E","Europe/Berlin","airport","OurAirports"
 343,"Berlin-Tempelhof International Airport","Berlin","Germany","THF","EDDI",52.472999572753906,13.403900146484375,167,1,"E","Europe/Berlin","airport","OurAirports"
 344,"Cologne Bonn Airport","Cologne","Germany","CGN","EDDK",50.8658981323,7.1427397728,302,1,"E","Europe/Berlin","airport","OurAirports"
-345,"Düsseldorf Airport","Duesseldorf","Germany","DUS","EDDL",51.289501,6.76678,147,1,"E","Europe/Berlin","airport","OurAirports"
+345,Dusseldorf Airport,Dusseldorf,"Germany","DUS","EDDL",51.289501,6.76678,147,1,"E","Europe/Berlin","airport","OurAirports"
 346,"Munich Airport","Munich","Germany","MUC","EDDM",48.353802,11.7861,1487,1,"E","Europe/Berlin","airport","OurAirports"
 347,"Nuremberg Airport","Nuernberg","Germany","NUE","EDDN",49.498699,11.078056,1046,1,"E","Europe/Berlin","airport","OurAirports"
 348,"Leipzig/Halle Airport","Leipzig","Germany","LEJ","EDDP",51.423889,12.236389,465,1,"E","Europe/Berlin","airport","OurAirports"
