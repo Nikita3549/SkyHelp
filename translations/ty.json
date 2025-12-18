@@ -1396,7 +1396,7 @@
     "Forgot.resetPassword": "Şifreyi sıfırla",
     "Forgot.noAccount": "Hesabınız yok mu?",
     "Forgot.register": "Kayıt ol",
-    "Forgot.instruction": "İş e-posta adresinizi girin ve size şifrenizi sıfırlamanız için bir bağlantı gönderelim.",
+    "Forgot.instruction": "E-posta adresinizi girin ve size şifrenizi sıfırlamanız için bir kod gönderelim.",
     "Index.faq1.question": "AB Tüzüğü 261/2004 nedir?",
     "Index.faq1.answer": "AB Tüzüğü 261/2004, biniş reddi, uçuş iptalleri veya uzun gecikmeler durumunda yolculara tazminat ve yardım konusunda ortak kurallar kuran bir Avrupa yasasıdır. AB havalimanından kalkan tüm uçuşlara ve AB merkezli taşıyıcıyla AB'ye varan uçuşlara uygulanır.",
     "Index.faq2.question": "Ne kadar tazminat talep edebilirim?",
