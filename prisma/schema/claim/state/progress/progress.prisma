@@ -1,16 +1,18 @@
 model Progress {
-  id           String         @id @default(cuid()) @map("id")
-  title        String         @map("title")
-  description  String         @map("description")
-  comments     String?
-  endAt        DateTime?      @map("end_at")
-  order        Int            @default(1)
-  status       ProgressStatus @default(COMPLETED) @map("status")
-  claimStateId String         @map("claim_state_id")
-  claimState   ClaimState     @relation(fields: [claimStateId], references: [id], onDelete: Cascade)
-  updatedBy    String?
-  user         User?          @relation(fields: [updatedBy], references: [id])
-  createdAt    DateTime       @default(now()) @map("created_at")
+  id                   String         @id @default(cuid()) @map("id")
+  title                String         @map("title")
+  description          String         @map("description")
+  comments             String?
+  endAt                DateTime?      @map("end_at")
+  order                Int            @default(1)
+  status               ProgressStatus @default(COMPLETED) @map("status")
+  claimStateId         String         @map("claim_state_id")
+  claimState           ClaimState     @relation(fields: [claimStateId], references: [id], onDelete: Cascade)
+  updatedBy            String?
+  user                 User?          @relation(fields: [updatedBy], references: [id])
+  descriptionVariables Json           @default("[]") @map("description_variables")
+
+  createdAt DateTime @default(now()) @map("created_at")
 
   @@map("progresses")
 }

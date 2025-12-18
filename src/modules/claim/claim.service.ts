@@ -55,7 +55,7 @@ export class ClaimService {
         private readonly tokenService: TokenService,
         private readonly progressService: ProgressService,
         private readonly documentRequestService: DocumentRequestService,
-    ) { }
+    ) {}
 
     async handleAllDocumentsUploaded(claimId: string) {
         type RequiredDocumentGroups = {
@@ -116,7 +116,7 @@ export class ClaimService {
             if (!progressVariant) {
                 return;
             }
-            await this.progressService.createProgressByClaimId(
+            await this.progressService.createProgress(
                 {
                     title: progressVariant.title,
                     description: progressVariant.descriptions[1],
@@ -130,6 +130,7 @@ export class ClaimService {
                             },
                             claim.state.progress[0],
                         ).order + 1,
+                    descriptionVariables: [],
                 },
                 claim.state.id,
                 tx,
@@ -401,15 +402,15 @@ export class ClaimService {
                 payment: {
                     update: newClaim.payment
                         ? {
-                            email: newClaim.payment.email,
-                            termsAgreed: newClaim.payment.termsAgreed,
-                            paymentMethod: newClaim.payment.paymentMethod,
-                            bankName: newClaim.payment.bankName,
-                            accountName: newClaim.payment.accountName,
-                            accountNumber: newClaim.payment.accountNumber,
-                            iban: newClaim.payment.iban,
-                            paypalEmail: newClaim.payment.paypalEmail,
-                        }
+                              email: newClaim.payment.email,
+                              termsAgreed: newClaim.payment.termsAgreed,
+                              paymentMethod: newClaim.payment.paymentMethod,
+                              bankName: newClaim.payment.bankName,
+                              accountName: newClaim.payment.accountName,
+                              accountNumber: newClaim.payment.accountNumber,
+                              iban: newClaim.payment.iban,
+                              paypalEmail: newClaim.payment.paypalEmail,
+                          }
                         : undefined,
                 },
             },

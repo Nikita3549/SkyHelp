@@ -92,15 +92,19 @@ export class ProgressController {
             description,
         );
 
-        const progress = await this.progressesService.createProgressByClaimId(
+        const progress = await this.progressesService.createProgress(
             {
                 title: progressVariant.title,
-                description: additionalData
-                    ? translatedDescription
-                    : description,
+                description,
                 order,
                 updatedBy: user.id,
                 comments,
+                descriptionVariables: additionalData
+                    ? Object.keys(additionalData).map((key) => ({
+                          key,
+                          value: additionalData[key],
+                      }))
+                    : [],
             },
             claim.stateId,
         );

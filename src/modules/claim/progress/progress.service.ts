@@ -22,13 +22,14 @@ export class ProgressService {
         });
     }
 
-    async createProgressByClaimId(
+    async createProgress(
         progress: {
             title: string;
             description: string;
             order: number;
             updatedBy?: string;
             comments?: string;
+            descriptionVariables: { key: string; value: string }[];
         },
         claimStateId: string,
         tx?: Prisma.TransactionClient,
@@ -41,6 +42,9 @@ export class ProgressService {
                 claimStateId,
                 endAt: new Date(),
                 status: ProgressStatus.COMPLETED,
+                descriptionVariables: JSON.stringify(
+                    progress.descriptionVariables,
+                ),
             },
         });
     }
