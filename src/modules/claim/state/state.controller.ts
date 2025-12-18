@@ -19,9 +19,9 @@ export class StateController {
     constructor(
         private readonly stateService: StateService,
         private readonly claimService: ClaimService,
-    ) {}
+    ) { }
 
-    @UseGuards(new RoleGuard([UserRole.ADMIN, UserRole.AGENT]))
+    @UseGuards(new RoleGuard([UserRole.ADMIN, UserRole.AGENT, UserRole.ACCOUNTANT]))
     @Put('admin')
     async updateState(@Body() dto: StateDto) {
         const { claimId } = dto;
