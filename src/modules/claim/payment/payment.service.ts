@@ -56,6 +56,9 @@ export class PaymentService {
                 iban: dto.iban,
                 paypalEmail: dto.paypalEmail,
                 bankName: dto.bankName,
+                idnp: dto.idnp,
+                bic: dto.bic,
+                region: dto.region,
             },
         });
     }

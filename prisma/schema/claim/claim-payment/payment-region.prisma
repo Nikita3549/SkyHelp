@@ -1,0 +1,5 @@
+enum PaymentRegion {
+  MOLDOVA
+  EU
+  OTHERS
+}

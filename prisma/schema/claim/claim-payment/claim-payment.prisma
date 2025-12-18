@@ -8,6 +8,9 @@ model ClaimPayment {
   accountNumber String?        @map("account_number")
   iban          String?        @map("iban")
   paypalEmail   String?        @map("paypal_email")
+  idnp          String?
+  bic           String?
+  region        PaymentRegion?
   Claim         Claim[]
 
   @@map("claim_payments")

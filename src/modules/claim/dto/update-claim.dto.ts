@@ -7,7 +7,7 @@ import {
     ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { PaymentMethod } from '@prisma/client';
+import { PaymentMethod, PaymentRegion } from '@prisma/client';
 
 class DetailsDto {
     @IsOptional()
@@ -47,6 +47,18 @@ class PaymentDto {
     @IsOptional()
     @IsEmail()
     paypalEmail?: string;
+
+    @IsOptional()
+    @IsString()
+    idnp?: string;
+
+    @IsOptional()
+    @IsString()
+    bic?: string;
+
+    @IsOptional()
+    @IsEnum(PaymentRegion)
+    region?: PaymentRegion;
 }
 
 export class UpdateClaimDto {

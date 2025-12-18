@@ -1,5 +1,5 @@
 import { forwardRef, Module } from '@nestjs/common';
-import { PaymentController } from './payment.controller';
+import { PaymentController } from './controllers/payment.controller';
 import { PaymentService } from './payment.service';
 import { ClaimModule } from '../claim.module';
 import { BullModule } from '@nestjs/bullmq';
@@ -8,6 +8,7 @@ import { GenerateLinksModule } from '../../generate-links/generate-links.module'
 import { NotificationModule } from '../../notification/notification.module';
 import { RequestPaymentDetailsProcessor } from '../processors/request-payment-details.processor';
 import { TokenModule } from '../../token/token.module';
+import { PaymentPublicController } from './controllers/payment-public.controller';
 
 @Module({
     imports: [
@@ -19,7 +20,7 @@ import { TokenModule } from '../../token/token.module';
         forwardRef(() => GenerateLinksModule),
         TokenModule,
     ],
-    controllers: [PaymentController],
+    controllers: [PaymentController, PaymentPublicController],
     providers: [PaymentService, RequestPaymentDetailsProcessor],
 })
 export class PaymentModule {}

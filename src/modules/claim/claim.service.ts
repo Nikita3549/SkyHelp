@@ -410,6 +410,9 @@ export class ClaimService {
                               accountNumber: newClaim.payment.accountNumber,
                               iban: newClaim.payment.iban,
                               paypalEmail: newClaim.payment.paypalEmail,
+                              idnp: newClaim.payment.idnp,
+                              bic: newClaim.payment.bic,
+                              region: newClaim.payment.region,
                           }
                         : undefined,
                 },

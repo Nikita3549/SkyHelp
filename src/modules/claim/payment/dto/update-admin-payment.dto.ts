@@ -1,5 +1,5 @@
 import { IsEnum, IsOptional, IsString } from 'class-validator';
-import { PaymentMethod } from '@prisma/client';
+import { PaymentMethod, PaymentRegion } from '@prisma/client';
 
 export class UpdateAdminPaymentDto {
     @IsString()
@@ -31,4 +31,16 @@ export class UpdateAdminPaymentDto {
     @IsOptional()
     @IsString()
     bankName?: string;
+
+    @IsOptional()
+    @IsString()
+    idnp?: string;
+
+    @IsOptional()
+    @IsString()
+    bic?: string;
+
+    @IsOptional()
+    @IsEnum(PaymentRegion)
+    region?: PaymentRegion;
 }
