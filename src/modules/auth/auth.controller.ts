@@ -165,10 +165,7 @@ export class AuthController {
 
     @Post('login')
     @HttpCode(HttpStatus.OK)
-    async login(
-        @Body() dto: LoginDto,
-        @Query('claim') claimToken?: string,
-    ): Promise<IPublicUserDataWithJwt> {
+    async login(@Body() dto: LoginDto): Promise<IPublicUserDataWithJwt> {
         const { email, password } = dto;
 
         const expiredUser = await this.userService.getUserByEmail(email);
@@ -200,8 +197,6 @@ export class AuthController {
         };
 
         const jwt = this.tokenService.generateJWT(publicUserData);
-
-        await this.connectWithClaim(user.id, claimToken);
 
         return {
             userData: publicUserData,
