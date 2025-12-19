@@ -3987,5 +3987,8 @@
     "Terms.prefix": "By continuing, you agree",
     "Terms.termsOfService": "Terms of Service",
     "Terms.and": "and",
-    "Terms.privacyPolicy": "Privacy Policy."
+    "Terms.privacyPolicy": "Privacy Policy.",
+    "IncompleteClaimBanner.message": "You have an incomplete claim",
+    "IncompleteClaimBanner.continue": "Continue",
+    "IncompleteClaimBanner.startNew": "Start New"
 }

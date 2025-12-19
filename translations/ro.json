@@ -3988,5 +3988,8 @@
     "Terms.prefix": "Continuând, ești de acord cu",
     "Terms.termsOfService": "Termeni și Condiții",
     "Terms.and": "și",
-    "Terms.privacyPolicy": "Politica de Confidențialitate."
+    "Terms.privacyPolicy": "Politica de Confidențialitate.",
+    "IncompleteClaimBanner.message": "Ai o cerere incompletă",
+    "IncompleteClaimBanner.continue": "Continuă",
+    "IncompleteClaimBanner.startNew": "Începe Nou"
 }

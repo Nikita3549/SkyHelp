@@ -4011,5 +4011,8 @@
     "Terms.prefix": "Devam ederek kabul ediyorsunuz",
     "Terms.termsOfService": "Hizmet Şartları",
     "Terms.and": "ve",
-    "Terms.privacyPolicy": "Gizlilik Politikası."
+    "Terms.privacyPolicy": "Gizlilik Politikası.",
+    "IncompleteClaimBanner.message": "Tamamlanmamış bir talebiniz var",
+    "IncompleteClaimBanner.continue": "Devam Et",
+    "IncompleteClaimBanner.startNew": "Yeni Başlat"
 }
