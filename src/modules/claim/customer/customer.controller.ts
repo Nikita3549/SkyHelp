@@ -166,27 +166,34 @@ export class PublicCustomerController {
             throw new NotFoundException(CLAIM_NOT_FOUND);
         }
 
-        const file = await this.documentService.saveSignaturePdf(signature, {
-            firstName: customer.firstName,
-            lastName: customer.lastName,
-            flightNumber: claim.details.flightNumber,
-            date: claim.details.date,
-            address: customer.address,
-            claimId: claim.id,
-            airlineName: claim.details.airlines.name,
-        });
+        const assignmentFileName = generateAssignmentName(
+            customer.firstName,
+            customer.lastName,
+        );
+        const file = await this.documentService.saveSignaturePdf(
+            {
+                imageDataUrl: signature,
+            },
+            {
+                firstName: customer.firstName,
+                lastName: customer.lastName,
+                flightNumber: claim.details.flightNumber,
+                date: claim.details.date,
+                address: customer.address,
+                claimId: claim.id,
+                airlineName: claim.details.airlines.name,
+                fileName: assignmentFileName,
+            },
+        );
 
         const documents = await this.documentService.saveDocuments(
             [
                 {
-                    path: file.path,
                     buffer: file.buffer,
-                    name: generateAssignmentName(
-                        customer.firstName,
-                        customer.lastName,
-                    ),
+                    name: assignmentFileName,
                     passengerId: claim.customer.id,
                     documentType: DocumentType.ASSIGNMENT,
+                    mimetype: 'application/pdf',
                 },
             ],
             customer.Claim[0].id,

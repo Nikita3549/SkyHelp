@@ -1,7 +1,7 @@
 export interface UploadFileOptions {
     buffer: Buffer;
-    contentType?: string;
+    contentType: string;
     metadata?: Record<string, string>;
-    filename: string;
-    claimId: string;
+    s3Key: string;
+    fileName: string;
 }

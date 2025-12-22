@@ -21,7 +21,7 @@ export interface ISignatureRectangle {
     y: number;
     width: number;
     height: number;
-    page?: number;
+    page: number;
 }
 
 export type IAssignmentPassenger =

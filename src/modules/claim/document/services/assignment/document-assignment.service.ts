@@ -1,5 +1,5 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
-import { PDFDocument, rgb } from 'pdf-lib';
+import { forwardRef, Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import { PDFDocument, PDFPage, rgb } from 'pdf-lib';
 import { DocumentType, OtherPassenger } from '@prisma/client';
 import { generateAssignmentName } from '../../../../../common/utils/generate-assignment-name';
 import { formatDate } from '../../../../../common/utils/formatDate';
@@ -8,130 +8,95 @@ import * as path from 'path';
 import { FontsDirectoryPath } from '../../../../../common/constants/paths/FontsDirectoryPath';
 import { AssignmentsDirectoryPath } from '../../../../../common/constants/paths/AssignmentsDirectoryPath';
 import * as fontkit from 'fontkit';
-import { UPLOAD_DIRECTORY_PATH } from '../../../../../common/constants/paths/UploadsDirectoryPath';
 import { ClaimService } from '../../../claim.service';
-import { DocumentDbService } from '../database/document-db.service';
 import {
-    IAssignmentData,
     IAssignmentPassenger,
-    IParentalAssignmentData,
     ISignatureRectangle,
 } from './interfaces/assignment.interfaces';
 import { DocumentService } from '../document.service';
+import { S3Service } from '../../../../s3/s3.service';
+import { IAssignmentFonts } from './interfaces/assignment-fonts.interface';
+import { IAssignmentTemplates } from './interfaces/assignment-templates.interface';
+import { IAssignmentData } from './interfaces/assignment-data.interface';
+import { IParentalAssignmentData } from './interfaces/parental-assignment-data.interface';
+import { IAssignmentSignature } from './interfaces/assignment-signature.interface';
+import { logDocumentWithoutS3Key } from '../../utils/logDocumentWithoutS3Key';
 
 @Injectable()
-export class DocumentAssignmentService {
+export class DocumentAssignmentService implements OnModuleInit {
+    fonts: IAssignmentFonts;
+    assignmentTemplates: IAssignmentTemplates;
+
     constructor(
         private readonly claimService: ClaimService,
         @Inject(forwardRef(() => DocumentService))
         private readonly documentService: DocumentService,
+        private readonly S3Service: S3Service,
     ) {}
 
-    private async insertSignatureFromSource(
-        sourcePath: string,
-        targetPath: string,
-        outputPath: string,
-        isOldAssignment: boolean = false,
-        signatureRect?: ISignatureRectangle,
-    ) {
-        const sourceBuffer = await fs.readFile(sourcePath);
-        const targetBuffer = await fs.readFile(targetPath);
+    async onModuleInit() {
+        this.fonts = {
+            Inter: {
+                Regular: await fs.readFile(
+                    path.resolve(FontsDirectoryPath, 'Inter', 'regular.ttf'),
+                ),
+                Medium: await fs.readFile(
+                    path.resolve(FontsDirectoryPath, 'Inter', 'medium.ttf'),
+                ),
+                Bold: await fs.readFile(
+                    path.resolve(FontsDirectoryPath, 'Inter', 'bold.ttf'),
+                ),
+            },
+        };
 
-        const sourcePdf = await PDFDocument.load(sourceBuffer);
-        const targetPdf = await PDFDocument.load(targetBuffer);
-
-        const sourcePageIndex = signatureRect?.page || 1;
-        const sourcePage = sourcePdf.getPage(sourcePageIndex);
-
-        const targetPage = targetPdf.getPage(2);
-
-        if (!signatureRect && isOldAssignment) {
-            signatureRect = {
-                x: 150,
-                y: 217 - 30,
-                width: 160,
-                height: 100,
-            };
-        } else if (!signatureRect) {
-            signatureRect = {
-                x: 105,
-                y: 435,
-                width: 160,
-                height: 70,
-            };
-        }
-
-        const embeddedPage = await targetPdf.embedPage(sourcePage, {
-            left: signatureRect.x,
-            bottom: signatureRect.y,
-            right: signatureRect.x + signatureRect.width,
-            top: signatureRect.y + signatureRect.height,
-        });
-
-        targetPage.drawPage(embeddedPage, {
-            x: 100,
-            y: isOldAssignment ? 157 - 30 : 157,
-            xScale: 1,
-            yScale: 1,
-        });
-
-        const updatedPdf = await targetPdf.save();
-        await fs.writeFile(outputPath, updatedPdf);
-
-        return outputPath;
+        this.assignmentTemplates = {
+            regular: await fs.readFile(
+                path.join(
+                    AssignmentsDirectoryPath,
+                    'assignment_agreement-template.pdf',
+                ),
+            ),
+            parental: await fs.readFile(
+                path.join(
+                    AssignmentsDirectoryPath,
+                    'parental-assignment_agreement-template.pdf',
+                ),
+            ),
+        };
     }
-    private async insertParentalSignatureFromSource(
-        sourcePath: string,
-        targetPath: string,
-        outputPath: string,
-        isOldAssignment: boolean = false,
-        signatureRect?: ISignatureRectangle,
-    ) {
-        const sourceBuffer = await fs.readFile(sourcePath);
-        const targetBuffer = await fs.readFile(targetPath);
 
-        const sourcePdf = await PDFDocument.load(sourceBuffer);
-        const targetPdf = await PDFDocument.load(targetBuffer);
+    private async insertSignatureFromSource(assignmentData: {
+        sourceKey: string;
+        targetPage: PDFPage;
+        signatureRect: ISignatureRectangle;
+    }): Promise<{ page: PDFPage }> {
+        const { sourceKey, targetPage, signatureRect } = assignmentData;
 
-        const sourcePageIndex = signatureRect?.page || 1;
-        const sourcePage = sourcePdf.getPage(sourcePageIndex);
+        const targetDoc = targetPage.doc;
 
-        const targetPage = targetPdf.getPage(3);
+        const sourceBuffer = await this.S3Service.getBuffer(sourceKey);
+        const sourceDoc = await PDFDocument.load(sourceBuffer);
 
-        if (!signatureRect && isOldAssignment) {
-            signatureRect = {
-                x: 110,
-                y: 228 - 30,
-                width: 160,
-                height: 100,
-            };
-        } else if (!signatureRect) {
-            signatureRect = {
-                x: 110,
-                y: 228,
-                width: 160,
-                height: 70,
-            };
-        }
+        const sourcePageIndex = signatureRect.page;
+        const sourcePage = sourceDoc.getPage(sourcePageIndex);
 
-        const embeddedPage = await targetPdf.embedPage(sourcePage, {
+        const signatureFragment = await targetDoc.embedPage(sourcePage, {
             left: signatureRect.x,
             bottom: signatureRect.y,
             right: signatureRect.x + signatureRect.width,
             top: signatureRect.y + signatureRect.height,
         });
 
-        targetPage.drawPage(embeddedPage, {
-            x: 110,
-            y: isOldAssignment ? 445 - 30 : 445,
-            xScale: 1,
-            yScale: 1,
+        targetPage.drawPage(signatureFragment, {
+            x: signatureRect.x,
+            y: signatureRect.y,
+            width: signatureRect.width,
+            height: signatureRect.height,
         });
 
-        const updatedPdf = await targetPdf.save();
-        await fs.writeFile(outputPath, updatedPdf);
-
-        return outputPath;
+        return {
+            page: targetPage,
+        };
     }
 
     async updateAssignmentData(claimId: string, passengerIds: string[]) {
@@ -166,11 +131,17 @@ export class DocumentAssignmentService {
 
                 for (const assignment of assignments) {
                     try {
-                        let file: { path: string; buffer: Buffer };
+                        let file: { buffer: Buffer };
 
+                        if (!assignment.s3Key) {
+                            logDocumentWithoutS3Key(assignment.id);
+                            continue;
+                        }
                         if (!passenger.isMinor) {
                             file = await this.saveSignaturePdf(
-                                null,
+                                {
+                                    sourceS3Key: assignment.s3Key,
+                                },
                                 {
                                     address: passenger.address,
                                     airlineName: claim.details.airlines.name,
@@ -179,20 +150,23 @@ export class DocumentAssignmentService {
                                     claimId: claim.id,
                                     lastName: passenger.lastName,
                                     flightNumber: claim.details.flightNumber,
+                                    fileName: assignment.name,
                                 },
-                                assignment.path,
                             );
                         } else {
-                            const otherPassenger = passenger as OtherPassenger;
+                            const otherPassenger = passenger;
 
                             file = await this.saveParentalSignaturePdf(
-                                null,
+                                {
+                                    sourceS3Key: assignment.s3Key,
+                                },
                                 {
                                     address: otherPassenger.address,
                                     airlineName: claim.details.airlines.name,
                                     firstName: otherPassenger.firstName,
                                     date: claim.details.date,
                                     claimId: claim.id,
+                                    fileName: assignment.name,
                                     lastName: otherPassenger.lastName,
                                     flightNumber: claim.details.flightNumber,
                                     parentLastName:
@@ -201,7 +175,6 @@ export class DocumentAssignmentService {
                                         otherPassenger.parentFirstName!,
                                     minorBirthday: otherPassenger.birthday!,
                                 },
-                                assignment.path,
                             );
                         }
 
@@ -216,10 +189,10 @@ export class DocumentAssignmentService {
                                         passenger.firstName,
                                         passenger.lastName,
                                     ),
-                                    path: file.path,
                                     buffer: file.buffer,
                                     passengerId: assignment.passengerId,
                                     documentType: assignment.type,
+                                    mimetype: 'application/pdf',
                                 },
                             ],
                             claim.id,
@@ -230,138 +203,33 @@ export class DocumentAssignmentService {
         }
     }
 
-    async updateParentalAssignment(
-        sourcePath: string,
-        assignmentData: IParentalAssignmentData,
-    ): Promise<{ path: string; buffer: Buffer }> {
-        const {
-            claimId,
-            address,
-            airlineName,
-            date,
-            firstName,
-            lastName,
-            flightNumber,
-            parentLastName,
-            parentFirstName,
-            minorBirthday,
-        } = assignmentData;
-
-        const file = await this.saveParentalSignaturePdf(null, {
-            claimId,
-            address,
-            airlineName,
-            date,
-            firstName,
-            lastName,
-            flightNumber,
-            parentLastName,
-            parentFirstName,
-            minorBirthday,
-        });
-
-        await this.insertParentalSignatureFromSource(
-            sourcePath,
-            file.path,
-            file.path,
-        );
-
-        return file;
-    }
-
-    async updateAssignment(
-        sourcePath: string,
-        assignmentData: IAssignmentData,
-        isOldAssignment: boolean,
-    ): Promise<{ path: string; buffer: Buffer }> {
-        const {
-            claimId,
-            address,
-            airlineName,
-            date,
-            firstName,
-            lastName,
-            flightNumber,
-        } = assignmentData;
-
-        const file = await this.saveSignaturePdf(null, {
-            claimId,
-            address,
-            airlineName,
-            date,
-            firstName,
-            lastName,
-            flightNumber,
-        });
-
-        await this.insertSignatureFromSource(
-            sourcePath,
-            file.path,
-            file.path,
-            isOldAssignment,
-        );
-
-        return file;
-    }
-
     async saveParentalSignaturePdf(
-        signatureDataUrl: string | null,
-        documentData: {
-            claimId: string;
-            firstName: string;
-            lastName: string;
-            address: string;
-            date: Date;
-            flightNumber: string;
-            airlineName: string;
-            parentFirstName: string;
-            parentLastName: string;
-            minorBirthday: Date;
-        },
-        signatureTemplatePath?: string,
-        isOldAssignment: boolean = false,
-    ): Promise<{ path: string; buffer: Buffer }> {
+        signature: IAssignmentSignature,
+        assignmentData: IParentalAssignmentData,
+    ): Promise<{ buffer: Buffer }> {
         const today = formatDate(new Date(), 'dd.mm.yyyy');
 
-        const fontBoldBuffer = await fs.readFile(
-            path.resolve(FontsDirectoryPath, 'Inter', 'bold.ttf'),
+        const pdfDoc = await PDFDocument.load(
+            this.assignmentTemplates.parental,
         );
-        const fontRegularBuffer = await fs.readFile(
-            path.resolve(FontsDirectoryPath, 'Inter', 'regular.ttf'),
-        );
-        const fontMediumBuffer = await fs.readFile(
-            path.resolve(FontsDirectoryPath, 'Inter', 'medium.ttf'),
-        );
-
-        let pngBuffer;
-        if (signatureDataUrl) {
-            const base64 = signatureDataUrl.replace(
-                /^data:image\/png;base64,/,
-                '',
-            );
-            pngBuffer = Buffer.from(base64, 'base64');
-        }
-
-        const templatePath = path.join(
-            AssignmentsDirectoryPath,
-            'parental-assignment_agreement-template.pdf',
-        );
-        const templateBuffer = await fs.readFile(templatePath);
-
-        const pdfDoc = await PDFDocument.load(templateBuffer);
 
         // @ts-ignore
         pdfDoc.registerFontkit(fontkit);
 
-        const fontBold = await pdfDoc.embedFont(fontBoldBuffer);
-        const fontRegular = await pdfDoc.embedFont(fontRegularBuffer);
-        const fontMedium = await pdfDoc.embedFont(fontMediumBuffer);
+        const fontRegular = await pdfDoc.embedFont(this.fonts.Inter.Regular);
+        const fontMedium = await pdfDoc.embedFont(this.fonts.Inter.Medium);
+        const fontBold = await pdfDoc.embedFont(this.fonts.Inter.Bold);
 
         const firstPage = pdfDoc.getPages()[0];
         const fourthPage = pdfDoc.getPages()[3];
 
         let pngImage;
-        if (signatureDataUrl && pngBuffer) {
+        if (signature.imageDataUrl) {
+            const base64 = signature.imageDataUrl.replace(
+                /^data:image\/png;base64,/,
+                '',
+            );
+            const pngBuffer = Buffer.from(base64, 'base64');
             pngImage = await pdfDoc.embedPng(pngBuffer);
         }
 
@@ -374,7 +242,7 @@ export class DocumentAssignmentService {
         });
 
         firstPage.drawText(
-            `${documentData.parentFirstName} ${documentData.parentLastName}`,
+            `${assignmentData.parentFirstName} ${assignmentData.parentLastName}`,
             {
                 x: 67,
                 y: 585,
@@ -385,7 +253,7 @@ export class DocumentAssignmentService {
         );
 
         firstPage.drawText(
-            `${documentData.firstName} ${documentData.lastName}`,
+            `${assignmentData.firstName} ${assignmentData.lastName}`,
             {
                 x: 304,
                 y: 585,
@@ -396,7 +264,7 @@ export class DocumentAssignmentService {
         );
 
         firstPage.drawText(
-            formatDate(documentData.minorBirthday, 'dd.mm.yyyy'),
+            formatDate(assignmentData.minorBirthday, 'dd.mm.yyyy'),
             {
                 x: 304,
                 y: 543,
@@ -406,7 +274,7 @@ export class DocumentAssignmentService {
             },
         );
 
-        firstPage.drawText(documentData.address, {
+        firstPage.drawText(assignmentData.address, {
             x: 67,
             y: 543,
             size: 10.5,
@@ -414,7 +282,7 @@ export class DocumentAssignmentService {
             font: fontBold,
         });
 
-        firstPage.drawText(documentData.claimId, {
+        firstPage.drawText(assignmentData.claimId, {
             x: 130,
             y: 453,
             size: 10.5,
@@ -422,7 +290,7 @@ export class DocumentAssignmentService {
             font: fontRegular,
         });
 
-        firstPage.drawText(documentData.airlineName, {
+        firstPage.drawText(assignmentData.airlineName, {
             x: 130,
             y: 422,
             size: 10.5,
@@ -430,7 +298,7 @@ export class DocumentAssignmentService {
             font: fontRegular,
         });
 
-        firstPage.drawText(documentData.flightNumber, {
+        firstPage.drawText(assignmentData.flightNumber, {
             x: 370,
             y: 453,
             size: 10.5,
@@ -438,7 +306,7 @@ export class DocumentAssignmentService {
             font: fontRegular,
         });
 
-        firstPage.drawText(formatDate(documentData.date, 'dd.mm.yyyy'), {
+        firstPage.drawText(formatDate(assignmentData.date, 'dd.mm.yyyy'), {
             x: 370,
             y: 422,
             size: 10.5,
@@ -447,7 +315,7 @@ export class DocumentAssignmentService {
         });
 
         fourthPage.drawText(
-            `${documentData.parentFirstName} ${documentData.parentLastName}`,
+            `${assignmentData.parentFirstName} ${assignmentData.parentLastName}`,
             {
                 x: 55,
                 y: 556,
@@ -466,91 +334,59 @@ export class DocumentAssignmentService {
             });
         }
 
-        const pdfBytes = await pdfDoc.save();
-
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-        const fileName = `${uniqueSuffix}.pdf`;
-        const filePath = path.join(UPLOAD_DIRECTORY_PATH, fileName);
-
-        await fs.writeFile(filePath, pdfBytes);
-
-        if (signatureTemplatePath) {
-            await this.insertParentalSignatureFromSource(
-                signatureTemplatePath,
-                filePath,
-                filePath,
-                isOldAssignment,
-                {
+        if (signature.sourceS3Key) {
+            await this.insertSignatureFromSource({
+                sourceKey: signature.sourceS3Key,
+                targetPage: fourthPage,
+                signatureRect: {
                     width: 160,
                     height: 70,
                     x: 110,
                     y: 445,
                     page: 3,
                 },
-            );
+            });
         }
 
+        const pdfBytes = await pdfDoc.save();
+        const pdfBuffer = Buffer.from(pdfBytes);
+
         return {
-            path: filePath,
-            buffer: Buffer.from(pdfBytes),
+            buffer: pdfBuffer,
         };
     }
 
     async saveSignaturePdf(
-        signatureDataUrl: string | null,
-        documentData: {
-            claimId: string;
-            firstName: string;
-            lastName: string;
-            address: string;
-            date: Date;
-            flightNumber: string;
-            airlineName: string;
-        },
-        signatureTemplatePath?: string,
-    ): Promise<{ path: string; buffer: Buffer }> {
-        const today = formatDate(new Date(), 'dd.MMMM.yyyy');
-
-        const fontBoldBuffer = await fs.readFile(
-            path.resolve(FontsDirectoryPath, 'Inter', 'bold.ttf'),
-        );
-        const fontRegularBuffer = await fs.readFile(
-            path.resolve(FontsDirectoryPath, 'Inter', 'regular.ttf'),
-        );
-        const fontMediumBuffer = await fs.readFile(
-            path.resolve(FontsDirectoryPath, 'Inter', 'medium.ttf'),
-        );
-
-        let pngBuffer;
-        if (signatureDataUrl) {
-            const base64 = signatureDataUrl.replace(
-                /^data:image\/png;base64,/,
-                '',
+        signature: IAssignmentSignature,
+        assignmentData: IAssignmentData,
+    ): Promise<{ buffer: Buffer }> {
+        if (!!signature.imageDataUrl == !!signature.sourceS3Key) {
+            throw new Error(
+                'You must provide exactly one of: signature.imageDataUrl OR signature.sourceS3Key',
             );
-            pngBuffer = Buffer.from(base64, 'base64');
         }
 
-        const sourceBuffer = await fs.readFile(
-            path.join(
-                AssignmentsDirectoryPath,
-                'assignment_agreement-template.pdf',
-            ),
-        );
+        const today = formatDate(new Date(), 'dd.MMMM.yyyy');
 
-        const pdfDoc = await PDFDocument.load(sourceBuffer);
+        const pdfDoc = await PDFDocument.load(this.assignmentTemplates.regular);
 
         // @ts-ignore
         pdfDoc.registerFontkit(fontkit);
 
-        const fontBold = await pdfDoc.embedFont(fontBoldBuffer);
-        const fontRegular = await pdfDoc.embedFont(fontRegularBuffer);
-        const fontMedium = await pdfDoc.embedFont(fontMediumBuffer);
+        const fontRegular = await pdfDoc.embedFont(this.fonts.Inter.Regular);
+        const fontMedium = await pdfDoc.embedFont(this.fonts.Inter.Medium);
+        const fontBold = await pdfDoc.embedFont(this.fonts.Inter.Bold);
 
         const firstPage = pdfDoc.getPages()[0];
         const thirdPage = pdfDoc.getPages()[2];
 
         let pngImage;
-        if (signatureDataUrl && pngBuffer) {
+        if (signature.imageDataUrl) {
+            const base64 = signature.imageDataUrl.replace(
+                /^data:image\/png;base64,/,
+                '',
+            );
+            const pngBuffer = Buffer.from(base64, 'base64');
             pngImage = await pdfDoc.embedPng(pngBuffer);
         }
 
@@ -562,7 +398,7 @@ export class DocumentAssignmentService {
             font: fontRegular,
         });
 
-        firstPage.drawText(documentData.address, {
+        firstPage.drawText(assignmentData.address, {
             x: 55,
             y: 605,
             size: 10.5,
@@ -571,7 +407,7 @@ export class DocumentAssignmentService {
         });
 
         firstPage.drawText(
-            `${documentData.firstName} ${documentData.lastName}`,
+            `${assignmentData.firstName} ${assignmentData.lastName}`,
             {
                 x: 55,
                 y: 625,
@@ -581,7 +417,7 @@ export class DocumentAssignmentService {
             },
         );
 
-        firstPage.drawText(documentData.claimId, {
+        firstPage.drawText(assignmentData.claimId, {
             x: 130,
             y: 521,
             size: 10.5,
@@ -589,7 +425,7 @@ export class DocumentAssignmentService {
             font: fontRegular,
         });
 
-        firstPage.drawText(documentData.airlineName, {
+        firstPage.drawText(assignmentData.airlineName, {
             x: 130,
             y: 490,
             size: 10.5,
@@ -597,7 +433,7 @@ export class DocumentAssignmentService {
             font: fontRegular,
         });
 
-        firstPage.drawText(documentData.flightNumber, {
+        firstPage.drawText(assignmentData.flightNumber, {
             x: 370,
             y: 521,
             size: 10.5,
@@ -605,7 +441,7 @@ export class DocumentAssignmentService {
             font: fontRegular,
         });
 
-        firstPage.drawText(formatDate(documentData.date, 'dd.mm.yyyy'), {
+        firstPage.drawText(formatDate(assignmentData.date, 'dd.mm.yyyy'), {
             x: 370,
             y: 490,
             size: 10.5,
@@ -614,7 +450,7 @@ export class DocumentAssignmentService {
         });
 
         thirdPage.drawText(
-            `${documentData.firstName} ${documentData.lastName}`,
+            `${assignmentData.firstName} ${assignmentData.lastName}`,
             {
                 x: 55,
                 y: 264,
@@ -633,30 +469,23 @@ export class DocumentAssignmentService {
             });
         }
 
-        const pdfBytes = await pdfDoc.save();
-
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-        const fileName = `${uniqueSuffix}.pdf`;
-        const filePath = path.join(UPLOAD_DIRECTORY_PATH, fileName);
-
-        await fs.writeFile(filePath, pdfBytes);
-
-        if (signatureTemplatePath) {
-            await this.insertSignatureFromSource(
-                signatureTemplatePath,
-                filePath,
-                filePath,
-                false,
-                {
-                    width: 160,
-                    height: 70,
+        if (signature.sourceS3Key) {
+            await this.insertSignatureFromSource({
+                sourceKey: signature.sourceS3Key,
+                targetPage: thirdPage,
+                signatureRect: {
                     x: 105,
                     y: 157,
+                    width: 160,
+                    height: 70,
                     page: 2,
                 },
-            );
+            });
         }
 
-        return { path: filePath, buffer: Buffer.from(pdfBytes) };
+        const pdfBytes = await pdfDoc.save();
+        const pdfBuffer = Buffer.from(pdfBytes);
+
+        return { buffer: pdfBuffer };
     }
 }

@@ -1,28 +1,25 @@
 import { BadRequestException, UseInterceptors } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
+import { memoryStorage } from 'multer';
 import * as path from 'path';
+import * as lookup from 'mime-types';
 import { ALLOWED_EXTENSIONS, MAX_FILE_SIZE, MAX_FILES } from './constants';
-import { UPLOAD_DIRECTORY_PATH } from '../../constants/paths/UploadsDirectoryPath';
 
-export function DocumentsUploadInterceptor() {
+export function DocumentsUploadInterceptor(fieldName: string = 'documents') {
     return UseInterceptors(
-        FilesInterceptor('documents', MAX_FILES, {
-            storage: diskStorage({
-                destination: UPLOAD_DIRECTORY_PATH,
-                filename: (_req, file, cb) => {
-                    const uniqueSuffix =
-                        Date.now() + '-' + Math.round(Math.random() * 1e9);
-                    const ext = path.extname(file.originalname);
-                    cb(null, `${uniqueSuffix}${ext}`);
-                },
-            }),
+        FilesInterceptor(fieldName, MAX_FILES, {
+            storage: memoryStorage(),
             fileFilter: (_req, file, cb) => {
                 file.originalname = Buffer.from(
                     file.originalname,
                     'latin1',
                 ).toString('utf8');
+
                 const ext = path.extname(file.originalname).toLowerCase();
+
+                file.mimetype =
+                    lookup.lookup(ext) || 'application/octet-stream';
+
                 if (ALLOWED_EXTENSIONS.includes(ext)) {
                     cb(null, true);
                 } else {

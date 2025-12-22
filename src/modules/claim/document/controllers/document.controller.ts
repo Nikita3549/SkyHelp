@@ -29,9 +29,6 @@ import { UploadAdminDocumentsDto } from '../dto/upload-admin-documents.dto';
 import { DocumentService } from '../services/document.service';
 import { GetDocumentDto } from '../dto/get-document.dto';
 import { Response } from 'express';
-import * as path from 'path';
-import * as fs from 'fs';
-import { lookup as mimeLookup } from 'mime-types';
 import { AuthRequest } from '../../../../common/interfaces/AuthRequest.interface';
 import { UploadDocumentsQueryDto } from '../dto/upload-documents-query.dto';
 import { UpdateDocumentTypeDto } from '../dto/update-document-type.dto';
@@ -40,15 +37,14 @@ import { RecentUpdatesService } from '../../recent-updates/recent-updates.servic
 import {
     ClaimRecentUpdatesType,
     DocumentRequestStatus,
-    DocumentType,
     UserRole,
 } from '@prisma/client';
 import { DocumentRequestService } from '../../document-request/document-request.service';
 import { PatchPassengerIdDto } from '../dto/patch-passenger-id.dto';
 import { HttpStatusCode } from 'axios';
 import { RoleGuard } from '../../../../common/guards/role.guard';
-import { GenerateAssignmentDto } from '../dto/generate-assignment.dto';
-import { formatDate } from '../../../../common/utils/formatDate';
+import { S3Service } from '../../../s3/s3.service';
+import { ISignedUrlResponse } from './interfaces/signed-url-response.interface';
 
 @Controller('claims/documents')
 @UseGuards(JwtAuthGuard)
@@ -60,105 +56,18 @@ export class DocumentController {
         private readonly documentRequestService: DocumentRequestService,
     ) {}
 
-    @Post('assignment')
-    @UseGuards(new RoleGuard([UserRole.ADMIN, UserRole.LAWYER, UserRole.AGENT]))
-    async generateAssignment(@Body() dto: GenerateAssignmentDto) {
-        const { passengerId } = dto;
-
-        const passenger =
-            await this.claimService.getCustomerOrOtherPassengerById(
-                passengerId,
-            );
-
-        if (!passenger) {
-            throw new NotFoundException(PASSENGER_NOT_FOUND);
-        }
-
-        const claim = await this.claimService.getClaim(passenger.claimId);
-
-        if (!claim) {
-            console.error(`Passenger ${passengerId} has invalid claimId`);
-            throw new InternalServerErrorException('Known error, check logs');
-        }
-
-        const oldAssignment = (
-            await this.documentService.getDocumentsByPassengerId(passengerId)
-        ).find(
-            (d) =>
-                d.type == DocumentType.ASSIGNMENT &&
-                !d.name?.includes('updated'),
-        );
-
-        if (!oldAssignment) {
-            throw new NotFoundException('Passenger has no assignments');
-        }
-
-        let assignmentFile: { path: string; buffer: Buffer };
-        if (!passenger.isMinor) {
-            assignmentFile = await this.documentService.updateAssignment(
-                oldAssignment.path,
-                {
-                    claimId: claim.id,
-                    airlineName: claim.details.airlines.name,
-                    address: passenger.address,
-                    lastName: passenger.lastName,
-                    firstName: passenger.firstName,
-                    date: claim.details.date,
-                    flightNumber: claim.details.flightNumber,
-                },
-                claim.createdAt <= new Date('2025-10-09'),
-            );
-        } else {
-            assignmentFile =
-                await this.documentService.updateParentalAssignment(
-                    oldAssignment.path,
-                    {
-                        claimId: claim.id,
-                        airlineName: claim.details.airlines.name,
-                        address: passenger.address,
-                        lastName: passenger.lastName,
-                        firstName: passenger.firstName,
-                        date: claim.details.date,
-                        flightNumber: claim.details.flightNumber,
-                        parentFirstName: passenger.parentFirstName!,
-                        parentLastName: passenger.lastName!,
-                        minorBirthday: passenger.birthday!,
-                    },
-                );
-        }
-
-        return (
-            await this.documentService.saveDocuments(
-                [
-                    {
-                        name: `updated_${passenger.firstName}_${passenger.lastName}-${formatDate(claim.details.date, 'dd.mm.yyyy')}-assignment_agreement.pdf`,
-                        path: assignmentFile.path,
-                        buffer: assignmentFile.buffer,
-                        documentType: DocumentType.ASSIGNMENT,
-                        passengerId: passenger.id,
-                    },
-                ],
-                claim.id,
-                true,
-            )
-        )[0];
-    }
-
     @Post('merge')
     async mergeDocuments(@Res() res: Response, @Body() dto: MergeDocumentsDto) {
         const { documentIds } = dto;
         const documents =
             await this.documentService.getDocumentByIds(documentIds);
-        const files = await this.documentService.getExpressMulterFilesFromPaths(
-            documents.map((d) => d.path),
-        );
 
         res.set({
             'Content-Type': 'application/pdf',
             'Content-Disposition': 'attachment; filename=merged.pdf',
         });
 
-        const mergedStream = await this.documentService.mergeFiles(files);
+        const mergedStream = await this.documentService.mergeFiles(documents);
         mergedStream.pipe(res);
     }
 
@@ -214,6 +123,7 @@ export class DocumentController {
                     passengerId,
                     documentType,
                     buffer: doc.buffer,
+                    mimetype: doc.mimetype,
                 };
             }),
             claimId,
@@ -234,7 +144,7 @@ export class DocumentController {
         return documents;
     }
 
-    @Patch('/:documentId/admin')
+    @Patch(':documentId/admin')
     @UseGuards(
         new RoleGuard([
             UserRole.ADMIN,
@@ -259,13 +169,12 @@ export class DocumentController {
         );
     }
 
-    @Get('download')
+    @Get('signed-url')
     async getDocument(
         @Query() query: GetDocumentDto,
         @Req() req: AuthRequest,
-        @Res() res: Response,
-    ) {
-        const { documentId } = query;
+    ): Promise<ISignedUrlResponse> {
+        const { documentId, disposition } = query;
 
         const document = await this.documentService.getDocument(documentId);
 
@@ -279,24 +188,26 @@ export class DocumentController {
             throw new ForbiddenException('You have no rights on this document');
         }
 
-        const filePath = path.resolve(document.path);
-
-        if (!fs.existsSync(filePath)) {
-            throw new NotFoundException(FILE_DOESNT_ON_DISK);
+        if (!document.s3Key) {
+            throw new InternalServerErrorException(
+                'Server cant find s3Key for this document',
+            );
         }
-        const fileName = path.basename(filePath);
-        const mimeType = mimeLookup(filePath) || 'application/octet-stream';
 
-        res.setHeader('Content-Type', mimeType);
-        res.setHeader(
-            'Content-Disposition',
-            `attachment; filename="${encodeURIComponent(fileName)}"`,
+        const { signedUrl } = await this.documentService.getSignedUrl(
+            document.s3Key,
+            {
+                disposition,
+            },
         );
 
-        return res.download(filePath);
+        return {
+            signedUrl,
+            contentType: document.mimetype,
+        };
     }
 
-    @Get('admin')
+    @Get('signed-url/admin')
     @UseGuards(
         new RoleGuard([
             UserRole.ADMIN,
@@ -308,9 +219,8 @@ export class DocumentController {
     )
     async getDocumentAdmin(
         @Query() query: GetDocumentDto,
-        @Res() res: Response,
-    ) {
-        const { documentId } = query;
+    ): Promise<ISignedUrlResponse> {
+        const { documentId, disposition } = query;
 
         const document = await this.documentService.getDocument(documentId);
 
@@ -318,20 +228,23 @@ export class DocumentController {
             throw new NotFoundException(DOCUMENT_NOT_FOUND);
         }
 
-        const filePath = path.resolve(document.path);
-        if (!fs.existsSync(filePath)) {
-            throw new NotFoundException(FILE_DOESNT_ON_DISK);
+        if (!document.s3Key) {
+            throw new InternalServerErrorException(
+                'Server cant find s3Key for this document',
+            );
         }
-        const fileName = path.basename(filePath);
-        const mimeType = mimeLookup(filePath) || 'application/octet-stream';
 
-        res.setHeader('Content-Type', mimeType);
-        res.setHeader(
-            'Content-Disposition',
-            `attachment; filename="${encodeURIComponent(fileName)}"`,
+        const { signedUrl } = await this.documentService.getSignedUrl(
+            document.s3Key,
+            {
+                disposition,
+            },
         );
 
-        return res.download(filePath);
+        return {
+            signedUrl,
+            contentType: document.mimetype,
+        };
     }
 
     @Post()
@@ -357,6 +270,7 @@ export class DocumentController {
                     passengerId,
                     documentType,
                     buffer: doc.buffer,
+                    mimetype: doc.mimetype,
                 };
             }),
             claimId,

@@ -1,7 +1,9 @@
 model Document {
   id          String       @id @default(cuid()) @map("id")
   name        String       @map("name")
-  path        String       @map("path")
+  s3Key       String?      @map("s3_key")
+  path        String?      @map("path")
+  mimetype    String?      @map("mimetype")
   type        DocumentType @default(DOCUMENT)
   claimId     String       @map("claim_id")
   passengerId String       @default("") @map("passenger_id")

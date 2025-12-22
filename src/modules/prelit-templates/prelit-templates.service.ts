@@ -41,11 +41,6 @@ export class PrelitTemplatesService {
 
         const pdfBytes = await templatePdfDoc.save();
 
-        const fileName = `test.pdf`;
-        const filePath = path.join(UPLOAD_DIRECTORY_PATH, fileName);
-
-        await fs.writeFile(filePath, pdfBytes);
-
         return pdfBytes;
     }
 }

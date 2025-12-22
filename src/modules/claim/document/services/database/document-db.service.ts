@@ -45,9 +45,11 @@ export class DocumentDbService {
     async saveMany(
         documents: {
             name: string;
-            path: string;
+            path: string | null;
             passengerId: string;
             documentType: DocumentType;
+            s3Key: string;
+            mimetype: string;
         }[],
         claimId: string,
         isPublic: boolean = false,
@@ -61,6 +63,8 @@ export class DocumentDbService {
                         claimId,
                         passengerId: doc.passengerId,
                         type: doc.documentType,
+                        s3Key: doc.s3Key,
+                        mimetype: doc.mimetype,
                     },
                     select: isPublic ? this.getPublicDataSelect() : undefined,
                 }),

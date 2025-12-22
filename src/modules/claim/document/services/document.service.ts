@@ -4,6 +4,12 @@ import { DocumentDbService } from './database/document-db.service';
 import { DocumentAssignmentService } from './assignment/document-assignment.service';
 import { DocumentFileService } from './file/document-file.service';
 import { S3Service } from '../../../s3/s3.service';
+import { IParentalAssignmentData } from './assignment/interfaces/parental-assignment-data.interface';
+import { IAssignmentData } from './assignment/interfaces/assignment-data.interface';
+import { IAssignmentSignature } from './assignment/interfaces/assignment-signature.interface';
+import { SignedUrlDisposition } from '../../../s3/enums/signed-url-disposition.enum';
+import { generateClaimDocumentKey } from '../../../../common/utils/generate-claim-document-key';
+import { IGetSignedUrlOptions } from '../../../s3/interfaces/get-signed-url-options.interfaces';
 
 @Injectable()
 export class DocumentService {
@@ -22,105 +28,38 @@ export class DocumentService {
         );
     }
 
-    async updateParentalAssignment(
-        sourcePath: string,
-        assignmentData: {
-            claimId: string;
-            address: string;
-            airlineName: string;
-            date: Date;
-            firstName: string;
-            lastName: string;
-            flightNumber: string;
-            minorBirthday: Date;
-            parentFirstName: string;
-            parentLastName: string;
-        },
-    ): Promise<{ path: string; buffer: Buffer }> {
-        return this.documentAssignmentService.updateParentalAssignment(
-            sourcePath,
-            assignmentData,
-        );
-    }
-
-    async updateAssignment(
-        sourcePath: string,
-        assignmentData: {
-            claimId: string;
-            address: string;
-            airlineName: string;
-            date: Date;
-            firstName: string;
-            lastName: string;
-            flightNumber: string;
-        },
-        isOldAssignment: boolean,
-    ): Promise<{ path: string; buffer: Buffer }> {
-        return this.documentAssignmentService.updateAssignment(
-            sourcePath,
-            assignmentData,
-            isOldAssignment,
-        );
-    }
-
     async saveParentalSignaturePdf(
-        signatureDataUrl: string | null,
-        documentData: {
-            claimId: string;
-            firstName: string;
-            lastName: string;
-            address: string;
-            date: Date;
-            flightNumber: string;
-            airlineName: string;
-            parentFirstName: string;
-            parentLastName: string;
-            minorBirthday: Date;
-        },
-        signatureTemplatePath?: string,
-        isOldAssignment: boolean = false,
+        signature: IAssignmentSignature,
+        documentData: IParentalAssignmentData,
     ) {
         return this.documentAssignmentService.saveParentalSignaturePdf(
-            signatureDataUrl,
+            signature,
             documentData,
-            signatureTemplatePath,
-            isOldAssignment,
         );
     }
 
     async saveSignaturePdf(
-        signatureDataUrl: string | null,
-        documentData: {
-            claimId: string;
-            firstName: string;
-            lastName: string;
-            address: string;
-            date: Date;
-            flightNumber: string;
-            airlineName: string;
-        },
-        signatureTemplatePath?: string,
+        signature: IAssignmentSignature,
+        documentData: IAssignmentData,
     ) {
         return this.documentAssignmentService.saveSignaturePdf(
-            signatureDataUrl,
+            signature,
             documentData,
-            signatureTemplatePath,
         );
     }
 
     // ------------------ FILE ------------------
-    async mergeFiles(
-        files: Express.Multer.File[],
-    ): Promise<NodeJS.ReadableStream> {
-        return this.documentFileService.mergeFiles(files);
+    async mergeFiles(documents: Document[]): Promise<NodeJS.ReadableStream> {
+        return this.documentFileService.mergeFiles(documents);
     }
 
-    async getExpressMulterFilesFromPaths(
-        filePaths: string[],
-    ): Promise<Express.Multer.File[]> {
-        return this.documentFileService.getExpressMulterFilesFromPaths(
-            filePaths,
-        );
+    async getSignedUrl(
+        documentKey: string,
+        options?: IGetSignedUrlOptions,
+    ): Promise<{ signedUrl: string }> {
+        return {
+            signedUrl: await this.S3Service.getSignedUrl(documentKey, options),
+        };
     }
 
     // ------------------ DATABASE ------------------
@@ -144,10 +83,6 @@ export class DocumentService {
         );
     }
 
-    async getDocumentsByPassengerId(passengerId: string): Promise<Document[]> {
-        return this.documentDbService.getByPassengerId(passengerId);
-    }
-
     async getDocumentByIds(ids: string[]) {
         return this.documentDbService.getMany(ids);
     }
@@ -155,22 +90,33 @@ export class DocumentService {
     async saveDocuments(
         documents: {
             name: string;
-            path: string;
             passengerId: string;
             documentType: DocumentType;
             buffer: Buffer;
+            mimetype: string;
         }[],
         claimId: string,
         isPublic: boolean = false,
     ): Promise<Document[]> {
-        // for (let document of documents) {
-        //     await this.S3Service.uploadFile({
-        //         claimId,
-        //         filename: document.name,
-        //         buffer: document.buffer,
-        //     });
-        // }
+        const documentWithKeys = await Promise.all(
+            documents.map(async (doc) => {
+                const key = await this.S3Service.uploadFile({
+                    s3Key: generateClaimDocumentKey(claimId, doc.name),
+                    fileName: doc.name,
+                    buffer: doc.buffer,
+                    contentType: doc.mimetype,
+                });
 
-        return this.documentDbService.saveMany(documents, claimId, isPublic);
+                return {
+                    ...doc,
+                    s3Key: key,
+                    path: null,
+                };
+            }),
+        );
+
+        const docsToSave = documentWithKeys.map(({ buffer, ...rest }) => rest);
+
+        return this.documentDbService.saveMany(docsToSave, claimId, isPublic);
     }
 }

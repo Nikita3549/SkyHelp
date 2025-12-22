@@ -18,6 +18,10 @@ import { UPLOAD_DIRECTORY_PATH } from '../../common/constants/paths/UploadsDirec
 import { EmailCategory } from './enums/email-type.enum';
 import { MINUTE } from '../../common/constants/time.constants';
 import Gmail = gmail_v1.Gmail;
+import { S3Service } from '../s3/s3.service';
+import * as lookup from 'mime-types';
+import { generateEmailAttachmentKey } from './utils/generate-email-attachment-key';
+import { Email } from '@prisma/client';
 
 @Injectable()
 export class GmailService implements OnModuleInit {
@@ -28,6 +32,7 @@ export class GmailService implements OnModuleInit {
 
     constructor(
         private readonly configService: ConfigService,
+        private readonly S3Service: S3Service,
         private readonly claimService: ClaimService,
         @Inject(forwardRef(() => GmailOfficeAccountService))
         readonly office: GmailOfficeAccountService,
@@ -469,19 +474,28 @@ export class GmailService implements OnModuleInit {
         );
     }
 
-    async uploadFileBuffer(file: { filename: string; data: Buffer }) {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    async uploadFileBuffer(
+        file: { filename: string; data: Buffer },
+        email: Email,
+    ): Promise<{ s3Key: string }> {
         const ext = path.extname(file.filename);
-        const fileName = `${uniqueSuffix}${ext}`;
 
-        const uploadDir = UPLOAD_DIRECTORY_PATH;
+        const mimetype = lookup.lookup(ext) || 'application/octet-stream';
 
-        await fs.mkdir(uploadDir, { recursive: true });
+        const s3Key = await this.S3Service.uploadFile({
+            fileName: file.filename,
+            buffer: file.data,
+            contentType: mimetype,
+            s3Key: generateEmailAttachmentKey(
+                email.gmailThreadId,
+                email.id,
+                file.filename,
+            ),
+        });
 
-        const filePath = path.join(uploadDir, fileName);
-        await fs.writeFile(filePath, file.data);
-
-        return filePath;
+        return {
+            s3Key,
+        };
     }
 
     getFromHeaderTo(message: gmail_v1.Schema$Message): string[] {

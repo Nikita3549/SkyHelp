@@ -79,10 +79,10 @@ export class PublicDocumentController {
             files.map((doc, index) => {
                 return {
                     name: doc.originalname,
-                    path: doc.path,
                     passengerId,
                     documentType: parsed[index],
                     buffer: doc.buffer,
+                    mimetype: doc.mimetype,
                 };
             }),
             claimId,

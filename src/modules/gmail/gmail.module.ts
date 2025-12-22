@@ -5,6 +5,7 @@ import { GmailOfficeAccountModule } from './accounts/gmail-office-account/gmail-
 import { AttachmentModule } from './attachment/attachment.module';
 import { EmailModule } from './email/email.module';
 import { GmailNoreplyAccountModule } from './accounts/gmail-noreply-account/gmail-noreply-account.module';
+import { S3Module } from '../s3/s3.module';
 
 @Module({
     imports: [
@@ -14,6 +15,7 @@ import { GmailNoreplyAccountModule } from './accounts/gmail-noreply-account/gmai
         AttachmentModule,
         EmailModule,
         GmailNoreplyAccountModule,
+        S3Module,
     ],
     providers: [GmailService],
     exports: [GmailService],

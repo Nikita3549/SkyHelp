@@ -233,7 +233,11 @@ export class PublicOtherPassengerController {
             }
         }
 
-        let file: { path: string; buffer: Buffer };
+        let file: { buffer: Buffer };
+        const assignmentFileName = generateAssignmentName(
+            passenger.firstName,
+            passenger.lastName,
+        );
 
         if (passenger.isMinor) {
             if (
@@ -248,13 +252,16 @@ export class PublicOtherPassengerController {
             }
 
             file = await this.documentService.saveParentalSignaturePdf(
-                signature,
+                {
+                    imageDataUrl: signature,
+                },
                 {
                     firstName: passenger.firstName,
                     lastName: passenger.lastName,
                     flightNumber: claim.details.flightNumber,
                     date: claim.details.date,
                     address: passenger.address,
+                    fileName: assignmentFileName,
                     claimId: claim.id,
                     airlineName: claim.details.airlines.name,
                     parentFirstName: passenger.parentFirstName,
@@ -263,28 +270,31 @@ export class PublicOtherPassengerController {
                 },
             );
         } else {
-            file = await this.documentService.saveSignaturePdf(signature, {
-                firstName: passenger.firstName,
-                lastName: passenger.lastName,
-                flightNumber: claim.details.flightNumber,
-                date: claim.details.date,
-                address: passenger.address,
-                claimId: claim.id,
-                airlineName: claim.details.airlines.name,
-            });
+            file = await this.documentService.saveSignaturePdf(
+                {
+                    imageDataUrl: signature,
+                },
+                {
+                    firstName: passenger.firstName,
+                    lastName: passenger.lastName,
+                    flightNumber: claim.details.flightNumber,
+                    date: claim.details.date,
+                    address: passenger.address,
+                    claimId: claim.id,
+                    airlineName: claim.details.airlines.name,
+                    fileName: assignmentFileName,
+                },
+            );
         }
 
         const documents = await this.documentService.saveDocuments(
             [
                 {
-                    name: generateAssignmentName(
-                        passenger.firstName,
-                        passenger.lastName,
-                    ),
+                    name: assignmentFileName,
                     passengerId: passenger.id,
                     documentType: DocumentType.ASSIGNMENT,
-                    path: file.path,
                     buffer: file.buffer,
+                    mimetype: 'application/pdf',
                 },
             ],
             passenger.claimId,
@@ -383,10 +393,10 @@ export class PublicOtherPassengerController {
             files.map((doc, index) => {
                 return {
                     name: doc.originalname,
-                    path: doc.path,
                     passengerId,
                     documentType: documentTypes[index],
                     buffer: doc.buffer,
+                    mimetype: doc.mimetype,
                 };
             }),
             claimId,

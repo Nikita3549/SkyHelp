@@ -153,16 +153,19 @@ export class GmailOfficeAccountService implements OnModuleInit {
                         this.oauth2Client,
                     );
 
-                const path = await this.gmailService.uploadFileBuffer({
-                    filename,
-                    data,
-                });
+                const { s3Key } = await this.gmailService.uploadFileBuffer(
+                    {
+                        filename,
+                        data,
+                    },
+                    email,
+                );
 
                 await this.gmailService.attachment.saveAttachment({
                     filename,
                     mimeType,
                     size: attachment.size,
-                    path,
+                    s3Key,
                     emailId: email.id,
                 });
             })();

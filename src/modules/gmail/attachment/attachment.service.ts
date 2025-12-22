@@ -1,13 +1,27 @@
 import { Injectable } from '@nestjs/common';
-import * as fs from 'fs/promises';
 import { PrismaService } from '../../prisma/prisma.service';
+import { S3Service } from '../../s3/s3.service';
+import { IGetSignedUrlOptions } from '../../s3/interfaces/get-signed-url-options.interfaces';
 
 @Injectable()
 export class AttachmentService {
-    constructor(private readonly prisma: PrismaService) {}
+    constructor(
+        private readonly prisma: PrismaService,
+        private readonly S3Service: S3Service,
+    ) {}
 
-    async readAttachment(attachmentPath: string) {
-        return await fs.readFile(attachmentPath);
+    async readAttachment(
+        attachmentS3Key: string,
+        options?: IGetSignedUrlOptions,
+    ): Promise<{ signedUrl: string }> {
+        const signedUrl = await this.S3Service.getSignedUrl(
+            attachmentS3Key,
+            options,
+        );
+
+        return {
+            signedUrl,
+        };
     }
 
     async getAttachmentById(attachmentId: string) {
@@ -22,7 +36,8 @@ export class AttachmentService {
         filename: string;
         mimeType: string;
         size?: number;
-        path: string;
+        path?: string;
+        s3Key: string;
         emailId: string;
     }) {
         return this.prisma.attachment.create({

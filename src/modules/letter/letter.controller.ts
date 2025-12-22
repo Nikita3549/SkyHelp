@@ -3,6 +3,7 @@ import {
     Controller,
     ForbiddenException,
     Get,
+    InternalServerErrorException,
     NotFoundException,
     Param,
     Patch,
@@ -33,6 +34,10 @@ import { EmailType, UserRole } from '@prisma/client';
 import { CLAIM_NOT_FOUND } from '../claim/constants';
 import { RoleGuard } from '../../common/guards/role.guard';
 import { PatchFavoriteLetter } from './dto/patch-favorite-letter';
+import { ISignedUrlResponse } from '../claim/document/controllers/interfaces/signed-url-response.interface';
+import { logDocumentWithoutS3Key } from '../claim/document/utils/logDocumentWithoutS3Key';
+import { GetAttachmentDto } from './dto/get-attachment.dto';
+import { DocumentsUploadInterceptor } from '../../common/interceptors/documents/documents-upload.interceptor';
 
 @Controller('letters')
 @UseGuards(
@@ -75,7 +80,7 @@ export class LetterController {
     }
 
     @Post()
-    @UseInterceptors(FilesInterceptor('attachments'))
+    @DocumentsUploadInterceptor('attachments')
     async sendLetter(
         @Req() req: AuthRequest,
         @UploadedFiles() files: Express.Multer.File[] = [],
@@ -149,16 +154,19 @@ export class LetterController {
 
         const attachments = await Promise.all(
             files.map(async (file) => {
-                const path = await this.gmailService.uploadFileBuffer({
-                    filename: file.originalname,
-                    data: file.buffer,
-                });
+                const { s3Key } = await this.gmailService.uploadFileBuffer(
+                    {
+                        filename: file.originalname,
+                        data: file.buffer,
+                    },
+                    email,
+                );
 
                 return await this.gmailService.attachment.saveAttachment({
                     filename: file.originalname,
                     mimeType: file.mimetype,
                     size: file.size,
-                    path,
+                    s3Key,
                     emailId: email.id,
                 });
             }),
@@ -181,8 +189,9 @@ export class LetterController {
     async getLetterAttachment(
         @Req() req: AuthRequest,
         @Param('attachmentId') attachmentId: string,
-        @Res() res: Response,
-    ) {
+        @Query() query: GetAttachmentDto,
+    ): Promise<ISignedUrlResponse> {
+        const { disposition } = query;
         const attachment =
             await this.gmailService.attachment.getAttachmentById(attachmentId);
 
@@ -206,17 +215,20 @@ export class LetterController {
             }
         }
 
-        const data = await this.gmailService.attachment.readAttachment(
-            attachment.path,
+        if (!attachment.s3Key) {
+            logDocumentWithoutS3Key(`attachment - ${attachment.id}`);
+            throw new InternalServerErrorException();
+        }
+
+        const { signedUrl } = await this.gmailService.attachment.readAttachment(
+            attachment.s3Key,
+            { disposition },
         );
 
-        res.set({
-            'Content-Type': attachment.mimeType,
-            'Content-Disposition': `attachment; filename="${attachment.filename}"`,
-            'Content-Length': data.length,
-        });
-
-        res.send(data);
+        return {
+            signedUrl,
+            contentType: attachment.mimeType,
+        };
     }
 
     @Patch(':letterId')
