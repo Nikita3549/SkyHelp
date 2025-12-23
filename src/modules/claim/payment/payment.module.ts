@@ -9,6 +9,7 @@ import { NotificationModule } from '../../notification/notification.module';
 import { RequestPaymentDetailsProcessor } from '../processors/request-payment-details.processor';
 import { TokenModule } from '../../token/token.module';
 import { PaymentPublicController } from './controllers/payment-public.controller';
+import { ActivityModule } from '../activity/activity.module';
 
 @Module({
     imports: [
@@ -19,6 +20,7 @@ import { PaymentPublicController } from './controllers/payment-public.controller
         forwardRef(() => NotificationModule),
         forwardRef(() => GenerateLinksModule),
         TokenModule,
+        ActivityModule,
     ],
     controllers: [PaymentController, PaymentPublicController],
     providers: [PaymentService, RequestPaymentDetailsProcessor],
