@@ -2883,7 +2883,7 @@
     "Ticket.recoveredForCustomers": "Возвращено клиентам — мы помогаем пассажирам получить заслуженную компенсацию",
     "Ticket.poweredClaimProcessing": "Автоматизированная обработка заявок — передовые алгоритмы анализируют вашу заявку за секунды",
     "Ticket.successRate": "Процент успешных заявок — наша команда эффективно ведёт переговоры с авиакомпаниями",
-    "Ticket.claimsDataInfo": "На основе данных заявок за последние 3 года",
+    "Ticket.claimsDataInfo": "На основе данных заявок за последние 2 года",
     "WhyChooseUs.titlePrefix": "Почему люди выбирают ",
     "WhyChooseUs.titleHighlight": "SkyHelp",
     "WhyChooseUs.titleSuffix": "?",
