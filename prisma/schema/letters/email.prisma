@@ -1,7 +1,7 @@
 model Email {
   id                String       @id @map("id")
   gmailThreadId     String       @map("gmail_thread_id")
-  messageId         String?      @unique @map("message_id") @db.VarChar(255)
+  messageId         String       @unique @map("message_id") @db.VarChar(255)
   inReplyTo         String?      @map("in_reply_to")
   references        String[]     @map("references")
   subject           String?      @map("subject")

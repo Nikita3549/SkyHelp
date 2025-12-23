@@ -678,7 +678,7 @@ This message was automatically generated.
                 threadId: email.threadId!,
                 subject,
                 normalizedSubject: subject,
-                messageId: email.id,
+                messageId: email.id!,
                 fromName: 'SkyHelp',
                 fromEmail: this.configService.getOrThrow('GMAIL_NOREPLY_EMAIL'),
                 toEmail: to,

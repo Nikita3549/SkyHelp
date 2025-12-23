@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import {
     CancellationNotice,
@@ -44,9 +44,15 @@ import { ViewClaimType } from './enums/view-claim-type.enum';
 import { ProgressService } from './progress/progress.service';
 import { ProgressVariants } from './progress/constants/progresses/progressVariants';
 import { DocumentRequestService } from './document-request/document-request.service';
+import * as path from 'path';
+import * as lookup from 'mime-types';
+import * as fs from 'fs/promises';
+import { generateClaimDocumentKey } from '../../common/utils/generate-claim-document-key';
+import { S3Service } from '../s3/s3.service';
+import { generateEmailAttachmentKey } from '../gmail/utils/generate-email-attachment-key';
 
 @Injectable()
-export class ClaimService {
+export class ClaimService implements OnModuleInit {
     constructor(
         private readonly prisma: PrismaService,
         @InjectQueue(CLAIM_FOLLOWUP_QUEUE_KEY)
@@ -55,7 +61,146 @@ export class ClaimService {
         private readonly tokenService: TokenService,
         private readonly progressService: ProgressService,
         private readonly documentRequestService: DocumentRequestService,
+        private readonly S3Service: S3Service,
     ) {}
+
+    async onModuleInit() {
+        //ADD MIME TYPE FOR EACH DOCUMENT
+        const documentsWithoutMimeType = await this.prisma.document.findMany({
+            where: {
+                mimetype: null,
+                s3Key: null,
+            },
+        });
+
+        for (let i = 0; i < documentsWithoutMimeType.length; i++) {
+            const document = documentsWithoutMimeType[i];
+            try {
+                const filename = document.name;
+                const ext = path.extname(filename).toLowerCase();
+                const mimetype = lookup.lookup(ext) || '*/*';
+
+                await this.prisma.document.update({
+                    data: {
+                        mimetype,
+                    },
+                    where: {
+                        id: document.id,
+                    },
+                });
+
+                console.log(
+                    `mimetype added to ${i} of ${documentsWithoutMimeType.length}`,
+                );
+            } catch (e) {
+                console.error(
+                    `Error: failed to update document mimetype ${document.id}: ${e}`,
+                );
+            }
+        }
+
+        // MIGRATE CLAIM DOCUMENTS
+        const notMigratedDocumentsOnS3 = await this.prisma.document.findMany({
+            where: {
+                isMigratedOnS3: false,
+                s3Key: null,
+            },
+        });
+
+        for (let i = 0; i < notMigratedDocumentsOnS3.length; i++) {
+            const document = notMigratedDocumentsOnS3[i];
+            try {
+                const filePath = document.path;
+                if (!filePath) {
+                    continue;
+                }
+                const buffer = await fs.readFile(filePath);
+
+                const s3Key = generateClaimDocumentKey(
+                    document.claimId,
+                    document.name,
+                );
+
+                await this.S3Service.uploadFile({
+                    buffer,
+                    contentType: document.mimetype || '*/*',
+                    fileName: document.name,
+                    s3Key,
+                });
+                console.log(s3Key);
+
+                await this.prisma.document.update({
+                    data: {
+                        s3Key,
+                        isMigratedOnS3: true,
+                    },
+                    where: {
+                        id: document.id,
+                    },
+                });
+
+                console.log(
+                    `${i} documents were migrated from ${notMigratedDocumentsOnS3.length}`,
+                );
+            } catch (e) {
+                console.error(
+                    `Error: failed to upload document on S3, documentId: ${document.id}, ${e}`,
+                );
+            }
+        }
+
+        // MIGRATE EMAIL ATTACHMENTS
+        const notMigratedAttachmentsOnS3 =
+            await this.prisma.attachment.findMany({
+                where: {
+                    isMigratedOnS3: false,
+                },
+                include: {
+                    email: true,
+                },
+            });
+
+        for (let i = 0; i < notMigratedAttachmentsOnS3.length; i++) {
+            const attachment = notMigratedAttachmentsOnS3[i];
+            try {
+                const filePath = attachment.path;
+                const email = attachment.email;
+                if (!filePath) {
+                    continue;
+                }
+                const buffer = await fs.readFile(filePath);
+
+                const s3Key = generateEmailAttachmentKey(
+                    email.id,
+                    attachment.filename,
+                );
+
+                await this.S3Service.uploadFile({
+                    buffer,
+                    contentType: attachment.mimeType || '*/*',
+                    fileName: attachment.filename,
+                    s3Key,
+                });
+
+                await this.prisma.attachment.update({
+                    data: {
+                        s3Key,
+                        isMigratedOnS3: true,
+                    },
+                    where: {
+                        id: attachment.id,
+                    },
+                });
+                console.log(
+                    `${i} attachments were migrated from ${notMigratedAttachmentsOnS3.length}`,
+                );
+            } catch (e) {
+                console.error(
+                    `Error: failed to upload attachment on S3, attachmentId: ${attachment.id}, ${e}`,
+                );
+            }
+        }
+    }
 
     async handleAllDocumentsUploaded(claimId: string) {
         type RequiredDocumentGroups = {

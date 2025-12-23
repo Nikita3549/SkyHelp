@@ -486,11 +486,7 @@ export class GmailService implements OnModuleInit {
             fileName: file.filename,
             buffer: file.data,
             contentType: mimetype,
-            s3Key: generateEmailAttachmentKey(
-                email.gmailThreadId,
-                email.id,
-                file.filename,
-            ),
+            s3Key: generateEmailAttachmentKey(email.id, file.filename),
         });
 
         return {

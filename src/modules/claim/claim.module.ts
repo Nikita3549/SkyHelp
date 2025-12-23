@@ -35,6 +35,7 @@ import { AddFlightStatusProcessor } from './processors/add-flight-status.process
 import { PartnerModule } from '../referral/partner/partner.module';
 import { FlightStatusModule } from './flight-status/flight-status.module';
 import { ClaimReminderProcessor } from './processors/claim-reminder.processor';
+import { S3Module } from '../s3/s3.module';
 
 @Module({
     imports: [
@@ -72,6 +73,7 @@ import { ClaimReminderProcessor } from './processors/claim-reminder.processor';
         BoardingPassModule,
         forwardRef(() => PartnerModule),
         forwardRef(() => FlightStatusModule),
+        S3Module, // temporary for migration
     ],
     controllers: [ClaimController, AdminController, PublicClaimController],
     providers: [

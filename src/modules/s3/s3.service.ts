@@ -95,13 +95,7 @@ export class S3Service {
     }
 
     async uploadFile(options: UploadFileOptions): Promise<string> {
-        let {
-            buffer,
-            contentType = 'application/octet-stream',
-            metadata = {},
-            s3Key,
-            fileName,
-        } = options;
+        let { buffer, contentType, metadata = {}, s3Key, fileName } = options;
 
         const params: PutObjectCommandInput = {
             Key: s3Key,
@@ -110,7 +104,7 @@ export class S3Service {
             ContentType: contentType,
             Metadata: metadata,
             ContentLength: buffer.length,
-            ContentDisposition: `attachment; filename="${fileName}"`,
+            ContentDisposition: `attachment; filename="${encodeURIComponent(fileName)}"`,
         };
 
         try {

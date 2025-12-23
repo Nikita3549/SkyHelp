@@ -132,7 +132,7 @@ export class LetterController {
         const email = await this.gmailService.email.saveEmail({
             id: message.id!,
             threadId: message.threadId!,
-            messageId: message.id,
+            messageId: message.id!,
             inReplyTo: replyToMessageId || null,
             references: replyToMessageId ? [replyToMessageId] : undefined,
             subject: subject,

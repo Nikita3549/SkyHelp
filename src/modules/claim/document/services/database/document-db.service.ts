@@ -65,6 +65,7 @@ export class DocumentDbService {
                         type: doc.documentType,
                         s3Key: doc.s3Key,
                         mimetype: doc.mimetype,
+                        isMigratedOnS3: true,
                     },
                     select: isPublic ? this.getPublicDataSelect() : undefined,
                 }),

@@ -1,7 +1,7 @@
 export interface GmailEmailPayload {
     id: string;
     threadId: string;
-    messageId?: string | null;
+    messageId: string;
     inReplyTo?: string | null;
     references?: string[];
     subject?: string | null;
