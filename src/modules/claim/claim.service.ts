@@ -140,7 +140,7 @@ export class ClaimService implements OnModuleInit {
                 });
 
                 console.log(
-                    `${i} documents were migrated from ${notMigratedDocumentsOnS3.length}`,
+                    `${document.id} ${i} documents were migrated from ${notMigratedDocumentsOnS3.length}`,
                 );
             } catch (e) {
                 console.error(
@@ -192,7 +192,7 @@ export class ClaimService implements OnModuleInit {
                     },
                 });
                 console.log(
-                    `${i} attachments were migrated from ${notMigratedAttachmentsOnS3.length}`,
+                    `${attachment.id} ${i} attachments were migrated from ${notMigratedAttachmentsOnS3.length}`,
                 );
             } catch (e) {
                 console.error(
