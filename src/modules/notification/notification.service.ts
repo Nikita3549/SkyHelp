@@ -19,6 +19,9 @@ import {
     REMINDER_SENT_TO_AIRLINE_FILENAME,
     REQUEST_PAYMENT_DETAILS_FILENAME,
     SEND_PARTNER_PAYOUT_FILENAME,
+    SPECIALIZED_DOCUMENT_REQUEST_PASSPORT_IMAGE_UNCLEAR_FILENAME,
+    SPECIALIZED_DOCUMENT_REQUEST_PASSPORT_MISMATCH_FILENAME,
+    SPECIALIZED_DOCUMENT_REQUEST_SIGNATURE_MISMATCH_FILENAME,
 } from './constants';
 import { LETTERS_DIRECTORY_PATH } from '../../common/constants/paths/LettersDirectoryPath';
 import { EmailCategory } from '../gmail/enums/email-type.enum';
@@ -26,9 +29,10 @@ import { TokenService } from '../token/token.service';
 import { UnsubscribeJwt } from '../unsubscribe-email/interfaces/unsubscribe-jwt';
 import { UnsubscribeEmailService } from '../unsubscribe-email/unsubscribe-email.service';
 import { gmail_v1 } from 'googleapis';
-import { DocumentType } from '@prisma/client';
+import { DocumentRequestReason, DocumentType } from '@prisma/client';
 import Handlebars from 'handlebars';
 import { ReminderTypeEnum } from './enums/reminder-type.enum';
+import { GenerateLinksService } from '../generate-links/generate-links.service';
 
 @Injectable()
 export class NotificationService {
@@ -37,6 +41,7 @@ export class NotificationService {
         private readonly gmailService: GmailService,
         private readonly tokenService: TokenService,
         private readonly unsubscribeEmailService: UnsubscribeEmailService,
+        private readonly generateLinksService: GenerateLinksService,
     ) {}
 
     async sendNewGeneratedAccount(
@@ -54,7 +59,10 @@ export class NotificationService {
         const emailCategory = EmailCategory.TRANSACTIONAL;
 
         const letterContentHtml = (
-            await this.getLetterContent(GENERATE_NEW_ACCOUNT_FILENAME, language)
+            await this.getLetterContentTemplate(
+                GENERATE_NEW_ACCOUNT_FILENAME,
+                language,
+            )
         )
             .replace('{{email}}', userData.email)
             .replace('{{password}}', userData.password)
@@ -119,7 +127,7 @@ This message was automatically generated.
 
         const layoutHtml = await this.getLayout(to, language, emailCategory);
 
-        const letterTemplateHtml = await this.getLetterContent(
+        const letterTemplateHtml = await this.getLetterContentTemplate(
             CREATE_CLAIM_FILENAME,
             language,
         );
@@ -171,7 +179,7 @@ This message was automatically generated.
 
         const layoutHtml = await this.getLayout(to, language, emailCategory);
 
-        const letterTemplateHtml = await this.getLetterContent(
+        const letterTemplateHtml = await this.getLetterContentTemplate(
             NEW_STATUS_FILENAME,
             language,
         );
@@ -235,7 +243,7 @@ This message was automatically generated.
 
         const layoutHtml = await this.getLayout(to, language, emailCategory);
 
-        const letterTemplateHtmlRaw = await this.getLetterContent(
+        const letterTemplateHtmlRaw = await this.getLetterContentTemplate(
             DOCUMENT_REQUEST_FILENAME,
             language,
         );
@@ -286,7 +294,7 @@ This message was automatically generated.
 
         const layoutHtml = await this.getLayout(to, language, emailCategory);
 
-        const letterTemplateHtml = await this.getLetterContent(
+        const letterTemplateHtml = await this.getLetterContentTemplate(
             MISSING_DOCUMENTS_FILENAME,
             language,
         );
@@ -337,7 +345,7 @@ This message was automatically generated.
 
         const layoutHtml = await this.getLayout(to, language, emailCategory);
 
-        const letterTemplateHtml = await this.getLetterContent(
+        const letterTemplateHtml = await this.getLetterContentTemplate(
             FORGOT_PASSWORD_CODE_FILENAME,
             language,
         );
@@ -384,7 +392,7 @@ This message was automatically generated.
 
         const layoutHtml = await this.getLayout(to, language, emailCategory);
 
-        const letterTemplateHtml = await this.getLetterContent(
+        const letterTemplateHtml = await this.getLetterContentTemplate(
             REGISTER_CODE_FILENAME,
             language,
         );
@@ -426,7 +434,7 @@ This message was automatically generated.
 
         const layoutHtml = await this.getLayout(to, language, emailCategory);
 
-        const letterTemplateHtml = await this.getLetterContent(
+        const letterTemplateHtml = await this.getLetterContentTemplate(
             SEND_PARTNER_PAYOUT_FILENAME,
             language,
         );
@@ -476,7 +484,7 @@ This message was automatically generated.
 
         const emailCategory = EmailCategory.MARKETING;
 
-        const letterTemplateHtml = await this.getLetterContent(
+        const letterTemplateHtml = await this.getLetterContentTemplate(
             FINISH_CLAIM_FILENAME,
             language,
         );
@@ -522,7 +530,7 @@ This message was automatically generated.
         });
     }
 
-    private async getLetterContent(
+    private async getLetterContentTemplate(
         fileName: string,
         language: Languages = Languages.EN,
     ): Promise<string> {
@@ -546,7 +554,7 @@ This message was automatically generated.
 
         const layoutHtml = await this.getLayout(to, language, emailCategory);
 
-        const letterTemplateHtml = await this.getLetterContent(
+        const letterTemplateHtml = await this.getLetterContentTemplate(
             REQUEST_PAYMENT_DETAILS_FILENAME,
             language,
         );
@@ -590,7 +598,7 @@ This message was automatically generated.
 
         const layoutHtml = await this.getLayout(to, language, emailCategory);
 
-        const letterTemplateHtml = await this.getLetterContent(
+        const letterTemplateHtml = await this.getLetterContentTemplate(
             letterData.reminderType == ReminderTypeEnum.CLAIM_RECEIVED
                 ? REMINDER_CLAIM_RECEIVED_FILENAME
                 : letterData.reminderType == ReminderTypeEnum.SENT_TO_AIRLINE
@@ -610,6 +618,119 @@ This message was automatically generated.
         );
 
         const subject = `Current Progress on Your Claim #${letterData.claimId}`;
+        const email = await this.gmailService.noreply.sendEmailHtml(
+            to,
+            subject,
+            letterHtml,
+            emailCategory,
+        );
+
+        await this.saveHtmlEmail({
+            email,
+            subject,
+            claimId: letterData.claimId,
+            contentHtml: letterHtml,
+            to,
+        });
+    }
+
+    async sendSpecializedDocumentRequest(
+        to: string,
+        letterData: {
+            customerName: string;
+            claimId: string;
+            documentRequestReason: DocumentRequestReason;
+            passengerId: string;
+            passengerName: string;
+            isCustomer: boolean;
+        },
+        language: Languages = Languages.EN,
+    ) {
+        const {
+            documentRequestReason,
+            claimId,
+            customerName,
+            passengerId,
+            passengerName,
+            isCustomer,
+        } = letterData;
+        if (documentRequestReason == DocumentRequestReason.MISSING_DOCUMENT) {
+            return;
+        }
+
+        const emailCategory = EmailCategory.TRANSACTIONAL;
+
+        const layoutHtml = await this.getLayout(to, language, emailCategory);
+
+        let letterTemplateFileName: string;
+        let subject: string;
+        let link: string;
+        const jwt = await this.generateLinksService.generateLinkJwt(claimId);
+        switch (documentRequestReason) {
+            case DocumentRequestReason.PASSPORT_IMAGE_UNCLEAR:
+                subject = `Passport image unclear - resubmission required #${claimId}`;
+                letterTemplateFileName =
+                    SPECIALIZED_DOCUMENT_REQUEST_PASSPORT_IMAGE_UNCLEAR_FILENAME;
+                link = await this.generateLinksService.generateUploadDocuments(
+                    passengerId,
+                    claimId,
+                    jwt,
+                    JSON.stringify({
+                        documentTypes: [DocumentType.PASSPORT],
+                    }),
+                    passengerName,
+                );
+                break;
+            case DocumentRequestReason.PASSPORT_MISMATCH:
+                subject = `Passport data mismatch #${claimId}`;
+                letterTemplateFileName =
+                    SPECIALIZED_DOCUMENT_REQUEST_PASSPORT_MISMATCH_FILENAME;
+                link = await this.generateLinksService.generateUploadDocuments(
+                    passengerId,
+                    claimId,
+                    jwt,
+                    JSON.stringify({
+                        documentTypes: [DocumentType.PASSPORT],
+                    }),
+                    passengerName,
+                );
+                break;
+            case DocumentRequestReason.SIGNATURE_MISMATCH:
+                subject = `Signature mismatch in submitted documents #${claimId}`;
+                letterTemplateFileName =
+                    SPECIALIZED_DOCUMENT_REQUEST_SIGNATURE_MISMATCH_FILENAME;
+                if (isCustomer) {
+                    link = await this.generateLinksService.generateSignCustomer(
+                        passengerId,
+                        claimId,
+                        jwt,
+                    );
+                } else {
+                    link =
+                        await this.generateLinksService.generateSignOtherPassenger(
+                            passengerId,
+                            jwt,
+                            false,
+                        );
+                }
+
+                break;
+        }
+
+        const letterTemplateHtml = await this.getLetterContentTemplate(
+            letterTemplateFileName,
+            language,
+        );
+
+        const letterContentHtml = letterTemplateHtml
+            .replace('{{customerName}}', customerName)
+            .replace('{{link}}', link);
+
+        const letterHtml = this.setContentInLayout(
+            letterContentHtml,
+            layoutHtml,
+        );
+
         const email = await this.gmailService.noreply.sendEmailHtml(
             to,
             subject,

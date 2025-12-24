@@ -1,5 +1,8 @@
 import { ClaimCustomer, OtherPassenger } from '@prisma/client';
 
-export type BasePassenger =
+export type BasePassenger = (
     | (ClaimCustomer & { claimId: string; isMinor: false })
-    | OtherPassenger;
+    | OtherPassenger
+) & {
+    isCustomer: boolean;
+};

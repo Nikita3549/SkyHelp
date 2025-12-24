@@ -1,5 +1,5 @@
-import { IsEnum, IsString } from 'class-validator';
-import { DocumentRequestType } from '@prisma/client';
+import { IsEnum, IsOptional, IsString } from 'class-validator';
+import { DocumentRequestReason, DocumentRequestType } from '@prisma/client';
 
 export class CreateDocumentRequestDto {
     @IsEnum(DocumentRequestType)
@@ -10,4 +10,8 @@ export class CreateDocumentRequestDto {
 
     @IsString()
     claimId: string;
+
+    @IsEnum(DocumentRequestReason)
+    @IsOptional()
+    reason: DocumentRequestReason = DocumentRequestReason.MISSING_DOCUMENT;
 }

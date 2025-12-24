@@ -1,0 +1,5 @@
+-- CreateEnum
+CREATE TYPE "DocumentRequestReason" AS ENUM ('MISSING_DOCUMENT', 'SIGNATURE_MISSMATCH', 'PASSPORT_IMAGE_UNCLEAR', 'PASSPORT_MISSMATCH');
+
+-- AlterTable
+ALTER TABLE "document_requests" ADD COLUMN     "reason" "DocumentRequestReason" NOT NULL DEFAULT 'MISSING_DOCUMENT';

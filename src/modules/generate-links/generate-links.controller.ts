@@ -43,7 +43,6 @@ import { RoleGuard } from '../../common/guards/role.guard';
 @UseGuards(JwtAuthGuard)
 export class GenerateLinksController {
     constructor(
-        private readonly tokenService: TokenService,
         private readonly generateLinksService: GenerateLinksService,
         private readonly claimService: ClaimService,
         private readonly otherPassengerService: OtherPassengerService,
@@ -86,10 +85,13 @@ export class GenerateLinksController {
 
         let jwt: string;
         if (passenger) {
-            jwt = await this.generateLinkJwt(query.claimId, {
-                id: passenger.id,
-                copiedLinkType: OtherPassengerCopiedLinkType.DOCUMENT,
-            });
+            jwt = await this.generateLinksService.generateLinkJwt(
+                query.claimId,
+                {
+                    id: passenger.id,
+                    copiedLinkType: OtherPassengerCopiedLinkType.DOCUMENT,
+                },
+            );
 
             await this.otherPassengerCopiedLinksService.createIfNotExist(
                 passenger.id,
@@ -97,7 +99,9 @@ export class GenerateLinksController {
                 OtherPassengerCopiedLinkType.DOCUMENT,
             );
         } else if (customer) {
-            jwt = await this.generateLinkJwt(query.claimId);
+            jwt = await this.generateLinksService.generateLinkJwt(
+                query.claimId,
+            );
         } else {
             throw new NotFoundException(PASSENGER_NOT_FOUND);
         }
@@ -154,10 +158,13 @@ export class GenerateLinksController {
 
         let jwt: string;
         if (passenger) {
-            jwt = await this.generateLinkJwt(query.claimId, {
-                id: passenger.id,
-                copiedLinkType: OtherPassengerCopiedLinkType.DOCUMENT,
-            });
+            jwt = await this.generateLinksService.generateLinkJwt(
+                query.claimId,
+                {
+                    id: passenger.id,
+                    copiedLinkType: OtherPassengerCopiedLinkType.DOCUMENT,
+                },
+            );
 
             await this.otherPassengerCopiedLinksService.createIfNotExist(
                 passenger.id,
@@ -165,7 +172,9 @@ export class GenerateLinksController {
                 OtherPassengerCopiedLinkType.DOCUMENT,
             );
         } else if (customer) {
-            jwt = await this.generateLinkJwt(query.claimId);
+            jwt = await this.generateLinksService.generateLinkJwt(
+                query.claimId,
+            );
         } else {
             throw new NotFoundException(PASSENGER_NOT_FOUND);
         }
@@ -188,7 +197,9 @@ export class GenerateLinksController {
 
     @Get('sign-customer')
     async copySignCustomer(@Query() query: SignCustomerDto) {
-        const jwt = await this.generateLinkJwt(query.claimId);
+        const jwt = await this.generateLinksService.generateLinkJwt(
+            query.claimId,
+        );
         const link = await this.generateLinksService.generateSignCustomer(
             query.customerId,
             query.claimId,
@@ -207,10 +218,13 @@ export class GenerateLinksController {
             throw new NotFoundException(PASSENGER_NOT_FOUND);
         }
 
-        const jwt = await this.generateLinkJwt(query.claimId, {
-            id: passenger.id,
-            copiedLinkType: OtherPassengerCopiedLinkType.ASSIGNMENT,
-        });
+        const jwt = await this.generateLinksService.generateLinkJwt(
+            query.claimId,
+            {
+                id: passenger.id,
+                copiedLinkType: OtherPassengerCopiedLinkType.ASSIGNMENT,
+            },
+        );
 
         await this.otherPassengerCopiedLinksService.createIfNotExist(
             passenger.id,
@@ -228,24 +242,6 @@ export class GenerateLinksController {
             requireParentInfo,
         );
         return { link };
-    }
-
-    private async generateLinkJwt(
-        claimId: string,
-        otherPassengerData?: {
-            id: string;
-            copiedLinkType: OtherPassengerCopiedLinkType;
-        },
-    ) {
-        return this.tokenService.generateJWT(
-            {
-                claimId,
-                otherPassengerId: otherPassengerData?.id,
-                otherPassengerCopiedLinkType:
-                    otherPassengerData?.copiedLinkType,
-            },
-            { expiresIn: CONTINUE_LINKS_EXP },
-        );
     }
 }
 
@@ -276,10 +272,13 @@ export class PublicGenerateLinksController {
             throw new NotFoundException(PASSENGER_NOT_FOUND);
         }
 
-        const jwt = await this.generateLinkJwt(token.claimId, {
-            id: passenger.id,
-            copiedLinkType: OtherPassengerCopiedLinkType.ASSIGNMENT,
-        });
+        const jwt = await this.generateLinksService.generateLinkJwt(
+            token.claimId,
+            {
+                id: passenger.id,
+                copiedLinkType: OtherPassengerCopiedLinkType.ASSIGNMENT,
+            },
+        );
 
         await this.otherPassengerCopiedLinksService.createIfNotExist(
             passenger.id,
@@ -318,10 +317,13 @@ export class PublicGenerateLinksController {
             throw new BadRequestException(PASSENGER_NOT_FOUND);
         }
 
-        const jwt = await this.generateLinkJwt(token.claimId, {
-            id: passenger.id,
-            copiedLinkType: OtherPassengerCopiedLinkType.DOCUMENT,
-        });
+        const jwt = await this.generateLinksService.generateLinkJwt(
+            token.claimId,
+            {
+                id: passenger.id,
+                copiedLinkType: OtherPassengerCopiedLinkType.DOCUMENT,
+            },
+        );
         await this.otherPassengerCopiedLinksService.createIfNotExist(
             passenger.id,
             true,
@@ -336,24 +338,6 @@ export class PublicGenerateLinksController {
             `${passenger.firstName} ${passenger.lastName}`,
         );
         return { link };
-    }
-
-    private async generateLinkJwt(
-        claimId: string,
-        otherPassengerData?: {
-            id: string;
-            copiedLinkType: OtherPassengerCopiedLinkType;
-        },
-    ) {
-        return this.tokenService.generateJWT(
-            {
-                claimId,
-                otherPassengerId: otherPassengerData?.id,
-                otherPassengerCopiedLinkType:
-                    otherPassengerData?.copiedLinkType,
-            },
-            { expiresIn: CONTINUE_LINKS_EXP },
-        );
     }
 
     @Post('/boarding-pass/scan')

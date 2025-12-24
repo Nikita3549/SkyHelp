@@ -2,6 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { generateNumericId } from '../../common/utils/generateNumericId';
 import { UrlShortenerService } from './url-shortener/url-shortener.service';
+import { OtherPassengerCopiedLinkType } from '@prisma/client';
+import { CONTINUE_LINKS_EXP } from '../claim/constants';
+import { TokenService } from '../token/token.service';
 
 @Injectable()
 export class GenerateLinksService {
@@ -10,6 +13,7 @@ export class GenerateLinksService {
     constructor(
         private readonly configService: ConfigService,
         private readonly urlShortenerService: UrlShortenerService,
+        private readonly tokenService: TokenService,
     ) {
         this.FRONTEND_URL = this.configService.getOrThrow('FRONTEND_URL');
     }
@@ -18,14 +22,32 @@ export class GenerateLinksService {
         return `${this.FRONTEND_URL}/scan?sessionId=${sessionId}`;
     }
 
+    async generateLinkJwt(
+        claimId: string,
+        otherPassengerData?: {
+            id: string;
+            copiedLinkType: OtherPassengerCopiedLinkType;
+        },
+    ) {
+        return this.tokenService.generateJWT(
+            {
+                claimId,
+                otherPassengerId: otherPassengerData?.id,
+                otherPassengerCopiedLinkType:
+                    otherPassengerData?.copiedLinkType,
+            },
+            { expiresIn: CONTINUE_LINKS_EXP },
+        );
+    }
+
     async generateUploadDocuments(
-        customerId: string,
+        passengerId: string,
         claimId: string,
         jwt: string,
         documentTypes: string,
         passengerName?: string,
     ) {
-        const url = `/documents/customer?customerId=${encodeURIComponent(customerId)}&claimId=${encodeURIComponent(claimId)}&claim=${encodeURIComponent(jwt)}&documentType=${documentTypes}&passengerName=${passengerName}`;
+        const url = `/documents/customer?customerId=${encodeURIComponent(passengerId)}&claimId=${encodeURIComponent(claimId)}&claim=${encodeURIComponent(jwt)}&documentType=${documentTypes}&passengerName=${passengerName}`;
 
         const shortenUrl = await this.urlShortenerService.saveShortenUrl(
             url,

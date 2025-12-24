@@ -1265,6 +1265,7 @@ export class ClaimService implements OnModuleInit {
                 ...claimCustomer.customer,
                 claimId: claimCustomer.id,
                 isMinor: false,
+                isCustomer: true,
             };
         }
 
@@ -1274,7 +1275,12 @@ export class ClaimService implements OnModuleInit {
             },
         });
 
-        return !otherPassenger ? null : otherPassenger;
+        return !otherPassenger
+            ? null
+            : {
+                  ...otherPassenger,
+                  isCustomer: false,
+              };
     }
 
     async getDuplicates(claimId: string) {

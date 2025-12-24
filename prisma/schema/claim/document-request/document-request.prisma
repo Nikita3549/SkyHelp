@@ -2,6 +2,7 @@ model DocumentRequest {
   id           String                @id @default(cuid())
   type         DocumentRequestType
   status       DocumentRequestStatus @default(ACTIVE)
+  reason       DocumentRequestReason @default(MISSING_DOCUMENT)
   passengerId  String
   documentType DocumentType          @default(DOCUMENT) @map("document_type")
   claimId      String                @map("claim_id")

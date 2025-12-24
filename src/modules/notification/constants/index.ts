@@ -21,3 +21,12 @@ export const REQUEST_PAYMENT_DETAILS_FILENAME = 'requestPaymentDetails.html';
 export const REMINDER_CLAIM_RECEIVED_FILENAME = 'reminders/claimReceived.html';
 export const REMINDER_LEGAL_PROCESS_FILENAME = 'reminders/legalProcess.html';
 export const REMINDER_SENT_TO_AIRLINE_FILENAME = 'reminders/sentToAirline.html';
+
+export const SPECIALIZED_DOCUMENT_REQUEST_PASSPORT_MISMATCH_FILENAME =
+    'specializedDocumentRequests/passportDataMismatch.html';
+
+export const SPECIALIZED_DOCUMENT_REQUEST_PASSPORT_IMAGE_UNCLEAR_FILENAME =
+    'specializedDocumentRequests/passportImageUnclear.html';
+
+export const SPECIALIZED_DOCUMENT_REQUEST_SIGNATURE_MISMATCH_FILENAME =
+    'specializedDocumentRequests/signatureMismatch.html';
