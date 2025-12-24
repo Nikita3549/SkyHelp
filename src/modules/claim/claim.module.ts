@@ -73,7 +73,6 @@ import { S3Module } from '../s3/s3.module';
         BoardingPassModule,
         forwardRef(() => PartnerModule),
         forwardRef(() => FlightStatusModule),
-        S3Module, // temporary for migration
     ],
     controllers: [ClaimController, AdminController, PublicClaimController],
     providers: [
