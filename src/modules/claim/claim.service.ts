@@ -44,12 +44,6 @@ import { ViewClaimType } from './enums/view-claim-type.enum';
 import { ProgressService } from './progress/progress.service';
 import { ProgressVariants } from './progress/constants/progresses/progressVariants';
 import { DocumentRequestService } from './document-request/document-request.service';
-import * as path from 'path';
-import * as lookup from 'mime-types';
-import * as fs from 'fs/promises';
-import { generateClaimDocumentKey } from '../../common/utils/generate-claim-document-key';
-import { S3Service } from '../s3/s3.service';
-import { generateEmailAttachmentKey } from '../gmail/utils/generate-email-attachment-key';
 
 @Injectable()
 export class ClaimService {
@@ -61,7 +55,6 @@ export class ClaimService {
         private readonly tokenService: TokenService,
         private readonly progressService: ProgressService,
         private readonly documentRequestService: DocumentRequestService,
-        private readonly S3Service: S3Service,
     ) {}
 
     async handleAllDocumentsUploaded(claimId: string) {
