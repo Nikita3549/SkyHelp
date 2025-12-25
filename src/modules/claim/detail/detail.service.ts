@@ -41,6 +41,7 @@ export class DetailService {
                 flightNumber: dto.flightNumber,
                 date: new Date(dto.date),
                 bookingRef: dto.bookingRef,
+                airlineLink: dto.airlineLink,
                 airlines: dto.airline
                     ? {
                           update: {

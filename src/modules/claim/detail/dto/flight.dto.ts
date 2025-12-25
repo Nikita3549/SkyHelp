@@ -57,4 +57,8 @@ export class FlightDto {
 
     @IsOptional()
     departureAirport?: AirportUpdateDto;
+
+    @IsOptional()
+    @IsString()
+    airlineLink?: string;
 }

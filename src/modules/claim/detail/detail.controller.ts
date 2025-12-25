@@ -25,7 +25,7 @@ export class DetailController {
 
     @UseGuards(new RoleGuard([UserRole.ADMIN, UserRole.AGENT]))
     @Put('admin')
-    async updateFlight(@Body() dto: FlightDto) {
+    async updateDetails(@Body() dto: FlightDto) {
         const { claimId } = dto;
 
         const claim = await this.claimService.getClaim(claimId);
