@@ -1,6 +1,7 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import {
+    ClaimActivityType,
     ClaimRecentUpdatesStatus,
     ClaimRecentUpdatesType,
     DocumentType,
@@ -80,24 +81,29 @@ export class RecentUpdatesService {
     ) {
         let title: string;
         let description: string;
+        let activityType: ClaimActivityType;
         switch (data.type) {
             case ClaimRecentUpdatesType.DOCUMENT:
                 switch (data.documentType) {
                     case DocumentType.ASSIGNMENT:
                         title = `Assignment uploaded`;
                         description = `New assignment ${data.entityData} uploaded`;
+                        activityType = ClaimActivityType.ASSIGNMENT;
                         break;
                     case DocumentType.BOARDING_PASS:
                         title = `Boarding pass uploaded`;
                         description = `New boarding pass ${data.entityData} uploaded`;
+                        activityType = ClaimActivityType.BOARDING_PASS;
                         break;
                     case DocumentType.ETICKET:
                         title = `E-ticket uploaded`;
                         description = `New boarding pass ${data.entityData} uploaded`;
+                        activityType = ClaimActivityType.ETICKET;
                         break;
                     case DocumentType.PASSPORT:
                         title = `Passport uploaded`;
                         description = `New passport ${data.entityData} uploaded`;
+                        activityType = ClaimActivityType.PASSPORT;
                         break;
                     case DocumentType.AIRLINE_PAYMENT:
                         return;
@@ -106,17 +112,19 @@ export class RecentUpdatesService {
                     default:
                         title = `Document uploaded`;
                         description = `New document ${data.entityData} uploaded`;
+                        activityType = ClaimActivityType.DOCUMENT;
                 }
                 break;
             case ClaimRecentUpdatesType.EMAIL:
                 title = `Email received`;
                 description = `New email from ${data.entityData}`;
+                activityType = ClaimActivityType.EMAIL;
                 break;
         }
 
         await this.activityService.saveActivity(
             {
-                type: data.type,
+                type: activityType,
                 title,
                 description,
             },
