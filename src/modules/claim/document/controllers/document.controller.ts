@@ -136,6 +136,7 @@ export class DocumentController {
                     type: ClaimRecentUpdatesType.DOCUMENT,
                     updatedEntityId: doc.id,
                     entityData: doc.name,
+                    documentType: doc.type,
                 },
                 claimId,
             );
@@ -295,6 +296,7 @@ export class DocumentController {
                     type: ClaimRecentUpdatesType.DOCUMENT,
                     updatedEntityId: doc.id,
                     entityData: doc.name,
+                    documentType: doc.type,
                 },
                 claimId,
             );

@@ -307,6 +307,7 @@ export class PublicOtherPassengerController {
                     type: ClaimRecentUpdatesType.DOCUMENT,
                     updatedEntityId: doc.id,
                     entityData: doc.name,
+                    documentType: doc.type,
                 },
                 passenger.claimId,
             );
@@ -409,6 +410,7 @@ export class PublicOtherPassengerController {
                     type: ClaimRecentUpdatesType.DOCUMENT,
                     updatedEntityId: doc.id,
                     entityData: doc.name,
+                    documentType: doc.type,
                 },
                 claimId,
             );

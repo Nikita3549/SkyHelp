@@ -218,6 +218,7 @@ export class PublicCustomerController {
                     type: ClaimRecentUpdatesType.DOCUMENT,
                     updatedEntityId: doc.id,
                     entityData: doc.name,
+                    documentType: doc.type,
                 },
                 customer.Claim[0].id,
             );

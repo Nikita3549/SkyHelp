@@ -3,6 +3,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 import {
     ClaimRecentUpdatesStatus,
     ClaimRecentUpdatesType,
+    DocumentType,
 } from '@prisma/client';
 import { ClaimService } from '../claim.service';
 import { ActivityService } from '../activity/activity.service';
@@ -20,6 +21,7 @@ export class RecentUpdatesService {
     async saveRecentUpdate(
         recentUpdateData: {
             type: ClaimRecentUpdatesType;
+            documentType?: DocumentType;
             updatedEntityId: string;
             entityData: string; // document name for documents & fromEmail for emails
         },
@@ -40,6 +42,7 @@ export class RecentUpdatesService {
             {
                 type: recentUpdateData.type,
                 entityData: recentUpdateData.entityData,
+                documentType: recentUpdateData.documentType,
             },
             claimId,
         );
@@ -50,7 +53,8 @@ export class RecentUpdatesService {
         return this.prisma.claimRecentUpdates.create({
             data: {
                 claimId,
-                ...omit(recentUpdateData, 'entityData'),
+                type: recentUpdateData.type,
+                updatedEntityId: recentUpdateData.updatedEntityId,
             },
         });
     }
@@ -67,18 +71,45 @@ export class RecentUpdatesService {
     }
 
     private async saveActivity(
-        data: { type: ClaimRecentUpdatesType; entityData: string },
+        data: {
+            type: ClaimRecentUpdatesType;
+            entityData: string;
+            documentType?: DocumentType;
+        },
         claimId: string,
     ) {
         let title: string;
         let description: string;
         switch (data.type) {
             case ClaimRecentUpdatesType.DOCUMENT:
-                title = `Document uploaded`;
-                description = `New document ${data.entityData} uploaded`;
+                switch (data.documentType) {
+                    case DocumentType.ASSIGNMENT:
+                        title = `Assignment uploaded`;
+                        description = `New assignment ${data.entityData} uploaded`;
+                        break;
+                    case DocumentType.BOARDING_PASS:
+                        title = `Boarding pass uploaded`;
+                        description = `New boarding pass ${data.entityData} uploaded`;
+                        break;
+                    case DocumentType.ETICKET:
+                        title = `E-ticket uploaded`;
+                        description = `New boarding pass ${data.entityData} uploaded`;
+                        break;
+                    case DocumentType.PASSPORT:
+                        title = `Passport uploaded`;
+                        description = `New passport ${data.entityData} uploaded`;
+                        break;
+                    case DocumentType.AIRLINE_PAYMENT:
+                        return;
+                    case DocumentType.PASSENGER_PAYOUT:
+                        return;
+                    default:
+                        title = `Document uploaded`;
+                        description = `New document ${data.entityData} uploaded`;
+                }
                 break;
             case ClaimRecentUpdatesType.EMAIL:
-                title = `Receive email`;
+                title = `Email received`;
                 description = `New email from ${data.entityData}`;
                 break;
         }
