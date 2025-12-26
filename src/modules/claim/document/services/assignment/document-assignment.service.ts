@@ -9,10 +9,6 @@ import { FontsDirectoryPath } from '../../../../../common/constants/paths/FontsD
 import { AssignmentsDirectoryPath } from '../../../../../common/constants/paths/AssignmentsDirectoryPath';
 import * as fontkit from 'fontkit';
 import { ClaimService } from '../../../claim.service';
-import {
-    IAssignmentPassenger,
-    ISignatureRectangle,
-} from './interfaces/assignment.interfaces';
 import { DocumentService } from '../document.service';
 import { S3Service } from '../../../../s3/s3.service';
 import { IAssignmentFonts } from './interfaces/assignment-fonts.interface';
@@ -21,6 +17,8 @@ import { IAssignmentData } from './interfaces/assignment-data.interface';
 import { IParentalAssignmentData } from './interfaces/parental-assignment-data.interface';
 import { IAssignmentSignature } from './interfaces/assignment-signature.interface';
 import { logDocumentWithoutS3Key } from '../../utils/logDocumentWithoutS3Key';
+import { ISignatureRectangle } from './interfaces/signature-rectangle.interface';
+import { IAssignmentPassenger } from './interfaces/assignment-passenger.interfaces';
 
 @Injectable()
 export class DocumentAssignmentService implements OnModuleInit {
@@ -138,7 +136,7 @@ export class DocumentAssignmentService implements OnModuleInit {
                             continue;
                         }
                         if (!passenger.isMinor) {
-                            file = await this.saveSignaturePdf(
+                            file = await this.saveSignature(
                                 {
                                     sourceS3Key: assignment.s3Key,
                                 },
@@ -156,7 +154,7 @@ export class DocumentAssignmentService implements OnModuleInit {
                         } else {
                             const otherPassenger = passenger;
 
-                            file = await this.saveParentalSignaturePdf(
+                            file = await this.saveParentalSignature(
                                 {
                                     sourceS3Key: assignment.s3Key,
                                 },
@@ -203,7 +201,7 @@ export class DocumentAssignmentService implements OnModuleInit {
         }
     }
 
-    async saveParentalSignaturePdf(
+    async saveParentalSignature(
         signature: IAssignmentSignature,
         assignmentData: IParentalAssignmentData,
     ): Promise<{ buffer: Buffer }> {
@@ -356,7 +354,7 @@ export class DocumentAssignmentService implements OnModuleInit {
         };
     }
 
-    async saveSignaturePdf(
+    async saveSignature(
         signature: IAssignmentSignature,
         assignmentData: IAssignmentData,
     ): Promise<{ buffer: Buffer }> {

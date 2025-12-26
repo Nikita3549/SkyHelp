@@ -166,38 +166,18 @@ export class PublicCustomerController {
             throw new NotFoundException(CLAIM_NOT_FOUND);
         }
 
-        const assignmentFileName = generateAssignmentName(
-            customer.firstName,
-            customer.lastName,
-        );
-        const file = await this.documentService.saveSignaturePdf(
+        await this.documentService.saveSignature(
             {
                 imageDataUrl: signature,
             },
             {
-                firstName: customer.firstName,
-                lastName: customer.lastName,
-                flightNumber: claim.details.flightNumber,
-                date: claim.details.date,
-                address: customer.address,
                 claimId: claim.id,
-                airlineName: claim.details.airlines.name,
-                fileName: assignmentFileName,
+                passengerId: claim.customer.id,
             },
-        );
-
-        const documents = await this.documentService.saveDocuments(
-            [
-                {
-                    buffer: file.buffer,
-                    name: assignmentFileName,
-                    passengerId: claim.customer.id,
-                    documentType: DocumentType.ASSIGNMENT,
-                    mimetype: 'application/pdf',
-                },
-            ],
-            customer.Claim[0].id,
-            true,
+            {
+                saveRecentUpdate: true,
+                checkIfAllDocumentsUploaded: true,
+            },
         );
 
         if (documentRequestId) {
@@ -212,20 +192,6 @@ export class PublicCustomerController {
             }
         }
 
-        documents.forEach((doc) => {
-            this.recentUpdatesService.saveRecentUpdate(
-                {
-                    type: ClaimRecentUpdatesType.DOCUMENT,
-                    updatedEntityId: doc.id,
-                    entityData: doc.name,
-                    documentType: doc.type,
-                },
-                customer.Claim[0].id,
-            );
-        });
-
         await this.customerService.setIsSignedCustomer(customerId, true);
-
-        await this.claimService.handleAllDocumentsUploaded(claim.id);
     }
 }

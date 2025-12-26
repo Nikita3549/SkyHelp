@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Document, DocumentType } from '@prisma/client';
+import { ClaimRecentUpdatesType, Document, DocumentType } from '@prisma/client';
 import { DocumentDbService } from './database/document-db.service';
 import { DocumentAssignmentService } from './assignment/document-assignment.service';
 import { DocumentFileService } from './file/document-file.service';
@@ -7,9 +7,16 @@ import { S3Service } from '../../../s3/s3.service';
 import { IParentalAssignmentData } from './assignment/interfaces/parental-assignment-data.interface';
 import { IAssignmentData } from './assignment/interfaces/assignment-data.interface';
 import { IAssignmentSignature } from './assignment/interfaces/assignment-signature.interface';
-import { SignedUrlDisposition } from '../../../s3/enums/signed-url-disposition.enum';
 import { generateClaimDocumentKey } from '../../../../common/utils/generate-claim-document-key';
 import { IGetSignedUrlOptions } from '../../../s3/interfaces/get-signed-url-options.interfaces';
+import { IDocumentData } from './database/interfaces/document-data.interface';
+import { ISaveSignatureOptions } from './assignment/interfaces/save-signature-options.interface';
+import { ISaveSignatureData } from '../interfaces/save-signature-data.interface';
+import { ClaimService } from '../../claim.service';
+import { InjectQueue } from '@nestjs/bullmq';
+import { GENERATE_ASSIGNMENT_QUEUE_KEY } from '../processors/constants/generate-assignment-queue-key';
+import { Queue } from 'bullmq';
+import { IGenerateAssignmentJobData } from '../processors/interfaces/generateAssignmentJobData';
 
 @Injectable()
 export class DocumentService {
@@ -18,6 +25,9 @@ export class DocumentService {
         private readonly documentFileService: DocumentFileService,
         private readonly documentAssignmentService: DocumentAssignmentService,
         private readonly S3Service: S3Service,
+        private readonly claimService: ClaimService,
+        @InjectQueue(GENERATE_ASSIGNMENT_QUEUE_KEY)
+        private readonly generateAssignmentQueue: Queue,
     ) {}
 
     // ------------------ ASSIGNMENT ------------------
@@ -28,24 +38,55 @@ export class DocumentService {
         );
     }
 
-    async saveParentalSignaturePdf(
+    async saveSignature(
         signature: IAssignmentSignature,
-        documentData: IParentalAssignmentData,
+        saveSignatureData: ISaveSignatureData,
+        options?: ISaveSignatureOptions,
     ) {
-        return this.documentAssignmentService.saveParentalSignaturePdf(
-            signature,
-            documentData,
-        );
-    }
+        const { claimId, passengerId } = saveSignatureData;
 
-    async saveSignaturePdf(
-        signature: IAssignmentSignature,
-        documentData: IAssignmentData,
-    ) {
-        return this.documentAssignmentService.saveSignaturePdf(
+        const claim = await this.claimService.getClaim(claimId);
+        if (!claim) {
+            throw new Error(
+                `Claim not found while saving signature ${claimId}`,
+            );
+        }
+
+        const passenger =
+            await this.claimService.getCustomerOrOtherPassengerById(
+                passengerId,
+            );
+        if (!passenger) {
+            throw new Error(
+                `Passenger not found while saving signature passengerId: ${passengerId}, claimId: ${claimId}`,
+            );
+        }
+
+        if (options?.isParental) {
+            if (passenger.isCustomer) {
+                throw new Error(
+                    `Trying to save parental signature for customer passengerId: ${passengerId}`,
+                );
+            }
+            if (
+                !passenger.birthday ||
+                !passenger.parentFirstName ||
+                !passenger.parentLastName
+            ) {
+                throw new Error(
+                    `Trying to save parental signature for passenger without birthday or parentFirstName or parentLastName: ${passengerId}`,
+                );
+            }
+        }
+
+        const jobData: IGenerateAssignmentJobData = {
+            claim,
+            passenger,
             signature,
-            documentData,
-        );
+            options,
+        };
+
+        await this.generateAssignmentQueue.add('generateAssignment', jobData);
     }
 
     // ------------------ FILE ------------------
@@ -88,13 +129,7 @@ export class DocumentService {
     }
 
     async saveDocuments(
-        documents: {
-            name: string;
-            passengerId: string;
-            documentType: DocumentType;
-            buffer: Buffer;
-            mimetype: string;
-        }[],
+        documents: IDocumentData[],
         claimId: string,
         isPublic: boolean = false,
     ): Promise<Document[]> {

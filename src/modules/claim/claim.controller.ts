@@ -268,39 +268,14 @@ export class PublicClaimController {
             throw new NotFoundException(CLAIM_NOT_FOUND);
         }
 
-        const assignmentFileName = generateAssignmentName(
-            claim.customer.firstName,
-            claim.customer.lastName,
-        );
-
-        const file = await this.documentService.saveSignaturePdf(
+        await this.documentService.saveSignature(
             {
                 imageDataUrl: signature,
             },
             {
-                firstName: claim.customer.firstName,
-                lastName: claim.customer.lastName,
-                flightNumber: claim.details.flightNumber,
-                date: claim.details.date,
-                address: claim.customer.address,
                 claimId: claim.id,
-                airlineName: claim.details.airlines.name,
-                fileName: assignmentFileName,
+                passengerId: claim.customer.id,
             },
-        );
-
-        const documents = await this.documentService.saveDocuments(
-            [
-                {
-                    buffer: file.buffer,
-                    name: assignmentFileName,
-                    passengerId: claim.customer.id,
-                    documentType: DocumentType.ASSIGNMENT,
-                    mimetype: 'application/pdf',
-                },
-            ],
-            claimId,
-            true,
         );
 
         await this.claimService.updateStep(claimId, 7);
@@ -313,7 +288,6 @@ export class PublicClaimController {
                 ...claim.customer,
                 isSigned: true,
             },
-            documents: [...documents],
         };
     }
 

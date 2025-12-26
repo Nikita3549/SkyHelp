@@ -44,6 +44,7 @@ export class DocumentDbService {
 
     async saveMany(
         documents: {
+            id?: string;
             name: string;
             path: string | null;
             passengerId: string;
@@ -58,6 +59,7 @@ export class DocumentDbService {
             documents.map((doc) =>
                 this.prisma.document.create({
                     data: {
+                        id: doc.id,
                         name: doc.name,
                         path: doc.path,
                         claimId,

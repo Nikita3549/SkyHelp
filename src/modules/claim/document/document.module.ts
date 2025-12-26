@@ -10,6 +10,9 @@ import { DocumentDbService } from './services/database/document-db.service';
 import { DocumentAssignmentService } from './services/assignment/document-assignment.service';
 import { DocumentFileService } from './services/file/document-file.service';
 import { S3Module } from '../../s3/s3.module';
+import { GenerateAssignmentProcessor } from './processors/generate-assignment.processor';
+import { BullModule } from '@nestjs/bullmq';
+import { GENERATE_ASSIGNMENT_QUEUE_KEY } from './processors/constants/generate-assignment-queue-key';
 
 @Module({
     imports: [
@@ -18,6 +21,9 @@ import { S3Module } from '../../s3/s3.module';
         RecentUpdatesModule,
         DocumentRequestModule,
         S3Module,
+        BullModule.registerQueue({
+            name: GENERATE_ASSIGNMENT_QUEUE_KEY,
+        }),
     ],
     controllers: [DocumentController, PublicDocumentController],
     providers: [
@@ -25,6 +31,7 @@ import { S3Module } from '../../s3/s3.module';
         DocumentDbService,
         DocumentFileService,
         DocumentAssignmentService,
+        GenerateAssignmentProcessor,
     ],
     exports: [DocumentService],
 })

@@ -233,85 +233,20 @@ export class PublicOtherPassengerController {
             }
         }
 
-        let file: { buffer: Buffer };
-        const assignmentFileName = generateAssignmentName(
-            passenger.firstName,
-            passenger.lastName,
+        await this.documentService.saveSignature(
+            {
+                imageDataUrl: signature,
+            },
+            {
+                claimId: claim.id,
+                passengerId: passenger.id,
+            },
+            {
+                saveRecentUpdate: true,
+                checkIfAllDocumentsUploaded: true,
+                isParental: passenger.isMinor,
+            },
         );
-
-        if (passenger.isMinor) {
-            if (
-                !passenger.birthday ||
-                !passenger.parentFirstName ||
-                !passenger.parentLastName
-            ) {
-                console.error(
-                    `ERROR: Minor passenger ${passengerId} doesn't have birthday or parentFirstName or parentLastName field. Claim: ${claim.id}`,
-                );
-                throw new InternalServerErrorException();
-            }
-
-            file = await this.documentService.saveParentalSignaturePdf(
-                {
-                    imageDataUrl: signature,
-                },
-                {
-                    firstName: passenger.firstName,
-                    lastName: passenger.lastName,
-                    flightNumber: claim.details.flightNumber,
-                    date: claim.details.date,
-                    address: passenger.address,
-                    fileName: assignmentFileName,
-                    claimId: claim.id,
-                    airlineName: claim.details.airlines.name,
-                    parentFirstName: passenger.parentFirstName,
-                    parentLastName: passenger.parentLastName,
-                    minorBirthday: passenger.birthday,
-                },
-            );
-        } else {
-            file = await this.documentService.saveSignaturePdf(
-                {
-                    imageDataUrl: signature,
-                },
-                {
-                    firstName: passenger.firstName,
-                    lastName: passenger.lastName,
-                    flightNumber: claim.details.flightNumber,
-                    date: claim.details.date,
-                    address: passenger.address,
-                    claimId: claim.id,
-                    airlineName: claim.details.airlines.name,
-                    fileName: assignmentFileName,
-                },
-            );
-        }
-
-        const documents = await this.documentService.saveDocuments(
-            [
-                {
-                    name: assignmentFileName,
-                    passengerId: passenger.id,
-                    documentType: DocumentType.ASSIGNMENT,
-                    buffer: file.buffer,
-                    mimetype: 'application/pdf',
-                },
-            ],
-            passenger.claimId,
-            true,
-        );
-
-        documents.forEach((doc) => {
-            this.recentUpdatesService.saveRecentUpdate(
-                {
-                    type: ClaimRecentUpdatesType.DOCUMENT,
-                    updatedEntityId: doc.id,
-                    entityData: doc.name,
-                    documentType: doc.type,
-                },
-                passenger.claimId,
-            );
-        });
 
         await this.otherPassengerService.setIsSignedPassenger(
             passengerId,
