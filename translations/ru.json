@@ -2656,6 +2656,12 @@
     "DisruptionTypeRadioGroup.cancellation": "Рейс был отменён",
     "DisruptionTypeRadioGroup.deniedBoarding": "Отказ в посадке (перебронирование)",
     "DisruptionTypeRadioGroup.missedConnection": "Пропущен пересадочный рейс",
+    "DisruptionTypeRadioGroup.choose": "Выбрать",
+    "DisruptionTypeRadioGroup.chosen": "Выбрано",
+    "DisruptionTypeRadioGroup.baggageProblems": "Проблемы с багажом",
+    "DisruptionTypeRadioGroup.damagedBaggage": "Повреждённый багаж",
+    "DisruptionTypeRadioGroup.delayedBaggage": "Задержанный багаж",
+    "DisruptionTypeRadioGroup.lostBaggage": "Потерянный багаж",
     "ConnectingFlightsSection.title": "У вас были пересадочные рейсы?",
     "ConnectingFlightsSection.radioGroupLabel": "пересадочный рейсы",
     "ConnectingFlightsSection.no": "Нет, не было",
@@ -4004,5 +4010,6 @@
     "Terms.privacyPolicy": "Политика конфиденциальности.",
     "IncompleteClaimBanner.message": "У вас есть незавершенная заявка",
     "IncompleteClaimBanner.continue": "Продолжить",
-    "IncompleteClaimBanner.startNew": "Начать заново"
+    "IncompleteClaimBanner.startNew": "Начать заново",
+    "Common.Download": "Скачать"
 }

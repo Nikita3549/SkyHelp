@@ -2656,6 +2656,12 @@
     "DisruptionTypeRadioGroup.cancellation": "Zborul a fost anulat",
     "DisruptionTypeRadioGroup.deniedBoarding": "Am fost refuzat la îmbarcare (overbooking)",
     "DisruptionTypeRadioGroup.missedConnection": "Am pierdut zborul de legătură",
+    "DisruptionTypeRadioGroup.choose": "Alege",
+    "DisruptionTypeRadioGroup.chosen": "Selectat",
+    "DisruptionTypeRadioGroup.baggageProblems": "Probleme cu bagajul",
+    "DisruptionTypeRadioGroup.damagedBaggage": "Bagaj deteriorat",
+    "DisruptionTypeRadioGroup.delayedBaggage": "Bagaj întârziat",
+    "DisruptionTypeRadioGroup.lostBaggage": "Bagaj pierdut",
     "ConnectingFlightsSection.title": "Ai avut zboruri de legătură?",
     "ConnectingFlightsSection.radioGroupLabel": "Zboruri de legătură",
     "ConnectingFlightsSection.no": "Nu, nu am avut",
@@ -4004,5 +4010,6 @@
     "Terms.privacyPolicy": "Politica de Confidențialitate.",
     "IncompleteClaimBanner.message": "Ai o cerere incompletă",
     "IncompleteClaimBanner.continue": "Continuă",
-    "IncompleteClaimBanner.startNew": "Începe Nou"
+    "IncompleteClaimBanner.startNew": "Începe Nou",
+    "Common.Download": "Descarcă"
 }
