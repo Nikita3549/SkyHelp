@@ -3,4 +3,6 @@ enum DisruptionType {
   cancellation
   delay
   missed_connection
+  delayed_baggage
+  lost_baggage
 }
