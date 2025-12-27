@@ -4021,5 +4021,9 @@
     "IncompleteClaimBanner.startNew": "Începe Nou",
     "Common.Download": "Descarcă",
     "signatureStep.additionalPassenger" : "Pasager suplimentar",
-    "signature.baggageCase" : "Pentru a obține banii pe care îi meriți, semnați mai jos."
+    "signature.baggageCase" : "Pentru a obține banii pe care îi meriți, semnați mai jos.",
+    "IssueDetailsCard.damaged_baggage": "Bagaj deteriorat",
+    "IssueDetailsCard.delayed_baggage": "Bagaj întârziat sau pierdut",
+    "IssueDetailsCard.other_baggage_problem": "Altă problemă cu bagajul",
+    "IssueDetailsCard.baggage_delay_category": "Întârziere bagaj"
 }

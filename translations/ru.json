@@ -4021,5 +4021,9 @@
     "IncompleteClaimBanner.startNew": "Начать заново",
     "Common.Download": "Скачать",
     "signatureStep.additionalPassenger" : "Дополнительный пассажир",
-    "signature.baggageCase" : "Чтобы получить заслуженную компенсацию, подпишитесь ниже."
+    "signature.baggageCase" : "Чтобы получить заслуженную компенсацию, подпишитесь ниже.",
+    "IssueDetailsCard.damaged_baggage": "Повреждённый багаж",
+    "IssueDetailsCard.delayed_baggage": "Задержанный или потерянный багаж",
+    "IssueDetailsCard.other_baggage_problem": "Другая проблема с багажом",
+    "IssueDetailsCard.baggage_delay_category": "Задержка багажа"
 }

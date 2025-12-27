@@ -4020,7 +4020,11 @@
     "IncompleteClaimBanner.startNew": "Start New",
     "Common.Download": "Download",
     "signatureStep.additionalPassenger" : "Additional passenger",
-    "signature.baggageCase" : "To get the money you deserve, sign below."
+    "signature.baggageCase" : "To get the money you deserve, sign below.",
+    "IssueDetailsCard.damaged_baggage": "Damaged Baggage",
+    "IssueDetailsCard.delayed_baggage": "Delayed Baggage or Lost",
+    "IssueDetailsCard.other_baggage_problem": "Other Baggage Problem",
+    "IssueDetailsCard.baggage_delay_category": "Baggage Delay"
 
 
 }
