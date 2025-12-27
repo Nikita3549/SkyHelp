@@ -344,6 +344,8 @@ export class ClaimService {
                                 additionalInfo: claimData.issue.additionalInfo,
                                 hasContactedAirline:
                                     claimData.issue.hasContactedAirline,
+                                baggageDelayCategory:
+                                    claimData.issue.baggageDelayCategory,
                             },
                         },
                         payment: { create: {} },

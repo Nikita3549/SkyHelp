@@ -1,0 +1,5 @@
+enum BaggageDelayCategory {
+  from_1_to_3_days
+  from_4_to_10_days
+  more_than_10_days
+}

@@ -13,6 +13,7 @@ import {
 import { Type } from 'class-transformer';
 import {
     AirlineReason,
+    BaggageDelayCategory,
     CancellationNotice,
     DelayCategory,
     DisruptionType,
@@ -145,6 +146,10 @@ class IssueDto {
     @IsOptional()
     @IsBoolean()
     hasContactedAirline: boolean = false;
+
+    @IsOptional()
+    @IsEnum(BaggageDelayCategory)
+    baggageDelayCategory: BaggageDelayCategory;
 }
 
 export class CreateClaimDto {
