@@ -1054,7 +1054,7 @@ export class ClaimService {
     }
 
     async addPartnerBulk(claimIds: string[], referralCode: string | null) {
-        this.prisma.claim.updateMany({
+        await this.prisma.claim.updateMany({
             where: {
                 id: {
                     in: claimIds,
