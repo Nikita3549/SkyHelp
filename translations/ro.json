@@ -1568,7 +1568,7 @@
     "priceList.section.remuneration.l1": "Pentru toate zborurile de 1.500 km sau mai puțin, unde Clientul are dreptul la o compensație de 250 EUR, remunerația SkyHelp este de 88,00 EUR, exclusiv TVA-ul aplicabil.",
     "priceList.section.remuneration.l2": "Pentru toate zborurile intra-comunitare de peste 1.500 km și pentru toate zborurile între 1.500 km și 3.500 km, unde Clientul are dreptul la o compensație de 400 EUR, remunerația SkyHelp este de 140,00 EUR, exclusiv TVA-ul aplicabil.",
     "priceList.section.remuneration.l3": "Pentru toate zborurile care nu sunt descrise mai sus, unde Clientul are dreptul la o compensație de 600 EUR, remunerația SkyHelp este de 210,00 EUR, exclusiv TVA-ul aplicabil.",
-    "priceList.section.remuneration.l4": "În cazurile în care Clientul are dreptul la o sumă diferită de compensație, remunerația SkyHelp va fi de 35,00% din compensația primită, exclusiv TVA-ul aplicabil.",
+    "priceList.section.remuneration.l4": "Pentru cazurile de compensație pentru bagaj, Skyhelp reține 35,00% exclusiv TVA",
     "priceList.section.legalTitle": "4. Proceduri legale",
     "priceList.section.legalText": "Dacă nu se ajunge la un acord amiabil cu compania aeriană sau în alte cazuri când recuperarea compensației ar fi mai eficientă și/sau mai rapidă, SkyHelp va iniția proceduri legale și va avea dreptul la o remunerație majorată pentru a acoperi costurile suplimentare (ex. taxe judiciare, costuri de traducere, onorarii ale avocaților, costuri administrative).",
     "priceList.section.legalSubTitle": "Remunerația SkyHelp în caz de proceduri legale:",
@@ -4011,5 +4011,7 @@
     "IncompleteClaimBanner.message": "Ai o cerere incompletă",
     "IncompleteClaimBanner.continue": "Continuă",
     "IncompleteClaimBanner.startNew": "Începe Nou",
-    "Common.Download": "Descarcă"
+    "Common.Download": "Descarcă",
+    "signatureStep.additionalPassenger" : "Pasager suplimentar",
+    "signature.baggageCase" : "Pentru a obține banii pe care îi meriți, semnați mai jos."
 }

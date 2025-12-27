@@ -1568,7 +1568,7 @@
     "priceList.section.remuneration.l1": "Для рейсов до 1 500 км, при компенсации 250 EUR, вознаграждение SkyHelp составляет 88,00 EUR без НДС.",
     "priceList.section.remuneration.l2": "Для внутрисоюзных рейсов свыше 1 500 км и всех рейсов от 1 500 до 3 500 км, при компенсации 400 EUR — 140,00 EUR без НДС.",
     "priceList.section.remuneration.l3": "Для остальных рейсов, при компенсации 600 EUR — 210,00 EUR без НДС.",
-    "priceList.section.remuneration.l4": "Если компенсация составляет другую сумму, SkyHelp удерживает 35,00% от суммы компенсации, исключая НДС.",
+    "priceList.section.remuneration.l4": "Для случаев компенсации за багаж Skyhelp удерживает 35,00% исключяя ндс",
     "priceList.section.legalTitle": "4. Судебные разбирательства",
     "priceList.section.legalText": "Если соглашение с авиакомпанией не достигнуто или разбирательство эффективнее и/или быстрее в суде, SkyHelp может инициировать Судебные разбирательства и получит увеличенное вознаграждение для покрытия соответствующих расходов (судебные издержки, перевод, юристы и др.).",
     "priceList.section.legalSubTitle": "Вознаграждение SkyHelp при судебном разбирательстве:",
@@ -4011,5 +4011,7 @@
     "IncompleteClaimBanner.message": "У вас есть незавершенная заявка",
     "IncompleteClaimBanner.continue": "Продолжить",
     "IncompleteClaimBanner.startNew": "Начать заново",
-    "Common.Download": "Скачать"
+    "Common.Download": "Скачать",
+    "signatureStep.additionalPassenger" : "Дополнительный пассажир",
+    "signature.baggageCase" : "Чтобы получить заслуженную компенсацию, подпишитесь ниже."
 }

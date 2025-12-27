@@ -1568,7 +1568,7 @@
     "priceList.section.remuneration.l1": "In the case of all flights of 1 500 km or less, where the Client is entitled to a Flight Compensation of 250 EUR, SkyHelp remuneration is 88,00 EUR, excluding applicable VAT.",
     "priceList.section.remuneration.l2": "In the case of all intra-Community flights of more than 1 500 km, and for all flights between 1 500 km and 3 500 km, where the Client is entitled to a compensation of 400 EUR, SkyHelp remuneration is 140,00 EUR, excluding applicable VAT.",
     "priceList.section.remuneration.l3": "In the case of all flights not described above, where the Client is entitled to a compensation of 600 EUR, SkyHelp remuneration is 210,00 EUR, excluding applicable VAT.",
-    "priceList.section.remuneration.l4": "In the cases where the Client is entitled to a different amount of the Flight Compensation, SkyHelp remuneration will be 35,00% of the received Flight Compensation excluding applicable VAT.",
+    "priceList.section.remuneration.l4": "Bagaj tazminatı durumlarında Skyhelp %35,00 tutarında kesinti yapar, KDV hariç",
     "priceList.section.legalTitle": " 4. Legal Proceedings",
     "priceList.section.legalText": " If settlement agreement with the airline is not reached or in other cases, when the Flight Compensation recovery process would be more effective and (or) quicker, SkyHelp will initiate Legal Proceedings and will be entitled to the increased remuneration in order to cover additional costs of the Legal Proceedings (e.g. court fees, translation costs, attorney fees, administrative costs).",
     "priceList.section.legalSubTitle": " SkyHelp remuneration in the case of Legal Proceedings",
@@ -4033,5 +4033,8 @@
     "Terms.privacyPolicy": "Gizlilik Politikası.",
     "IncompleteClaimBanner.message": "Tamamlanmamış bir talebiniz var",
     "IncompleteClaimBanner.continue": "Devam Et",
-    "IncompleteClaimBanner.startNew": "Yeni Başlat"
+    "IncompleteClaimBanner.startNew": "Yeni Başlat",
+    "Common.Download": "İndir",
+    "signatureStep.additionalPassenger" : "Ek yolcu",
+    "signature.baggageCase" : "Para almak için aşağıya imza atın."
 }
