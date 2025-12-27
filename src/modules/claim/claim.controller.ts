@@ -375,7 +375,7 @@ export class PublicClaimController {
         );
 
         const compensation = this.claimService.calculateCompensation(
-            Object.assign(dto, { flightDistanceKm: distance }),
+            Object.assign({ ...dto }, { flightDistanceKm: distance }),
         );
 
         return {

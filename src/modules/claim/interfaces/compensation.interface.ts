@@ -1,4 +1,8 @@
-import { CancellationNotice, DelayCategory } from '@prisma/client';
+import {
+    CancellationNotice,
+    DelayCategory,
+    DisruptionType,
+} from '@prisma/client';
 
 export interface IGetCompensation {
     flightDistanceKm: number;
@@ -9,4 +13,5 @@ export interface IGetCompensation {
     arrivalTimeDelayOfAlternative: number;
     wasDisruptionDuoExtraordinaryCircumstances: boolean;
     airlineIcao: string;
+    disruptionType: DisruptionType;
 }

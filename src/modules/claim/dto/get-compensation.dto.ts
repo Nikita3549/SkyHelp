@@ -5,9 +5,16 @@ import {
     IsOptional,
     IsString,
 } from 'class-validator';
-import { CancellationNotice, DelayCategory } from '@prisma/client';
+import {
+    CancellationNotice,
+    DelayCategory,
+    DisruptionType,
+} from '@prisma/client';
 
 export class GetCompensationDto {
+    @IsEnum(DisruptionType)
+    disruptionType: DisruptionType;
+
     @IsOptional()
     @IsEnum(DelayCategory)
     delayHours: DelayCategory | null;

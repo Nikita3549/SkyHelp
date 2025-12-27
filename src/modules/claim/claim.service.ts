@@ -4,6 +4,7 @@ import {
     CancellationNotice,
     ClaimStatus,
     DelayCategory,
+    DisruptionType,
     DocumentRequestStatus,
     DocumentType,
     Prisma,
@@ -433,6 +434,7 @@ export class ClaimService {
             wasAlternativeFlightOffered,
             arrivalTimeDelayOfAlternative,
             airlineIcao,
+            disruptionType,
         } = compensation;
 
         if (!flightDistanceKm) {
@@ -458,10 +460,15 @@ export class ClaimService {
             cancellationNoticeDays === CancellationNotice.less_than_14days;
         const isEligibleDueToDeniedBoarding = wasDeniedBoarding;
 
+        const isEligibleForBaggageCompensation =
+            disruptionType == DisruptionType.delayed_baggage ||
+            disruptionType == DisruptionType.lost_baggage;
+
         const eligible =
             isEligibleDueToDelay ||
             isEligibleDueToCancellation ||
-            isEligibleDueToDeniedBoarding;
+            isEligibleDueToDeniedBoarding ||
+            isEligibleForBaggageCompensation;
 
         if (!eligible) {
             return 0;
