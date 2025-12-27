@@ -1053,18 +1053,16 @@ export class ClaimService {
         });
     }
 
-    async addPartner(
-        claimId: string,
-        referralCode: string | null,
-    ): Promise<IFullClaim> {
-        return this.prisma.claim.update({
+    async addPartnerBulk(claimIds: string[], referralCode: string | null) {
+        this.prisma.claim.updateMany({
             where: {
-                id: claimId,
+                id: {
+                    in: claimIds,
+                },
             },
             data: {
                 referrer: referralCode,
             },
-            include: this.fullClaimInclude(),
         });
     }
 

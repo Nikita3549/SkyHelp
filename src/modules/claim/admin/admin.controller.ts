@@ -78,18 +78,9 @@ export class AdminController {
         );
     }
 
-    @Patch(`:claimId/partner`)
-    async assignToPartner(
-        @Param('claimId') claimId: string,
-        @Body() dto: AssignToPartnerDto,
-    ) {
-        const { referralCode } = dto;
-
-        const claim = await this.claimService.getClaim(claimId);
-
-        if (!claim) {
-            throw new NotFoundException(CLAIM_NOT_FOUND);
-        }
+    @Patch(`partner`)
+    async assignToPartnerBulk(@Body() dto: AssignToPartnerDto) {
+        const { referralCode, claimIds } = dto;
 
         const partner =
             await this.partnerService.getPartnerByReferralCode(referralCode);
@@ -98,10 +89,7 @@ export class AdminController {
             throw new NotFoundException(PARTNER_NOT_FOUND);
         }
 
-        return await this.claimService.addPartner(
-            claim.id,
-            partner.referralCode,
-        );
+        await this.claimService.addPartnerBulk(claimIds, partner.referralCode);
     }
 
     @Post('partner')
