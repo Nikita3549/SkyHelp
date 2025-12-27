@@ -1051,6 +1051,21 @@ export class ClaimService {
         });
     }
 
+    async addPartner(
+        claimId: string,
+        referralCode: string | null,
+    ): Promise<IFullClaim> {
+        return this.prisma.claim.update({
+            where: {
+                id: claimId,
+            },
+            data: {
+                referrer: referralCode,
+            },
+            include: this.fullClaimInclude(),
+        });
+    }
+
     async findDuplicate(claimData: {
         firstName: string;
         lastName: string;

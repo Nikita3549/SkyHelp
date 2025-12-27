@@ -36,6 +36,8 @@ import { RoleGuard } from '../../../common/guards/role.guard';
 import { ViewClaimType } from '../enums/view-claim-type.enum';
 import { OtherPassengerService } from '../other-passenger/other-passenger.service';
 import { OtherPassengerDto } from '../other-passenger/dto/create-other-passengers.dto';
+import { AssignToPartnerDto } from './dto/assign-to-partner.dto';
+import { PARTNER_NOT_FOUND } from '../../referral/partner/constants';
 
 @Controller('claims/admin')
 @UseGuards(
@@ -73,6 +75,32 @@ export class AdminController {
             [dto],
             claimId,
             claim.customer.compensation,
+        );
+    }
+
+    @Patch(`:claimId/partner`)
+    async assignToPartner(
+        @Param('claimId') claimId: string,
+        @Body() dto: AssignToPartnerDto,
+    ) {
+        const { referralCode } = dto;
+
+        const claim = await this.claimService.getClaim(claimId);
+
+        if (!claim) {
+            throw new NotFoundException(CLAIM_NOT_FOUND);
+        }
+
+        const partner =
+            await this.partnerService.getPartnerByReferralCode(referralCode);
+
+        if (!partner) {
+            throw new NotFoundException(PARTNER_NOT_FOUND);
+        }
+
+        return await this.claimService.addPartner(
+            claim.id,
+            partner.referralCode,
         );
     }
 
