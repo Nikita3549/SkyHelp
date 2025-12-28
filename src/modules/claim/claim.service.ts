@@ -78,6 +78,15 @@ export class ClaimService {
         if (!claim) {
             return;
         }
+        if (
+            claim.state.progress.some(
+                (p) =>
+                    p.description ==
+                    ProgressVariants.claimReceived.descriptions[1],
+            )
+        ) {
+            return;
+        }
         const documentRequests =
             await this.documentRequestService.getByClaimId(claimId);
 
