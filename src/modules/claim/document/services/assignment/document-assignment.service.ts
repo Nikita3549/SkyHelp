@@ -152,7 +152,11 @@ export class DocumentAssignmentService implements OnModuleInit {
                     claim,
                     passenger,
                     assignment,
-                );
+                ).catch((e) => {
+                    console.error(
+                        `Failed to update assignment ${assignment.id}: ${e}`,
+                    );
+                });
             }
         }
     }
