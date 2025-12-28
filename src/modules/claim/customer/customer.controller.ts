@@ -171,8 +171,13 @@ export class PublicCustomerController {
                 imageDataUrl: signature,
             },
             {
-                claimId: claim.id,
-                passengerId: claim.customer.id,
+                claim: claim,
+                passenger: {
+                    ...claim.customer,
+                    isCustomer: true,
+                    claimId: claim.id,
+                    isMinor: false,
+                },
             },
             {
                 saveRecentUpdate: true,

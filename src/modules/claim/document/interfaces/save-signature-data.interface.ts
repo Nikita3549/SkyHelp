@@ -1,6 +1,7 @@
-import { IAssignmentData } from '../services/assignment/interfaces/assignment-data.interface';
+import { BasePassenger } from '../../interfaces/base-passenger.interface';
+import { IFullClaim } from '../../interfaces/full-claim.interface';
 
 export interface ISaveSignatureData {
-    passengerId: string;
-    claimId: string;
+    passenger: BasePassenger;
+    claim: IFullClaim;
 }

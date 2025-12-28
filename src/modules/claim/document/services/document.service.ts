@@ -1,11 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { ClaimRecentUpdatesType, Document, DocumentType } from '@prisma/client';
+import { Document } from '@prisma/client';
 import { DocumentDbService } from './database/document-db.service';
 import { DocumentAssignmentService } from './assignment/document-assignment.service';
 import { DocumentFileService } from './file/document-file.service';
 import { S3Service } from '../../../s3/s3.service';
-import { IParentalAssignmentData } from './assignment/interfaces/parental-assignment-data.interface';
-import { IAssignmentData } from './assignment/interfaces/assignment-data.interface';
 import { IAssignmentSignature } from './assignment/interfaces/assignment-signature.interface';
 import { generateClaimDocumentKey } from '../../../../common/utils/generate-claim-document-key';
 import { IGetSignedUrlOptions } from '../../../s3/interfaces/get-signed-url-options.interfaces';
@@ -32,8 +30,15 @@ export class DocumentService {
 
     // ------------------ ASSIGNMENT ------------------
     async updateAssignmentData(claimId: string, passengerIds: string[]) {
+        // This method always requires refreshed claim data
+        const claim = await this.claimService.getClaim(claimId);
+
+        if (!claim) {
+            return;
+        }
+
         return this.documentAssignmentService.updateAssignmentData(
-            claimId,
+            claim,
             passengerIds,
         );
     }
@@ -43,29 +48,12 @@ export class DocumentService {
         saveSignatureData: ISaveSignatureData,
         options?: ISaveSignatureOptions,
     ) {
-        const { claimId, passengerId } = saveSignatureData;
-
-        const claim = await this.claimService.getClaim(claimId);
-        if (!claim) {
-            throw new Error(
-                `Claim not found while saving signature ${claimId}`,
-            );
-        }
-
-        const passenger =
-            await this.claimService.getCustomerOrOtherPassengerById(
-                passengerId,
-            );
-        if (!passenger) {
-            throw new Error(
-                `Passenger not found while saving signature passengerId: ${passengerId}, claimId: ${claimId}`,
-            );
-        }
+        const { claim, passenger } = saveSignatureData;
 
         if (options?.isParental) {
             if (passenger.isCustomer) {
                 throw new Error(
-                    `Trying to save parental signature for customer passengerId: ${passengerId}`,
+                    `Trying to save parental signature for customer passengerId: ${passenger.id}`,
                 );
             }
             if (
@@ -74,7 +62,7 @@ export class DocumentService {
                 !passenger.parentLastName
             ) {
                 throw new Error(
-                    `Trying to save parental signature for passenger without birthday or parentFirstName or parentLastName: ${passengerId}`,
+                    `Trying to save parental signature for passenger without birthday or parentFirstName or parentLastName: ${passenger.id}`,
                 );
             }
         }

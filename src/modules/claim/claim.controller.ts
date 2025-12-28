@@ -273,8 +273,13 @@ export class PublicClaimController {
                 imageDataUrl: signature,
             },
             {
-                claimId: claim.id,
-                passengerId: claim.customer.id,
+                claim: claim,
+                passenger: {
+                    ...claim.customer,
+                    isCustomer: true,
+                    claimId: claim.id,
+                    isMinor: false,
+                },
             },
         );
 

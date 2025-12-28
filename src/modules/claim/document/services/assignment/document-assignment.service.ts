@@ -1,14 +1,10 @@
 import { forwardRef, Inject, Injectable, OnModuleInit } from '@nestjs/common';
-import { PDFDocument, PDFPage, rgb } from 'pdf-lib';
-import { DocumentType, OtherPassenger } from '@prisma/client';
+import { PDFDocument, PDFFont, PDFPage } from 'pdf-lib';
+import { Document, DocumentType } from '@prisma/client';
 import { generateAssignmentName } from '../../../../../common/utils/generate-assignment-name';
 import { formatDate } from '../../../../../common/utils/formatDate';
 import * as fs from 'fs/promises';
-import * as path from 'path';
-import { FontsDirectoryPath } from '../../../../../common/constants/paths/FontsDirectoryPath';
-import { AssignmentsDirectoryPath } from '../../../../../common/constants/paths/AssignmentsDirectoryPath';
 import * as fontkit from 'fontkit';
-import { ClaimService } from '../../../claim.service';
 import { DocumentService } from '../document.service';
 import { S3Service } from '../../../../s3/s3.service';
 import { IAssignmentFonts } from './interfaces/assignment-fonts.interface';
@@ -18,61 +14,303 @@ import { IParentalAssignmentData } from './interfaces/parental-assignment-data.i
 import { IAssignmentSignature } from './interfaces/assignment-signature.interface';
 import { logDocumentWithoutS3Key } from '../../utils/logDocumentWithoutS3Key';
 import { ISignatureRectangle } from './interfaces/signature-rectangle.interface';
-import { IAssignmentPassenger } from './interfaces/assignment-passenger.interfaces';
+import { COLORS } from './constants/colors';
+import { FONT_SIZE } from './constants/font-size';
+import { ASSIGNMENT } from './constants/assignment';
+import { Fontkit } from 'pdf-lib/es/types/fontkit';
+import { ASSIGNMENT_AGREEMENT_FILEPATH } from './constants/template-filepath';
+import { FONT_FAMILY_FILEPATH } from './constants/font-family-filepath';
+import { IPreparePdfResult } from './interfaces/prepare-pdf-result.interface';
+import { IFullClaim } from '../../../interfaces/full-claim.interface';
+import { BasePassenger } from '../../../interfaces/base-passenger.interface';
 
 @Injectable()
 export class DocumentAssignmentService implements OnModuleInit {
-    fonts: IAssignmentFonts;
+    fontFamilies: IAssignmentFonts;
     assignmentTemplates: IAssignmentTemplates;
 
     constructor(
-        private readonly claimService: ClaimService,
         @Inject(forwardRef(() => DocumentService))
         private readonly documentService: DocumentService,
         private readonly S3Service: S3Service,
     ) {}
 
     async onModuleInit() {
-        this.fonts = {
+        this.fontFamilies = {
             Inter: {
-                Regular: await fs.readFile(
-                    path.resolve(FontsDirectoryPath, 'Inter', 'regular.ttf'),
-                ),
-                Medium: await fs.readFile(
-                    path.resolve(FontsDirectoryPath, 'Inter', 'medium.ttf'),
-                ),
-                Bold: await fs.readFile(
-                    path.resolve(FontsDirectoryPath, 'Inter', 'bold.ttf'),
-                ),
+                Regular: await fs.readFile(FONT_FAMILY_FILEPATH.INTER.REGULAR),
+                Medium: await fs.readFile(FONT_FAMILY_FILEPATH.INTER.MEDIUM),
+                Bold: await fs.readFile(FONT_FAMILY_FILEPATH.INTER.BOLD),
             },
         };
 
         this.assignmentTemplates = {
-            regular: await fs.readFile(
-                path.join(
-                    AssignmentsDirectoryPath,
-                    'assignment_agreement-template.pdf',
-                ),
-            ),
-            parental: await fs.readFile(
-                path.join(
-                    AssignmentsDirectoryPath,
-                    'parental-assignment_agreement-template.pdf',
-                ),
-            ),
+            regular: await fs.readFile(ASSIGNMENT_AGREEMENT_FILEPATH.REGULAR),
+            parental: await fs.readFile(ASSIGNMENT_AGREEMENT_FILEPATH.PARENTAL),
+        };
+    }
+
+    async saveSignature(
+        signature: IAssignmentSignature,
+        assignmentData: IAssignmentData,
+    ): Promise<{ buffer: Buffer }> {
+        const { pdfDoc, fonts } = await this.preparePdf(
+            this.assignmentTemplates.regular,
+        );
+        const titlePage =
+            pdfDoc.getPages()[ASSIGNMENT.REGULAR.PAGE_INDEX.TITLE];
+        const signaturePage =
+            pdfDoc.getPages()[ASSIGNMENT.REGULAR.PAGE_INDEX.SIGNATURE];
+
+        // <--- TEXTS --->
+        await this.fillRegularText(
+            titlePage,
+            signaturePage,
+            assignmentData,
+            fonts,
+        );
+
+        // <--- SIGNATURE --->
+        const signatureRect: ISignatureRectangle = {
+            x: ASSIGNMENT.REGULAR.COORDINATES.SIGNATURE.X,
+            y: ASSIGNMENT.REGULAR.COORDINATES.SIGNATURE.Y,
+            width: ASSIGNMENT.REGULAR.COORDINATES.SIGNATURE.WIDTH,
+            height: ASSIGNMENT.REGULAR.COORDINATES.SIGNATURE.HEIGHT,
+            page: ASSIGNMENT.REGULAR.PAGE_INDEX.SIGNATURE,
+        };
+
+        await this.embedSignature({
+            signature,
+            pdfDoc,
+            signaturePage,
+            signatureRect,
+        });
+
+        const pdfBytes = await pdfDoc.save();
+        const pdfBuffer = Buffer.from(pdfBytes);
+
+        return { buffer: pdfBuffer };
+    }
+
+    async saveParentalSignature(
+        signature: IAssignmentSignature,
+        assignmentData: IParentalAssignmentData,
+    ): Promise<{ buffer: Buffer }> {
+        const { pdfDoc, fonts } = await this.preparePdf(
+            this.assignmentTemplates.parental,
+        );
+        const titlePage =
+            pdfDoc.getPages()[ASSIGNMENT.PARENTAL.PAGE_INDEX.TITLE];
+        const signaturePage =
+            pdfDoc.getPages()[ASSIGNMENT.PARENTAL.PAGE_INDEX.SIGNATURE];
+
+        // <--- TEXTS --->
+        await this.fillParentalText(
+            titlePage,
+            signaturePage,
+            assignmentData,
+            fonts,
+        );
+
+        // <--- SIGNATURE --->
+        const signatureRect: ISignatureRectangle = {
+            x: ASSIGNMENT.PARENTAL.COORDINATES.SIGNATURE.X,
+            y: ASSIGNMENT.PARENTAL.COORDINATES.SIGNATURE.Y,
+            width: ASSIGNMENT.PARENTAL.COORDINATES.SIGNATURE.WIDTH,
+            height: ASSIGNMENT.PARENTAL.COORDINATES.SIGNATURE.HEIGHT,
+            page: ASSIGNMENT.PARENTAL.PAGE_INDEX.SIGNATURE,
+        };
+
+        await this.embedSignature({
+            signature,
+            pdfDoc,
+            signaturePage,
+            signatureRect,
+        });
+
+        const pdfBytes = await pdfDoc.save();
+        const pdfBuffer = Buffer.from(pdfBytes);
+
+        return {
+            buffer: pdfBuffer,
+        };
+    }
+
+    async updateAssignmentData(claim: IFullClaim, passengerIds: string[]) {
+        const passengers = this.getTargetPassengers(claim, passengerIds);
+
+        for (const passenger of passengers) {
+            const assignments = claim.documents.filter(
+                (a) =>
+                    a.passengerId == passenger.id &&
+                    a.type == DocumentType.ASSIGNMENT &&
+                    !a.deletedAt,
+            );
+
+            for (const assignment of assignments) {
+                await this.processUpdateAssignment(
+                    claim,
+                    passenger,
+                    assignment,
+                );
+            }
+        }
+    }
+
+    // <--- PRIVATE HELPERS --->
+    private getTargetPassengers(
+        claim: IFullClaim,
+        passengerIds: string[],
+    ): BasePassenger[] {
+        const passengers: BasePassenger[] = [];
+
+        if (passengerIds.includes(claim.customer.id)) {
+            passengers.push({
+                ...claim.customer,
+                isCustomer: true,
+                isMinor: false,
+                claimId: claim.id,
+            });
+        }
+
+        const otherPassengers = claim.passengers
+            .filter((p) => passengerIds.includes(p.id))
+            .map((p) => ({
+                ...p,
+                isCustomer: false as const,
+            }));
+
+        passengers.push(...otherPassengers);
+
+        return passengers;
+    }
+
+    private async processUpdateAssignment(
+        claim: IFullClaim,
+        passenger: BasePassenger,
+        assignment: Document,
+    ) {
+        if (!assignment.s3Key) {
+            logDocumentWithoutS3Key(assignment.id);
+            return;
+        }
+
+        const assignmentData = {
+            address: passenger.address,
+            airlineName: claim.details.airlines.name,
+            firstName: passenger.firstName,
+            date: claim.details.date,
+            claimId: claim.id,
+            lastName: passenger.lastName,
+            flightNumber: claim.details.flightNumber,
+            fileName: assignment.name,
+        };
+        const file = !passenger.isMinor
+            ? await this.saveSignature(
+                  {
+                      sourceS3Key: assignment.s3Key,
+                  },
+                  assignmentData,
+              )
+            : await this.saveParentalSignature(
+                  {
+                      sourceS3Key: assignment.s3Key,
+                  },
+                  {
+                      ...assignmentData,
+                      parentLastName: passenger.parentLastName!,
+                      parentFirstName: passenger.parentFirstName!,
+                      minorBirthday: passenger.birthday!,
+                  },
+              );
+
+        await this.documentService.removeDocument(assignment.id);
+
+        await this.documentService.saveDocuments(
+            [
+                {
+                    name: generateAssignmentName(
+                        passenger.firstName,
+                        passenger.lastName,
+                    ),
+                    buffer: file.buffer,
+                    passengerId: assignment.passengerId,
+                    documentType: assignment.type,
+                    mimetype: 'application/pdf',
+                },
+            ],
+            claim.id,
+        );
+    }
+
+    private async embedSignature(params: {
+        signature: IAssignmentSignature;
+        pdfDoc: PDFDocument;
+        signaturePage: PDFPage;
+        signatureRect: ISignatureRectangle;
+    }) {
+        const { signature, pdfDoc, signaturePage, signatureRect } = params;
+
+        if (!!signature.imageDataUrl == !!signature.sourceS3Key) {
+            throw new Error(
+                'You must provide exactly one of: signature.imageDataUrl OR signature.sourceS3Key',
+            );
+        }
+
+        // Signature from Base64 PNG
+        if (signature.imageDataUrl) {
+            const base64 = signature.imageDataUrl.replace(
+                /^data:image\/png;base64,/,
+                '',
+            );
+            const pngBuffer = Buffer.from(base64, 'base64');
+            const pngImage = await pdfDoc.embedPng(pngBuffer);
+            signaturePage.drawImage(pngImage, signatureRect);
+        }
+
+        // Signature extracted from source PDF document stored in S3
+        if (signature.sourceS3Key) {
+            await this.insertSignatureFromSource({
+                sourceS3Key: signature.sourceS3Key,
+                targetPage: signaturePage,
+                signatureRect,
+            });
+        }
+    }
+
+    private async preparePdf(
+        assignmentTemplate: Buffer,
+    ): Promise<IPreparePdfResult> {
+        const pdfDoc = await PDFDocument.load(assignmentTemplate);
+
+        pdfDoc.registerFontkit(fontkit as unknown as Fontkit);
+
+        const [regular, medium, bold] = await Promise.all([
+            await pdfDoc.embedFont(this.fontFamilies.Inter.Regular),
+            await pdfDoc.embedFont(this.fontFamilies.Inter.Medium),
+            await pdfDoc.embedFont(this.fontFamilies.Inter.Bold),
+        ]);
+
+        return {
+            pdfDoc,
+            fonts: {
+                regular,
+                medium,
+                bold,
+            },
         };
     }
 
     private async insertSignatureFromSource(assignmentData: {
-        sourceKey: string;
+        sourceS3Key: string;
         targetPage: PDFPage;
         signatureRect: ISignatureRectangle;
     }): Promise<{ page: PDFPage }> {
-        const { sourceKey, targetPage, signatureRect } = assignmentData;
+        const { sourceS3Key, targetPage, signatureRect } = assignmentData;
 
         const targetDoc = targetPage.doc;
 
-        const sourceBuffer = await this.S3Service.getBuffer(sourceKey);
+        const sourceBuffer = await this.S3Service.getBuffer(sourceS3Key);
         const sourceDoc = await PDFDocument.load(sourceBuffer);
 
         const sourcePageIndex = signatureRect.page;
@@ -97,393 +335,189 @@ export class DocumentAssignmentService implements OnModuleInit {
         };
     }
 
-    async updateAssignmentData(claimId: string, passengerIds: string[]) {
-        const claim = await this.claimService.getClaim(claimId, {
-            documentsWithPath: true,
-        });
-
-        if (!claim) {
-            return;
-        }
-
-        for (const passengerId of passengerIds) {
-            try {
-                const passenger: IAssignmentPassenger | undefined =
-                    claim.customer.id == passengerId
-                        ? {
-                              isMinor: false,
-                              ...claim.customer,
-                          }
-                        : claim.passengers.find((p) => p.id == passengerId);
-
-                if (!passenger) {
-                    continue;
-                }
-
-                const assignments = claim.documents.filter(
-                    (a) =>
-                        a.passengerId == passengerId &&
-                        a.type == DocumentType.ASSIGNMENT &&
-                        !a.deletedAt,
-                );
-
-                for (const assignment of assignments) {
-                    try {
-                        let file: { buffer: Buffer };
-
-                        if (!assignment.s3Key) {
-                            logDocumentWithoutS3Key(assignment.id);
-                            continue;
-                        }
-                        if (!passenger.isMinor) {
-                            file = await this.saveSignature(
-                                {
-                                    sourceS3Key: assignment.s3Key,
-                                },
-                                {
-                                    address: passenger.address,
-                                    airlineName: claim.details.airlines.name,
-                                    firstName: passenger.firstName,
-                                    date: claim.details.date,
-                                    claimId: claim.id,
-                                    lastName: passenger.lastName,
-                                    flightNumber: claim.details.flightNumber,
-                                    fileName: assignment.name,
-                                },
-                            );
-                        } else {
-                            const otherPassenger = passenger;
-
-                            file = await this.saveParentalSignature(
-                                {
-                                    sourceS3Key: assignment.s3Key,
-                                },
-                                {
-                                    address: otherPassenger.address,
-                                    airlineName: claim.details.airlines.name,
-                                    firstName: otherPassenger.firstName,
-                                    date: claim.details.date,
-                                    claimId: claim.id,
-                                    fileName: assignment.name,
-                                    lastName: otherPassenger.lastName,
-                                    flightNumber: claim.details.flightNumber,
-                                    parentLastName:
-                                        otherPassenger.parentLastName!,
-                                    parentFirstName:
-                                        otherPassenger.parentFirstName!,
-                                    minorBirthday: otherPassenger.birthday!,
-                                },
-                            );
-                        }
-
-                        await this.documentService.removeDocument(
-                            assignment.id,
-                        );
-
-                        await this.documentService.saveDocuments(
-                            [
-                                {
-                                    name: generateAssignmentName(
-                                        passenger.firstName,
-                                        passenger.lastName,
-                                    ),
-                                    buffer: file.buffer,
-                                    passengerId: assignment.passengerId,
-                                    documentType: assignment.type,
-                                    mimetype: 'application/pdf',
-                                },
-                            ],
-                            claim.id,
-                        );
-                    } catch (_e) {}
-                }
-            } catch (_e) {}
-        }
-    }
-
-    async saveParentalSignature(
-        signature: IAssignmentSignature,
-        assignmentData: IParentalAssignmentData,
-    ): Promise<{ buffer: Buffer }> {
-        const today = formatDate(new Date(), 'dd.mm.yyyy');
-
-        const pdfDoc = await PDFDocument.load(
-            this.assignmentTemplates.parental,
-        );
-
-        // @ts-ignore
-        pdfDoc.registerFontkit(fontkit);
-
-        const fontRegular = await pdfDoc.embedFont(this.fonts.Inter.Regular);
-        const fontMedium = await pdfDoc.embedFont(this.fonts.Inter.Medium);
-        const fontBold = await pdfDoc.embedFont(this.fonts.Inter.Bold);
-
-        const firstPage = pdfDoc.getPages()[0];
-        const fourthPage = pdfDoc.getPages()[3];
-
-        let pngImage;
-        if (signature.imageDataUrl) {
-            const base64 = signature.imageDataUrl.replace(
-                /^data:image\/png;base64,/,
-                '',
-            );
-            const pngBuffer = Buffer.from(base64, 'base64');
-            pngImage = await pdfDoc.embedPng(pngBuffer);
-        }
-
-        firstPage.drawText(today, {
-            x: 270,
-            y: 690,
-            size: 10.5,
-            color: rgb(0.333, 0.333, 0.333),
-            font: fontRegular,
-        });
-
-        firstPage.drawText(
-            `${assignmentData.parentFirstName} ${assignmentData.parentLastName}`,
-            {
-                x: 67,
-                y: 585,
-                size: 10.5,
-                color: rgb(0, 0, 0),
-                font: fontBold,
-            },
-        );
-
-        firstPage.drawText(
-            `${assignmentData.firstName} ${assignmentData.lastName}`,
-            {
-                x: 304,
-                y: 585,
-                size: 10.5,
-                color: rgb(0, 0, 0),
-                font: fontBold,
-            },
-        );
-
-        firstPage.drawText(
-            formatDate(assignmentData.minorBirthday, 'dd.mm.yyyy'),
-            {
-                x: 304,
-                y: 543,
-                size: 10.5,
-                color: rgb(0, 0, 0),
-                font: fontBold,
-            },
-        );
-
-        firstPage.drawText(assignmentData.address, {
-            x: 67,
-            y: 543,
-            size: 10.5,
-            color: rgb(0, 0, 0),
-            font: fontBold,
-        });
-
-        firstPage.drawText(assignmentData.claimId, {
-            x: 130,
-            y: 453,
-            size: 10.5,
-            color: rgb(0, 0, 0),
-            font: fontRegular,
-        });
-
-        firstPage.drawText(assignmentData.airlineName, {
-            x: 130,
-            y: 422,
-            size: 10.5,
-            color: rgb(0, 0, 0),
-            font: fontRegular,
-        });
-
-        firstPage.drawText(assignmentData.flightNumber, {
-            x: 370,
-            y: 453,
-            size: 10.5,
-            color: rgb(0, 0, 0),
-            font: fontRegular,
-        });
-
-        firstPage.drawText(formatDate(assignmentData.date, 'dd.mm.yyyy'), {
-            x: 370,
-            y: 422,
-            size: 10.5,
-            color: rgb(0, 0, 0),
-            font: fontRegular,
-        });
-
-        fourthPage.drawText(
-            `${assignmentData.parentFirstName} ${assignmentData.parentLastName}`,
-            {
-                x: 55,
-                y: 556,
-                size: 10.5,
-                color: rgb(0, 0, 0),
-                font: fontMedium,
-            },
-        );
-
-        if (pngImage) {
-            fourthPage.drawImage(pngImage, {
-                x: 110,
-                y: 445,
-                width: 160,
-                height: 70,
-            });
-        }
-
-        if (signature.sourceS3Key) {
-            await this.insertSignatureFromSource({
-                sourceKey: signature.sourceS3Key,
-                targetPage: fourthPage,
-                signatureRect: {
-                    width: 160,
-                    height: 70,
-                    x: 110,
-                    y: 445,
-                    page: 3,
-                },
-            });
-        }
-
-        const pdfBytes = await pdfDoc.save();
-        const pdfBuffer = Buffer.from(pdfBytes);
-
-        return {
-            buffer: pdfBuffer,
-        };
-    }
-
-    async saveSignature(
-        signature: IAssignmentSignature,
+    private async fillRegularText(
+        titlePage: PDFPage,
+        signaturePage: PDFPage,
         assignmentData: IAssignmentData,
-    ): Promise<{ buffer: Buffer }> {
-        if (!!signature.imageDataUrl == !!signature.sourceS3Key) {
-            throw new Error(
-                'You must provide exactly one of: signature.imageDataUrl OR signature.sourceS3Key',
-            );
-        }
-
+        fonts: {
+            regular: PDFFont;
+            medium: PDFFont;
+            bold: PDFFont;
+        },
+    ) {
         const today = formatDate(new Date(), 'dd.MMMM.yyyy');
-
-        const pdfDoc = await PDFDocument.load(this.assignmentTemplates.regular);
-
-        // @ts-ignore
-        pdfDoc.registerFontkit(fontkit);
-
-        const fontRegular = await pdfDoc.embedFont(this.fonts.Inter.Regular);
-        const fontMedium = await pdfDoc.embedFont(this.fonts.Inter.Medium);
-        const fontBold = await pdfDoc.embedFont(this.fonts.Inter.Bold);
-
-        const firstPage = pdfDoc.getPages()[0];
-        const thirdPage = pdfDoc.getPages()[2];
-
-        let pngImage;
-        if (signature.imageDataUrl) {
-            const base64 = signature.imageDataUrl.replace(
-                /^data:image\/png;base64,/,
-                '',
-            );
-            const pngBuffer = Buffer.from(base64, 'base64');
-            pngImage = await pdfDoc.embedPng(pngBuffer);
-        }
-
-        firstPage.drawText(today, {
+        titlePage.drawText(today, {
             x: 253,
             y: 685,
-            size: 10.5,
-            color: rgb(0.333, 0.333, 0.333),
-            font: fontRegular,
+            size: FONT_SIZE.MEDIUM,
+            color: COLORS.GRAY,
+            font: fonts.regular,
         });
 
-        firstPage.drawText(assignmentData.address, {
+        titlePage.drawText(assignmentData.address, {
             x: 55,
             y: 605,
-            size: 10.5,
-            color: rgb(0.333, 0.333, 0.333),
-            font: fontRegular,
+            size: FONT_SIZE.MEDIUM,
+            color: COLORS.GRAY,
+            font: fonts.regular,
         });
 
-        firstPage.drawText(
+        titlePage.drawText(
             `${assignmentData.firstName} ${assignmentData.lastName}`,
             {
                 x: 55,
                 y: 625,
-                size: 10.5,
-                color: rgb(0, 0, 0),
-                font: fontBold,
+                size: FONT_SIZE.MEDIUM,
+                color: COLORS.BLACK,
+                font: fonts.bold,
             },
         );
 
-        firstPage.drawText(assignmentData.claimId, {
+        titlePage.drawText(assignmentData.claimId, {
             x: 130,
             y: 521,
-            size: 10.5,
-            color: rgb(0, 0, 0),
-            font: fontRegular,
+            size: FONT_SIZE.MEDIUM,
+            color: COLORS.BLACK,
+            font: fonts.regular,
         });
 
-        firstPage.drawText(assignmentData.airlineName, {
+        titlePage.drawText(assignmentData.airlineName, {
             x: 130,
             y: 490,
-            size: 10.5,
-            color: rgb(0, 0, 0),
-            font: fontRegular,
+            size: FONT_SIZE.MEDIUM,
+            color: COLORS.BLACK,
+            font: fonts.regular,
         });
 
-        firstPage.drawText(assignmentData.flightNumber, {
+        titlePage.drawText(assignmentData.flightNumber, {
             x: 370,
             y: 521,
-            size: 10.5,
-            color: rgb(0, 0, 0),
-            font: fontRegular,
+            size: FONT_SIZE.MEDIUM,
+            color: COLORS.BLACK,
+            font: fonts.regular,
         });
 
-        firstPage.drawText(formatDate(assignmentData.date, 'dd.mm.yyyy'), {
+        titlePage.drawText(formatDate(assignmentData.date, 'dd.mm.yyyy'), {
             x: 370,
             y: 490,
-            size: 10.5,
-            color: rgb(0, 0, 0),
-            font: fontRegular,
+            size: FONT_SIZE.MEDIUM,
+            color: COLORS.BLACK,
+            font: fonts.regular,
         });
 
-        thirdPage.drawText(
+        signaturePage.drawText(
             `${assignmentData.firstName} ${assignmentData.lastName}`,
             {
                 x: 55,
                 y: 264,
-                size: 10.5,
-                color: rgb(0, 0, 0),
-                font: fontMedium,
+                size: FONT_SIZE.MEDIUM,
+                color: COLORS.BLACK,
+                font: fonts.medium,
+            },
+        );
+    }
+
+    private async fillParentalText(
+        titlePage: PDFPage,
+        signaturePage: PDFPage,
+        assignmentData: IParentalAssignmentData,
+        fonts: {
+            regular: PDFFont;
+            medium: PDFFont;
+            bold: PDFFont;
+        },
+    ) {
+        const today = formatDate(new Date(), 'dd.mm.yyyy');
+        titlePage.drawText(today, {
+            x: 270,
+            y: 690,
+            size: FONT_SIZE.MEDIUM,
+            color: COLORS.GRAY,
+            font: fonts.regular,
+        });
+
+        titlePage.drawText(
+            `${assignmentData.parentFirstName} ${assignmentData.parentLastName}`,
+            {
+                x: 67,
+                y: 585,
+                size: FONT_SIZE.MEDIUM,
+                color: COLORS.BLACK,
+                font: fonts.bold,
             },
         );
 
-        if (pngImage) {
-            thirdPage.drawImage(pngImage, {
-                x: 105,
-                y: 157,
-                width: 160,
-                height: 70,
-            });
-        }
+        titlePage.drawText(
+            `${assignmentData.firstName} ${assignmentData.lastName}`,
+            {
+                x: 304,
+                y: 585,
+                size: FONT_SIZE.MEDIUM,
+                color: COLORS.BLACK,
+                font: fonts.bold,
+            },
+        );
 
-        if (signature.sourceS3Key) {
-            await this.insertSignatureFromSource({
-                sourceKey: signature.sourceS3Key,
-                targetPage: thirdPage,
-                signatureRect: {
-                    x: 105,
-                    y: 157,
-                    width: 160,
-                    height: 70,
-                    page: 2,
-                },
-            });
-        }
+        titlePage.drawText(
+            formatDate(assignmentData.minorBirthday, 'dd.mm.yyyy'),
+            {
+                x: 304,
+                y: 543,
+                size: FONT_SIZE.MEDIUM,
+                color: COLORS.BLACK,
+                font: fonts.bold,
+            },
+        );
 
-        const pdfBytes = await pdfDoc.save();
-        const pdfBuffer = Buffer.from(pdfBytes);
+        titlePage.drawText(assignmentData.address, {
+            x: 67,
+            y: 543,
+            size: FONT_SIZE.MEDIUM,
+            color: COLORS.BLACK,
+            font: fonts.bold,
+        });
 
-        return { buffer: pdfBuffer };
+        titlePage.drawText(assignmentData.claimId, {
+            x: 130,
+            y: 453,
+            size: FONT_SIZE.MEDIUM,
+            color: COLORS.BLACK,
+            font: fonts.regular,
+        });
+
+        titlePage.drawText(assignmentData.airlineName, {
+            x: 130,
+            y: 422,
+            size: FONT_SIZE.MEDIUM,
+            color: COLORS.BLACK,
+            font: fonts.regular,
+        });
+
+        titlePage.drawText(assignmentData.flightNumber, {
+            x: 370,
+            y: 453,
+            size: FONT_SIZE.MEDIUM,
+            color: COLORS.BLACK,
+            font: fonts.regular,
+        });
+
+        titlePage.drawText(formatDate(assignmentData.date, 'dd.mm.yyyy'), {
+            x: 370,
+            y: 422,
+            size: FONT_SIZE.MEDIUM,
+            color: COLORS.BLACK,
+            font: fonts.regular,
+        });
+
+        signaturePage.drawText(
+            `${assignmentData.parentFirstName} ${assignmentData.parentLastName}`,
+            {
+                x: 55,
+                y: 556,
+                size: FONT_SIZE.MEDIUM,
+                color: COLORS.BLACK,
+                font: fonts.medium,
+            },
+        );
     }
 }

@@ -238,8 +238,8 @@ export class PublicOtherPassengerController {
                 imageDataUrl: signature,
             },
             {
-                claimId: claim.id,
-                passengerId: passenger.id,
+                claim: claim,
+                passenger: { ...passenger, isCustomer: false },
             },
             {
                 saveRecentUpdate: true,
