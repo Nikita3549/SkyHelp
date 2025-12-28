@@ -1056,6 +1056,21 @@ export class ClaimService {
         });
     }
 
+    async deletePartnerBulk(claimIds: string[]) {
+        await this.prisma.claim.updateMany({
+            where: {
+                id: {
+                    in: claimIds,
+                },
+            },
+            data: {
+                referrer: null,
+                referredById: null,
+                referrerSource: null,
+            },
+        });
+    }
+
     async addPartnerBulk(
         claimIds: string[],
         referralCode: string,

@@ -38,6 +38,7 @@ import { OtherPassengerService } from '../other-passenger/other-passenger.servic
 import { OtherPassengerDto } from '../other-passenger/dto/create-other-passengers.dto';
 import { AssignToPartnerDto } from './dto/assign-to-partner.dto';
 import { PARTNER_NOT_FOUND } from '../../referral/partner/constants';
+import { DeleteFromPartnerDto } from './dto/delete-from-partner.dto';
 
 @Controller('claims/admin')
 @UseGuards(
@@ -94,6 +95,14 @@ export class AdminController {
             partner.referralCode,
             partner.id,
         );
+    }
+
+    @Delete(`partner`)
+    @HttpCode(HttpStatus.NO_CONTENT)
+    async deleteFromPartnerBulk(@Body() dto: DeleteFromPartnerDto) {
+        const { claimIds } = dto;
+
+        await this.claimService.deletePartnerBulk(claimIds);
     }
 
     @Post('partner')
