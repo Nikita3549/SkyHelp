@@ -7,7 +7,6 @@ import { pngToJpeg } from './utils/png-to-jpeg.converter';
 import { convertDocToPdf } from './utils/doc-to-pdf.converter';
 import { S3Service } from '../../../../s3/s3.service';
 import { Document } from '@prisma/client';
-import { logDocumentWithoutS3Key } from '../../utils/logDocumentWithoutS3Key';
 
 @Injectable()
 export class DocumentFileService {
@@ -17,10 +16,6 @@ export class DocumentFileService {
         const mergedPdf = await PDFDocument.create();
 
         for (const document of documents) {
-            if (!document?.s3Key) {
-                logDocumentWithoutS3Key(document.id);
-                continue;
-            }
             const buffer = await this.S3Service.getBuffer(document.s3Key);
             const ext = path.extname(document.name).toLowerCase();
 

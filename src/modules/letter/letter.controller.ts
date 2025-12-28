@@ -35,7 +35,6 @@ import { CLAIM_NOT_FOUND } from '../claim/constants';
 import { RoleGuard } from '../../common/guards/role.guard';
 import { PatchFavoriteLetter } from './dto/patch-favorite-letter';
 import { ISignedUrlResponse } from '../claim/document/controllers/interfaces/signed-url-response.interface';
-import { logDocumentWithoutS3Key } from '../claim/document/utils/logDocumentWithoutS3Key';
 import { GetAttachmentDto } from './dto/get-attachment.dto';
 import { DocumentsUploadInterceptor } from '../../common/interceptors/documents/documents-upload.interceptor';
 
@@ -213,11 +212,6 @@ export class LetterController {
             if (!claim || claim.agentId != req.user.id) {
                 throw new NotFoundException(ATTACHMENT_NOT_FOUND);
             }
-        }
-
-        if (!attachment.s3Key) {
-            logDocumentWithoutS3Key(`attachment - ${attachment.id}`);
-            throw new InternalServerErrorException();
         }
 
         const { signedUrl } = await this.gmailService.attachment.readAttachment(

@@ -17,8 +17,7 @@ model OtherPassenger {
   parentFirstName String? @map("parent_first_name")
   parentLastName  String? @map("parent_last_name")
 
-  SignScenario SignScenario[]
-  copiedLinks  OtherPassengerCopiedLink[]
+  copiedLinks OtherPassengerCopiedLink[]
 
   @@map("claim_other_passengers")
 }

@@ -1,14 +1,13 @@
 model Attachment {
-  id             String   @id @default(cuid()) @map("id")
-  filename       String   @map("filename")
-  mimeType       String   @map("mime_type")
-  size           Int?     @map("size")
-  path           String?  @map("path")
-  s3Key          String?  @map("s3_key")
-  emailId        String   @map("email_id")
-  email          Email    @relation(fields: [emailId], references: [id])
-  createdAt      DateTime @default(now()) @map("created_at")
-  isMigratedOnS3 Boolean  @default(false) @map("is_migrated_on_s3")
+  id        String   @id @default(cuid()) @map("id")
+  filename  String   @map("filename")
+  mimeType  String   @map("mime_type")
+  size      Int?     @map("size")
+  path      String?  @map("path")
+  s3Key     String   @map("s3_key")
+  emailId   String   @map("email_id")
+  email     Email    @relation(fields: [emailId], references: [id])
+  createdAt DateTime @default(now()) @map("created_at")
 
   @@map("attachments")
 }

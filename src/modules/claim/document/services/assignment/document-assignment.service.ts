@@ -12,7 +12,6 @@ import { IAssignmentTemplates } from './interfaces/assignment-templates.interfac
 import { IAssignmentData } from './interfaces/assignment-data.interface';
 import { IParentalAssignmentData } from './interfaces/parental-assignment-data.interface';
 import { IAssignmentSignature } from './interfaces/assignment-signature.interface';
-import { logDocumentWithoutS3Key } from '../../utils/logDocumentWithoutS3Key';
 import { ISignatureRectangle } from './interfaces/signature-rectangle.interface';
 import { COLORS } from './constants/colors';
 import { FONT_SIZE } from './constants/font-size';
@@ -194,11 +193,6 @@ export class DocumentAssignmentService implements OnModuleInit {
         passenger: BasePassenger,
         assignment: Document,
     ) {
-        if (!assignment.s3Key) {
-            logDocumentWithoutS3Key(assignment.id);
-            return;
-        }
-
         const assignmentData = {
             address: passenger.address,
             airlineName: claim.details.airlines.name,
