@@ -1053,7 +1053,11 @@ export class ClaimService {
         });
     }
 
-    async addPartnerBulk(claimIds: string[], referralCode: string | null) {
+    async addPartnerBulk(
+        claimIds: string[],
+        referralCode: string,
+        partnerId: string,
+    ) {
         await this.prisma.claim.updateMany({
             where: {
                 id: {
@@ -1062,6 +1066,8 @@ export class ClaimService {
             },
             data: {
                 referrer: referralCode,
+                referredById: partnerId,
+                referrerSource: 'admin',
             },
         });
     }

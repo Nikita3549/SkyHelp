@@ -89,7 +89,11 @@ export class AdminController {
             throw new NotFoundException(PARTNER_NOT_FOUND);
         }
 
-        await this.claimService.addPartnerBulk(claimIds, partner.referralCode);
+        await this.claimService.addPartnerBulk(
+            claimIds,
+            partner.referralCode,
+            partner.id,
+        );
     }
 
     @Post('partner')
