@@ -10,10 +10,10 @@ import {
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { UploadFileOptions } from './interfaces/upload-file-options.interface';
-import { SIGNED_URL_EXPIRES_IN } from './const';
-import * as path from 'path';
+import { SIGNED_URL_EXPIRES_IN, STATIC_BUCKET_URL } from './const';
 import { SignedUrlDisposition } from './enums/signed-url-disposition.enum';
 import { IGetSignedUrlOptions } from './interfaces/get-signed-url-options.interfaces';
+import axios from 'axios';
 
 @Injectable()
 export class S3Service {
@@ -115,5 +115,19 @@ export class S3Service {
         } catch (error) {
             throw new Error(`Failed to upload file to S3: ${error}`);
         }
+    }
+
+    async getPublicFile(fileUri: string): Promise<Buffer> {
+        const res = await axios
+            .get(`${STATIC_BUCKET_URL}${fileUri}`, {
+                responseType: 'blob',
+            })
+            .catch((e) => {
+                throw new Error(
+                    `Cant find static file by uri ${fileUri}: ${e}`,
+                );
+            });
+
+        return res.data;
     }
 }

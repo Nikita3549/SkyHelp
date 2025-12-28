@@ -6,7 +6,6 @@ import { ICoordinates } from './interfaces/coordinates.interface';
 import { PrelitDirectoryPath } from '../../common/constants/paths/PrelitDirectoryPath';
 import { PDFDocument, rgb } from 'pdf-lib';
 import * as fontkit from 'fontkit';
-import { UPLOAD_DIRECTORY_PATH } from '../../common/constants/paths/UploadsDirectoryPath';
 
 @Injectable()
 export class PrelitTemplatesService {

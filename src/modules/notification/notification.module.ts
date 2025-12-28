@@ -4,6 +4,7 @@ import { GmailModule } from '../gmail/gmail.module';
 import { TokenModule } from '../token/token.module';
 import { UnsubscribeEmailModule } from '../unsubscribe-email/unsubscribe-email.module';
 import { GenerateLinksModule } from '../generate-links/generate-links.module';
+import { S3Module } from '../s3/s3.module';
 
 @Module({
     imports: [
@@ -11,6 +12,7 @@ import { GenerateLinksModule } from '../generate-links/generate-links.module';
         TokenModule,
         UnsubscribeEmailModule,
         GenerateLinksModule,
+        S3Module,
     ],
     providers: [NotificationService],
     exports: [NotificationService],

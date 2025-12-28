@@ -23,7 +23,6 @@ import {
     SPECIALIZED_DOCUMENT_REQUEST_PASSPORT_MISMATCH_FILENAME,
     SPECIALIZED_DOCUMENT_REQUEST_SIGNATURE_MISMATCH_FILENAME,
 } from './constants';
-import { LETTERS_DIRECTORY_PATH } from '../../common/constants/paths/LettersDirectoryPath';
 import { EmailCategory } from '../gmail/enums/email-type.enum';
 import { TokenService } from '../token/token.service';
 import { UnsubscribeJwt } from '../unsubscribe-email/interfaces/unsubscribe-jwt';
@@ -33,6 +32,7 @@ import { DocumentRequestReason, DocumentType } from '@prisma/client';
 import Handlebars from 'handlebars';
 import { ReminderTypeEnum } from './enums/reminder-type.enum';
 import { GenerateLinksService } from '../generate-links/generate-links.service';
+import { S3Service } from '../s3/s3.service';
 
 @Injectable()
 export class NotificationService {
@@ -42,6 +42,7 @@ export class NotificationService {
         private readonly tokenService: TokenService,
         private readonly unsubscribeEmailService: UnsubscribeEmailService,
         private readonly generateLinksService: GenerateLinksService,
+        private readonly S3Service: S3Service,
     ) {}
 
     async sendNewGeneratedAccount(
@@ -535,8 +536,8 @@ This message was automatically generated.
         language: Languages = Languages.EN,
     ): Promise<string> {
         return (
-            await fs.readFile(
-                path.join(LETTERS_DIRECTORY_PATH, `${language}/${fileName}`),
+            await this.S3Service.getPublicFile(
+                `/letters/${language}/${fileName}`,
             )
         ).toString();
     }
@@ -753,11 +754,8 @@ This message was automatically generated.
         emailCategory: EmailCategory = EmailCategory.TRANSACTIONAL,
     ): Promise<string> {
         const layout = (
-            await fs.readFile(
-                path.join(
-                    LETTERS_DIRECTORY_PATH,
-                    `layout/${emailCategory == EmailCategory.MARKETING ? '/unsubscribe/' : ''}${language}.html`,
-                ),
+            await this.S3Service.getPublicFile(
+                `/letters/layout/${emailCategory == EmailCategory.MARKETING ? '/unsubscribe/' : ''}${language}.html`,
             )
         )
             .toString()
