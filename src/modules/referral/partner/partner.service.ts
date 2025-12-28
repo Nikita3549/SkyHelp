@@ -134,7 +134,8 @@ export class PartnerService {
             JOIN partners p ON p.id = c.referred_by_id
             WHERE ${userFilter}
                 c.archived = false AND
-                c.created_at >= NOW() - INTERVAL '30 days'
+                c.created_at >= NOW() - INTERVAL '30 days' AND
+                c.referrer IS NOT NULL
             GROUP BY c.created_at::date
             ORDER BY c.created_at::date DESC
         `,
@@ -149,7 +150,8 @@ export class PartnerService {
                 c.archived = false AND
                 ${partnerData ? Prisma.sql`c.referrer_source = ${partnerData.referralSource} AND` : Prisma.empty}
                 c.created_at >= NOW() - INTERVAL '30 days' AND
-                cs.status = 'Paid'
+                cs.status = 'Paid' AND
+                c.referrer IS NOT NULL
             GROUP BY c.created_at::date
             ORDER BY c.created_at::date DESC
         `,
@@ -188,7 +190,9 @@ export class PartnerService {
             this.prisma.claim.count({
                 where: {
                     archived: false,
-                    referrer: partnerData?.referralCode,
+                    referrer: partnerData?.referralCode || {
+                        not: null,
+                    },
                     referrerSource: partnerData?.referralSource,
                     state: {
                         status: ClaimStatus.PAID,
@@ -208,6 +212,9 @@ export class PartnerService {
             this.prisma.claim.count({
                 where: {
                     referredBy: userId ? { userId } : undefined,
+                    referrer: {
+                        not: null,
+                    },
                     archived: false,
                 },
             }),
