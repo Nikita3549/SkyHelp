@@ -14,7 +14,6 @@ WORKDIR opt/api
 RUN apt-get update -y && apt-get install -y openssl libssl-dev
 COPY package.json ./
 COPY prisma ./prisma
-COPY translations ./translations
 COPY fonts ./fonts
 COPY assets ./assets
 RUN npm install --only=prod
