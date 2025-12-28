@@ -19,8 +19,6 @@ services:
     container_name: dev_api
     networks:
       - main
-    environment:
-      - ./uploads:/opt/api/uploads/
     command: sh -c "cd /opt/api/ && npx prisma migrate deploy && npx prisma generate && NODE_ENV=DEV node dist/main"
 
 networks:
@@ -30,4 +28,3 @@ networks:
 volumes:
   db_data:
   redis_data:
-  uploads:
