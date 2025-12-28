@@ -2,19 +2,18 @@ import { Injectable } from '@nestjs/common';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import { Languages } from './enums/languages.enums';
+import { S3Service } from '../s3/s3.service';
 
 @Injectable()
 export class LanguageService {
+    constructor(private readonly S3Service: S3Service) {}
+
     async getTranslationsJson(
         language: Languages,
     ): Promise<{ [key: string]: string }> {
-        const filename = `${language}.json`;
-
-        return JSON.parse(
-            await fs.readFile(
-                path.join(__dirname, `../../../translations/${filename}`),
-                { encoding: 'utf-8' },
-            ),
+        const buffer = await this.S3Service.getPublicFile(
+            `/translations/${language}.json`,
         );
+        return JSON.parse(buffer.toString());
     }
 }

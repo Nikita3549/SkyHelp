@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { LanguageController } from './language.controller';
 import { LanguageService } from './language.service';
+import { S3Module } from '../s3/s3.module';
 
 @Module({
-    controllers: [LanguageController],
+    imports: [S3Module],
     providers: [LanguageService],
     exports: [LanguageService],
 })
