@@ -6,4 +6,5 @@ enum DisruptionType {
   delayed_baggage
   lost_baggage
   other_baggage_problem
+  damaged_baggage
 }
