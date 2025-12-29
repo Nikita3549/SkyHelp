@@ -110,8 +110,8 @@ export class ClaimService {
         }
 
         if (
-            claim.state.status != ClaimStatus.LEGAL_PROCESS &&
-            claim.state.status != ClaimStatus.DOCS_REQUESTED &&
+            (claim.state.status != ClaimStatus.LEGAL_PROCESS &&
+                claim.state.status != ClaimStatus.DOCS_REQUESTED) ||
             documentRequests.some(
                 (d) => d.status === DocumentRequestStatus.ACTIVE,
             )
