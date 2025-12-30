@@ -4017,6 +4017,7 @@
     "IssueDetailsCard.delayed_baggage": "Затриманий багаж або втрачений",
     "IssueDetailsCard.other_baggage_problem": "Інша проблема з багажем",
     "IssueDetailsCard.baggage_delay_category": "Затримка багажу",
-    "CompensationDetailsCard.calculating": "Обчислення"
+    "CompensationDetailsCard.calculating": "Обчислення",
+    "signatureStep.rotatePhone": "Поверніть телефон"
 }
 

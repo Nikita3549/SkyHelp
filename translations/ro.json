@@ -4028,5 +4028,6 @@
     "IssueDetailsCard.delayed_baggage": "Bagaj întârziat sau pierdut",
     "IssueDetailsCard.other_baggage_problem": "Altă problemă cu bagajul",
     "IssueDetailsCard.baggage_delay_category": "Întârziere bagaj",
-    "CompensationDetailsCard.calculating": "Calcul"
+    "CompensationDetailsCard.calculating": "Calcul",
+    "signatureStep.rotatePhone": "Rotiți telefonul"
 }

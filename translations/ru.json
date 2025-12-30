@@ -4028,5 +4028,6 @@
     "IssueDetailsCard.delayed_baggage": "Задержанный или потерянный багаж",
     "IssueDetailsCard.other_baggage_problem": "Другая проблема с багажом",
     "IssueDetailsCard.baggage_delay_category": "Задержка багажа",
-    "CompensationDetailsCard.calculating": "Рассчитывается"
+    "CompensationDetailsCard.calculating": "Рассчитывается",
+    "signatureStep.rotatePhone": "Поверните телефон"
 }

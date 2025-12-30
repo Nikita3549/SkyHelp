@@ -4051,5 +4051,6 @@
     "IssueDetailsCard.delayed_baggage": "Geciken veya Kayıp Bagaj",
     "IssueDetailsCard.other_baggage_problem": "Diğer Bagaj Sorunu",
     "IssueDetailsCard.baggage_delay_category": "Bagaj Gecikmesi",
-    "CompensationDetailsCard.calculating": "Hesaplanıyor"
+    "CompensationDetailsCard.calculating": "Hesaplanıyor",
+    "signatureStep.rotatePhone": "Telefonunuzu döndürün"
 }

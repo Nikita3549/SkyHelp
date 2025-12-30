@@ -19,7 +19,7 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "check-env": "bash validate-env.sh",
-    "translations:push": "aws s3 sync ./translations s3://skyhelp-static/translations --dryrun"
+    "translations:push": "aws s3 sync ./translations s3://skyhelp-static/translations"
 
   },
   "dependencies": {
