@@ -114,7 +114,12 @@ export class UserService {
     }
 
     saveUserWithOauthAccount(
-        registerData: ISaveUserData,
+        registerData: {
+            email: string;
+            name?: string;
+            secondName?: string;
+            role?: UserRole;
+        },
         oauthAccountData: {
             providerId: string;
             provider: OauthProvider;
@@ -124,7 +129,10 @@ export class UserService {
             this.prisma.$transaction(async (tx: Prisma.TransactionClient) => {
                 const user = await tx.user.create({
                     data: {
-                        ...registerData,
+                        name: registerData.name || registerData.email,
+                        secondName: registerData.secondName || '-',
+                        role: registerData.role,
+                        email: registerData.email,
                     },
                     omit: {
                         hashedPassword: true,

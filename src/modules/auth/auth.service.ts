@@ -47,13 +47,7 @@ export class AuthService {
 
             const payload = ticket.getPayload();
 
-            if (
-                !payload ||
-                !payload.email_verified ||
-                !payload.email ||
-                !payload.family_name ||
-                !payload.given_name
-            ) {
+            if (!payload || !payload.email_verified || !payload.email) {
                 throw new UnauthorizedException('Google email is not verified');
             }
 
@@ -115,6 +109,7 @@ export class AuthService {
                 };
             }
         } catch (e) {
+            console.log(e);
             throw new UnauthorizedException('Invalid Google Token');
         }
     }
