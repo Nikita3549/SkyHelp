@@ -4029,7 +4029,7 @@
     "IssueDetailsCard.baggage_delay_category": "Baggage Delay",
     "GoogleLoginButton.failed.toast.title": "Authentication Failed",
     "GoogleLoginButton.failed.toast.description": "Something went wrong during the Google sign-in process.",
-    "GoogleLoginButton.button": "Continue",
+    "GoogleLoginButton.button": "Google",
     "AuthContext.login.social-auth-only.title": "Password not set",
     "AuthContext.login.social-auth-only.description": "This account was created via social media. Please sign in with social media or use \"Forgot Password\" to set a password.",
     "CompensationDetailsCard.calculating": "Calculating",
