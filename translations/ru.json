@@ -4030,5 +4030,10 @@
     "IssueDetailsCard.baggage_delay_category": "Задержка багажа",
     "CompensationDetailsCard.calculating": "Рассчитывается",
     "signatureStep.rotatePhone": "Поверните телефон",
-    "PartnerLayout.otherLinks.title": "Другие ссылки"
+    "PartnerLayout.otherLinks.title": "Другие ссылки",
+    "GoogleLoginButton.failed.toast.title": "Ошибка аутентификации",
+    "GoogleLoginButton.failed.toast.description": "Произошла ошибка при попытке входа через Google.",
+    "GoogleLoginButton.button": "Продолжить через Google",
+    "AuthContext.login.social-auth-only.title": "Пароль не установлен",
+    "AuthContext.login.social-auth-only.description": "Этот аккаунт был создан через социальные сети. Пожалуйста, войдите через соцсеть или воспользуйтесь функцией «Забыли пароль», чтобы установить его."
 }
