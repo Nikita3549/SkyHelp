@@ -4018,6 +4018,7 @@
     "IssueDetailsCard.other_baggage_problem": "Інша проблема з багажем",
     "IssueDetailsCard.baggage_delay_category": "Затримка багажу",
     "CompensationDetailsCard.calculating": "Обчислення",
-    "signatureStep.rotatePhone": "Поверніть телефон"
+    "signatureStep.rotatePhone": "Поверніть телефон",
+    "PartnerLayout.otherLinks.title": "Інші посилання"
 }
 

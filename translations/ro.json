@@ -4029,5 +4029,6 @@
     "IssueDetailsCard.other_baggage_problem": "Altă problemă cu bagajul",
     "IssueDetailsCard.baggage_delay_category": "Întârziere bagaj",
     "CompensationDetailsCard.calculating": "Calcul",
-    "signatureStep.rotatePhone": "Rotiți telefonul"
+    "signatureStep.rotatePhone": "Rotiți telefonul",
+    "PartnerLayout.otherLinks.title": "Alte link-uri"
 }

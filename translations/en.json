@@ -4031,5 +4031,6 @@
     "GoogleLoginButton.failed.toast.description": "Something went wrong during the Google sign-in process.",
     "GoogleLoginButton.button": "Continue with Google",
     "CompensationDetailsCard.calculating": "Calculating",
-    "signatureStep.rotatePhone": "Rotate your phone"
+    "signatureStep.rotatePhone": "Rotate your phone", 
+    "PartnerLayout.otherLinks.title": "Other Links"
 }
