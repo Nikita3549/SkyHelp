@@ -20,7 +20,6 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "check-env": "bash validate-env.sh",
     "translations:push": "aws s3 sync ./translations s3://skyhelp-static/translations"
-
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.948.0",
@@ -50,6 +49,7 @@
     "email-addresses": "^5.0.0",
     "file-type": "^21.0.0",
     "fontkit": "^2.0.4",
+    "google-auth-library": "^10.5.0",
     "googleapis": "^150.0.1",
     "handlebars": "^4.7.8",
     "ioredis": "^5.6.1",

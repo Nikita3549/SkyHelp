@@ -1,13 +1,60 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { User, UserRole } from '@prisma/client';
+import { OauthProvider, Prisma, User, UserRole } from '@prisma/client';
 import { ISaveUserData } from './interfaces/saveUserData.interface';
 import { IPublicUserData } from './interfaces/publicUserData.interface';
 import { IUpdateData } from './interfaces/update-data.interface';
+import { IUserWithOauthAccounts } from './interfaces/user-with-oauth-account.interface';
 
 @Injectable()
 export class UserService {
     constructor(private readonly prisma: PrismaService) {}
+
+    async getUserByProviderId(
+        providerId: string,
+        provider: OauthProvider,
+    ): Promise<IUserWithOauthAccounts | null> {
+        return new Promise(async (resolve, _reject) => {
+            await this.prisma.$transaction(
+                async (tx: Prisma.TransactionClient) => {
+                    const oauthAccount = await tx.oauthAccount.findUnique({
+                        where: {
+                            provider_providerId: {
+                                providerId,
+                                provider,
+                            },
+                        },
+                    });
+
+                    if (!oauthAccount) {
+                        resolve(null);
+                        return;
+                    }
+
+                    const user = await tx.user.findUniqueOrThrow({
+                        where: {
+                            id: oauthAccount.userId,
+                        },
+                        include: {
+                            oauthAccounts: true,
+                        },
+                    });
+
+                    resolve(user);
+                },
+            );
+        });
+    }
+
+    async createOauthAccount(data: {
+        providerId: string;
+        provider: OauthProvider;
+        userId: string;
+    }) {
+        return this.prisma.oauthAccount.create({
+            data,
+        });
+    }
 
     async getUserByEmail(email: string): Promise<User | null> {
         return this.prisma.user.findFirst({
@@ -63,6 +110,38 @@ export class UserService {
                 hashedPassword: true,
                 updatedAt: true,
             },
+        });
+    }
+
+    saveUserWithOauthAccount(
+        registerData: ISaveUserData,
+        oauthAccountData: {
+            providerId: string;
+            provider: OauthProvider;
+        },
+    ): Promise<IPublicUserData> {
+        return new Promise((resolve, _reject) => {
+            this.prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+                const user = await tx.user.create({
+                    data: {
+                        ...registerData,
+                    },
+                    omit: {
+                        hashedPassword: true,
+                        updatedAt: true,
+                    },
+                });
+
+                tx.oauthAccount.create({
+                    data: {
+                        providerId: oauthAccountData.providerId,
+                        provider: oauthAccountData.provider,
+                        userId: user.id,
+                    },
+                });
+
+                resolve(user);
+            });
         });
     }
 

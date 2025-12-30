@@ -1,0 +1,10 @@
+model OauthAccount {
+  id         String        @id @default(uuid())
+  userId     String        @map("user_id")
+  user       User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  provider   OauthProvider
+  providerId String        @map("provider_id")
+
+  @@unique([provider, providerId])
+  @@map("oauth_accounts")
+}

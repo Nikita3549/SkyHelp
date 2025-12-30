@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { RedisService } from '../redis/redis.service';
 import { IRegisterDataWithCode } from './interfaces/registerDataWithCode.interface';
 import {
@@ -10,21 +10,114 @@ import {
 } from './constants';
 import * as bcrypt from 'bcryptjs';
 import * as crypto from 'crypto';
-import { UserRole } from '@prisma/client';
+import { OauthProvider, Prisma, UserRole } from '@prisma/client';
 import { UserService } from '../user/user.service';
 import { NotificationService } from '../notification/notification.service';
 import { TokenService } from '../token/token.service';
 import { Languages } from '../language/enums/languages.enums';
 import { hashPassword } from './utils/hashPassword';
+import { OAuth2Client } from 'google-auth-library';
+import { ConfigService } from '@nestjs/config';
+import { IPublicUserData } from '../user/interfaces/publicUserData.interface';
+import { IPublicUserDataWithJwt } from './interfaces/publicUserDataWithJwt.interface';
 
 @Injectable()
 export class AuthService {
+    googleClient: OAuth2Client;
     constructor(
         private readonly redis: RedisService,
         private readonly userService: UserService,
         private readonly notificationService: NotificationService,
         private readonly tokenService: TokenService,
-    ) {}
+        private readonly configService: ConfigService,
+    ) {
+        this.googleClient = new OAuth2Client(
+            configService.getOrThrow('GOOGLE_CLIENT_ID'),
+        );
+    }
+
+    async authenticateGoogleLoginToken(
+        idToken: string,
+    ): Promise<IPublicUserDataWithJwt> {
+        try {
+            const ticket = await this.googleClient.verifyIdToken({
+                idToken,
+                audience: this.configService.getOrThrow('GOOGLE_CLIENT_ID'),
+            });
+
+            const payload = ticket.getPayload();
+
+            if (
+                !payload ||
+                !payload.email_verified ||
+                !payload.email ||
+                !payload.family_name ||
+                !payload.given_name
+            ) {
+                throw new UnauthorizedException('Google email is not verified');
+            }
+
+            const userWithOauthAccount =
+                await this.userService.getUserByProviderId(
+                    payload.sub,
+                    OauthProvider.GOOGLE,
+                );
+
+            if (!userWithOauthAccount) {
+                // Register or link
+                const user = await this.userService.getUserByEmail(
+                    payload.email,
+                );
+
+                // Link
+                if (user) {
+                    await this.userService.createOauthAccount({
+                        providerId: payload.sub,
+                        provider: OauthProvider.GOOGLE,
+                        userId: user.id,
+                    });
+
+                    const { jwt, publicUserData } = this.generateUserJwt(user);
+
+                    return {
+                        jwt,
+                        userData: publicUserData,
+                    };
+                }
+
+                // Register
+                const createdUser =
+                    await this.userService.saveUserWithOauthAccount(
+                        {
+                            email: payload.email,
+                            name: payload.given_name,
+                            secondName: payload.family_name,
+                            role: UserRole.CLIENT,
+                        },
+                        {
+                            provider: OauthProvider.GOOGLE,
+                            providerId: payload.sub,
+                        },
+                    );
+
+                const { jwt, publicUserData } =
+                    this.generateUserJwt(createdUser);
+
+                return { jwt, userData: publicUserData };
+            } else {
+                // Login
+                const { jwt, publicUserData } =
+                    this.generateUserJwt(userWithOauthAccount);
+
+                return {
+                    jwt,
+                    userData: publicUserData,
+                };
+            }
+        } catch (e) {
+            throw new UnauthorizedException('Invalid Google Token');
+        }
+    }
 
     async deleteRegisterDataFromRedis(email: string) {
         await this.redis.del(`${email}:${REDIS_REGISTER_DATA_KEY_POSTFIX}`);
@@ -149,6 +242,28 @@ export class AuthService {
         return {
             userToken,
             userId,
+        };
+    }
+
+    generateUserJwt(publicUserData: IPublicUserData): {
+        jwt: string;
+        publicUserData: IPublicUserData;
+    } {
+        // prevent from extra field
+        const formattedPublicData: IPublicUserData = {
+            id: publicUserData.id,
+            email: publicUserData.email,
+            name: publicUserData.name,
+            secondName: publicUserData.secondName,
+            role: publicUserData.role,
+            isActive: publicUserData.isActive,
+            createdAt: publicUserData.createdAt,
+            lastSign: publicUserData.lastSign,
+        };
+        const jwt = this.tokenService.generateJWT(formattedPublicData);
+        return {
+            jwt,
+            publicUserData: formattedPublicData,
         };
     }
 

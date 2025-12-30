@@ -3,6 +3,7 @@ import {
     Body,
     ConflictException,
     Controller,
+    ForbiddenException,
     Get,
     HttpCode,
     HttpStatus,
@@ -50,6 +51,8 @@ import { AuthRequest } from '../../common/interfaces/AuthRequest.interface';
 import { IClaimJwt } from '../claim/interfaces/claim-jwt.interface';
 import { ClaimService } from '../claim/claim.service';
 import { hashPassword } from './utils/hashPassword';
+import { GoogleLoginDto } from './dto/google-login.dto';
+import { IPublicUserData } from '../user/interfaces/publicUserData.interface';
 
 @Controller('auth')
 export class AuthController {
@@ -60,6 +63,13 @@ export class AuthController {
         private readonly tokenService: TokenService,
         private readonly claimService: ClaimService,
     ) {}
+
+    @Post('login/google')
+    async googleLogin(
+        @Body() dto: GoogleLoginDto,
+    ): Promise<IPublicUserDataWithJwt> {
+        return this.authService.authenticateGoogleLoginToken(dto.idToken);
+    }
 
     @Post('register')
     @HttpCode(HttpStatus.OK)
@@ -126,19 +136,13 @@ export class AuthController {
 
         const userData = await this.userService.saveUser(registerData);
 
-        const jwt = this.tokenService.generateJWT({
-            id: userData.id,
-            email: userData.email,
-            name: userData.name,
-            secondName: userData.secondName,
-            role: UserRole.CLIENT,
-            isActive: true,
-        });
+        const { jwt, publicUserData } =
+            this.authService.generateUserJwt(userData);
 
         await this.connectWithClaim(userData.id, claimToken);
 
         return {
-            userData,
+            userData: publicUserData,
             jwt,
         };
     }
@@ -174,6 +178,10 @@ export class AuthController {
             throw new UnauthorizedException(WRONG_EMAIL_OR_PASSWORD);
         }
 
+        if (!expiredUser.hashedPassword) {
+            throw new ForbiddenException('SOCIAL_AUTH_ONLY');
+        }
+
         if (
             !(await this.authService.comparePasswords(
                 password,
@@ -185,18 +193,7 @@ export class AuthController {
 
         const user = await this.userService.updateLastSign(expiredUser.email);
 
-        const publicUserData = {
-            name: user.name,
-            secondName: user.secondName,
-            role: user.role,
-            email: user.email,
-            id: user.id,
-            isActive: user.isActive,
-            lastSign: user.lastSign,
-            createdAt: user.lastSign,
-        };
-
-        const jwt = this.tokenService.generateJWT(publicUserData);
+        const { jwt, publicUserData } = this.authService.generateUserJwt(user);
 
         return {
             userData: publicUserData,
@@ -278,18 +275,7 @@ export class AuthController {
             throw new InternalServerErrorException();
         }
 
-        const publicUserData = {
-            name: user.name,
-            secondName: user.secondName,
-            role: user.role,
-            email: user.email,
-            id: user.id,
-            isActive: user.isActive,
-            lastSign: user.lastSign,
-            createdAt: user.lastSign,
-        };
-
-        const jwt = this.tokenService.generateJWT(publicUserData);
+        const { jwt } = this.authService.generateUserJwt(user);
 
         res.clearCookie('accessToken', {
             httpOnly: true,

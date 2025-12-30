@@ -1,9 +1,6 @@
+import { ISaveUserData } from '../../user/interfaces/saveUserData.interface';
+
 export interface IRegisterDataWithCode {
     code: number;
-    registerData: {
-        email: string;
-        hashedPassword: string;
-        name: string;
-        secondName: string;
-    };
+    registerData: ISaveUserData;
 }
