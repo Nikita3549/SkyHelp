@@ -4056,7 +4056,7 @@
     "PartnerLayout.otherLinks.title": "Diğer Bağlantılar",
     "GoogleLoginButton.failed.toast.title": "Kimlik Doğrulama Başarısız",
     "GoogleLoginButton.failed.toast.description": "Google ile giriş yapma işlemi sırasında bir hata oluştu.",
-    "GoogleLoginButton.button": "Google ile devam et",
+    "GoogleLoginButton.button": "Google",
     "AuthContext.login.social-auth-only.title": "Şifre belirlenmedi",
     "AuthContext.login.social-auth-only.description": "Bu hesap sosyal medya üzerinden oluşturuldu. Lütfen sosyal medya ile giriş yapın veya şifre belirlemek için \"Şifremi Unuttum\" seçeneğini kullanın."
 }

@@ -4033,7 +4033,7 @@
     "PartnerLayout.otherLinks.title": "Alte link-uri",
     "GoogleLoginButton.failed.toast.title": "Autentificare eșuată",
     "GoogleLoginButton.failed.toast.description": "A apărut o eroare în timpul procesului de conectare cu Google.",
-    "GoogleLoginButton.button": "Continuă cu Google",
+    "GoogleLoginButton.button": "Google",
     "AuthContext.login.social-auth-only.title": "Parola nu este setată",
     "AuthContext.login.social-auth-only.description": "Acest cont a fost creat prin rețelele sociale. Vă rugăm să vă conectați prin rețelele sociale sau să utilizați „Am uitat parola” pentru a seta o parolă."
 }
