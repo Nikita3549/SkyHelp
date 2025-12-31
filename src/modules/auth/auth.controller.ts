@@ -8,10 +8,7 @@ import {
     HttpCode,
     HttpStatus,
     InternalServerErrorException,
-    NotFoundException,
-    Patch,
     Post,
-    Put,
     Query,
     Req,
     Res,
@@ -44,15 +41,12 @@ import { LoginDto } from './dto/login.dto';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { VerifyResetPasswordDto } from './dto/verify-reset-password.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
-import { UpdateRoleDto } from './dto/update-role.dto';
 import { JwtAuthGuard } from '../../common/guards/jwtAuth.guard';
-import { UserRole } from '@prisma/client';
 import { AuthRequest } from '../../common/interfaces/AuthRequest.interface';
 import { IClaimJwt } from '../claim/interfaces/claim-jwt.interface';
 import { ClaimService } from '../claim/claim.service';
 import { hashPassword } from './utils/hashPassword';
 import { GoogleLoginDto } from './dto/google-login.dto';
-import { IPublicUserData } from '../user/interfaces/publicUserData.interface';
 
 @Controller('auth')
 export class AuthController {

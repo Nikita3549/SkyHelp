@@ -1,4 +1,4 @@
-import { IsEnum, IsUUID } from 'class-validator';
+import { IsEnum } from 'class-validator';
 import { UserRole } from '@prisma/client';
 
 export class UpdateRoleDto {

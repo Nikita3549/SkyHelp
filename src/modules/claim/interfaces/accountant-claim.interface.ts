@@ -2,14 +2,14 @@ import {
     Airline,
     ArrivalAirport,
     Claim,
-    ClaimDetails,
-    ClaimState,
     ClaimCustomer,
+    ClaimDetails,
+    ClaimPayment,
+    ClaimState,
     DepartureAirport,
     Document,
     DuplicatedClaim,
     OtherPassenger,
-    ClaimPayment,
     Progress,
     Route,
 } from '@prisma/client';
@@ -37,12 +37,17 @@ interface IAccountantClaimRoute extends Route {
 interface IAccountantClaimState
     extends Pick<
         ClaimState,
-        'id' | 'status' | 'amount' | 'updatedAt' | 'comments' | 'isPaymentRequested'
+        | 'id'
+        | 'status'
+        | 'amount'
+        | 'updatedAt'
+        | 'comments'
+        | 'isPaymentRequested'
     > {
     progress: Progress[];
 }
 
 interface IAccountantClaimPassenger
-    extends Pick<OtherPassenger, 'id' | 'isMinor' | 'firstName' | 'lastName'> { }
+    extends Pick<OtherPassenger, 'id' | 'isMinor' | 'firstName' | 'lastName'> {}
 
-interface IAccountantClaimDocument extends Omit<Document, 'path'> { }
+interface IAccountantClaimDocument extends Omit<Document, 'path'> {}

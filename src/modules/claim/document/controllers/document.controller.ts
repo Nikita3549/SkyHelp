@@ -17,12 +17,7 @@ import {
     UseGuards,
 } from '@nestjs/common';
 import { DocumentsUploadInterceptor } from '../../../../common/interceptors/documents/documents-upload.interceptor';
-import {
-    CLAIM_NOT_FOUND,
-    DOCUMENT_NOT_FOUND,
-    FILE_DOESNT_ON_DISK,
-    PASSENGER_NOT_FOUND,
-} from '../../constants';
+import { CLAIM_NOT_FOUND, DOCUMENT_NOT_FOUND } from '../../constants';
 import { JwtAuthGuard } from '../../../../common/guards/jwtAuth.guard';
 import { ClaimService } from '../../claim.service';
 import { UploadAdminDocumentsDto } from '../dto/upload-admin-documents.dto';
@@ -43,7 +38,6 @@ import { DocumentRequestService } from '../../document-request/document-request.
 import { PatchPassengerIdDto } from '../dto/patch-passenger-id.dto';
 import { HttpStatusCode } from 'axios';
 import { RoleGuard } from '../../../../common/guards/role.guard';
-import { S3Service } from '../../../s3/s3.service';
 import { ISignedUrlResponse } from './interfaces/signed-url-response.interface';
 
 @Controller('claims/documents')

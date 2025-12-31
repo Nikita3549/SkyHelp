@@ -2,7 +2,6 @@ import {
     BadRequestException,
     Body,
     Controller,
-    InternalServerErrorException,
     NotFoundException,
     Param,
     Patch,
@@ -33,13 +32,11 @@ import {
     ClaimRecentUpdatesType,
     ClaimStatus,
     DocumentRequestStatus,
-    DocumentType,
     PassengerPaymentStatus,
     UserRole,
 } from '@prisma/client';
 import { DocumentsUploadInterceptor } from '../../../common/interceptors/documents/documents-upload.interceptor';
 import { UploadOtherPassengerDto } from './dto/upload-other-passenger.dto';
-import { generateAssignmentName } from '../../../common/utils/generate-assignment-name';
 import { RecentUpdatesService } from '../recent-updates/recent-updates.service';
 import { DocumentRequestService } from '../document-request/document-request.service';
 import { RoleGuard } from '../../../common/guards/role.guard';

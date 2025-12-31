@@ -240,6 +240,7 @@ export class PartnerService {
             claimsCount,
         };
     }
+
     async updatePartnerPayment(dto: UpdatePartnerPaymentDto, userId: string) {
         return this.prisma.partnerPayment.updateMany({
             data: {

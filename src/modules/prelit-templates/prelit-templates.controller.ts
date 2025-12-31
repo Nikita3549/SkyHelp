@@ -24,6 +24,7 @@ export class PrelitTemplatesController {
     constructor(
         private readonly prelitTemplatesService: PrelitTemplatesService,
     ) {}
+
     @Post('cancellation')
     async generateCancellation(
         @Body() dto: GenerateTemplateDto,

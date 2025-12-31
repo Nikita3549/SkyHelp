@@ -1,10 +1,10 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import { FontsDirectoryPath } from '../../common/constants/paths/FontsDirectoryPath';
 import { ICoordinates } from './interfaces/coordinates.interface';
 import { PrelitDirectoryPath } from '../../common/constants/paths/PrelitDirectoryPath';
-import { PDFDocument, rgb } from 'pdf-lib';
+import { PDFDocument } from 'pdf-lib';
 import * as fontkit from 'fontkit';
 
 @Injectable()

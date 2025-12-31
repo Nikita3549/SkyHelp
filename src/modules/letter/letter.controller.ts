@@ -3,7 +3,6 @@ import {
     Controller,
     ForbiddenException,
     Get,
-    InternalServerErrorException,
     NotFoundException,
     Param,
     Patch,
@@ -11,20 +10,16 @@ import {
     Put,
     Query,
     Req,
-    Res,
     UnprocessableEntityException,
     UploadedFiles,
     UseGuards,
-    UseInterceptors,
 } from '@nestjs/common';
 import { GmailService } from '../gmail/gmail.service';
 import { JwtAuthGuard } from '../../common/guards/jwtAuth.guard';
 import { GetLettersQueryDto } from './dto/get-letters-query.dto';
 import { SendLetterDto } from './dto/send-letter.dto';
 import { ConfigService } from '@nestjs/config';
-import { FilesInterceptor } from '@nestjs/platform-express';
 import { ATTACHMENT_NOT_FOUND } from '../gmail/constants';
-import { Response } from 'express';
 import { ClaimService } from '../claim/claim.service';
 import { UpdateStatusDto } from './dto/update-status.dto';
 import { AGENT_MUST_HAVE_CLAIM_ID, LETTER_NOT_FOUND } from './constants';

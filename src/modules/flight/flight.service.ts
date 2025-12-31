@@ -1,6 +1,6 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 import { GetFlightsDto } from './dto/get-flights.dto';
 import { EARTH_RADIUS, KM, RADIAN } from './constants';
 import {
@@ -16,10 +16,7 @@ import { IOAGFlightInfo } from './interfaces/oag/oag-flight-info.interface';
 import { IFullOAGFlight } from './interfaces/oag/oag-flight-full-info.interface';
 import { FlightIoFlightData } from './interfaces/flight-io/flight-io-flight-data';
 import { parseFlightIoFlightStatus } from './utils/parse-flight-io-flight-status';
-import {
-    FlightIoFlightStatus,
-    IFlightIoFlightStatus,
-} from './interfaces/flight-io/flight-io-flight-status';
+import { FlightIoFlightStatus } from './interfaces/flight-io/flight-io-flight-status';
 
 @Injectable()
 export class FlightService {

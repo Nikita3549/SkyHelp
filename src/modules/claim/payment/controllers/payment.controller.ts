@@ -6,14 +6,11 @@ import {
     NotFoundException,
     Post,
     Put,
-    Query,
-    UnauthorizedException,
     UseGuards,
 } from '@nestjs/common';
 import { UpdateAdminPaymentDto } from '../dto/update-admin-payment.dto';
 import {
     CLAIM_NOT_FOUND,
-    INVALID_JWT,
     PAYMENT_DETAILS_ALREADY_REQUESTED,
 } from '../../constants';
 import { PaymentService } from '../payment.service';
@@ -23,9 +20,6 @@ import { UserRole } from '@prisma/client';
 import { RoleGuard } from '../../../../common/guards/role.guard';
 import { RequestPaymentDetailsDto } from '../dto/request-payment-details.dto';
 import { Languages } from '../../../language/enums/languages.enums';
-import { JwtQueryDto } from '../../dto/jwt-query.dto';
-import { TokenService } from '../../../token/token.service';
-import { UpdatePaymentDto } from '../dto/update-payment.dto';
 import { omit } from '../../../../common/utils/omit';
 
 @Controller('claims/payment')

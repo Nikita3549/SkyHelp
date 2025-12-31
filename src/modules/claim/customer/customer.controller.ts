@@ -23,15 +23,12 @@ import { JwtAuthGuard } from '../../../common/guards/jwtAuth.guard';
 import { UploadSignDto } from './dto/upload-sign.dto';
 import { DocumentService } from '../document/services/document.service';
 import {
-    ClaimRecentUpdatesType,
     ClaimStatus,
     DocumentRequestStatus,
-    DocumentType,
     PassengerPaymentStatus,
     UserRole,
 } from '@prisma/client';
 import { TokenService } from '../../token/token.service';
-import { generateAssignmentName } from '../../../common/utils/generate-assignment-name';
 import { RecentUpdatesService } from '../recent-updates/recent-updates.service';
 import { DocumentRequestService } from '../document-request/document-request.service';
 import { RoleGuard } from '../../../common/guards/role.guard';

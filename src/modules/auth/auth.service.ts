@@ -10,7 +10,7 @@ import {
 } from './constants';
 import * as bcrypt from 'bcryptjs';
 import * as crypto from 'crypto';
-import { OauthProvider, Prisma, UserRole } from '@prisma/client';
+import { OauthProvider, UserRole } from '@prisma/client';
 import { UserService } from '../user/user.service';
 import { NotificationService } from '../notification/notification.service';
 import { TokenService } from '../token/token.service';
@@ -24,6 +24,7 @@ import { IPublicUserDataWithJwt } from './interfaces/publicUserDataWithJwt.inter
 @Injectable()
 export class AuthService {
     googleClient: OAuth2Client;
+
     constructor(
         private readonly redis: RedisService,
         private readonly userService: UserService,

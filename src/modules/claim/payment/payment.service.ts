@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
-import { UpdateAdminPaymentDto } from './dto/update-admin-payment.dto';
 import { InjectQueue } from '@nestjs/bullmq';
 import {
     REQUEST_PAYMENT_DETAILS_QUEUE_KEY,
@@ -9,7 +8,6 @@ import {
 } from '../constants';
 import { Queue } from 'bullmq';
 import { IPaymentDetailsRequestJobData } from '../interfaces/job-data/payment-details-request-job-data.interface';
-import { getNextWorkTime } from '../../../common/utils/getNextWorkTime';
 import { UpdatePaymentDto } from './dto/update-payment.dto';
 
 @Injectable()

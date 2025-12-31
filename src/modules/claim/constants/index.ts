@@ -1,4 +1,4 @@
-import { DAY, MINUTE } from '../../../common/constants/time.constants';
+import { DAY } from '../../../common/constants/time.constants';
 
 export const CLAIM_NOT_FOUND = 'Claim not found';
 

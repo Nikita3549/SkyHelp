@@ -3,7 +3,6 @@ import { PrismaService } from '../prisma/prisma.service';
 import { OauthProvider, Prisma, User, UserRole } from '@prisma/client';
 import { ISaveUserData } from './interfaces/saveUserData.interface';
 import { IPublicUserData } from './interfaces/publicUserData.interface';
-import { IUpdateData } from './interfaces/update-data.interface';
 import { IUserWithOauthAccounts } from './interfaces/user-with-oauth-account.interface';
 
 @Injectable()

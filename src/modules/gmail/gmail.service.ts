@@ -8,7 +8,6 @@ import { IAttachment } from './interfaces/attachment.interface';
 import { AttachmentNotFoundError } from './errors/attachment-not-found.error';
 import { ParsedMailbox, parseOneAddress } from 'email-addresses';
 import * as path from 'path';
-import * as fs from 'fs/promises';
 import { ClaimService } from '../claim/claim.service';
 import { GmailOfficeAccountService } from './accounts/gmail-office-account/gmail-office-account.service';
 import { AttachmentService } from './attachment/attachment.service';
@@ -16,11 +15,11 @@ import { EmailService } from './email/email.service';
 import { GmailNoreplyAccountService } from './accounts/gmail-noreply-account/gmail-noreply-account.service';
 import { EmailCategory } from './enums/email-type.enum';
 import { MINUTE } from '../../common/constants/time.constants';
-import Gmail = gmail_v1.Gmail;
 import { S3Service } from '../s3/s3.service';
 import * as lookup from 'mime-types';
 import { generateEmailAttachmentKey } from './utils/generate-email-attachment-key';
 import { Email } from '@prisma/client';
+import Gmail = gmail_v1.Gmail;
 
 @Injectable()
 export class GmailService implements OnModuleInit {
@@ -285,6 +284,7 @@ export class GmailService implements OnModuleInit {
 
         return res.data;
     }
+
     async getRFCMessageId(
         gmail: gmail_v1.Gmail,
         internalMessageId: string,

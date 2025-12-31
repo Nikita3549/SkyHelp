@@ -1,10 +1,9 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import {
     CancellationNotice,
     ClaimStatus,
     DelayCategory,
-    DisruptionType,
     DocumentRequestStatus,
     DocumentType,
     Prisma,

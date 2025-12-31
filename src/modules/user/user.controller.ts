@@ -6,14 +6,13 @@ import {
     Param,
     Patch,
     Post,
-    Put,
     Query,
     UseGuards,
 } from '@nestjs/common';
 import { IPublicUserData } from './interfaces/publicUserData.interface';
 import { JwtAuthGuard } from '../../common/guards/jwtAuth.guard';
 import { UserService } from './user.service';
-import { INCORRECT_USER_ID, USER_NOT_FOUND } from './constants';
+import { INCORRECT_USER_ID } from './constants';
 import { GetUsersDto } from './dto/get-users.dto';
 import { UserRole } from '@prisma/client';
 import { RoleGuard } from '../../common/guards/role.guard';

@@ -1,6 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import * as fs from 'fs/promises';
-import * as path from 'path';
 import { Languages } from './enums/languages.enums';
 import { S3Service } from '../s3/s3.service';
 

@@ -2,7 +2,7 @@ import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PDFDocument } from 'pdf-lib';
 import * as fs from 'fs/promises';
 import * as path from 'path';
-import { PassThrough, Readable } from 'stream';
+import { PassThrough } from 'stream';
 import { pngToJpeg } from './utils/png-to-jpeg.converter';
 import { convertDocToPdf } from './utils/doc-to-pdf.converter';
 import { S3Service } from '../../../../s3/s3.service';

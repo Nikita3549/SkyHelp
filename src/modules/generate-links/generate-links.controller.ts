@@ -21,7 +21,6 @@ import {
 } from './dto/generate-links.dto';
 import {
     CLAIM_NOT_FOUND,
-    CONTINUE_LINKS_EXP,
     HAVE_NO_RIGHTS_ON_CLAIM,
     INVALID_JWT,
     PASSENGER_NOT_FOUND,
