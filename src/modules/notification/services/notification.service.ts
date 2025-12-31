@@ -22,15 +22,10 @@ import {
     SPECIALIZED_DOCUMENT_REQUEST_SIGNATURE_MISMATCH_FILENAME,
 } from '../constants';
 import { EmailCategory } from '../../gmail/enums/email-type.enum';
-import { TokenService } from '../../token/token.service';
-import { UnsubscribeJwt } from '../../unsubscribe-email/interfaces/unsubscribe-jwt';
 import { UnsubscribeEmailService } from '../../unsubscribe-email/unsubscribe-email.service';
-import { gmail_v1 } from 'googleapis';
 import { DocumentRequestReason, DocumentType } from '@prisma/client';
-import Handlebars from 'handlebars';
 import { ReminderTypeEnum } from '../enums/reminder-type.enum';
 import { GenerateLinksService } from '../../generate-links/generate-links.service';
-import { S3Service } from '../../s3/s3.service';
 import { EmailSenderService } from './email-sender.service';
 
 @Injectable()
@@ -41,10 +36,8 @@ export class NotificationService {
     constructor(
         private readonly configService: ConfigService,
         private readonly gmailService: GmailService,
-        private readonly tokenService: TokenService,
         private readonly unsubscribeEmailService: UnsubscribeEmailService,
         private readonly generateLinksService: GenerateLinksService,
-        private readonly S3Service: S3Service,
         private readonly emailSenderService: EmailSenderService,
     ) {
         this.dashboardLink = `${this.configService.getOrThrow('FRONTEND_URL')}/dashboard`;
@@ -63,7 +56,6 @@ export class NotificationService {
             console.log(
                 `User data send: ${userData.email}, ${userData.password} on ${to}`,
             );
-
         await this.emailSenderService.processAndSend(
             {
                 to,
@@ -172,46 +164,19 @@ This message was automatically generated.
         },
         language: Languages = Languages.EN,
     ) {
-        const emailCategory = EmailCategory.TRANSACTIONAL;
-
-        const layoutHtml = await this.getLayout(to, language, emailCategory);
-
-        const letterTemplateHtmlRaw = await this.getLetterContentTemplate(
-            DOCUMENT_REQUEST_FILENAME,
+        await this.emailSenderService.processAndSend({
+            to,
+            subject: `Action required: upload missing documents for claim #${letterData.claimId}`,
             language,
-        );
-
-        Handlebars.registerHelper('eq', (a: string, b: string) => a === b);
-
-        const template = Handlebars.compile(letterTemplateHtmlRaw);
-
-        const letterHtmlContent = template({
-            customerName: letterData.customerName,
             claimId: letterData.claimId,
-            dashboardLink: `${this.configService.getOrThrow('FRONTEND_URL')}/dashboard`,
-            documentRequestsData: letterData.documentRequestsData,
-        });
-
-        const letterHtml = this.setContentInLayout(
-            letterHtmlContent,
-            layoutHtml,
-        );
-
-        const subject = `Action required: upload missing documents for claim #${letterData.claimId}`;
-
-        const email = await this.gmailService.noreply.sendEmailHtml(
-            to,
-            subject,
-            letterHtml,
-            emailCategory,
-        );
-
-        await this.saveHtmlEmail({
-            email,
-            subject,
-            claimId: letterData.claimId,
-            contentHtml: letterHtml,
-            to,
+            emailCategory: EmailCategory.TRANSACTIONAL,
+            templateFilename: DOCUMENT_REQUEST_FILENAME,
+            context: {
+                customerName: letterData.customerName,
+                claimId: letterData.claimId,
+                dashboardLink: this.dashboardLink,
+                documentRequestsData: letterData.documentRequestsData,
+            },
         });
     }
 
@@ -223,42 +188,17 @@ This message was automatically generated.
         },
         language: Languages = Languages.EN,
     ) {
-        const emailCategory = EmailCategory.TRANSACTIONAL;
-
-        const layoutHtml = await this.getLayout(to, language, emailCategory);
-
-        const letterTemplateHtml = await this.getLetterContentTemplate(
-            MISSING_DOCUMENTS_FILENAME,
+        await this.emailSenderService.processAndSend({
+            to,
+            subject: `Missing documents for your claim #${letterData.claimId}`,
             language,
-        );
-
-        const letterContentHtml = letterTemplateHtml
-            .replace('{{customerName}}', letterData.customerName)
-            .replace(
-                '{{dashboardLink}}',
-                `https://${this.configService.getOrThrow('DOMAIN')}/dashboard`,
-            );
-
-        const letterHtml = this.setContentInLayout(
-            letterContentHtml,
-            layoutHtml,
-        );
-
-        const subject = `Missing documents for your claim #${letterData.claimId}`;
-
-        const email = await this.gmailService.noreply.sendEmailHtml(
-            to,
-            subject,
-            letterHtml,
-            emailCategory,
-        );
-
-        await this.saveHtmlEmail({
-            email,
-            subject,
             claimId: letterData.claimId,
-            contentHtml: letterHtml,
-            to,
+            emailCategory: EmailCategory.TRANSACTIONAL,
+            templateFilename: MISSING_DOCUMENTS_FILENAME,
+            context: {
+                customerName: letterData.customerName,
+                dashboardLink: this.dashboardLink,
+            },
         });
     }
 
@@ -273,40 +213,20 @@ This message was automatically generated.
             console.log(
                 `Seng forgot password code ${letterData.resetCode} on ${to}`,
             );
-        const language = Languages.EN;
-        const emailCategory = EmailCategory.TRANSACTIONAL;
-
-        const layoutHtml = await this.getLayout(to, language, emailCategory);
-
-        const letterTemplateHtml = await this.getLetterContentTemplate(
-            FORGOT_PASSWORD_CODE_FILENAME,
-            language,
+        await this.emailSenderService.processAndSend(
+            {
+                to,
+                subject: `Verification code for your account`,
+                language: Languages.EN,
+                emailCategory: EmailCategory.TRANSACTIONAL,
+                templateFilename: FORGOT_PASSWORD_CODE_FILENAME,
+                context: {
+                    customerName: letterData.customerName,
+                    resetCode: letterData.resetCode,
+                },
+            },
+            { doNotSaveInDb: true },
         );
-
-        const letterContentHtml = letterTemplateHtml
-            .replace('{{customerName}}', letterData.customerName)
-            .replace('{{resetCode}}', letterData.resetCode);
-
-        const letterHtml = this.setContentInLayout(
-            letterContentHtml,
-            layoutHtml,
-        );
-
-        const subject = `Verification code for your account`;
-
-        const email = await this.gmailService.noreply.sendEmailHtml(
-            to,
-            subject,
-            letterHtml,
-            emailCategory,
-        );
-
-        await this.saveHtmlEmail({
-            email,
-            subject,
-            contentHtml: letterHtml,
-            to,
-        });
     }
 
     async sendRegisterCode(
@@ -320,40 +240,20 @@ This message was automatically generated.
             console.log(
                 `Seng register code ${letterData.registerCode} on ${to}`,
             );
-        const language = Languages.EN;
-        const emailCategory = EmailCategory.TRANSACTIONAL;
-
-        const layoutHtml = await this.getLayout(to, language, emailCategory);
-
-        const letterTemplateHtml = await this.getLetterContentTemplate(
-            REGISTER_CODE_FILENAME,
-            language,
+        await this.emailSenderService.processAndSend(
+            {
+                to,
+                subject: `Verification code for your account`,
+                language: Languages.EN,
+                emailCategory: EmailCategory.TRANSACTIONAL,
+                templateFilename: REGISTER_CODE_FILENAME,
+                context: {
+                    customerName: letterData.customerName,
+                    verificationCode: letterData.registerCode,
+                },
+            },
+            { doNotSaveInDb: true },
         );
-
-        const letterContentHtml = letterTemplateHtml
-            .replace('{{customerName}}', letterData.customerName)
-            .replace('{{verificationCode}}', letterData.registerCode);
-
-        const letterHtml = this.setContentInLayout(
-            letterContentHtml,
-            layoutHtml,
-        );
-
-        const subject = `Verification code for your account`;
-
-        const email = await this.gmailService.noreply.sendEmailHtml(
-            to,
-            subject,
-            letterHtml,
-            emailCategory,
-        );
-
-        await this.saveHtmlEmail({
-            email,
-            subject,
-            contentHtml: letterHtml,
-            to,
-        });
     }
 
     async sendPartnerPayout(
@@ -363,39 +263,15 @@ This message was automatically generated.
         },
         language: Languages = Languages.EN,
     ) {
-        const emailCategory = EmailCategory.TRANSACTIONAL;
-
-        const layoutHtml = await this.getLayout(to, language, emailCategory);
-
-        const letterTemplateHtml = await this.getLetterContentTemplate(
-            SEND_PARTNER_PAYOUT_FILENAME,
+        await this.emailSenderService.processAndSend({
+            to,
+            subject: `Your Payout Has Been Processed`,
             language,
-        );
-
-        const letterContentHtml = letterTemplateHtml.replace(
-            '{{amount}}',
-            letterData.amount.toString(),
-        );
-
-        const letterHtml = this.setContentInLayout(
-            letterContentHtml,
-            layoutHtml,
-        );
-
-        const subject = `Your Payout Has Been Processed`;
-
-        const email = await this.gmailService.noreply.sendEmailHtml(
-            to,
-            subject,
-            letterHtml,
-            emailCategory,
-        );
-
-        await this.saveHtmlEmail({
-            email,
-            subject,
-            contentHtml: letterHtml,
-            to,
+            emailCategory: EmailCategory.TRANSACTIONAL,
+            templateFilename: SEND_PARTNER_PAYOUT_FILENAME,
+            context: {
+                amount: letterData.amount,
+            },
         });
     }
 
@@ -415,63 +291,20 @@ This message was automatically generated.
             return;
         }
 
-        const emailCategory = EmailCategory.MARKETING;
-
-        const letterTemplateHtml = await this.getLetterContentTemplate(
-            FINISH_CLAIM_FILENAME,
+        await this.emailSenderService.processAndSend({
+            to,
+            subject: `Just one step away from your compensation #${claimData.id}`,
             language,
-        );
-
-        const letterContentHtml = letterTemplateHtml
-            .replace('{{clientName}}', claimData.clientFirstName)
-            .replace(
-                '{{compensationAmount}}',
-                claimData.compensation.toString(),
-            )
-            .replace('{{claimId}}', claimData.id)
-            .replace('{{claimLink}}', claimData.continueClaimLink)
-            .replace(
-                '{{zeroCompensation}}',
-                claimData.compensation == 0 ? '' : 'display: none;',
-            )
-            .replace(
-                '{{notZeroCompensation}}',
-                claimData.compensation == 0 ? 'display: none;' : '',
-            );
-
-        const layoutHtml = await this.getLayout(to, language, emailCategory);
-
-        const letterHtml = this.setContentInLayout(
-            letterContentHtml,
-            layoutHtml,
-        );
-
-        const subject = `Just one step away from your compensation #${claimData.id}`;
-        const email = await this.gmailService.noreply.sendEmailHtml(
-            to,
-            subject,
-            letterHtml,
-            emailCategory,
-        );
-
-        await this.saveHtmlEmail({
-            email,
-            subject,
             claimId: claimData.id,
-            contentHtml: letterHtml,
-            to,
+            emailCategory: EmailCategory.MARKETING,
+            templateFilename: FINISH_CLAIM_FILENAME,
+            context: {
+                clientName: claimData.clientFirstName,
+                compensation: claimData.compensation,
+                claimId: claimData.id,
+                claimLink: claimData.continueClaimLink,
+            },
         });
-    }
-
-    private async getLetterContentTemplate(
-        fileName: string,
-        language: Languages = Languages.EN,
-    ): Promise<string> {
-        return (
-            await this.S3Service.getPublicFile(
-                `/letters/${language}/${fileName}`,
-            )
-        ).toString();
     }
 
     async sendPaymentRequest(
@@ -483,38 +316,17 @@ This message was automatically generated.
         },
         language: Languages = Languages.EN,
     ) {
-        const emailCategory = EmailCategory.TRANSACTIONAL;
-
-        const layoutHtml = await this.getLayout(to, language, emailCategory);
-
-        const letterTemplateHtml = await this.getLetterContentTemplate(
-            REQUEST_PAYMENT_DETAILS_FILENAME,
+        await this.emailSenderService.processAndSend({
+            to,
+            subject: `Action Required: Payment Details Needed #${letterData.claimId}`,
             language,
-        );
-
-        const letterContentHtml = letterTemplateHtml
-            .replace('{{customerName}}', letterData.customerName)
-            .replace('{{paymentDetailsLink}}', letterData.paymentDetailsLink);
-
-        const letterHtml = this.setContentInLayout(
-            letterContentHtml,
-            layoutHtml,
-        );
-
-        const subject = `Action Required: Payment Details Needed #${letterData.claimId}`;
-        const email = await this.gmailService.noreply.sendEmailHtml(
-            to,
-            subject,
-            letterHtml,
-            emailCategory,
-        );
-
-        await this.saveHtmlEmail({
-            email,
-            subject,
             claimId: letterData.claimId,
-            contentHtml: letterHtml,
-            to,
+            emailCategory: EmailCategory.TRANSACTIONAL,
+            templateFilename: REQUEST_PAYMENT_DETAILS_FILENAME,
+            context: {
+                customerName: letterData.customerName,
+                paymentDetailsLink: letterData.paymentDetailsLink,
+            },
         });
     }
 
@@ -527,43 +339,24 @@ This message was automatically generated.
         },
         language: Languages = Languages.EN,
     ) {
-        const emailCategory = EmailCategory.TRANSACTIONAL;
+        let templateFilename: string = REMINDER_CLAIM_RECEIVED_FILENAME;
+        if (letterData.reminderType == ReminderTypeEnum.SENT_TO_AIRLINE) {
+            templateFilename = REMINDER_SENT_TO_AIRLINE_FILENAME;
+        }
+        if (letterData.reminderType == ReminderTypeEnum.LEGAL_PROCESS) {
+            templateFilename = REMINDER_LEGAL_PROCESS_FILENAME;
+        }
 
-        const layoutHtml = await this.getLayout(to, language, emailCategory);
-
-        const letterTemplateHtml = await this.getLetterContentTemplate(
-            letterData.reminderType == ReminderTypeEnum.CLAIM_RECEIVED
-                ? REMINDER_CLAIM_RECEIVED_FILENAME
-                : letterData.reminderType == ReminderTypeEnum.SENT_TO_AIRLINE
-                  ? REMINDER_SENT_TO_AIRLINE_FILENAME
-                  : REMINDER_LEGAL_PROCESS_FILENAME,
+        await this.emailSenderService.processAndSend({
+            to,
+            subject: `Current Progress on Your Claim #${letterData.claimId}`,
             language,
-        );
-
-        const letterContentHtml = letterTemplateHtml.replace(
-            '{{clientName}}',
-            letterData.customerName,
-        );
-
-        const letterHtml = this.setContentInLayout(
-            letterContentHtml,
-            layoutHtml,
-        );
-
-        const subject = `Current Progress on Your Claim #${letterData.claimId}`;
-        const email = await this.gmailService.noreply.sendEmailHtml(
-            to,
-            subject,
-            letterHtml,
-            emailCategory,
-        );
-
-        await this.saveHtmlEmail({
-            email,
-            subject,
             claimId: letterData.claimId,
-            contentHtml: letterHtml,
-            to,
+            emailCategory: EmailCategory.TRANSACTIONAL,
+            templateFilename,
+            context: {
+                clientName: letterData.customerName,
+            },
         });
     }
 
@@ -590,19 +383,14 @@ This message was automatically generated.
         if (documentRequestReason == DocumentRequestReason.MISSING_DOCUMENT) {
             return;
         }
-
-        const emailCategory = EmailCategory.TRANSACTIONAL;
-
-        const layoutHtml = await this.getLayout(to, language, emailCategory);
-
-        let letterTemplateFileName: string;
+        let templateFilename: string;
         let subject: string;
         let link: string;
         const jwt = await this.generateLinksService.generateLinkJwt(claimId);
         switch (documentRequestReason) {
             case DocumentRequestReason.PASSPORT_IMAGE_UNCLEAR:
                 subject = `Passport image unclear - resubmission required #${claimId}`;
-                letterTemplateFileName =
+                templateFilename =
                     SPECIALIZED_DOCUMENT_REQUEST_PASSPORT_IMAGE_UNCLEAR_FILENAME;
                 link = await this.generateLinksService.generateUploadDocuments(
                     passengerId,
@@ -616,7 +404,7 @@ This message was automatically generated.
                 break;
             case DocumentRequestReason.PASSPORT_MISMATCH:
                 subject = `Passport data mismatch #${claimId}`;
-                letterTemplateFileName =
+                templateFilename =
                     SPECIALIZED_DOCUMENT_REQUEST_PASSPORT_MISMATCH_FILENAME;
                 link = await this.generateLinksService.generateUploadDocuments(
                     passengerId,
@@ -630,7 +418,7 @@ This message was automatically generated.
                 break;
             case DocumentRequestReason.SIGNATURE_MISMATCH:
                 subject = `Signature mismatch in submitted documents #${claimId}`;
-                letterTemplateFileName =
+                templateFilename =
                     SPECIALIZED_DOCUMENT_REQUEST_SIGNATURE_MISMATCH_FILENAME;
                 if (isCustomer) {
                     link = await this.generateLinksService.generateSignCustomer(
@@ -646,97 +434,26 @@ This message was automatically generated.
                             false,
                         );
                 }
-
                 break;
         }
 
-        const letterTemplateHtml = await this.getLetterContentTemplate(
-            letterTemplateFileName,
+        await this.emailSenderService.processAndSend({
+            to,
+            subject,
             language,
-        );
-
-        const letterContentHtml = letterTemplateHtml
-            .replace('{{customerName}}', customerName)
-            .replace('{{link}}', link);
-
-        const letterHtml = this.setContentInLayout(
-            letterContentHtml,
-            layoutHtml,
-        );
-
-        const email = await this.gmailService.noreply.sendEmailHtml(
-            to,
-            subject,
-            letterHtml,
-            emailCategory,
-        );
-
-        await this.saveHtmlEmail({
-            email,
-            subject,
-            claimId: letterData.claimId,
-            contentHtml: letterHtml,
-            to,
+            claimId,
+            emailCategory: EmailCategory.TRANSACTIONAL,
+            templateFilename,
+            context: {
+                customerName,
+                link,
+            },
         });
-    }
-
-    private async getLayout(
-        to: string,
-        language: Languages = Languages.EN,
-        emailCategory: EmailCategory = EmailCategory.TRANSACTIONAL,
-    ): Promise<string> {
-        const layout = (
-            await this.S3Service.getPublicFile(
-                `/letters/layout/${emailCategory == EmailCategory.MARKETING ? '/unsubscribe/' : ''}${language}.html`,
-            )
-        )
-            .toString()
-            .replaceAll('{{domain}}', this.configService.getOrThrow('DOMAIN'));
-
-        if (emailCategory == EmailCategory.TRANSACTIONAL) {
-            return layout;
-        }
-
-        const jwt = this.tokenService.generateJWT<UnsubscribeJwt>({
-            email: to,
-        });
-
-        return layout.replaceAll('{{email}}', to).replace('{{jwt}}', jwt);
-    }
-
-    private setContentInLayout(content: string, layout: string): string {
-        return layout.replace('{{{content}}}', content);
     }
 
     private async isUnsubscribed(email: string): Promise<boolean> {
         return !!(await this.unsubscribeEmailService.getUnsubscribeEmail(
             email,
         ));
-    }
-
-    private async saveHtmlEmail(data: {
-        email: gmail_v1.Schema$Message | undefined;
-        subject: string;
-        contentHtml: string;
-        to: string;
-        claimId?: string;
-    }) {
-        const { email, subject, contentHtml, to, claimId } = data;
-
-        if (email) {
-            await this.gmailService.email.saveEmail({
-                id: email.id!,
-                threadId: email.threadId!,
-                subject,
-                normalizedSubject: subject,
-                messageId: email.id!,
-                fromName: 'SkyHelp',
-                fromEmail: this.configService.getOrThrow('GMAIL_NOREPLY_EMAIL'),
-                toEmail: to,
-                bodyHtml: contentHtml,
-                claimId: claimId,
-                isInbox: false,
-            });
-        }
     }
 }

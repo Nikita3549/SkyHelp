@@ -16,6 +16,6 @@ import { EmailSenderService } from './services/email-sender.service';
         S3Module,
     ],
     providers: [NotificationService, EmailSenderService],
-    exports: [NotificationService, EmailSenderService],
+    exports: [NotificationService],
 })
 export class NotificationModule {}

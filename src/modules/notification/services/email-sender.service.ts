@@ -21,9 +21,11 @@ export class EmailSenderService {
         private readonly gmailService: GmailService,
         private readonly tokenService: TokenService,
         private readonly unsubscribeEmailService: UnsubscribeEmailService,
-        private readonly generateLinksService: GenerateLinksService,
         private readonly S3Service: S3Service,
-    ) {}
+    ) {
+        handlebars.registerHelper('eq', (a: string, b: string) => a === b);
+    }
+
     async processAndSend(
         letterData: ILetterData,
         options?: IProcessAndSendOptions,
@@ -93,7 +95,7 @@ export class EmailSenderService {
     ): Promise<string> {
         const layout = (
             await this.S3Service.getPublicFile(
-                `/letters/layout/${emailCategory == EmailCategory.MARKETING ? '/unsubscribe/' : ''}${language}.html`,
+                `/letters/layout/${emailCategory == EmailCategory.MARKETING ? 'unsubscribe/' : ''}${language}.html`,
             )
         )
             .toString()

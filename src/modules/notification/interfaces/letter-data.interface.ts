@@ -8,5 +8,5 @@ export interface ILetterData {
     claimId?: string;
     emailCategory: EmailCategory;
     templateFilename: string;
-    context: Record<string, string | number>;
+    context: Record<string, unknown>;
 }
