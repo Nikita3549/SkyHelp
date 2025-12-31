@@ -1,6 +1,6 @@
 import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
-import { NotificationService } from '../../../notification/notification.service';
+import { NotificationService } from '../../../notification/services/notification.service';
 import { ClaimService } from '../../claim.service';
 import { SEND_NEW_DOCUMENT_REQUEST_QUEUE_KEY } from '../constants';
 import { DocumentRequestService } from '../document-request.service';

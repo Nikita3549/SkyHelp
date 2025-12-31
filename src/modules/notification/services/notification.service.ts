@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { Languages } from '../language/enums/languages.enums';
+import { Languages } from '../../language/enums/languages.enums';
 import { ConfigService } from '@nestjs/config';
-import { isProd } from '../../common/utils/isProd';
-import { GmailService } from '../gmail/gmail.service';
+import { isProd } from '../../../common/utils/isProd';
+import { GmailService } from '../../gmail/gmail.service';
 import {
     CREATE_CLAIM_FILENAME,
     DOCUMENT_REQUEST_FILENAME,
@@ -20,20 +20,24 @@ import {
     SPECIALIZED_DOCUMENT_REQUEST_PASSPORT_IMAGE_UNCLEAR_FILENAME,
     SPECIALIZED_DOCUMENT_REQUEST_PASSPORT_MISMATCH_FILENAME,
     SPECIALIZED_DOCUMENT_REQUEST_SIGNATURE_MISMATCH_FILENAME,
-} from './constants';
-import { EmailCategory } from '../gmail/enums/email-type.enum';
-import { TokenService } from '../token/token.service';
-import { UnsubscribeJwt } from '../unsubscribe-email/interfaces/unsubscribe-jwt';
-import { UnsubscribeEmailService } from '../unsubscribe-email/unsubscribe-email.service';
+} from '../constants';
+import { EmailCategory } from '../../gmail/enums/email-type.enum';
+import { TokenService } from '../../token/token.service';
+import { UnsubscribeJwt } from '../../unsubscribe-email/interfaces/unsubscribe-jwt';
+import { UnsubscribeEmailService } from '../../unsubscribe-email/unsubscribe-email.service';
 import { gmail_v1 } from 'googleapis';
 import { DocumentRequestReason, DocumentType } from '@prisma/client';
 import Handlebars from 'handlebars';
-import { ReminderTypeEnum } from './enums/reminder-type.enum';
-import { GenerateLinksService } from '../generate-links/generate-links.service';
-import { S3Service } from '../s3/s3.service';
+import { ReminderTypeEnum } from '../enums/reminder-type.enum';
+import { GenerateLinksService } from '../../generate-links/generate-links.service';
+import { S3Service } from '../../s3/s3.service';
+import { EmailSenderService } from './email-sender.service';
 
 @Injectable()
 export class NotificationService {
+    dashboardLink: string;
+    resetPasswordLink: string;
+
     constructor(
         private readonly configService: ConfigService,
         private readonly gmailService: GmailService,
@@ -41,7 +45,11 @@ export class NotificationService {
         private readonly unsubscribeEmailService: UnsubscribeEmailService,
         private readonly generateLinksService: GenerateLinksService,
         private readonly S3Service: S3Service,
-    ) {}
+        private readonly emailSenderService: EmailSenderService,
+    ) {
+        this.dashboardLink = `${this.configService.getOrThrow('FRONTEND_URL')}/dashboard`;
+        this.resetPasswordLink = `${this.configService.getOrThrow('FRONTEND_URL')}/forgot`;
+    }
 
     async sendNewGeneratedAccount(
         to: string,
@@ -55,33 +63,21 @@ export class NotificationService {
             console.log(
                 `User data send: ${userData.email}, ${userData.password} on ${to}`,
             );
-        const emailCategory = EmailCategory.TRANSACTIONAL;
 
-        const letterContentHtml = (
-            await this.getLetterContentTemplate(
-                GENERATE_NEW_ACCOUNT_FILENAME,
+        await this.emailSenderService.processAndSend(
+            {
+                to,
+                subject: 'Your SkyHelp account details',
                 language,
-            )
-        )
-            .replace('{{email}}', userData.email)
-            .replace('{{password}}', userData.password)
-            .replace(
-                '{{resetPasswordLink}}',
-                `${this.configService.getOrThrow('FRONTEND_URL')}/forgot`,
-            );
-
-        const layoutHtml = await this.getLayout(to, language, emailCategory);
-
-        const letterHtml = this.setContentInLayout(
-            letterContentHtml,
-            layoutHtml,
-        );
-
-        await this.gmailService.noreply.sendEmailHtml(
-            to,
-            'Your SkyHelp account details',
-            letterHtml,
-            emailCategory,
+                emailCategory: EmailCategory.TRANSACTIONAL,
+                templateFilename: GENERATE_NEW_ACCOUNT_FILENAME,
+                context: {
+                    email: userData.email,
+                    password: userData.password,
+                    resetPasswordLink: this.resetPasswordLink,
+                },
+            },
+            { doNotSaveInDb: true },
         );
     }
 
@@ -117,49 +113,21 @@ This message was automatically generated.
         claimData: {
             id: string;
             airlineName: string;
-            link: string;
         },
-        isRegistered: boolean, // deprecated param
         language: Languages = Languages.EN,
     ) {
-        const emailCategory = EmailCategory.TRANSACTIONAL;
-
-        const layoutHtml = await this.getLayout(to, language, emailCategory);
-
-        const letterTemplateHtml = await this.getLetterContentTemplate(
-            CREATE_CLAIM_FILENAME,
+        await this.emailSenderService.processAndSend({
+            to,
+            subject: `Your claim successfully submitted #${claimData.id}`,
             language,
-        );
-
-        const letterContentHtml = letterTemplateHtml
-            .replace('{{claimId}}', claimData.id)
-            .replace('{{airlineName}}', claimData.airlineName)
-            .replace('{{airlineName}}', claimData.airlineName)
-            .replace('{{airlineName}}', claimData.airlineName)
-            .replace('{{claimLink}}', claimData.link)
-            .replace('{{claimLink}}', claimData.link)
-            .replace('{{registered}}', isRegistered ? '' : 'display: none;')
-            .replace('{{notRegistered}}', isRegistered ? 'display: none;' : '');
-
-        const letterHtml = this.setContentInLayout(
-            letterContentHtml,
-            layoutHtml,
-        );
-
-        const subject = `Your claim successfully submitted #${claimData.id}`;
-        const email = await this.gmailService.noreply.sendEmailHtml(
-            to,
-            subject,
-            letterHtml,
-            emailCategory,
-        );
-
-        await this.saveHtmlEmail({
-            email,
-            subject,
             claimId: claimData.id,
-            contentHtml: letterHtml,
-            to,
+            emailCategory: EmailCategory.TRANSACTIONAL,
+            templateFilename: CREATE_CLAIM_FILENAME,
+            context: {
+                claimId: claimData.id,
+                airlineName: claimData.airlineName,
+                claimLink: this.dashboardLink,
+            },
         });
     }
 
@@ -174,55 +142,21 @@ This message was automatically generated.
         },
         language: Languages = Languages.EN,
     ) {
-        const emailCategory = EmailCategory.TRANSACTIONAL;
-
-        const layoutHtml = await this.getLayout(to, language, emailCategory);
-
-        const letterTemplateHtml = await this.getLetterContentTemplate(
-            NEW_STATUS_FILENAME,
+        await this.emailSenderService.processAndSend({
+            to,
+            subject: `Update on your claim #${newStatusData.claimId}`,
             language,
-        );
-
-        const letterContentHtml = letterTemplateHtml
-            .replace('{{clientName}}', newStatusData.clientName)
-            .replace('{{claimId}}', newStatusData.claimId)
-            .replace('{{currentStep.title}}', newStatusData.title)
-            .replace('{{currentStep.description}}', newStatusData.description)
-            .replace(
-                '{{claimLink}}',
-                `https://${this.configService.getOrThrow('DOMAIN')}/dashboard`,
-            )
-            .replace(
-                '{{comments}}',
-                newStatusData.comments
-                    ? `  
-  <div style="margin-top: 20px; padding: 16px; background-color: #f8fafc; border-radius: 8px; border-left: 4px solid #3b82f6;">
-    <div style="font-size: 15px; color: #374151; line-height: 1.5; min-height: 1em;">
-      ${newStatusData.comments}
-    </div>
-  </div> `
-                    : '',
-            );
-
-        const letterHtml = this.setContentInLayout(
-            letterContentHtml,
-            layoutHtml,
-        );
-
-        const subject = `Update on your claim #${newStatusData.claimId}`;
-        const email = await this.gmailService.noreply.sendEmailHtml(
-            to,
-            subject,
-            letterHtml,
-            emailCategory,
-        );
-
-        await this.saveHtmlEmail({
-            email,
-            subject,
             claimId: newStatusData.claimId,
-            contentHtml: letterHtml,
-            to,
+            emailCategory: EmailCategory.TRANSACTIONAL,
+            templateFilename: NEW_STATUS_FILENAME,
+            context: {
+                clientName: newStatusData.clientName,
+                claimId: newStatusData.claimId,
+                currentStepTitle: newStatusData.title,
+                currentStepDescription: newStatusData.description,
+                claimLink: this.dashboardLink,
+                comments: newStatusData.comments ?? '',
+            },
         });
     }
 

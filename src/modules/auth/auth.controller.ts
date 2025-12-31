@@ -32,7 +32,7 @@ import {
     WRONG_EMAIL,
     WRONG_EMAIL_OR_PASSWORD,
 } from './constants';
-import { NotificationService } from '../notification/notification.service';
+import { NotificationService } from '../notification/services/notification.service';
 import { VerifyRegisterDto } from './dto/verify-register.dto';
 import { TokenService } from '../token/token.service';
 import { IPublicUserDataWithJwt } from './interfaces/publicUserDataWithJwt.interface';

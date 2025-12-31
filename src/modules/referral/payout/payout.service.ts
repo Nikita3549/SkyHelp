@@ -2,7 +2,7 @@ import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { Prisma } from '@prisma/client';
 import { PartnerService } from '../partner/partner.service';
-import { NotificationService } from '../../notification/notification.service';
+import { NotificationService } from '../../notification/services/notification.service';
 import { PartnerSettingsService } from '../partner/partner-settings/partner-settings.service';
 
 @Injectable()

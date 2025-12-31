@@ -4,7 +4,7 @@ import {
     CONTINUE_LINKS_EXP,
     REQUEST_PAYMENT_DETAILS_QUEUE_KEY,
 } from '../constants';
-import { NotificationService } from '../../notification/notification.service';
+import { NotificationService } from '../../notification/services/notification.service';
 import { IPaymentDetailsRequestJobData } from '../interfaces/job-data/payment-details-request-job-data.interface';
 import { GenerateLinksService } from '../../generate-links/generate-links.service';
 import { TokenService } from '../../token/token.service';

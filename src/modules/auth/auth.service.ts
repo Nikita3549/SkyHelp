@@ -12,7 +12,7 @@ import * as bcrypt from 'bcryptjs';
 import * as crypto from 'crypto';
 import { OauthProvider, UserRole } from '@prisma/client';
 import { UserService } from '../user/user.service';
-import { NotificationService } from '../notification/notification.service';
+import { NotificationService } from '../notification/services/notification.service';
 import { TokenService } from '../token/token.service';
 import { Languages } from '../language/enums/languages.enums';
 import { hashPassword } from './utils/hashPassword';

@@ -43,7 +43,7 @@ import { RoleGuard } from '../../../common/guards/role.guard';
 import { UpdatePaymentStatusDto } from '../customer/dto/update-payment-status.dto';
 import { Languages } from '../../language/enums/languages.enums';
 import { GenerateLinksService } from '../../generate-links/generate-links.service';
-import { NotificationService } from '../../notification/notification.service';
+import { NotificationService } from '../../notification/services/notification.service';
 
 @Controller('claims/passengers')
 @UseGuards(JwtAuthGuard)

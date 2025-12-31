@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
-import { NotificationService } from './notification.service';
+import { NotificationService } from './services/notification.service';
 import { GmailModule } from '../gmail/gmail.module';
 import { TokenModule } from '../token/token.module';
 import { UnsubscribeEmailModule } from '../unsubscribe-email/unsubscribe-email.module';
 import { GenerateLinksModule } from '../generate-links/generate-links.module';
 import { S3Module } from '../s3/s3.module';
+import { EmailSenderService } from './services/email-sender.service';
 
 @Module({
     imports: [
@@ -14,7 +15,7 @@ import { S3Module } from '../s3/s3.module';
         GenerateLinksModule,
         S3Module,
     ],
-    providers: [NotificationService],
-    exports: [NotificationService],
+    providers: [NotificationService, EmailSenderService],
+    exports: [NotificationService, EmailSenderService],
 })
 export class NotificationModule {}

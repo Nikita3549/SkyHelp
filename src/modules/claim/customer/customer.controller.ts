@@ -34,7 +34,7 @@ import { DocumentRequestService } from '../document-request/document-request.ser
 import { RoleGuard } from '../../../common/guards/role.guard';
 import { UpdatePaymentStatusDto } from './dto/update-payment-status.dto';
 import { GenerateLinksService } from '../../generate-links/generate-links.service';
-import { NotificationService } from '../../notification/notification.service';
+import { NotificationService } from '../../notification/services/notification.service';
 import { Languages } from '../../language/enums/languages.enums';
 
 @Controller('claims/customer')

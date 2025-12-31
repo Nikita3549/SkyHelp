@@ -4,7 +4,7 @@ import {
     CLAIM_REMINDER_INTERVAL,
     CLAIM_REMINDER_QUEUE_KEY,
 } from '../constants';
-import { NotificationService } from '../../notification/notification.service';
+import { NotificationService } from '../../notification/services/notification.service';
 import { ClaimService } from '../claim.service';
 import { ClaimReminderJobDataInterface } from '../interfaces/job-data/claim-reminder-job-data.interface';
 import { ClaimStatus } from '@prisma/client';

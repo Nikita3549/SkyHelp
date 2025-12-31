@@ -6,7 +6,7 @@ import {
     Post,
     UseGuards,
 } from '@nestjs/common';
-import { NotificationService } from '../notification/notification.service';
+import { NotificationService } from '../notification/services/notification.service';
 import { SendMissingDocumentsEmailDto } from './dto/sendMissingDocumentsEmail.dto';
 import { ClaimService } from '../claim/claim.service';
 import { CLAIM_NOT_FOUND } from '../claim/constants';

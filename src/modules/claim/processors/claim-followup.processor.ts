@@ -5,7 +5,7 @@ import {
     CLAIM_NOT_FOUND,
     PAYMENT_STEP,
 } from '../constants';
-import { NotificationService } from '../../notification/notification.service';
+import { NotificationService } from '../../notification/services/notification.service';
 import { IJobClaimFollowupData } from '../interfaces/job-data/job-data.interface';
 import { ClaimService } from '../claim.service';
 import { EmailResumeClickService } from '../../email-resume-click/email-resume-click.service';

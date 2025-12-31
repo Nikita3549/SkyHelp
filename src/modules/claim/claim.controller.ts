@@ -33,7 +33,7 @@ import { JwtStepQueryDto } from './dto/jwt-step-query.dto';
 import { JwtQueryDto } from './dto/jwt-query.dto';
 import { IJwtPayload } from '../token/interfaces/jwtPayload';
 import { AirportService } from '../airport/airport.service';
-import { NotificationService } from '../notification/notification.service';
+import { NotificationService } from '../notification/services/notification.service';
 import { ConfigService } from '@nestjs/config';
 import { UpdateFormStateDto } from './dto/update-form-state.dto';
 import { DocumentService } from './document/services/document.service';
@@ -344,10 +344,8 @@ export class PublicClaimController {
                 claim.customer.email,
                 {
                     id: claim.id,
-                    link: `${this.configService.getOrThrow('FRONTEND_URL')}/dashboard}`,
                     airlineName: claim.details.airlines.name,
                 },
-                true, // deprecated param
                 language,
             );
         }
