@@ -18,7 +18,6 @@ import { LanguageModule } from './modules/language/language.module';
 import { ContactUsModule } from './modules/contact-us/contact-us.module';
 import { BullModule } from '@nestjs/bullmq';
 import { LetterModule } from './modules/letter/letter.module';
-import { LogModule } from './modules/log/log.module';
 import { GoogleSheetsModule } from './modules/google-sheets/google-sheets.module';
 import { YandexMetrikaModule } from './modules/yandex-metrika/yandex-metrika.module';
 import { EmailResumeClickModule } from './modules/email-resume-click/email-resume-click.module';
@@ -61,7 +60,6 @@ import { S3Module } from './modules/s3/s3.module';
         LanguageModule,
         ContactUsModule,
         LetterModule,
-        LogModule,
         GoogleSheetsModule,
         YandexMetrikaModule,
         EmailResumeClickModule,
