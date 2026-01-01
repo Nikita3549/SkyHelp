@@ -8,6 +8,8 @@ import { NotificationService } from '../../notification/services/notification.se
 import { IPaymentDetailsRequestJobData } from '../interfaces/job-data/payment-details-request-job-data.interface';
 import { GenerateLinksService } from '../../generate-links/generate-links.service';
 import { TokenService } from '../../token/token.service';
+import { PaymentRequestLetter } from '../../notification/letters/definitions/claim/payment-request.letter';
+import { Languages } from '../../language/enums/languages.enums';
 
 @Processor(REQUEST_PAYMENT_DETAILS_QUEUE_KEY)
 export class RequestPaymentDetailsProcessor extends WorkerHost {
@@ -33,14 +35,14 @@ export class RequestPaymentDetailsProcessor extends WorkerHost {
         const paymentDetailsLink =
             await this.generateLinksService.generatePaymentDetails(linkJwt);
 
-        await this.notificationService.sendPaymentRequest(
-            customerEmail,
-            {
-                claimId,
-                customerName,
+        await this.notificationService.sendLetter(
+            new PaymentRequestLetter({
+                to: customerEmail,
+                customerName: customerName,
+                claimId: claimId,
                 paymentDetailsLink,
-            },
-            customerLanguage,
+                language: customerLanguage,
+            }),
         );
     }
 }

@@ -11,6 +11,7 @@ import { ClaimStatus } from '@prisma/client';
 import { ReminderTypeEnum } from '../../notification/enums/reminder-type.enum';
 import { Languages } from '../../language/enums/languages.enums';
 import { getNextWorkTime } from '../../../common/utils/getNextWorkTime';
+import { ClaimReminderLetter } from '../../notification/letters/definitions/claim/claim-reminder.letter';
 
 @Processor(CLAIM_REMINDER_QUEUE_KEY)
 export class ClaimReminderProcessor extends WorkerHost {
@@ -41,9 +42,10 @@ export class ClaimReminderProcessor extends WorkerHost {
             return;
         }
 
-        await this.notificationService.sendClaimReminder(
-            claim.customer.email,
-            {
+        await this.notificationService.sendLetter(
+            new ClaimReminderLetter({
+                to: claim.customer.email,
+                language: claim.customer.language as Languages,
                 customerName: claim.customer.firstName,
                 claimId: claim.id,
                 reminderType:
@@ -52,8 +54,7 @@ export class ClaimReminderProcessor extends WorkerHost {
                         : claimStatus == ClaimStatus.SENT_TO_AIRLINE
                           ? ReminderTypeEnum.SENT_TO_AIRLINE
                           : ReminderTypeEnum.LEGAL_PROCESS,
-            },
-            claim.customer.language as Languages,
+            }),
         );
 
         const jobData: ClaimReminderJobDataInterface = {

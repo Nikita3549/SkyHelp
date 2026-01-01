@@ -15,10 +15,10 @@ import { GenerateLinksModule } from '../../generate-links/generate-links.module'
 @Module({
     imports: [
         forwardRef(() => ClaimModule),
-        DocumentModule,
+        forwardRef(() => DocumentModule),
         TokenModule,
         RecentUpdatesModule,
-        DocumentRequestModule,
+        forwardRef(() => DocumentRequestModule),
         forwardRef(() => GenerateLinksModule),
         forwardRef(() => NotificationModule),
     ],

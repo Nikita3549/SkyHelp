@@ -10,12 +10,12 @@ export class ContactUsController {
     async sendContactUsData(@Body() body: SendContactUsDataDto) {
         const { email, subject, name, message, phone } = body;
 
-        await this.notificationsService.sendSubmitContactUsForm(
+        await this.notificationsService.submitContactUsForm({
             email,
             subject,
             name,
             message,
             phone,
-        );
+        });
     }
 }

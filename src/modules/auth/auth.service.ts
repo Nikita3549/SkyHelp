@@ -20,6 +20,7 @@ import { OAuth2Client } from 'google-auth-library';
 import { ConfigService } from '@nestjs/config';
 import { IPublicUserData } from '../user/interfaces/publicUserData.interface';
 import { IPublicUserDataWithJwt } from './interfaces/publicUserDataWithJwt.interface';
+import { NewGeneratedAccountLetter } from '../notification/letters/definitions/auth/new-generated-account.letter';
 
 @Injectable()
 export class AuthService {
@@ -226,13 +227,14 @@ export class AuthService {
                 isActive: true,
             });
 
-            this.notificationService.sendNewGeneratedAccount(
-                email,
-                {
-                    email: email,
+            await this.notificationService.sendLetter(
+                new NewGeneratedAccountLetter({
+                    to: email,
+                    language,
+                    email,
                     password,
-                },
-                language,
+                    resetPasswordLink: `${this.configService.getOrThrow('FRONTEND_URL')}/forgot`,
+                }),
             );
         }
         return {

@@ -13,12 +13,15 @@ import { CLAIM_NOT_FOUND } from '../claim/constants';
 import { Languages } from '../language/enums/languages.enums';
 import { HttpStatusCode } from 'axios';
 import { ApiKeyAuthGuard } from '../../common/guards/apiKeyAuthGuard';
+import { MissingDocumentsLetter } from '../notification/letters/definitions/claim/missing-documents.letter';
+import { ConfigService } from '@nestjs/config';
 
 @Controller('bot')
 export class BotController {
     constructor(
         private readonly notificationService: NotificationService,
         private readonly claimService: ClaimService,
+        private readonly configService: ConfigService,
     ) {}
 
     @UseGuards(ApiKeyAuthGuard)
@@ -33,13 +36,14 @@ export class BotController {
             throw new NotFoundException(CLAIM_NOT_FOUND);
         }
 
-        await this.notificationService.sendMissingDocumentEmail(
-            claim.customer.email,
-            {
+        await this.notificationService.sendLetter(
+            new MissingDocumentsLetter({
+                to: claim.customer.email,
                 claimId: claim.id,
                 customerName: claim.customer.firstName,
-            },
-            claim.customer.language as Languages,
+                language: claim.customer.language as Languages,
+                dashboardLink: `${this.configService.getOrThrow('FRONTEND_URL')}/dashboard`,
+            }),
         );
     }
 }

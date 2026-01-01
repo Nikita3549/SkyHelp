@@ -9,6 +9,8 @@ import { ReferralTransactionService } from '../../../referral/referral-transacti
 import { ClaimStatus, Prisma } from '@prisma/client';
 import { REFERRAL_RATE } from '../../../referral/referral-transaction/constants';
 import { PrismaService } from '../../../prisma/prisma.service';
+import { NewStatusLetter } from '../../../notification/letters/definitions/claim/new-status.letter';
+import { ConfigService } from '@nestjs/config';
 
 @Processor(SEND_NEW_PROGRESS_EMAIL_QUEUE_KEY)
 export class SendNewProgressEmailProcessor extends WorkerHost {
@@ -18,6 +20,7 @@ export class SendNewProgressEmailProcessor extends WorkerHost {
         private readonly claimService: ClaimService,
         private readonly referralTransactionService: ReferralTransactionService,
         private readonly prisma: PrismaService,
+        private readonly configService: ConfigService,
     ) {
         super();
     }
@@ -75,16 +78,17 @@ export class SendNewProgressEmailProcessor extends WorkerHost {
             }
         });
 
-        await this.notificationService.sendNewStatus(
-            emailData.to,
-            {
+        await this.notificationService.sendLetter(
+            new NewStatusLetter({
+                to: emailData.to,
+                language: emailData.language,
                 title: emailData.title,
                 description: emailData.description,
                 clientName: emailData.clientName,
                 claimId: emailData.claimId,
                 comments: progress.comments,
-            },
-            emailData.language,
+                dashboardLink: `${this.configService.getOrThrow('FRONTEND_URL')}/dashboard`,
+            }),
         );
     }
 }

@@ -1,3 +1,3 @@
 export interface IProcessAndSendOptions {
-    doNotSaveInDb?: boolean;
+    saveInDb?: boolean;
 }

@@ -36,6 +36,7 @@ import { UpdatePaymentStatusDto } from './dto/update-payment-status.dto';
 import { GenerateLinksService } from '../../generate-links/generate-links.service';
 import { NotificationService } from '../../notification/services/notification.service';
 import { Languages } from '../../language/enums/languages.enums';
+import { PaymentRequestLetter } from '../../notification/letters/definitions/claim/payment-request.letter';
 
 @Controller('claims/customer')
 @UseGuards(JwtAuthGuard)
@@ -105,14 +106,14 @@ export class CustomerController {
             const paymentDetailsLink =
                 await this.generateLinksService.generatePaymentDetails(linkJwt);
 
-            await this.notificationService.sendPaymentRequest(
-                customer.email,
-                {
+            await this.notificationService.sendLetter(
+                new PaymentRequestLetter({
+                    to: customer.email,
                     customerName: customer.firstName,
                     claimId: customer.Claim[0].id,
                     paymentDetailsLink,
-                },
-                Languages.EN,
+                    language: customer.language as Languages,
+                }),
             );
 
             await this.claimService.updateStatus(

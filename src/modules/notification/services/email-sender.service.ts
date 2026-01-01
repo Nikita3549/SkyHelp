@@ -3,7 +3,6 @@ import { ConfigService } from '@nestjs/config';
 import { GmailService } from '../../gmail/gmail.service';
 import { TokenService } from '../../token/token.service';
 import { UnsubscribeEmailService } from '../../unsubscribe-email/unsubscribe-email.service';
-import { GenerateLinksService } from '../../generate-links/generate-links.service';
 import { S3Service } from '../../s3/s3.service';
 import { Languages } from '../../language/enums/languages.enums';
 import { EmailCategory } from '../../gmail/enums/email-type.enum';
@@ -11,8 +10,8 @@ import { UnsubscribeJwt } from '../../unsubscribe-email/interfaces/unsubscribe-j
 import { gmail_v1 } from 'googleapis';
 import * as handlebars from 'handlebars';
 import { SUPPORTED_LETTER_LANGUAGES } from '../constants/supported-languages';
-import { ILetterData } from '../interfaces/letter-data.interface';
 import { IProcessAndSendOptions } from '../interfaces/process-and-send-options.interface';
+import { ILetterData } from '../interfaces/process-letter-data.interface';
 
 @Injectable()
 export class EmailSenderService {
@@ -48,17 +47,15 @@ export class EmailSenderService {
             emailCategory,
         );
 
-        if (options?.doNotSaveInDb) {
-            return;
+        if (options?.saveInDb) {
+            await this.saveHtmlEmail({
+                email,
+                subject,
+                claimId: claimId,
+                contentHtml: letterHtml,
+                to,
+            });
         }
-
-        await this.saveHtmlEmail({
-            email,
-            subject,
-            claimId: claimId,
-            contentHtml: letterHtml,
-            to,
-        });
     }
 
     private async render(letterData: ILetterData): Promise<{
@@ -114,12 +111,6 @@ export class EmailSenderService {
 
     private setContentInLayout(content: string, layout: string): string {
         return layout.replace('{{{content}}}', content);
-    }
-
-    private async isUnsubscribed(email: string): Promise<boolean> {
-        return !!(await this.unsubscribeEmailService.getUnsubscribeEmail(
-            email,
-        ));
     }
 
     private async saveHtmlEmail(data: {

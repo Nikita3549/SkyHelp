@@ -47,6 +47,8 @@ import { IClaimJwt } from '../claim/interfaces/claim-jwt.interface';
 import { ClaimService } from '../claim/claim.service';
 import { hashPassword } from './utils/hashPassword';
 import { GoogleLoginDto } from './dto/google-login.dto';
+import { ResetPasswordCodeLetter } from '../notification/letters/definitions/auth/reset-password-code.letter';
+import { RegisterCodeLetter } from '../notification/letters/definitions/auth/register-code.letter';
 
 @Controller('auth')
 export class AuthController {
@@ -93,10 +95,13 @@ export class AuthController {
                 code,
             });
 
-            await this.notificationService.sendRegisterCode(email, {
-                customerName: name,
-                registerCode: code.toString(),
-            });
+            await this.notificationService.sendLetter(
+                new RegisterCodeLetter({
+                    to: email,
+                    customerName: name,
+                    registerCode: code,
+                }),
+            );
         } catch (e: unknown) {
             await this.authService.deleteRegisterDataFromRedis(email);
 
@@ -153,10 +158,13 @@ export class AuthController {
             throw new BadRequestException(EXPIRE_CODE_OR_WRONG_EMAIL_ERROR);
         }
 
-        await this.notificationService.sendRegisterCode(email, {
-            registerCode: registerDataWithCode.code.toString(),
-            customerName: registerDataWithCode.registerData.name,
-        });
+        await this.notificationService.sendLetter(
+            new RegisterCodeLetter({
+                registerCode: registerDataWithCode.code,
+                customerName: registerDataWithCode.registerData.name,
+                to: email,
+            }),
+        );
 
         return CODE_SUCCESSFUL_RESEND;
     }
@@ -208,10 +216,13 @@ export class AuthController {
 
         const code = this.authService.generateCode();
 
-        await this.notificationService.sendForgotPasswordCode(email, {
-            resetCode: code.toString(),
-            customerName: user.name,
-        });
+        await this.notificationService.sendLetter(
+            new ResetPasswordCodeLetter({
+                to: email,
+                resetCode: code,
+                customerName: user.name,
+            }),
+        );
 
         await this.authService.saveForgotPasswordCode(email, code);
 

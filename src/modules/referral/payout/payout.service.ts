@@ -4,6 +4,7 @@ import { Prisma } from '@prisma/client';
 import { PartnerService } from '../partner/partner.service';
 import { NotificationService } from '../../notification/services/notification.service';
 import { PartnerSettingsService } from '../partner/partner-settings/partner-settings.service';
+import { PartnerPayoutProcessedLetter } from '../../notification/letters/definitions/partner/partner-payout-processed.letter';
 
 @Injectable()
 export class PayoutService {
@@ -55,11 +56,11 @@ export class PayoutService {
                 }
 
                 if (partnerSettings.paymentAlerts) {
-                    await this.notificationService.sendPartnerPayout(
-                        partnerSettings.email,
-                        {
+                    await this.notificationService.sendLetter(
+                        new PartnerPayoutProcessedLetter({
+                            to: partnerSettings.email,
                             amount,
-                        },
+                        }),
                     );
                 }
 

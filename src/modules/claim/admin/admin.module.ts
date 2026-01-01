@@ -12,7 +12,7 @@ import { OtherPassengerModule } from '../other-passenger/other-passenger.module'
         UserModule,
         RecentUpdatesModule,
         PartnerModule,
-        OtherPassengerModule,
+        forwardRef(() => OtherPassengerModule),
     ],
     controllers: [AdminController],
 })

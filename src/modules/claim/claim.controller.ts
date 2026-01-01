@@ -54,6 +54,7 @@ import { PartnerService } from '../referral/partner/partner.service';
 import { ApiKeyAuthGuard } from '../../common/guards/apiKeyAuthGuard';
 import { UserService } from '../user/user.service';
 import { getNextWorkTime } from '../../common/utils/getNextWorkTime';
+import { ClaimCreatedLetter } from '../notification/letters/definitions/claim/claim-created.letter';
 
 @Controller('claims')
 @UseGuards(JwtOrApiKeyAuth)
@@ -340,13 +341,14 @@ export class PublicClaimController {
         const claim = await this.claimService.updateStep(claimId, step);
 
         if (step == FINAL_STEP) {
-            await this.notificationService.sendClaimCreated(
-                claim.customer.email,
-                {
-                    id: claim.id,
+            await this.notificationService.sendLetter(
+                new ClaimCreatedLetter({
+                    to: claim.customer.email,
+                    language: language,
+                    claimId: claim.id,
                     airlineName: claim.details.airlines.name,
-                },
-                language,
+                    dashboardLink: `${this.configService.getOrThrow('FRONTEND_URL')}/dashboard`,
+                }),
             );
         }
 

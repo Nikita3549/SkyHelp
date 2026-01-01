@@ -13,12 +13,12 @@ import { ClaimModule } from '../claim/claim.module';
 
 @Module({
     imports: [
-        forwardRef(() => TokenModule),
+        TokenModule,
         forwardRef(() => ClaimModule),
         OtherPassengerModule,
         OtherPassengerCopiedLinksModule,
         UrlShortenerModule,
-        forwardRef(() => CustomerModule),
+        CustomerModule,
     ],
     controllers: [GenerateLinksController, PublicGenerateLinksController],
     providers: [GenerateLinksService],

@@ -9,6 +9,7 @@ import { NotificationService } from '../../notification/services/notification.se
 import { IJobClaimFollowupData } from '../interfaces/job-data/job-data.interface';
 import { ClaimService } from '../claim.service';
 import { EmailResumeClickService } from '../../email-resume-click/email-resume-click.service';
+import { FinishClaimLetter } from '../../notification/letters/definitions/claim/finish-claim.letter';
 
 @Processor(CLAIM_FOLLOWUP_QUEUE_KEY)
 export class ClaimFollowupProcessor extends WorkerHost {
@@ -42,15 +43,15 @@ export class ClaimFollowupProcessor extends WorkerHost {
 
         await this.emailResumeClickService.createRecord(claimId);
 
-        await this.notificationService.sendFinishClaim(
-            email,
-            {
+        await this.notificationService.sendLetter(
+            new FinishClaimLetter({
+                to: email,
+                language,
                 clientFirstName,
                 continueClaimLink,
                 compensation,
-                id: claimId,
-            },
-            language,
+                claimId: claimId,
+            }),
         );
 
         return;

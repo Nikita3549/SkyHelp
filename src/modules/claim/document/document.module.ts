@@ -18,8 +18,8 @@ import { GENERATE_ASSIGNMENT_QUEUE_KEY } from './processors/constants/generate-a
     imports: [
         forwardRef(() => ClaimModule),
         TokenModule,
-        RecentUpdatesModule,
-        DocumentRequestModule,
+        forwardRef(() => RecentUpdatesModule),
+        forwardRef(() => DocumentRequestModule),
         S3Module,
         BullModule.registerQueue({
             name: GENERATE_ASSIGNMENT_QUEUE_KEY,

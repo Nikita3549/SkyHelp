@@ -5,8 +5,12 @@ import { ClaimService } from '../../claim.service';
 import { SEND_NEW_DOCUMENT_REQUEST_QUEUE_KEY } from '../constants';
 import { DocumentRequestService } from '../document-request.service';
 import { SendNewDocumentRequestJobDataInterface } from '../interfaces/send-new-document-request-job-data.interface';
-import { DocumentRequestReason } from '@prisma/client';
+import { DocumentRequestReason, DocumentType } from '@prisma/client';
 import { Languages } from '../../../language/enums/languages.enums';
+import { DocumentRequestLetter } from '../../../notification/letters/definitions/claim/document-request.letter';
+import { ConfigService } from '@nestjs/config';
+import { GenerateLinksService } from '../../../generate-links/generate-links.service';
+import { SpecializedDocumentRequestLetter } from '../../../notification/letters/definitions/claim/specialized-document-request.letter';
 
 @Processor(SEND_NEW_DOCUMENT_REQUEST_QUEUE_KEY)
 export class SendNewDocumentRequestsProcessor extends WorkerHost {
@@ -14,6 +18,8 @@ export class SendNewDocumentRequestsProcessor extends WorkerHost {
         private readonly notificationService: NotificationService,
         private readonly claimService: ClaimService,
         private readonly documentRequestService: DocumentRequestService,
+        private readonly configService: ConfigService,
+        private readonly generateLinksService: GenerateLinksService,
     ) {
         super();
     }
@@ -40,17 +46,23 @@ export class SendNewDocumentRequestsProcessor extends WorkerHost {
                     ))!;
 
                 if (r.reason != DocumentRequestReason.MISSING_DOCUMENT) {
-                    await this.notificationService.sendSpecializedDocumentRequest(
-                        claim.customer.email,
-                        {
+                    const { continueLink } = await this.generateContinueLink({
+                        claimId: claim.id,
+                        documentRequestReason: r.reason,
+                        passengerId: r.passengerId,
+                        passengerName: passenger.firstName,
+                        isCustomer: passenger.isCustomer,
+                    });
+
+                    await this.notificationService.sendLetter(
+                        new SpecializedDocumentRequestLetter({
+                            to: claim.customer.email,
                             customerName: customerName,
                             claimId: claim.id,
                             documentRequestReason: r.reason,
-                            passengerId: r.passengerId,
-                            passengerName: passenger.firstName,
-                            isCustomer: passenger.isCustomer,
-                        },
-                        claim.customer.language as Languages,
+                            continueLink,
+                            language: claim.customer.language as Languages,
+                        }),
                     );
                 }
 
@@ -61,14 +73,86 @@ export class SendNewDocumentRequestsProcessor extends WorkerHost {
             }),
         );
 
-        await this.notificationService.sendDocumentRequest(
-            to,
-            {
+        await this.notificationService.sendLetter(
+            new DocumentRequestLetter({
+                language,
+                to,
                 documentRequestsData: mappedDocumentRequests,
                 claimId,
                 customerName,
-            },
-            language,
+                dashboardLink: `${this.configService.getOrThrow('FRONTEND_URL')}/dashboard`,
+            }),
         );
+    }
+
+    private async generateContinueLink(data: {
+        documentRequestReason: DocumentRequestReason;
+        claimId: string;
+        passengerId: string;
+        isCustomer: boolean;
+        passengerName: string;
+    }): Promise<{ continueLink: string }> {
+        const {
+            documentRequestReason,
+            claimId,
+            passengerId,
+            isCustomer,
+            passengerName,
+        } = data;
+        if (documentRequestReason == DocumentRequestReason.MISSING_DOCUMENT) {
+            throw new Error(
+                'You cannot generate continue link for DocumentRequestReason == MISSING_DOCUMENT',
+            );
+        }
+
+        let continueLink: string;
+        const jwt = await this.generateLinksService.generateLinkJwt(claimId);
+        switch (documentRequestReason) {
+            case DocumentRequestReason.PASSPORT_IMAGE_UNCLEAR:
+                continueLink =
+                    await this.generateLinksService.generateUploadDocuments(
+                        passengerId,
+                        claimId,
+                        jwt,
+                        JSON.stringify({
+                            documentTypes: [DocumentType.PASSPORT],
+                        }),
+                        passengerName,
+                    );
+                break;
+            case DocumentRequestReason.PASSPORT_MISMATCH:
+                continueLink =
+                    await this.generateLinksService.generateUploadDocuments(
+                        passengerId,
+                        claimId,
+                        jwt,
+                        JSON.stringify({
+                            documentTypes: [DocumentType.PASSPORT],
+                        }),
+                        passengerName,
+                    );
+                break;
+            case DocumentRequestReason.SIGNATURE_MISMATCH:
+                if (isCustomer) {
+                    continueLink =
+                        await this.generateLinksService.generateSignCustomer(
+                            passengerId,
+                            claimId,
+                            jwt,
+                        );
+                } else {
+                    continueLink =
+                        await this.generateLinksService.generateSignOtherPassenger(
+                            passengerId,
+                            jwt,
+                            false,
+                        );
+                }
+                break;
+        }
+
+        return {
+            continueLink,
+        };
     }
 }
