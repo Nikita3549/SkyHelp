@@ -1,19 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { GmailService } from '../../gmail/gmail.service';
 import { EmailCategory } from '../../gmail/enums/email-type.enum';
 import { UnsubscribeEmailService } from '../../unsubscribe-email/unsubscribe-email.service';
 import { EmailSenderService } from './email-sender.service';
 import { BaseLetter } from '../letters/base-letter';
 import { IBaseLetterData } from '../letters/base-letter-data.interface';
+import { GmailNoreplyService } from '../../gmail/services/gmail-noreply.service';
 
 @Injectable()
 export class NotificationService {
     constructor(
         private readonly configService: ConfigService,
-        private readonly gmailService: GmailService,
         private readonly unsubscribeEmailService: UnsubscribeEmailService,
         private readonly emailSenderService: EmailSenderService,
+        private readonly gmailNoreplyService: GmailNoreplyService,
     ) {}
 
     async sendLetter<T extends IBaseLetterData>(letter: BaseLetter<T>) {
@@ -46,7 +46,7 @@ export class NotificationService {
     }) {
         const { email, subject, name, message, phone } = data;
 
-        await this.gmailService.noreply.sendEmail(
+        await this.gmailNoreplyService.sendEmail(
             this.configService.getOrThrow('GMAIL_CONTACT_US_SUBMIT_EMAIL'),
             `New Contact Form Submission from ${name}`,
             `You have received a new message via the Contact Us form.

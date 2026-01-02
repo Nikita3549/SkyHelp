@@ -15,6 +15,7 @@ import { UploadDocumentsJwtQueryDto } from '../dto/upload-documents-jwt-query.dt
 import { DocumentType } from '@prisma/client';
 import { validateClaimJwt } from '../../../../common/utils/validate-claim-jwt';
 import { CLAIM_NOT_FOUND } from '../../constants';
+import { ClaimPersistenceService } from '../../../claim-persistence/claim-persistence.service';
 
 @Controller('claims/documents/public')
 export class PublicDocumentController {
@@ -22,6 +23,7 @@ export class PublicDocumentController {
         private readonly documentService: DocumentService,
         private readonly claimService: ClaimService,
         private readonly tokenService: TokenService,
+        private readonly claimPersistenceService: ClaimPersistenceService,
     ) {}
 
     @Post()
@@ -33,7 +35,7 @@ export class PublicDocumentController {
     ) {
         const { jwt, claimId, step, passengerId } = query;
 
-        const claim = await this.claimService.getClaim(claimId);
+        const claim = await this.claimPersistenceService.findOneById(claimId);
 
         if (!claim) {
             throw new NotFoundException(CLAIM_NOT_FOUND);
@@ -67,7 +69,7 @@ export class PublicDocumentController {
             this.tokenService.verifyJWT.bind(this.tokenService),
         );
 
-        if (!(await this.claimService.getClaim(claimId))) {
+        if (!(await this.claimPersistenceService.findOneById(claimId))) {
             throw new NotFoundException(CLAIM_NOT_FOUND);
         }
 
@@ -75,7 +77,7 @@ export class PublicDocumentController {
             await this.claimService.updateStep(claimId, step);
         }
 
-        const documents = await this.documentService.saveDocuments(
+        return await this.documentService.saveDocuments(
             files.map((doc, index) => {
                 return {
                     name: doc.originalname,
@@ -86,11 +88,9 @@ export class PublicDocumentController {
                 };
             }),
             claimId,
-            true,
+            {
+                isPublic: true,
+            },
         );
-
-        await this.claimService.handleAllDocumentsUploaded(claimId);
-
-        return documents;
     }
 }

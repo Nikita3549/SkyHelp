@@ -39,6 +39,7 @@ import { OtherPassengerDto } from '../other-passenger/dto/create-other-passenger
 import { AssignToPartnerDto } from './dto/assign-to-partner.dto';
 import { PARTNER_NOT_FOUND } from '../../referral/partner/constants';
 import { DeleteFromPartnerDto } from './dto/delete-from-partner.dto';
+import { ClaimPersistenceService } from '../../claim-persistence/claim-persistence.service';
 
 @Controller('claims/admin')
 @UseGuards(
@@ -59,6 +60,7 @@ export class AdminController {
         private readonly recentUpdatesService: RecentUpdatesService,
         private readonly partnerService: PartnerService,
         private readonly otherPassengersService: OtherPassengerService,
+        private readonly claimPersistenceService: ClaimPersistenceService,
     ) {}
 
     @Post(':claimId/passenger')
@@ -66,7 +68,7 @@ export class AdminController {
         @Body() dto: OtherPassengerDto,
         @Param('claimId') claimId: string,
     ) {
-        const claim = await this.claimService.getClaim(claimId);
+        const claim = await this.claimPersistenceService.findOneById(claimId);
 
         if (!claim) {
             throw new NotFoundException(CLAIM_NOT_FOUND);
@@ -232,7 +234,7 @@ export class AdminController {
         ]),
     )
     async patchHasRecentUpdates(@Param('claimId') claimId: string) {
-        const claim = await this.claimService.getClaim(claimId);
+        const claim = await this.claimPersistenceService.findOneById(claimId);
 
         if (!claim) {
             throw new NotFoundException(CLAIM_NOT_FOUND);
@@ -240,7 +242,10 @@ export class AdminController {
 
         await this.recentUpdatesService.unviewRecentUpdatesByClaimId(claimId);
 
-        return this.claimService.updateHasRecentUpdate(false, claimId);
+        await this.claimPersistenceService.updateHasRecentUpdate(
+            { hasRecentUpdate: true },
+            claimId,
+        );
     }
 
     @Get('stats')
@@ -291,7 +296,7 @@ export class AdminController {
     ) {
         const { archived } = dto;
 
-        const claim = await this.claimService.getClaim(claimId);
+        const claim = await this.claimPersistenceService.findOneById(claimId);
 
         if (!claim) {
             throw new NotFoundException(CLAIM_NOT_FOUND);
@@ -315,7 +320,7 @@ export class AdminController {
         ]),
     )
     async getAdminClaim(@Param('claimId') claimId: string) {
-        const claim = await this.claimService.getClaim(claimId);
+        const claim = await this.claimPersistenceService.findOneById(claimId);
 
         if (!claim) {
             throw new BadRequestException(CLAIM_NOT_FOUND);
@@ -330,7 +335,7 @@ export class AdminController {
         @Body() dto: UpdateClaimDto,
         @Param('claimId') claimId: string,
     ) {
-        if (!(await this.claimService.getClaim(claimId))) {
+        if (!(await this.claimPersistenceService.findOneById(claimId))) {
             throw new BadRequestException(CLAIM_NOT_FOUND);
         }
 
@@ -370,7 +375,7 @@ export class AdminController {
         ]),
     )
     async deleteAgent(@Param('claimId') claimId: string) {
-        if (!(await this.claimService.getClaim(claimId))) {
+        if (!(await this.claimPersistenceService.findOneById(claimId))) {
             throw new BadRequestException(CLAIM_NOT_FOUND);
         }
 

@@ -9,13 +9,14 @@ import {
 import { ClaimService } from '../claim.service';
 import { ActivityService } from '../activity/activity.service';
 import { FINAL_STEP } from '../constants';
+import { ClaimPersistenceService } from '../../claim-persistence/claim-persistence.service';
 
 @Injectable()
 export class RecentUpdatesService {
     constructor(
         private readonly prisma: PrismaService,
-        private readonly claimService: ClaimService,
         private readonly activityService: ActivityService,
+        private readonly claimPersistenceService: ClaimPersistenceService,
     ) {}
 
     async saveRecentUpdate(
@@ -27,7 +28,7 @@ export class RecentUpdatesService {
         },
         claimId: string,
     ) {
-        const claim = await this.claimService.getClaim(claimId);
+        const claim = await this.claimPersistenceService.findOneById(claimId);
 
         if (!claim) {
             throw new InternalServerErrorException(
@@ -46,9 +47,15 @@ export class RecentUpdatesService {
             },
             claimId,
         );
-        await this.claimService.updateHasRecentUpdate(true, claimId);
+        await this.claimPersistenceService.updateHasRecentUpdate(
+            { hasRecentUpdate: true },
+            claimId,
+        );
 
-        await this.claimService.changeRecentUpdatedAt(claimId);
+        await this.claimPersistenceService.update(
+            { recentUpdatedAt: new Date() },
+            claimId,
+        );
 
         return this.prisma.claimRecentUpdates.create({
             data: {

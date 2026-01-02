@@ -3,20 +3,19 @@ import { OAuth2Client } from 'google-auth-library';
 import { gmail_v1, google } from 'googleapis';
 import { ConfigService } from '@nestjs/config';
 import { Interval } from '@nestjs/schedule';
-import { GmailService } from '../../gmail.service';
-import { EmailCategory } from '../../enums/email-type.enum';
-import { MINUTE } from '../../../../common/constants/time.constants';
+import { GmailService } from './gmail.service';
+import { EmailCategory } from '../enums/email-type.enum';
+import { MINUTE } from '../../../common/constants/time.constants';
 import Gmail = gmail_v1.Gmail;
 
 @Injectable()
-export class GmailNoreplyAccountService implements OnModuleInit {
+export class GmailNoreplyService implements OnModuleInit {
     private oauth2Client: OAuth2Client;
     private gmail: Gmail;
     private _accessToken: string;
 
     constructor(
         private readonly configService: ConfigService,
-        @Inject(forwardRef(() => GmailService))
         private readonly gmailService: GmailService,
     ) {}
 

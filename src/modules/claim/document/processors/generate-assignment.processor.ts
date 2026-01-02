@@ -73,6 +73,10 @@ export class GenerateAssignmentProcessor extends WorkerHost {
                     },
                 ],
                 claim.id,
+                {
+                    handleIsAllDocumentsUploaded:
+                        !!options?.checkIfAllDocumentsUploaded,
+                },
             );
 
             if (options?.saveRecentUpdate) {
@@ -85,10 +89,6 @@ export class GenerateAssignmentProcessor extends WorkerHost {
                     },
                     claim.id,
                 );
-            }
-
-            if (options?.checkIfAllDocumentsUploaded) {
-                await this.claimService.handleAllDocumentsUploaded(claim.id);
             }
         } catch (e) {
             console.error(e);

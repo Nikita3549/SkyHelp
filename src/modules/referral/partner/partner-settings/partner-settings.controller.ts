@@ -28,7 +28,6 @@ import { RoleGuard } from '../../../../common/guards/role.guard';
 export class PartnerSettingsController {
     constructor(
         private readonly partnerSettingsService: PartnerSettingsService,
-        private readonly partnerService: PartnerService,
     ) {}
 
     @Put()
@@ -41,18 +40,12 @@ export class PartnerSettingsController {
             if (req.user.id != userId) {
                 throw new ForbiddenException(HAVE_NO_RIGHTS_ON_PARTNER_DATA);
             }
-        } else {
-            const partner =
-                await this.partnerService.getPartnerByUserId(userId);
-
-            if (!partner) {
-                throw new NotFoundException(PARTNER_NOT_FOUND);
-            }
         }
 
-        return await this.partnerSettingsService.updatePartnerSettings(
-            dto,
-            userId,
-        );
+        return await this.partnerSettingsService
+            .updatePartnerSettings(dto, userId)
+            .catch((e) => {
+                throw new NotFoundException(PARTNER_NOT_FOUND);
+            });
     }
 }

@@ -9,16 +9,16 @@ import { OtherPassengerModule } from '../claim/other-passenger/other-passenger.m
 import { OtherPassengerCopiedLinksModule } from '../claim/other-passenger/other-passenger-copied-links/other-passenger-copied-links.module';
 import { UrlShortenerModule } from './url-shortener/url-shortener.module';
 import { CustomerModule } from '../claim/customer/customer.module';
-import { ClaimModule } from '../claim/claim.module';
+import { ClaimPersistenceModule } from '../claim-persistence/claim-persistence.module';
 
 @Module({
     imports: [
         TokenModule,
-        forwardRef(() => ClaimModule),
         OtherPassengerModule,
         OtherPassengerCopiedLinksModule,
         UrlShortenerModule,
         CustomerModule,
+        ClaimPersistenceModule,
     ],
     controllers: [GenerateLinksController, PublicGenerateLinksController],
     providers: [GenerateLinksService],

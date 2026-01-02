@@ -4,9 +4,10 @@ import { FlightStatusController } from './flight-status.controller';
 import { ClaimModule } from '../claim.module';
 import { FlightModule } from '../../flight/flight.module';
 import { AirlineModule } from '../../airline/airline.module';
+import { ClaimPersistenceModule } from '../../claim-persistence/claim-persistence.module';
 
 @Module({
-    imports: [forwardRef(() => ClaimModule), FlightModule, AirlineModule],
+    imports: [FlightModule, AirlineModule, ClaimPersistenceModule],
     providers: [FlightStatusService],
     controllers: [FlightStatusController],
     exports: [FlightStatusService],

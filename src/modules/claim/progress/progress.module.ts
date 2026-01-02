@@ -8,16 +8,17 @@ import { SEND_NEW_PROGRESS_EMAIL_QUEUE_KEY } from './constants';
 import { SendNewProgressEmailProcessor } from './processors/send-new-progress-email.processor';
 import { LanguageModule } from '../../language/language.module';
 import { ReferralTransactionModule } from '../../referral/referral-transaction/referral-transaction.module';
+import { ClaimPersistenceModule } from '../../claim-persistence/claim-persistence.module';
 
 @Module({
     imports: [
-        forwardRef(() => NotificationModule),
-        forwardRef(() => ClaimModule),
+        NotificationModule,
         BullModule.registerQueue({
             name: SEND_NEW_PROGRESS_EMAIL_QUEUE_KEY,
         }),
-        forwardRef(() => LanguageModule),
+        LanguageModule,
         ReferralTransactionModule,
+        ClaimPersistenceModule,
     ],
     controllers: [ProgressController],
     providers: [ProgressService, SendNewProgressEmailProcessor],

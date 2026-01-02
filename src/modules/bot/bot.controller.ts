@@ -15,13 +15,14 @@ import { HttpStatusCode } from 'axios';
 import { ApiKeyAuthGuard } from '../../common/guards/apiKeyAuthGuard';
 import { MissingDocumentsLetter } from '../notification/letters/definitions/claim/missing-documents.letter';
 import { ConfigService } from '@nestjs/config';
+import { ClaimPersistenceService } from '../claim-persistence/claim-persistence.service';
 
 @Controller('bot')
 export class BotController {
     constructor(
         private readonly notificationService: NotificationService,
-        private readonly claimService: ClaimService,
         private readonly configService: ConfigService,
+        private readonly claimPersistenceService: ClaimPersistenceService,
     ) {}
 
     @UseGuards(ApiKeyAuthGuard)
@@ -30,7 +31,7 @@ export class BotController {
     async sendMissingDocumentsEmail(@Body() dto: SendMissingDocumentsEmailDto) {
         const { claimId } = dto;
 
-        const claim = await this.claimService.getClaim(claimId);
+        const claim = await this.claimPersistenceService.findOneById(claimId);
 
         if (!claim) {
             throw new NotFoundException(CLAIM_NOT_FOUND);

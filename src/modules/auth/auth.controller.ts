@@ -49,6 +49,7 @@ import { hashPassword } from './utils/hashPassword';
 import { GoogleLoginDto } from './dto/google-login.dto';
 import { ResetPasswordCodeLetter } from '../notification/letters/definitions/auth/reset-password-code.letter';
 import { RegisterCodeLetter } from '../notification/letters/definitions/auth/register-code.letter';
+import { ClaimPersistenceService } from '../claim-persistence/claim-persistence.service';
 
 @Controller('auth')
 export class AuthController {
@@ -57,7 +58,7 @@ export class AuthController {
         private readonly userService: UserService,
         private readonly notificationService: NotificationService,
         private readonly tokenService: TokenService,
-        private readonly claimService: ClaimService,
+        private readonly claimPersistenceService: ClaimPersistenceService,
     ) {}
 
     @Post('login/google')
@@ -315,7 +316,7 @@ export class AuthController {
                 const payload =
                     await this.tokenService.verifyJWT<IClaimJwt>(claimToken);
 
-                await this.claimService.connectWithUser(
+                await this.claimPersistenceService.connectWithUser(
                     payload.claimId,
                     userId,
                 );

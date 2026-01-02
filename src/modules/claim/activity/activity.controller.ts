@@ -8,13 +8,14 @@ import { CLAIM_NOT_FOUND, HAVE_NO_RIGHTS_ON_CLAIM } from '../constants';
 import { BadRequestException } from '@nestjs/common/exceptions/bad-request.exception';
 import { ActivityService } from './activity.service';
 import { JwtAuthGuard } from '../../../common/guards/jwtAuth.guard';
+import { ClaimPersistenceService } from '../../claim-persistence/claim-persistence.service';
 
 @Controller('activities')
 @UseGuards(JwtAuthGuard)
 export class ActivityController {
     constructor(
-        private readonly claimService: ClaimService,
         private readonly activityService: ActivityService,
+        private readonly claimPersistenceService: ClaimPersistenceService,
     ) {}
 
     @Get()
@@ -29,7 +30,8 @@ export class ActivityController {
                 throw new BadRequestException(CLAIM_NOT_FOUND);
             }
 
-            const claim = await this.claimService.getClaim(claimId);
+            const claim =
+                await this.claimPersistenceService.findOneById(claimId);
 
             if (!claim || claim.id != claimId) {
                 throw new ForbiddenException(HAVE_NO_RIGHTS_ON_CLAIM);

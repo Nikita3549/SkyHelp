@@ -26,6 +26,7 @@ import { HttpStatusCode } from 'axios';
 import { RedisService } from '../../redis/redis.service';
 import { DAY } from '../../../common/constants/time.constants';
 import { RoleGuard } from '../../../common/guards/role.guard';
+import { ClaimPersistenceService } from '../../claim-persistence/claim-persistence.service';
 
 @Controller('claims/document-requests')
 @UseGuards(JwtAuthGuard)
@@ -33,7 +34,7 @@ export class DocumentRequestController {
     constructor(
         private readonly documentRequestService: DocumentRequestService,
         private readonly redis: RedisService,
-        private readonly claimService: ClaimService,
+        private readonly claimPersistenceService: ClaimPersistenceService,
     ) {}
 
     @Post()
@@ -49,7 +50,9 @@ export class DocumentRequestController {
         @Body() dto: CreateDocumentRequestDto,
         @Req() req: AuthRequest,
     ) {
-        const claim = await this.claimService.getClaim(dto.claimId);
+        const claim = await this.claimPersistenceService.findOneById(
+            dto.claimId,
+        );
 
         if (!claim) {
             throw new NotFoundException(CLAIM_NOT_FOUND);
@@ -86,7 +89,7 @@ export class DocumentRequestController {
     ) {
         const { claimId } = query;
 
-        const claim = await this.claimService.getClaim(claimId);
+        const claim = await this.claimPersistenceService.findOneById(claimId);
 
         if (!claim) {
             throw new NotFoundException(CLAIM_NOT_FOUND);
@@ -123,9 +126,13 @@ export class DocumentRequestController {
             throw new NotFoundException(DOCUMENT_REQUEST_NOT_FOUND);
         }
 
-        const claim = (await this.claimService.getClaim(
+        const claim = await this.claimPersistenceService.findOneById(
             documentRequest.claimId,
-        )) as IFullClaim;
+        );
+
+        if (!claim) {
+            return;
+        }
 
         if (req.user.role != UserRole.ADMIN && claim.agentId != req.user.id) {
             throw new ForbiddenException(HAVE_NO_RIGHTS_ON_CLAIM);

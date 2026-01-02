@@ -11,16 +11,17 @@ import { REFERRAL_RATE } from '../../../referral/referral-transaction/constants'
 import { PrismaService } from '../../../prisma/prisma.service';
 import { NewStatusLetter } from '../../../notification/letters/definitions/claim/new-status.letter';
 import { ConfigService } from '@nestjs/config';
+import { ClaimPersistenceService } from '../../../claim-persistence/claim-persistence.service';
 
 @Processor(SEND_NEW_PROGRESS_EMAIL_QUEUE_KEY)
 export class SendNewProgressEmailProcessor extends WorkerHost {
     constructor(
         private readonly notificationService: NotificationService,
         private readonly progressService: ProgressService,
-        private readonly claimService: ClaimService,
         private readonly referralTransactionService: ReferralTransactionService,
         private readonly prisma: PrismaService,
         private readonly configService: ConfigService,
+        private readonly claimPersistenceService: ClaimPersistenceService,
     ) {
         super();
     }
@@ -43,14 +44,16 @@ export class SendNewProgressEmailProcessor extends WorkerHost {
             return;
         }
 
-        const claim = await this.claimService.getClaim(emailData.claimId);
+        const claim = await this.claimPersistenceService.findOneById(
+            emailData.claimId,
+        );
 
         if (!claim) {
             return;
         }
 
         this.prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-            await this.claimService.updateStatus(
+            await this.claimPersistenceService.updateStatus(
                 newClaimStatus,
                 emailData.claimId,
                 tx,

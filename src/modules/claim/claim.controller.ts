@@ -55,6 +55,7 @@ import { ApiKeyAuthGuard } from '../../common/guards/apiKeyAuthGuard';
 import { UserService } from '../user/user.service';
 import { getNextWorkTime } from '../../common/utils/getNextWorkTime';
 import { ClaimCreatedLetter } from '../notification/letters/definitions/claim/claim-created.letter';
+import { ClaimPersistenceService } from '../claim-persistence/claim-persistence.service';
 
 @Controller('claims')
 @UseGuards(JwtOrApiKeyAuth)
@@ -90,6 +91,7 @@ export class PublicClaimController {
         private readonly userService: UserService,
         @InjectQueue(CLAIM_REMINDER_QUEUE_KEY)
         private readonly claimReminderQueue: Queue,
+        private readonly claimPersistenceService: ClaimPersistenceService,
     ) {}
 
     @Post()
@@ -236,7 +238,7 @@ export class PublicClaimController {
             this.tokenService.verifyJWT.bind(this.tokenService),
         );
 
-        const claim = await this.claimService.getClaim(claimId);
+        const claim = await this.claimPersistenceService.findOneById(claimId);
 
         if (!claim) {
             throw new NotFoundException(CLAIM_NOT_FOUND);
@@ -261,7 +263,7 @@ export class PublicClaimController {
             this.tokenService.verifyJWT.bind(this.tokenService),
         );
 
-        const claim = await this.claimService.getClaim(claimId);
+        const claim = await this.claimPersistenceService.findOneById(claimId);
 
         if (!claim) {
             throw new NotFoundException(CLAIM_NOT_FOUND);
@@ -314,8 +316,8 @@ export class PublicClaimController {
 
     @Get(':claimId')
     @UseGuards(ApiKeyAuthGuard)
-    async getClaim(@Param('claimId') claimId: string, @Req() req: Request) {
-        const claim = await this.claimService.getClaim(claimId);
+    async getClaim(@Param('claimId') claimId: string) {
+        const claim = await this.claimPersistenceService.findOneById(claimId);
 
         if (!claim) {
             throw new NotFoundException(CLAIM_NOT_FOUND);

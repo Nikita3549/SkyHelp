@@ -35,6 +35,7 @@ import { AuthRequest } from '../../../common/interfaces/AuthRequest.interface';
 import { MINUTE } from '../../../common/constants/time.constants';
 import { UpdateProgressComments } from './dto/update-progress-comments';
 import { RoleGuard } from '../../../common/guards/role.guard';
+import { ClaimPersistenceService } from '../../claim-persistence/claim-persistence.service';
 
 @Controller('claims/progresses')
 @UseGuards(
@@ -50,10 +51,10 @@ import { RoleGuard } from '../../../common/guards/role.guard';
 export class ProgressController {
     constructor(
         private readonly progressesService: ProgressService,
-        private readonly claimService: ClaimService,
         @InjectQueue(SEND_NEW_PROGRESS_EMAIL_QUEUE_KEY)
         private readonly sendNewProgressEmailQueue: Queue,
         private readonly languageService: LanguageService,
+        private readonly claimPersistenceService: ClaimPersistenceService,
     ) {}
 
     @Post(':claimId')
@@ -65,7 +66,7 @@ export class ProgressController {
         const { status, order, description, comments, additionalData } = dto;
         const user = req.user;
 
-        const claim = await this.claimService.getClaim(claimId);
+        const claim = await this.claimPersistenceService.findOneById(claimId);
 
         if (!claim) {
             throw new NotFoundException(CLAIM_NOT_FOUND);

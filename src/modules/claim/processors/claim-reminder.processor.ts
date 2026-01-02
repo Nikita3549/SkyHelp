@@ -12,14 +12,15 @@ import { ReminderTypeEnum } from '../../notification/enums/reminder-type.enum';
 import { Languages } from '../../language/enums/languages.enums';
 import { getNextWorkTime } from '../../../common/utils/getNextWorkTime';
 import { ClaimReminderLetter } from '../../notification/letters/definitions/claim/claim-reminder.letter';
+import { ClaimPersistenceService } from '../../claim-persistence/claim-persistence.service';
 
 @Processor(CLAIM_REMINDER_QUEUE_KEY)
 export class ClaimReminderProcessor extends WorkerHost {
     constructor(
         private readonly notificationService: NotificationService,
-        private readonly claimService: ClaimService,
         @InjectQueue(CLAIM_REMINDER_QUEUE_KEY)
         private readonly claimReminderQueue: Queue,
+        private readonly claimPersistenceService: ClaimPersistenceService,
     ) {
         super();
     }
@@ -27,7 +28,7 @@ export class ClaimReminderProcessor extends WorkerHost {
     async process(job: Job<ClaimReminderJobDataInterface>) {
         const { claimId } = job.data;
 
-        const claim = await this.claimService.getClaim(claimId);
+        const claim = await this.claimPersistenceService.findOneById(claimId);
 
         if (!claim) {
             return;

@@ -30,7 +30,7 @@ import {
 } from './constants';
 import { Queue } from 'bullmq';
 import { IJobClaimFollowupData } from './interfaces/job-data/job-data.interface';
-import { BasePassenger } from './interfaces/base-passenger.interface';
+import { BasePassenger } from '../claim-persistence/interfaces/base-passenger.interface';
 import { ConfigService } from '@nestjs/config';
 import { IClaimJwt } from './interfaces/claim-jwt.interface';
 import { TokenService } from '../token/token.service';
@@ -44,6 +44,7 @@ import { ViewClaimType } from './enums/view-claim-type.enum';
 import { ProgressService } from './progress/progress.service';
 import { ProgressVariants } from './progress/constants/progresses/progressVariants';
 import { DocumentRequestService } from './document-request/document-request.service';
+import { ClaimPersistenceService } from '../claim-persistence/claim-persistence.service';
 
 @Injectable()
 export class ClaimService {
@@ -55,6 +56,7 @@ export class ClaimService {
         private readonly tokenService: TokenService,
         private readonly progressService: ProgressService,
         private readonly documentRequestService: DocumentRequestService,
+        private readonly claimPersistenceService: ClaimPersistenceService,
     ) {}
 
     async handleAllDocumentsUploaded(claimId: string) {
@@ -72,7 +74,7 @@ export class ClaimService {
             Assignment: [DocumentType.ASSIGNMENT],
         };
 
-        const claim = await this.getClaim(claimId);
+        const claim = await this.claimPersistenceService.findOneById(claimId);
 
         if (!claim) {
             return;
@@ -145,7 +147,11 @@ export class ClaimService {
                 tx,
             );
 
-            await this.updateStatus(ClaimStatus.CLAIM_RECEIVED, claimId, tx);
+            await this.claimPersistenceService.updateStatus(
+                ClaimStatus.CLAIM_RECEIVED,
+                claimId,
+                tx,
+            );
         });
     }
 
@@ -177,18 +183,6 @@ export class ClaimService {
             data: {
                 userId,
             },
-        });
-    }
-
-    async getClaim(
-        claimId: string,
-        filters?: { documentsWithPath: boolean },
-    ): Promise<IFullClaim | null> {
-        return this.prisma.claim.findFirst({
-            where: {
-                id: claimId,
-            },
-            include: this.fullClaimInclude(filters),
         });
     }
 
@@ -385,16 +379,6 @@ export class ClaimService {
         throw new Error(
             'Failed to generate unique numericId after multiple attempts.',
         );
-    }
-
-    async getClaimByEmail(email: string) {
-        return this.prisma.claim.findFirst({
-            where: {
-                customer: {
-                    email,
-                },
-            },
-        });
     }
 
     async updateClaim(
@@ -964,39 +948,6 @@ export class ClaimService {
         };
     }
 
-    async connectWithUser(claimId: string, userId: string) {
-        return this.prisma.claim.update({
-            data: {
-                userId,
-            },
-            where: {
-                id: claimId,
-            },
-        });
-    }
-
-    async changeUpdatedAt(claimId: string) {
-        return this.prisma.claim.updateMany({
-            data: {
-                updatedAt: new Date(),
-            },
-            where: {
-                id: claimId,
-            },
-        });
-    }
-
-    async changeRecentUpdatedAt(claimId: string) {
-        return this.prisma.claim.update({
-            data: {
-                recentUpdatedAt: new Date(),
-            },
-            where: {
-                id: claimId,
-            },
-        });
-    }
-
     async setArchived(claimId: string, archived: boolean) {
         return this.prisma.claim.update({
             data: { archived },
@@ -1109,80 +1060,6 @@ export class ClaimService {
         });
     }
 
-    async updateHasRecentUpdate(hasRecentUpdate: boolean, claimId: string) {
-        return this.prisma.claim.update({
-            data: {
-                state: {
-                    update: {
-                        hasRecentUpdate,
-                    },
-                },
-            },
-            where: {
-                id: claimId,
-            },
-            include: this.fullClaimInclude(),
-        });
-    }
-
-    async updateStatus(
-        newStatus: ClaimStatus,
-        claimId: string,
-        tx?: Prisma.TransactionClient,
-    ) {
-        const client = tx ?? this.prisma;
-
-        return client.claim.update({
-            data: {
-                state: {
-                    update: {
-                        status: newStatus,
-                    },
-                },
-            },
-            where: {
-                id: claimId,
-            },
-        });
-    }
-
-    async getCustomerOrOtherPassengerById(
-        passengerId: string,
-    ): Promise<BasePassenger | null> {
-        const claimCustomer = await this.prisma.claim.findFirst({
-            where: {
-                customer: {
-                    id: passengerId,
-                },
-            },
-            include: {
-                customer: true,
-            },
-        });
-
-        if (claimCustomer) {
-            return {
-                ...claimCustomer.customer,
-                claimId: claimCustomer.id,
-                isMinor: false,
-                isCustomer: true,
-            };
-        }
-
-        const otherPassenger = await this.prisma.otherPassenger.findFirst({
-            where: {
-                id: passengerId,
-            },
-        });
-
-        return !otherPassenger
-            ? null
-            : {
-                  ...otherPassenger,
-                  isCustomer: false,
-              };
-    }
-
     async getDuplicates(claimId: string) {
         return this.prisma.duplicatedClaim.findMany({
             where: {
@@ -1213,25 +1090,6 @@ export class ClaimService {
                     in: claimIds,
                 },
             },
-        });
-    }
-
-    async updateIsPaymentRequested(
-        isPaymentRequested: boolean,
-        claimId: string,
-    ): Promise<IFullClaim | null> {
-        return this.prisma.claim.update({
-            data: {
-                state: {
-                    update: {
-                        isPaymentRequested,
-                    },
-                },
-            },
-            where: {
-                id: claimId,
-            },
-            include: this.fullClaimInclude(),
         });
     }
 }

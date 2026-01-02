@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../prisma/prisma.service';
-import { S3Service } from '../../s3/s3.service';
-import { IGetSignedUrlOptions } from '../../s3/interfaces/get-signed-url-options.interfaces';
+import { PrismaService } from '../prisma/prisma.service';
+import { S3Service } from '../s3/s3.service';
+import { IGetSignedUrlOptions } from '../s3/interfaces/get-signed-url-options.interfaces';
 
 @Injectable()
-export class AttachmentService {
+export class EmailAttachmentService {
     constructor(
         private readonly prisma: PrismaService,
         private readonly S3Service: S3Service,

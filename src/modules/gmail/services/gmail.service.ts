@@ -3,21 +3,21 @@ import { gmail_v1, google } from 'googleapis';
 import { OAuth2Client } from 'google-auth-library';
 import { ConfigService } from '@nestjs/config';
 import { Interval } from '@nestjs/schedule';
-import { ATTACHMENT_NOT_FOUND } from './constants';
-import { IAttachment } from './interfaces/attachment.interface';
-import { AttachmentNotFoundError } from './errors/attachment-not-found.error';
+import { ATTACHMENT_NOT_FOUND } from '../constants';
+import { IAttachment } from '../interfaces/attachment.interface';
+import { AttachmentNotFoundError } from '../errors/attachment-not-found.error';
 import { ParsedMailbox, parseOneAddress } from 'email-addresses';
 import * as path from 'path';
-import { ClaimService } from '../claim/claim.service';
-import { GmailOfficeAccountService } from './accounts/gmail-office-account/gmail-office-account.service';
-import { AttachmentService } from './attachment/attachment.service';
-import { EmailService } from './email/email.service';
-import { GmailNoreplyAccountService } from './accounts/gmail-noreply-account/gmail-noreply-account.service';
-import { EmailCategory } from './enums/email-type.enum';
-import { MINUTE } from '../../common/constants/time.constants';
-import { S3Service } from '../s3/s3.service';
+import { ClaimService } from '../../claim/claim.service';
+import { GmailOfficeService } from './gmail-office.service';
+import { EmailAttachmentService } from '../../email-attachment/email-attachment.service';
+import { EmailService } from '../../email/email.service';
+import { GmailNoreplyService } from './gmail-noreply.service';
+import { EmailCategory } from '../enums/email-type.enum';
+import { MINUTE } from '../../../common/constants/time.constants';
+import { S3Service } from '../../s3/s3.service';
 import * as lookup from 'mime-types';
-import { generateEmailAttachmentKey } from './utils/generate-email-attachment-key';
+import { generateEmailAttachmentKey } from '../utils/generate-email-attachment-key';
 import { Email } from '@prisma/client';
 import Gmail = gmail_v1.Gmail;
 
@@ -31,13 +31,6 @@ export class GmailService implements OnModuleInit {
     constructor(
         private readonly configService: ConfigService,
         private readonly S3Service: S3Service,
-        private readonly claimService: ClaimService,
-        @Inject(forwardRef(() => GmailOfficeAccountService))
-        readonly office: GmailOfficeAccountService,
-        @Inject(forwardRef(() => GmailNoreplyAccountService))
-        readonly noreply: GmailNoreplyAccountService,
-        readonly attachment: AttachmentService,
-        readonly email: EmailService,
     ) {
         this.FRONTEND_URL = this.configService.getOrThrow('FRONTEND_URL');
     }
@@ -58,25 +51,6 @@ export class GmailService implements OnModuleInit {
         await this.refreshAccessToken();
 
         this.gmail = google.gmail({ version: 'v1', auth: this.oauth2Client });
-    }
-
-    async findClaimIdForEmail(
-        fromEmail: string,
-        threadId: string,
-    ): Promise<string | null> {
-        const email = await this.email.getEmailByThreadId(threadId);
-
-        if (email?.claimId) {
-            return email.claimId;
-        }
-
-        const claim = await this.claimService.getClaimByEmail(fromEmail);
-
-        if (claim?.archived) {
-            return null;
-        }
-
-        return claim?.id || null;
     }
 
     async getAttachmentByIdFromGmail(

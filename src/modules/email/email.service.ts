@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import {
     ClaimRecentUpdatesType,
     Email,
@@ -7,14 +7,16 @@ import {
     EmailType,
     Prisma,
 } from '@prisma/client';
-import { GmailEmailPayload } from '../interfaces/gmail-email-payload.interface';
-import { RecentUpdatesService } from '../../claim/recent-updates/recent-updates.service';
+import { GmailEmailPayload } from '../gmail/interfaces/gmail-email-payload.interface';
+import { RecentUpdatesService } from '../claim/recent-updates/recent-updates.service';
+import { ClaimPersistenceService } from '../claim-persistence/claim-persistence.service';
 
 @Injectable()
 export class EmailService {
     constructor(
         private readonly prisma: PrismaService,
         private readonly recentUpdatesService: RecentUpdatesService,
+        private readonly claimPersistenceService: ClaimPersistenceService,
     ) {}
 
     async getEmailById(emailId: string) {
@@ -57,6 +59,26 @@ export class EmailService {
         return email;
     }
 
+    async findClaimIdForEmail(
+        fromEmail: string,
+        threadId: string,
+    ): Promise<string | null> {
+        const email = await this.getEmailByThreadId(threadId);
+
+        if (email?.claimId) {
+            return email.claimId;
+        }
+
+        const claim =
+            await this.claimPersistenceService.findOneByEmail(fromEmail);
+
+        if (claim?.archived) {
+            return null;
+        }
+
+        return claim?.id || null;
+    }
+
     async saveEmail(data: GmailEmailPayload) {
         const internalDate = data.internalDate
             ? data.internalDate instanceof Date
@@ -64,7 +86,14 @@ export class EmailService {
                 : new Date(Number(data.internalDate))
             : undefined;
 
-        return this.prisma.email.create({
+        if (!data.claimId && data.isInbox && data.fromEmail) {
+            data.claimId = await this.findClaimIdForEmail(
+                data.fromEmail,
+                data.threadId,
+            );
+        }
+
+        const email = await this.prisma.email.create({
             data: {
                 id: data.id,
                 gmailThreadId: data.threadId,
@@ -88,6 +117,19 @@ export class EmailService {
                 status: data.isInbox ? EmailStatus.UNREAD : EmailStatus.READ,
             },
         });
+
+        if (email.claimId) {
+            await this.recentUpdatesService.saveRecentUpdate(
+                {
+                    type: ClaimRecentUpdatesType.EMAIL,
+                    updatedEntityId: email.id,
+                    entityData: `${email.fromName}`,
+                },
+                email.claimId,
+            );
+        }
+
+        return email;
     }
 
     async getEmails(

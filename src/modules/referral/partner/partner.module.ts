@@ -5,10 +5,7 @@ import { PartnerController } from './partner.controller';
 import { PartnerSettingsModule } from './partner-settings/partner-settings.module';
 
 @Module({
-    imports: [
-        forwardRef(() => ClaimModule),
-        forwardRef(() => PartnerSettingsModule),
-    ],
+    imports: [PartnerSettingsModule],
     providers: [PartnerService],
     exports: [PartnerService],
     controllers: [PartnerController],

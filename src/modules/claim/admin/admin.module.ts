@@ -5,6 +5,7 @@ import { UserModule } from '../../user/user.module';
 import { RecentUpdatesModule } from '../recent-updates/recent-updates.module';
 import { PartnerModule } from '../../referral/partner/partner.module';
 import { OtherPassengerModule } from '../other-passenger/other-passenger.module';
+import { ClaimPersistenceModule } from '../../claim-persistence/claim-persistence.module';
 
 @Module({
     imports: [
@@ -12,7 +13,8 @@ import { OtherPassengerModule } from '../other-passenger/other-passenger.module'
         UserModule,
         RecentUpdatesModule,
         PartnerModule,
-        forwardRef(() => OtherPassengerModule),
+        OtherPassengerModule,
+        ClaimPersistenceModule,
     ],
     controllers: [AdminController],
 })

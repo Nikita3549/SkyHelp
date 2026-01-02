@@ -4,7 +4,6 @@ import { PartnerSettingsService } from './partner-settings.service';
 import { PartnerModule } from '../partner.module';
 
 @Module({
-    imports: [forwardRef(() => PartnerModule)],
     controllers: [PartnerSettingsController],
     providers: [PartnerSettingsService],
     exports: [PartnerSettingsService],

@@ -35,13 +35,15 @@ import { AddFlightStatusProcessor } from './processors/add-flight-status.process
 import { PartnerModule } from '../referral/partner/partner.module';
 import { FlightStatusModule } from './flight-status/flight-status.module';
 import { ClaimReminderProcessor } from './processors/claim-reminder.processor';
+import { ClaimPersistenceModule } from '../claim-persistence/claim-persistence.module';
 
 @Module({
     imports: [
+        ClaimPersistenceModule,
         FlightModule,
         TokenModule,
         AirportModule,
-        forwardRef(() => NotificationModule),
+        NotificationModule,
         BullModule.registerQueue(
             {
                 name: CLAIM_FOLLOWUP_QUEUE_KEY,
@@ -55,7 +57,7 @@ import { ClaimReminderProcessor } from './processors/claim-reminder.processor';
         ),
         ProgressModule,
         UserModule,
-        forwardRef(() => AuthModule),
+        AuthModule,
         DocumentModule,
         StateModule,
         CustomerModule,

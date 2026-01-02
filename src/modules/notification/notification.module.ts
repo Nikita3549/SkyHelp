@@ -5,9 +5,16 @@ import { TokenModule } from '../token/token.module';
 import { UnsubscribeEmailModule } from '../unsubscribe-email/unsubscribe-email.module';
 import { S3Module } from '../s3/s3.module';
 import { EmailSenderService } from './services/email-sender.service';
+import { EmailModule } from '../email/email.module';
 
 @Module({
-    imports: [GmailModule, TokenModule, UnsubscribeEmailModule, S3Module],
+    imports: [
+        TokenModule,
+        UnsubscribeEmailModule,
+        S3Module,
+        EmailModule,
+        GmailModule,
+    ],
     providers: [NotificationService, EmailSenderService],
     exports: [NotificationService],
 })

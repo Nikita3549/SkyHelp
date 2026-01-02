@@ -10,17 +10,18 @@ import { RequestPaymentDetailsProcessor } from '../processors/request-payment-de
 import { TokenModule } from '../../token/token.module';
 import { PaymentPublicController } from './controllers/payment-public.controller';
 import { ActivityModule } from '../activity/activity.module';
+import { ClaimPersistenceModule } from '../../claim-persistence/claim-persistence.module';
 
 @Module({
     imports: [
-        forwardRef(() => ClaimModule),
         BullModule.registerQueue({
             name: REQUEST_PAYMENT_DETAILS_QUEUE_KEY,
         }),
-        forwardRef(() => NotificationModule),
-        forwardRef(() => GenerateLinksModule),
+        NotificationModule,
+        GenerateLinksModule,
         TokenModule,
         ActivityModule,
+        ClaimPersistenceModule,
     ],
     controllers: [PaymentController, PaymentPublicController],
     providers: [PaymentService, RequestPaymentDetailsProcessor],

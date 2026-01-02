@@ -37,17 +37,18 @@ import { GenerateLinksService } from '../../generate-links/generate-links.servic
 import { NotificationService } from '../../notification/services/notification.service';
 import { Languages } from '../../language/enums/languages.enums';
 import { PaymentRequestLetter } from '../../notification/letters/definitions/claim/payment-request.letter';
+import { ClaimPersistenceService } from '../../claim-persistence/claim-persistence.service';
 
 @Controller('claims/customer')
 @UseGuards(JwtAuthGuard)
 export class CustomerController {
     constructor(
         private readonly customerService: CustomerService,
-        private readonly claimService: ClaimService,
         private readonly generateLinksService: GenerateLinksService,
         private readonly tokenService: TokenService,
         private readonly notificationService: NotificationService,
         private readonly documentService: DocumentService,
+        private readonly claimPersistenceService: ClaimPersistenceService,
     ) {}
 
     @UseGuards(new RoleGuard([UserRole.ADMIN, UserRole.AGENT]))
@@ -55,7 +56,7 @@ export class CustomerController {
     async updateCustomer(@Body() dto: CustomerDto) {
         const { claimId } = dto;
 
-        const claim = await this.claimService.getClaim(claimId);
+        const claim = await this.claimPersistenceService.findOneById(claimId);
 
         if (!claim) {
             throw new BadRequestException(CLAIM_NOT_FOUND);
@@ -66,7 +67,10 @@ export class CustomerController {
             claimId,
         );
 
-        await this.claimService.changeUpdatedAt(claimId);
+        await this.claimPersistenceService.update(
+            { updatedAt: new Date() },
+            claimId,
+        );
         await this.documentService.updateAssignmentData(claim.id, [
             claim.customer.id,
         ]);
@@ -116,7 +120,7 @@ export class CustomerController {
                 }),
             );
 
-            await this.claimService.updateStatus(
+            await this.claimPersistenceService.updateStatus(
                 ClaimStatus.PAYMENT_FAILED,
                 customer.Claim[0].id,
             );
@@ -132,11 +136,10 @@ export class CustomerController {
 export class PublicCustomerController {
     constructor(
         private readonly customerService: CustomerService,
-        private readonly claimService: ClaimService,
         private readonly documentService: DocumentService,
         private readonly tokenService: TokenService,
-        private readonly recentUpdatesService: RecentUpdatesService,
         private readonly documentRequestService: DocumentRequestService,
+        private readonly claimPersistenceService: ClaimPersistenceService,
     ) {}
 
     @Post(':customerId/sign')
@@ -158,7 +161,9 @@ export class PublicCustomerController {
             throw new NotFoundException(CUSTOMER_NOT_FOUND);
         }
 
-        const claim = await this.claimService.getClaim(customer.Claim[0].id);
+        const claim = await this.claimPersistenceService.findOneById(
+            customer.Claim[0].id,
+        );
 
         if (!claim) {
             throw new NotFoundException(CLAIM_NOT_FOUND);

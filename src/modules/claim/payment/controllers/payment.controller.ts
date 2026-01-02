@@ -21,13 +21,14 @@ import { RoleGuard } from '../../../../common/guards/role.guard';
 import { RequestPaymentDetailsDto } from '../dto/request-payment-details.dto';
 import { Languages } from '../../../language/enums/languages.enums';
 import { omit } from '../../../../common/utils/omit';
+import { ClaimPersistenceService } from '../../../claim-persistence/claim-persistence.service';
 
 @Controller('claims/payment')
 @UseGuards(JwtAuthGuard)
 export class PaymentController {
     constructor(
         private readonly paymentService: PaymentService,
-        private readonly claimService: ClaimService,
+        private readonly claimPersistenceService: ClaimPersistenceService,
     ) {}
 
     @Put('admin')
@@ -35,11 +36,14 @@ export class PaymentController {
     async updateAdminPayment(@Body() dto: UpdateAdminPaymentDto) {
         const { claimId } = dto;
 
-        if (!(await this.claimService.getClaim(claimId))) {
+        if (!(await this.claimPersistenceService.findOneById(claimId))) {
             throw new BadRequestException(CLAIM_NOT_FOUND);
         }
 
-        await this.claimService.changeUpdatedAt(claimId);
+        await this.claimPersistenceService.update(
+            { updatedAt: new Date() },
+            claimId,
+        );
 
         return await this.paymentService.updatePayment(
             omit(dto, 'claimId'),
@@ -59,7 +63,7 @@ export class PaymentController {
     async requestPaymentDetails(@Body() dto: RequestPaymentDetailsDto) {
         const { claimId } = dto;
 
-        const claim = await this.claimService.getClaim(claimId);
+        const claim = await this.claimPersistenceService.findOneById(claimId);
 
         if (!claim) {
             throw new NotFoundException(CLAIM_NOT_FOUND);
@@ -75,6 +79,9 @@ export class PaymentController {
             customerEmail: claim.customer.email,
         });
 
-        await this.claimService.updateIsPaymentRequested(true, claimId);
+        await this.claimPersistenceService.updateIsPaymentRequested(
+            { isPaymentRequested: true },
+            claimId,
+        );
     }
 }

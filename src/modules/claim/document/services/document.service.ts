@@ -10,11 +10,12 @@ import { IGetSignedUrlOptions } from '../../../s3/interfaces/get-signed-url-opti
 import { IDocumentData } from './database/interfaces/document-data.interface';
 import { ISaveSignatureOptions } from './assignment/interfaces/save-signature-options.interface';
 import { ISaveSignatureData } from '../interfaces/save-signature-data.interface';
-import { ClaimService } from '../../claim.service';
 import { InjectQueue } from '@nestjs/bullmq';
 import { GENERATE_ASSIGNMENT_QUEUE_KEY } from '../processors/constants/generate-assignment-queue-key';
 import { Queue } from 'bullmq';
 import { IGenerateAssignmentJobData } from '../processors/interfaces/generateAssignmentJobData';
+import { ClaimPersistenceService } from '../../../claim-persistence/claim-persistence.service';
+import { ClaimService } from '../../claim.service';
 
 @Injectable()
 export class DocumentService {
@@ -26,12 +27,13 @@ export class DocumentService {
         private readonly claimService: ClaimService,
         @InjectQueue(GENERATE_ASSIGNMENT_QUEUE_KEY)
         private readonly generateAssignmentQueue: Queue,
+        private readonly claimPersistenceService: ClaimPersistenceService,
     ) {}
 
     // ------------------ ASSIGNMENT ------------------
     async updateAssignmentData(claimId: string, passengerIds: string[]) {
         // This method always requires refreshed claim data
-        const claim = await this.claimService.getClaim(claimId);
+        const claim = await this.claimPersistenceService.findOneById(claimId);
 
         if (!claim) {
             return;
@@ -119,7 +121,10 @@ export class DocumentService {
     async saveDocuments(
         documents: IDocumentData[],
         claimId: string,
-        isPublic: boolean = false,
+        options?: {
+            handleIsAllDocumentsUploaded?: boolean;
+            isPublic?: boolean;
+        },
     ): Promise<Document[]> {
         const documentWithKeys = await Promise.all(
             documents.map(async (doc) => {
@@ -140,6 +145,16 @@ export class DocumentService {
 
         const docsToSave = documentWithKeys.map(({ buffer, ...rest }) => rest);
 
-        return this.documentDbService.saveMany(docsToSave, claimId, isPublic);
+        const savedDocuments = await this.documentDbService.saveMany(
+            docsToSave,
+            claimId,
+            !!options?.isPublic,
+        );
+
+        if (options?.handleIsAllDocumentsUploaded) {
+            await this.claimService.handleAllDocumentsUploaded(claimId);
+        }
+
+        return savedDocuments;
     }
 }

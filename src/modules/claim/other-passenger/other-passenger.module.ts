@@ -1,8 +1,5 @@
 import { forwardRef, Module } from '@nestjs/common';
-import {
-    OtherPassengerController,
-    PublicOtherPassengerController,
-} from './other-passenger.controller';
+import { OtherPassengerController } from './controllers/other-passenger.controller';
 import { OtherPassengerService } from './other-passenger.service';
 import { ClaimModule } from '../claim.module';
 import { DocumentModule } from '../document/document.module';
@@ -12,17 +9,19 @@ import { DocumentRequestModule } from '../document-request/document-request.modu
 import { OtherPassengerCopiedLinksModule } from './other-passenger-copied-links/other-passenger-copied-links.module';
 import { NotificationModule } from '../../notification/notification.module';
 import { GenerateLinksModule } from '../../generate-links/generate-links.module';
+import { ClaimPersistenceModule } from '../../claim-persistence/claim-persistence.module';
+import { PublicOtherPassengerController } from './controllers/public-other-passenger.controller';
 
 @Module({
     imports: [
-        forwardRef(() => ClaimModule),
         forwardRef(() => DocumentModule),
         TokenModule,
         RecentUpdatesModule,
         forwardRef(() => DocumentRequestModule),
         OtherPassengerCopiedLinksModule,
-        forwardRef(() => NotificationModule),
+        NotificationModule,
         forwardRef(() => GenerateLinksModule),
+        ClaimPersistenceModule,
     ],
     controllers: [OtherPassengerController, PublicOtherPassengerController],
     providers: [OtherPassengerService],

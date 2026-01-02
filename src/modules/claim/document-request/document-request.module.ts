@@ -8,16 +8,17 @@ import { SendNewDocumentRequestsProcessor } from './processors/send-new-document
 import { NotificationModule } from '../../notification/notification.module';
 import { RedisModule } from '../../redis/redis.module';
 import { GenerateLinksModule } from '../../generate-links/generate-links.module';
+import { ClaimPersistenceModule } from '../../claim-persistence/claim-persistence.module';
 
 @Module({
     imports: [
-        forwardRef(() => ClaimModule),
         BullModule.registerQueue({
             name: SEND_NEW_DOCUMENT_REQUEST_QUEUE_KEY,
         }),
-        forwardRef(() => NotificationModule),
+        NotificationModule,
         RedisModule,
-        forwardRef(() => GenerateLinksModule),
+        GenerateLinksModule,
+        ClaimPersistenceModule,
     ],
     controllers: [DocumentRequestController],
     providers: [DocumentRequestService, SendNewDocumentRequestsProcessor],

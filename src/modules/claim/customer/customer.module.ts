@@ -11,16 +11,17 @@ import { RecentUpdatesModule } from '../recent-updates/recent-updates.module';
 import { DocumentRequestModule } from '../document-request/document-request.module';
 import { NotificationModule } from '../../notification/notification.module';
 import { GenerateLinksModule } from '../../generate-links/generate-links.module';
+import { ClaimPersistenceModule } from '../../claim-persistence/claim-persistence.module';
 
 @Module({
     imports: [
-        forwardRef(() => ClaimModule),
         forwardRef(() => DocumentModule),
         TokenModule,
         RecentUpdatesModule,
         forwardRef(() => DocumentRequestModule),
         forwardRef(() => GenerateLinksModule),
-        forwardRef(() => NotificationModule),
+        NotificationModule,
+        ClaimPersistenceModule,
     ],
     controllers: [CustomerController, PublicCustomerController],
     providers: [CustomerService],

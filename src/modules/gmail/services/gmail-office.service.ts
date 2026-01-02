@@ -4,15 +4,17 @@ import { OAuth2Client } from 'google-auth-library';
 import { gmail_v1, google } from 'googleapis';
 import { Interval } from '@nestjs/schedule';
 import { PubSub } from '@google-cloud/pubsub';
-import { GmailService } from '../../gmail.service';
-import { isProd } from '../../../../common/utils/isProd';
+import { GmailService } from './gmail.service';
+import { isProd } from '../../../common/utils/isProd';
 import { ClaimRecentUpdatesType } from '@prisma/client';
-import { RecentUpdatesService } from '../../../claim/recent-updates/recent-updates.service';
-import { DAY, HOUR, MINUTE } from '../../../../common/constants/time.constants';
+import { RecentUpdatesService } from '../../claim/recent-updates/recent-updates.service';
+import { DAY, HOUR, MINUTE } from '../../../common/constants/time.constants';
 import Gmail = gmail_v1.Gmail;
+import { EmailService } from '../../email/email.service';
+import { EmailAttachmentService } from '../../email-attachment/email-attachment.service';
 
 @Injectable()
-export class GmailOfficeAccountService implements OnModuleInit {
+export class GmailOfficeService implements OnModuleInit {
     private oauth2Client: OAuth2Client;
     private _accessToken: string;
     private gmail: Gmail;
@@ -22,9 +24,9 @@ export class GmailOfficeAccountService implements OnModuleInit {
 
     constructor(
         private readonly configService: ConfigService,
-        @Inject(forwardRef(() => GmailService))
         private readonly gmailService: GmailService,
-        private readonly recentUpdatesService: RecentUpdatesService,
+        private readonly emailService: EmailService,
+        private readonly emailAttachmentService: EmailAttachmentService,
     ) {
         if (!isProd()) return;
 
@@ -101,15 +103,10 @@ export class GmailOfficeAccountService implements OnModuleInit {
                 `Missing messageId or gmailThreadId or fromEmail \n${JSON.stringify(message)}`,
             );
         }
-
-        const claimId = await this.gmailService.findClaimIdForEmail(
-            fromEmail,
-            gmailThreadId,
-        );
         if (!subject || !isInbox) {
             return;
         }
-        const email = await this.gmailService.email.saveEmail({
+        const email = await this.emailService.saveEmail({
             id: messageId,
             threadId: gmailThreadId,
             messageId,
@@ -127,21 +124,10 @@ export class GmailOfficeAccountService implements OnModuleInit {
             sizeEstimate,
             internalDate: internalDate == null ? null : +internalDate,
             headersJson,
-            claimId,
             isInbox,
         });
         if (!email) {
             return;
-        }
-        if (claimId) {
-            await this.recentUpdatesService.saveRecentUpdate(
-                {
-                    type: ClaimRecentUpdatesType.EMAIL,
-                    updatedEntityId: email.id,
-                    entityData: `${email.fromName}`,
-                },
-                claimId,
-            );
         }
         attachments.forEach((attachment) => {
             (async () => {
@@ -161,7 +147,7 @@ export class GmailOfficeAccountService implements OnModuleInit {
                     email,
                 );
 
-                await this.gmailService.attachment.saveAttachment({
+                await this.emailAttachmentService.saveAttachment({
                     filename,
                     mimeType,
                     size: attachment.size,

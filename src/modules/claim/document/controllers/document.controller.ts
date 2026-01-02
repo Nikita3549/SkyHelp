@@ -39,6 +39,7 @@ import { PatchPassengerIdDto } from '../dto/patch-passenger-id.dto';
 import { HttpStatusCode } from 'axios';
 import { RoleGuard } from '../../../../common/guards/role.guard';
 import { ISignedUrlResponse } from './interfaces/signed-url-response.interface';
+import { ClaimPersistenceService } from '../../../claim-persistence/claim-persistence.service';
 
 @Controller('claims/documents')
 @UseGuards(JwtAuthGuard)
@@ -48,6 +49,7 @@ export class DocumentController {
         private readonly claimService: ClaimService,
         private readonly recentUpdatesService: RecentUpdatesService,
         private readonly documentRequestService: DocumentRequestService,
+        private readonly claimPersistenceService: ClaimPersistenceService,
     ) {}
 
     @Post('merge')
@@ -103,7 +105,7 @@ export class DocumentController {
     ) {
         const { claimId, documentType, passengerId } = query;
 
-        const claim = await this.claimService.getClaim(claimId);
+        const claim = await this.claimPersistenceService.findOneById(claimId);
 
         if (!claim) {
             throw new NotFoundException(CLAIM_NOT_FOUND);
@@ -121,7 +123,9 @@ export class DocumentController {
                 };
             }),
             claimId,
-            true,
+            {
+                isPublic: true,
+            },
         );
 
         documents.forEach((doc) => {
@@ -177,7 +181,9 @@ export class DocumentController {
             throw new NotFoundException(DOCUMENT_NOT_FOUND);
         }
 
-        const claim = await this.claimService.getClaim(document.claimId);
+        const claim = await this.claimPersistenceService.findOneById(
+            document.claimId,
+        );
 
         if (!claim || claim.userId != req.user.id) {
             throw new ForbiddenException('You have no rights on this document');
@@ -251,7 +257,7 @@ export class DocumentController {
     ) {
         const { claimId, documentType, documentRequestId, passengerId } = query;
 
-        const claim = await this.claimService.getClaim(claimId);
+        const claim = await this.claimPersistenceService.findOneById(claimId);
 
         if (!claim || claim.userId != req.user.id) {
             throw new NotFoundException(CLAIM_NOT_FOUND);
@@ -269,7 +275,10 @@ export class DocumentController {
                 };
             }),
             claimId,
-            true,
+            {
+                isPublic: true,
+                handleIsAllDocumentsUploaded: true,
+            },
         );
 
         if (documentRequestId) {
@@ -295,8 +304,6 @@ export class DocumentController {
                 claimId,
             );
         });
-
-        await this.claimService.handleAllDocumentsUploaded(claim.id);
 
         return documents;
     }

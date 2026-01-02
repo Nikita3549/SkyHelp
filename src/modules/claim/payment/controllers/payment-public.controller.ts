@@ -15,6 +15,7 @@ import { TokenService } from '../../../token/token.service';
 import { ClaimService } from '../../claim.service';
 import { ActivityService } from '../../activity/activity.service';
 import { ClaimActivityType } from '@prisma/client';
+import { ClaimPersistenceService } from '../../../claim-persistence/claim-persistence.service';
 
 @Injectable()
 @Controller('claims/payment')
@@ -22,8 +23,8 @@ export class PaymentPublicController {
     constructor(
         private readonly paymentService: PaymentService,
         private readonly tokenService: TokenService,
-        private readonly claimService: ClaimService,
         private readonly activityService: ActivityService,
+        private readonly claimPersistenceService: ClaimPersistenceService,
     ) {}
 
     @Post()
@@ -40,7 +41,7 @@ export class PaymentPublicController {
         }
         const claimId = payload.claimId;
 
-        const claim = await this.claimService.getClaim(claimId);
+        const claim = await this.claimPersistenceService.findOneById(claimId);
 
         if (!claim) {
             throw new NotFoundException(CLAIM_NOT_FOUND);
@@ -48,9 +49,15 @@ export class PaymentPublicController {
 
         await this.tokenService.revokeJwt(payload);
 
-        await this.claimService.changeUpdatedAt(claimId);
+        await this.claimPersistenceService.update(
+            { updatedAt: new Date() },
+            claimId,
+        );
 
-        await this.claimService.updateIsPaymentRequested(false, claimId);
+        await this.claimPersistenceService.updateIsPaymentRequested(
+            { isPaymentRequested: false },
+            claimId,
+        );
 
         await this.activityService.saveActivity(
             {

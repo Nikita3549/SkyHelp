@@ -37,16 +37,17 @@ import { OtherPassengerService } from '../claim/other-passenger/other-passenger.
 import { OtherPassengerCopiedLinksService } from '../claim/other-passenger/other-passenger-copied-links/other-passenger-copied-links.service';
 import { CustomerService } from '../claim/customer/customer.service';
 import { RoleGuard } from '../../common/guards/role.guard';
+import { ClaimPersistenceService } from '../claim-persistence/claim-persistence.service';
 
 @Controller('links')
 @UseGuards(JwtAuthGuard)
 export class GenerateLinksController {
     constructor(
         private readonly generateLinksService: GenerateLinksService,
-        private readonly claimService: ClaimService,
         private readonly otherPassengerService: OtherPassengerService,
         private readonly otherPassengerCopiedLinksService: OtherPassengerCopiedLinksService,
         private readonly customerService: CustomerService,
+        private readonly claimPersistenceService: ClaimPersistenceService,
     ) {}
 
     @UseGuards(
@@ -64,7 +65,9 @@ export class GenerateLinksController {
         @Req() req: AuthRequest,
     ) {
         if (req.user.role == UserRole.CLIENT) {
-            const claim = await this.claimService.getClaim(query.claimId);
+            const claim = await this.claimPersistenceService.findOneById(
+                query.claimId,
+            );
 
             if (!claim) {
                 throw new NotFoundException(CLAIM_NOT_FOUND);
@@ -136,7 +139,9 @@ export class GenerateLinksController {
         @Req() req: AuthRequest,
     ) {
         if (req.user.role == UserRole.CLIENT) {
-            const claim = await this.claimService.getClaim(query.claimId);
+            const claim = await this.claimPersistenceService.findOneById(
+                query.claimId,
+            );
 
             if (!claim) {
                 throw new NotFoundException(CLAIM_NOT_FOUND);

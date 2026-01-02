@@ -32,6 +32,7 @@ import { ReferralLinksModule } from './modules/referral/referral-links/referral-
 import { PaymentModule } from './modules/claim/payment/payment.module';
 import { PrelitTemplatesModule } from './modules/prelit-templates/prelit-templates.module';
 import { S3Module } from './modules/s3/s3.module';
+import { ClaimPersistenceModule } from './modules/claim-persistence/claim-persistence.module';
 
 @Module({
     imports: [
@@ -73,6 +74,7 @@ import { S3Module } from './modules/s3/s3.module';
         ReferralLinksModule,
         PrelitTemplatesModule,
         S3Module,
+        ClaimPersistenceModule,
     ],
     controllers: [AppController],
     providers: [AppService],

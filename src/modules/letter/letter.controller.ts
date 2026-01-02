@@ -14,7 +14,7 @@ import {
     UploadedFiles,
     UseGuards,
 } from '@nestjs/common';
-import { GmailService } from '../gmail/gmail.service';
+import { GmailService } from '../gmail/services/gmail.service';
 import { JwtAuthGuard } from '../../common/guards/jwtAuth.guard';
 import { GetLettersQueryDto } from './dto/get-letters-query.dto';
 import { SendLetterDto } from './dto/send-letter.dto';
@@ -32,6 +32,10 @@ import { PatchFavoriteLetter } from './dto/patch-favorite-letter';
 import { ISignedUrlResponse } from '../claim/document/controllers/interfaces/signed-url-response.interface';
 import { GetAttachmentDto } from './dto/get-attachment.dto';
 import { DocumentsUploadInterceptor } from '../../common/interceptors/documents/documents-upload.interceptor';
+import { EmailService } from '../email/email.service';
+import { GmailOfficeService } from '../gmail/services/gmail-office.service';
+import { EmailAttachmentService } from '../email-attachment/email-attachment.service';
+import { ClaimPersistenceService } from '../claim-persistence/claim-persistence.service';
 
 @Controller('letters')
 @UseGuards(
@@ -48,7 +52,10 @@ export class LetterController {
     constructor(
         private readonly gmailService: GmailService,
         private readonly configService: ConfigService,
-        private readonly claimService: ClaimService,
+        private readonly emailService: EmailService,
+        private readonly gmailOfficeService: GmailOfficeService,
+        private readonly emailAttachmentService: EmailAttachmentService,
+        private readonly claimPersistenceService: ClaimPersistenceService,
     ) {}
 
     @Get()
@@ -59,7 +66,8 @@ export class LetterController {
         const { claimId, page, type, status } = query;
 
         if (claimId) {
-            const claim = await this.claimService.getClaim(claimId);
+            const claim =
+                await this.claimPersistenceService.findOneById(claimId);
 
             if (!claim) {
                 throw new NotFoundException(CLAIM_NOT_FOUND);
@@ -70,7 +78,7 @@ export class LetterController {
             throw new ForbiddenException(AGENT_MUST_HAVE_CLAIM_ID);
         }
 
-        return this.gmailService.email.getEmails(page, claimId, type, status);
+        return this.emailService.getEmails(page, claimId, type, status);
     }
 
     @Post()
@@ -84,7 +92,7 @@ export class LetterController {
 
         if (replyToMessageId) {
             const replyEmail =
-                await this.gmailService.email.getEmailById(replyToMessageId);
+                await this.emailService.getEmailById(replyToMessageId);
 
             if (!replyEmail) {
                 throw new NotFoundException('Letter for reply not found');
@@ -100,7 +108,9 @@ export class LetterController {
                 : `Re: ${subject}`;
         }
 
-        const claim = await this.claimService.getClaim(claimId || '');
+        const claim = await this.claimPersistenceService.findOneById(
+            claimId || '',
+        );
 
         if (
             req.user.role == UserRole.AGENT &&
@@ -110,7 +120,7 @@ export class LetterController {
             throw new ForbiddenException(AGENT_MUST_HAVE_CLAIM_ID);
         }
 
-        const message = await this.gmailService.office.sendEmailWithAttachments(
+        const message = await this.gmailOfficeService.sendEmailWithAttachments(
             to,
             subject,
             content,
@@ -123,7 +133,7 @@ export class LetterController {
             replyToMessageId,
         );
 
-        const email = await this.gmailService.email.saveEmail({
+        const email = await this.emailService.saveEmail({
             id: message.id!,
             threadId: message.threadId!,
             messageId: message.id!,
@@ -156,7 +166,7 @@ export class LetterController {
                     email,
                 );
 
-                return await this.gmailService.attachment.saveAttachment({
+                return await this.emailAttachmentService.saveAttachment({
                     filename: file.originalname,
                     mimeType: file.mimetype,
                     size: file.size,
@@ -187,14 +197,14 @@ export class LetterController {
     ): Promise<ISignedUrlResponse> {
         const { disposition } = query;
         const attachment =
-            await this.gmailService.attachment.getAttachmentById(attachmentId);
+            await this.emailAttachmentService.getAttachmentById(attachmentId);
 
         if (!attachment) {
             throw new NotFoundException(ATTACHMENT_NOT_FOUND);
         }
 
         if (req.user.role == UserRole.AGENT) {
-            const email = await this.gmailService.email.getEmailById(
+            const email = await this.emailService.getEmailById(
                 attachment.emailId,
             );
 
@@ -202,14 +212,16 @@ export class LetterController {
                 throw new NotFoundException(ATTACHMENT_NOT_FOUND);
             }
 
-            const claim = await this.claimService.getClaim(email.claimId);
+            const claim = await this.claimPersistenceService.findOneById(
+                email.claimId,
+            );
 
             if (!claim || claim.agentId != req.user.id) {
                 throw new NotFoundException(ATTACHMENT_NOT_FOUND);
             }
         }
 
-        const { signedUrl } = await this.gmailService.attachment.readAttachment(
+        const { signedUrl } = await this.emailAttachmentService.readAttachment(
             attachment.s3Key,
             { disposition },
         );
@@ -228,7 +240,7 @@ export class LetterController {
     ) {
         const { newStatus } = dto;
 
-        const email = await this.gmailService.email.getEmailById(letterId);
+        const email = await this.emailService.getEmailById(letterId);
 
         if (!email) {
             throw new NotFoundException(LETTER_NOT_FOUND);
@@ -239,14 +251,16 @@ export class LetterController {
                 throw new NotFoundException(LETTER_NOT_FOUND);
             }
 
-            const claim = await this.claimService.getClaim(email.claimId);
+            const claim = await this.claimPersistenceService.findOneById(
+                email.claimId,
+            );
 
             if (!claim || claim.agentId != req.user.id) {
                 throw new NotFoundException(LETTER_NOT_FOUND);
             }
         }
 
-        return await this.gmailService.email.updateStatus(newStatus, letterId);
+        return await this.emailService.updateStatus(newStatus, letterId);
     }
 
     @Put(':letterId')
@@ -257,13 +271,13 @@ export class LetterController {
     ) {
         const { claimId } = dto;
 
-        const claim = await this.claimService.getClaim(claimId);
+        const claim = await this.claimPersistenceService.findOneById(claimId);
 
         if (!claim) {
             throw new NotFoundException(CLAIM_NOT_FOUND);
         }
 
-        const email = await this.gmailService.email.getEmailById(letterId);
+        const email = await this.emailService.getEmailById(letterId);
 
         if (!email) {
             throw new NotFoundException(LETTER_NOT_FOUND);
@@ -274,14 +288,16 @@ export class LetterController {
                 throw new NotFoundException(LETTER_NOT_FOUND);
             }
 
-            const claim = await this.claimService.getClaim(email.claimId);
+            const claim = await this.claimPersistenceService.findOneById(
+                email.claimId,
+            );
 
             if (!claim || claim.agentId != req.user.id) {
                 throw new NotFoundException(LETTER_NOT_FOUND);
             }
         }
 
-        return await this.gmailService.email.updateClaimId(claimId, letterId);
+        return await this.emailService.updateClaimId(claimId, letterId);
     }
 
     @Patch(':letterId/favorite')
@@ -289,15 +305,12 @@ export class LetterController {
         @Body() dto: PatchFavoriteLetter,
         @Param('letterId') letterId: string,
     ) {
-        const letter = await this.gmailService.email.getEmailById(letterId);
+        const letter = await this.emailService.getEmailById(letterId);
 
         if (!letter) {
             throw new NotFoundException(LETTER_NOT_FOUND);
         }
 
-        return await this.gmailService.email.patchFavorite(
-            letter.id,
-            dto.favorite,
-        );
+        return await this.emailService.patchFavorite(letter.id, dto.favorite);
     }
 }

@@ -1,8 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { GmailService } from '../../gmail/gmail.service';
 import { TokenService } from '../../token/token.service';
-import { UnsubscribeEmailService } from '../../unsubscribe-email/unsubscribe-email.service';
 import { S3Service } from '../../s3/s3.service';
 import { Languages } from '../../language/enums/languages.enums';
 import { EmailCategory } from '../../gmail/enums/email-type.enum';
@@ -12,15 +10,17 @@ import * as handlebars from 'handlebars';
 import { SUPPORTED_LETTER_LANGUAGES } from '../constants/supported-languages';
 import { IProcessAndSendOptions } from '../interfaces/process-and-send-options.interface';
 import { ILetterData } from '../interfaces/process-letter-data.interface';
+import { GmailNoreplyService } from '../../gmail/services/gmail-noreply.service';
+import { EmailService } from '../../email/email.service';
 
 @Injectable()
 export class EmailSenderService {
     constructor(
         private readonly configService: ConfigService,
-        private readonly gmailService: GmailService,
         private readonly tokenService: TokenService,
-        private readonly unsubscribeEmailService: UnsubscribeEmailService,
         private readonly S3Service: S3Service,
+        private readonly gmailNoreplyService: GmailNoreplyService,
+        private readonly emailService: EmailService,
     ) {
         handlebars.registerHelper('eq', (a: string, b: string) => a === b);
     }
@@ -40,7 +40,7 @@ export class EmailSenderService {
             language: supportedLanguage,
         });
 
-        const email = await this.gmailService.noreply.sendEmailHtml(
+        const email = await this.gmailNoreplyService.sendEmailHtml(
             to,
             subject,
             letterHtml,
@@ -123,7 +123,7 @@ export class EmailSenderService {
         const { email, subject, contentHtml, to, claimId } = data;
 
         if (email) {
-            await this.gmailService.email.saveEmail({
+            await this.emailService.saveEmail({
                 id: email.id!,
                 threadId: email.threadId!,
                 subject,

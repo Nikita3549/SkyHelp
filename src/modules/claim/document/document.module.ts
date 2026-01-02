@@ -13,17 +13,19 @@ import { S3Module } from '../../s3/s3.module';
 import { GenerateAssignmentProcessor } from './processors/generate-assignment.processor';
 import { BullModule } from '@nestjs/bullmq';
 import { GENERATE_ASSIGNMENT_QUEUE_KEY } from './processors/constants/generate-assignment-queue-key';
+import { ClaimPersistenceModule } from '../../claim-persistence/claim-persistence.module';
 
 @Module({
     imports: [
         forwardRef(() => ClaimModule),
         TokenModule,
-        forwardRef(() => RecentUpdatesModule),
-        forwardRef(() => DocumentRequestModule),
+        RecentUpdatesModule,
+        DocumentRequestModule,
         S3Module,
         BullModule.registerQueue({
             name: GENERATE_ASSIGNMENT_QUEUE_KEY,
         }),
+        ClaimPersistenceModule,
     ],
     controllers: [DocumentController, PublicDocumentController],
     providers: [

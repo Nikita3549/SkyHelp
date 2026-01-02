@@ -11,15 +11,16 @@ import { DocumentRequestLetter } from '../../../notification/letters/definitions
 import { ConfigService } from '@nestjs/config';
 import { GenerateLinksService } from '../../../generate-links/generate-links.service';
 import { SpecializedDocumentRequestLetter } from '../../../notification/letters/definitions/claim/specialized-document-request.letter';
+import { ClaimPersistenceService } from '../../../claim-persistence/claim-persistence.service';
 
 @Processor(SEND_NEW_DOCUMENT_REQUEST_QUEUE_KEY)
 export class SendNewDocumentRequestsProcessor extends WorkerHost {
     constructor(
         private readonly notificationService: NotificationService,
-        private readonly claimService: ClaimService,
         private readonly documentRequestService: DocumentRequestService,
         private readonly configService: ConfigService,
         private readonly generateLinksService: GenerateLinksService,
+        private readonly claimPersistenceService: ClaimPersistenceService,
     ) {
         super();
     }
@@ -33,7 +34,7 @@ export class SendNewDocumentRequestsProcessor extends WorkerHost {
         if (documentRequests.length == 0) {
             return;
         }
-        const claim = await this.claimService.getClaim(claimId);
+        const claim = await this.claimPersistenceService.findOneById(claimId);
         if (!claim) {
             return;
         }
@@ -41,7 +42,7 @@ export class SendNewDocumentRequestsProcessor extends WorkerHost {
         const mappedDocumentRequests = await Promise.all(
             documentRequests.map(async (r) => {
                 const passenger =
-                    (await this.claimService.getCustomerOrOtherPassengerById(
+                    (await this.claimPersistenceService.getBasePassenger(
                         r.passengerId,
                     ))!;
 

@@ -10,13 +10,14 @@ import { IJobClaimFollowupData } from '../interfaces/job-data/job-data.interface
 import { ClaimService } from '../claim.service';
 import { EmailResumeClickService } from '../../email-resume-click/email-resume-click.service';
 import { FinishClaimLetter } from '../../notification/letters/definitions/claim/finish-claim.letter';
+import { ClaimPersistenceService } from '../../claim-persistence/claim-persistence.service';
 
 @Processor(CLAIM_FOLLOWUP_QUEUE_KEY)
 export class ClaimFollowupProcessor extends WorkerHost {
     constructor(
         private readonly notificationService: NotificationService,
-        private readonly claimService: ClaimService,
         private readonly emailResumeClickService: EmailResumeClickService,
+        private readonly claimPersistenceService: ClaimPersistenceService,
     ) {
         super();
     }
@@ -31,7 +32,7 @@ export class ClaimFollowupProcessor extends WorkerHost {
             language,
         } = job.data;
 
-        const claim = await this.claimService.getClaim(claimId);
+        const claim = await this.claimPersistenceService.findOneById(claimId);
 
         if (!claim) {
             throw new Error(CLAIM_NOT_FOUND);

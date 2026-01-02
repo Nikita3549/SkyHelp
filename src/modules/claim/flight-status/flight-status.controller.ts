@@ -19,15 +19,16 @@ import { CreateFlightStatusDto } from './dto/create-flight-status.dto';
 import { CLAIM_NOT_FOUND } from '../constants';
 import { RoleGuard } from '../../../common/guards/role.guard';
 import { AirlineService } from '../../airline/airline.service';
+import { ClaimPersistenceService } from '../../claim-persistence/claim-persistence.service';
 
 @Controller('claims/flight-statuses')
 @UseGuards(JwtAuthGuard, new RoleGuard([UserRole.ADMIN]))
 export class FlightStatusController {
     constructor(
         private readonly flightStatusService: FlightStatusService,
-        private readonly claimService: ClaimService,
         private readonly flightService: FlightService,
         private readonly airlinesService: AirlineService,
+        private readonly claimPersistenceService: ClaimPersistenceService,
     ) {}
 
     @Put(':flightStatusId')
@@ -39,7 +40,9 @@ export class FlightStatusController {
             throw new NotFoundException(FLIGHT_STATUS_NOT_FOUND);
         }
 
-        const claim = (await this.claimService.getClaim(flightStatus.claimId))!;
+        const claim = (await this.claimPersistenceService.findOneById(
+            flightStatus.claimId,
+        ))!;
 
         const flightCode = claim.details.flightNumber.slice(2);
 
@@ -103,7 +106,7 @@ export class FlightStatusController {
     @Post()
     async createFlightStatus(@Body() dto: CreateFlightStatusDto) {
         const { claimId, source } = dto;
-        const claim = await this.claimService.getClaim(claimId);
+        const claim = await this.claimPersistenceService.findOneById(claimId);
         if (!claim) throw new NotFoundException(CLAIM_NOT_FOUND);
 
         const flightStatus =

@@ -7,6 +7,7 @@ import { TokenModule } from '../token/token.module';
 import { NotificationModule } from '../notification/notification.module';
 import { PassportModule } from '@nestjs/passport';
 import { ClaimModule } from '../claim/claim.module';
+import { ClaimPersistenceModule } from '../claim-persistence/claim-persistence.module';
 
 @Module({
     imports: [
@@ -15,8 +16,8 @@ import { ClaimModule } from '../claim/claim.module';
         TokenModule,
         NotificationModule,
         PassportModule,
-        forwardRef(() => ClaimModule),
         NotificationModule,
+        ClaimPersistenceModule,
     ],
     controllers: [AuthController],
     providers: [AuthService],

@@ -3,9 +3,10 @@ import { DetailController } from './detail.controller';
 import { DetailService } from './detail.service';
 import { ClaimModule } from '../claim.module';
 import { DocumentModule } from '../document/document.module';
+import { ClaimPersistenceModule } from '../../claim-persistence/claim-persistence.module';
 
 @Module({
-    imports: [forwardRef(() => ClaimModule), DocumentModule],
+    imports: [DocumentModule, ClaimPersistenceModule],
     controllers: [DetailController],
     providers: [DetailService],
 })
