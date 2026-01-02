@@ -32,4 +32,12 @@ export class UpdatePassengerDto {
     @IsOptional()
     @IsString()
     email?: string | null;
+
+    @IsOptional()
+    @IsString()
+    parentFirstName?: string;
+
+    @IsOptional()
+    @IsString()
+    parentLastName?: string;
 }
