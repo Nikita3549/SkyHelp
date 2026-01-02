@@ -11,7 +11,7 @@ import { DocumentRequestLetter } from '../../../notification/letters/definitions
 import { ConfigService } from '@nestjs/config';
 import { GenerateLinksService } from '../../../generate-links/generate-links.service';
 import { SpecializedDocumentRequestLetter } from '../../../notification/letters/definitions/claim/specialized-document-request.letter';
-import { ClaimPersistenceService } from '../../../claim-persistence/claim-persistence.service';
+import { ClaimPersistenceService } from '../../../claim-persistence/services/claim-persistence.service';
 
 @Processor(SEND_NEW_DOCUMENT_REQUEST_QUEUE_KEY)
 export class SendNewDocumentRequestsProcessor extends WorkerHost {

@@ -11,7 +11,7 @@ import { REFERRAL_RATE } from '../../../referral/referral-transaction/constants'
 import { PrismaService } from '../../../prisma/prisma.service';
 import { NewStatusLetter } from '../../../notification/letters/definitions/claim/new-status.letter';
 import { ConfigService } from '@nestjs/config';
-import { ClaimPersistenceService } from '../../../claim-persistence/claim-persistence.service';
+import { ClaimPersistenceService } from '../../../claim-persistence/services/claim-persistence.service';
 
 @Processor(SEND_NEW_PROGRESS_EMAIL_QUEUE_KEY)
 export class SendNewProgressEmailProcessor extends WorkerHost {

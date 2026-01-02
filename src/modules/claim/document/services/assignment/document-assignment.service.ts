@@ -20,8 +20,8 @@ import { Fontkit } from 'pdf-lib/es/types/fontkit';
 import { ASSIGNMENT_AGREEMENT_FILEPATH } from './constants/template-filepath';
 import { FONT_FAMILY_FILEPATH } from './constants/font-family-filepath';
 import { IPreparePdfResult } from './interfaces/prepare-pdf-result.interface';
-import { IFullClaim } from '../../../interfaces/full-claim.interface';
 import { BasePassenger } from '../../../../claim-persistence/interfaces/base-passenger.interface';
+import { IFullClaim } from '../../../../claim-persistence/types/claim-persistence.types';
 
 @Injectable()
 export class DocumentAssignmentService implements OnModuleInit {

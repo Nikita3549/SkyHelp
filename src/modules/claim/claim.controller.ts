@@ -39,7 +39,6 @@ import { UpdateFormStateDto } from './dto/update-form-state.dto';
 import { DocumentService } from './document/services/document.service';
 import { CustomerService } from './customer/customer.service';
 import { validateClaimJwt } from '../../common/utils/validate-claim-jwt';
-import { IFullClaim } from './interfaces/full-claim.interface';
 import { UploadFormSignDto } from './dto/upload-form-sign-dto';
 import { AuthService } from '../auth/auth.service';
 import { LanguageWithReferrerDto } from './dto/language-with-referrer.dto';
@@ -55,18 +54,20 @@ import { ApiKeyAuthGuard } from '../../common/guards/apiKeyAuthGuard';
 import { UserService } from '../user/user.service';
 import { getNextWorkTime } from '../../common/utils/getNextWorkTime';
 import { ClaimCreatedLetter } from '../notification/letters/definitions/claim/claim-created.letter';
-import { ClaimPersistenceService } from '../claim-persistence/claim-persistence.service';
+import { ClaimPersistenceService } from '../claim-persistence/services/claim-persistence.service';
+import { IFullClaim } from '../claim-persistence/types/claim-persistence.types';
+import { ClaimSearchService } from '../claim-persistence/services/claim-search.service';
 
 @Controller('claims')
 @UseGuards(JwtOrApiKeyAuth)
 export class ClaimController {
-    constructor(private readonly claimService: ClaimService) {}
+    constructor(private readonly claimSearchService: ClaimSearchService) {}
 
     @Get()
     async getClaims(@Req() req: AuthRequest, @Query() query: GetClaimsQuery) {
         const { phone, email } = query;
 
-        return this.claimService.getUserClaims(req?.user?.id, 1, {
+        return this.claimSearchService.getUserClaims(req?.user?.id, 1, {
             phone: phone ? normalizePhone(phone) : undefined,
             email,
         });
@@ -164,7 +165,7 @@ export class PublicClaimController {
             referredById = partner ? partner.id : null;
         }
 
-        const claim = await this.claimService.createClaim(dto, {
+        const { claim, jwt } = await this.claimService.createClaim(dto, {
             referredById,
             referrerSource,
             referrer,
@@ -180,7 +181,10 @@ export class PublicClaimController {
             );
 
             if (user) {
-                await this.claimService.updateUserId(user.id, claim.id);
+                await this.claimPersistenceService.update(
+                    { userId: user.id },
+                    claim.id,
+                );
             }
         }
 
@@ -220,7 +224,7 @@ export class PublicClaimController {
 
         return {
             claimData: claim,
-            jwt: claim.jwt,
+            jwt,
             userToken: userToken ? userToken : null,
         };
     }
@@ -284,7 +288,7 @@ export class PublicClaimController {
             },
         );
 
-        await this.claimService.updateStep(claimId, 7);
+        await this.claimPersistenceService.update({ step: 7 }, claimId);
 
         await this.customerService.setIsSignedCustomer(claim.customerId, true);
 
@@ -311,7 +315,10 @@ export class PublicClaimController {
             this.tokenService.verifyJWT.bind(this.tokenService),
         );
 
-        await this.claimService.updateFormState(claimId, dto.formState);
+        await this.claimPersistenceService.update(
+            { formState: dto.formState },
+            claimId,
+        );
     }
 
     @Get(':claimId')
@@ -340,7 +347,10 @@ export class PublicClaimController {
             this.tokenService.verifyJWT.bind(this.tokenService),
         );
 
-        const claim = await this.claimService.updateStep(claimId, step);
+        const claim = (await this.claimPersistenceService.update(
+            { step },
+            claimId,
+        ))!;
 
         if (step == FINAL_STEP) {
             await this.notificationService.sendLetter(
@@ -354,7 +364,10 @@ export class PublicClaimController {
             );
         }
 
-        return await this.claimService.updateClaim(dto, claimId);
+        return await this.claimPersistenceService.updateFullObject(
+            dto,
+            claimId,
+        );
     }
 
     @Post('/compensation')

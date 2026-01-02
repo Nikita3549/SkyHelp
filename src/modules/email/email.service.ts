@@ -9,7 +9,7 @@ import {
 } from '@prisma/client';
 import { GmailEmailPayload } from '../gmail/interfaces/gmail-email-payload.interface';
 import { RecentUpdatesService } from '../claim/recent-updates/recent-updates.service';
-import { ClaimPersistenceService } from '../claim-persistence/claim-persistence.service';
+import { ClaimPersistenceService } from '../claim-persistence/services/claim-persistence.service';
 
 @Injectable()
 export class EmailService {

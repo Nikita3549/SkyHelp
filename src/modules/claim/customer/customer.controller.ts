@@ -37,7 +37,7 @@ import { GenerateLinksService } from '../../generate-links/generate-links.servic
 import { NotificationService } from '../../notification/services/notification.service';
 import { Languages } from '../../language/enums/languages.enums';
 import { PaymentRequestLetter } from '../../notification/letters/definitions/claim/payment-request.letter';
-import { ClaimPersistenceService } from '../../claim-persistence/claim-persistence.service';
+import { ClaimPersistenceService } from '../../claim-persistence/services/claim-persistence.service';
 
 @Controller('claims/customer')
 @UseGuards(JwtAuthGuard)

@@ -12,7 +12,7 @@ import { ReminderTypeEnum } from '../../notification/enums/reminder-type.enum';
 import { Languages } from '../../language/enums/languages.enums';
 import { getNextWorkTime } from '../../../common/utils/getNextWorkTime';
 import { ClaimReminderLetter } from '../../notification/letters/definitions/claim/claim-reminder.letter';
-import { ClaimPersistenceService } from '../../claim-persistence/claim-persistence.service';
+import { ClaimPersistenceService } from '../../claim-persistence/services/claim-persistence.service';
 
 @Processor(CLAIM_REMINDER_QUEUE_KEY)
 export class ClaimReminderProcessor extends WorkerHost {

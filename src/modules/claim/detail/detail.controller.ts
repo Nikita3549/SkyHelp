@@ -13,7 +13,7 @@ import { ClaimService } from '../claim.service';
 import { UserRole } from '@prisma/client';
 import { RoleGuard } from '../../../common/guards/role.guard';
 import { DocumentService } from '../document/services/document.service';
-import { ClaimPersistenceService } from '../../claim-persistence/claim-persistence.service';
+import { ClaimPersistenceService } from '../../claim-persistence/services/claim-persistence.service';
 
 @Controller('claims/details')
 @UseGuards(JwtAuthGuard)

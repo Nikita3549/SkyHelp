@@ -15,7 +15,7 @@ import { HttpStatusCode } from 'axios';
 import { ApiKeyAuthGuard } from '../../common/guards/apiKeyAuthGuard';
 import { MissingDocumentsLetter } from '../notification/letters/definitions/claim/missing-documents.letter';
 import { ConfigService } from '@nestjs/config';
-import { ClaimPersistenceService } from '../claim-persistence/claim-persistence.service';
+import { ClaimPersistenceService } from '../claim-persistence/services/claim-persistence.service';
 
 @Controller('bot')
 export class BotController {

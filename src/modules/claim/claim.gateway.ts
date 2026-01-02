@@ -10,10 +10,10 @@ import { TokenService } from '../token/token.service';
 import { Server, Socket } from 'socket.io';
 import { IJwtPayload } from '../token/interfaces/jwtPayload';
 import { UserRole } from '@prisma/client';
-import { ClaimService } from './claim.service';
 import { AuthSocket } from '../auth/interfaces/authSocket.interface';
 import { SearchClaimsDto } from './dto/search-claims.dto';
 import { INVALID_TOKEN } from '../token/constants';
+import { ClaimSearchService } from '../claim-persistence/services/claim-search.service';
 
 @WebSocketGateway({
     namespace: '/ws/claims',
@@ -26,7 +26,7 @@ import { INVALID_TOKEN } from '../token/constants';
 export class ClaimGateway implements OnGatewayConnection {
     constructor(
         private readonly tokenService: TokenService,
-        private readonly claimService: ClaimService,
+        private readonly claimSearchService: ClaimSearchService,
     ) {}
 
     @WebSocketServer() server: Server;
@@ -58,7 +58,7 @@ export class ClaimGateway implements OnGatewayConnection {
     handleMessage(client: AuthSocket, dto: SearchClaimsDto) {
         const { search } = dto;
 
-        return this.claimService.searchClaims(
+        return this.claimSearchService.searchClaims(
             search,
             client.data.role != UserRole.ADMIN ? client.data.id : undefined,
         );

@@ -21,11 +21,10 @@ import { ArchiveClaimDto } from './dto/archive-claim.dto';
 import { CLAIM_NOT_FOUND, HAVE_NO_RIGHTS_ON_CLAIM } from '../constants';
 import { UpdateClaimDto } from '../dto/update-claim.dto';
 import { JwtAuthGuard } from '../../../common/guards/jwtAuth.guard';
-import { ClaimService } from '../claim.service';
 import { AddAgentDto } from './dto/add-agent.dto';
 import { UserService } from '../../user/user.service';
 import { UserRole } from '@prisma/client';
-import { AGENT_NOT_FOUND } from './constants';
+import { ADMIN_REFERRER_SOURCE, AGENT_NOT_FOUND } from './constants';
 import { AuthRequest } from '../../../common/interfaces/AuthRequest.interface';
 import { RecentUpdatesService } from '../recent-updates/recent-updates.service';
 import { GetAdminClaimsStatsQuery } from './dto/get-admin-claims-stats.query';
@@ -33,13 +32,16 @@ import { DeleteDuplicatesDto } from './dto/delete-duplicates.dto';
 import { PartnerService } from '../../referral/partner/partner.service';
 import { CreatePartnerDto } from './dto/create-partner.dto';
 import { RoleGuard } from '../../../common/guards/role.guard';
-import { ViewClaimType } from '../enums/view-claim-type.enum';
+import { ViewClaimType } from '../../claim-persistence/enums/view-claim-type.enum';
 import { OtherPassengerService } from '../other-passenger/other-passenger.service';
 import { OtherPassengerDto } from '../other-passenger/dto/create-other-passengers.dto';
 import { AssignToPartnerDto } from './dto/assign-to-partner.dto';
 import { PARTNER_NOT_FOUND } from '../../referral/partner/constants';
 import { DeleteFromPartnerDto } from './dto/delete-from-partner.dto';
-import { ClaimPersistenceService } from '../../claim-persistence/claim-persistence.service';
+import { ClaimPersistenceService } from '../../claim-persistence/services/claim-persistence.service';
+import { DuplicateService } from '../duplicate/duplicate.service';
+import { ClaimSearchService } from '../../claim-persistence/services/claim-search.service';
+import { ClaimStatsService } from '../../claim-persistence/services/claim-stats.service';
 
 @Controller('claims/admin')
 @UseGuards(
@@ -55,12 +57,14 @@ import { ClaimPersistenceService } from '../../claim-persistence/claim-persisten
 )
 export class AdminController {
     constructor(
-        private readonly claimService: ClaimService,
+        private readonly claimSearchService: ClaimSearchService,
+        private readonly claimStatsService: ClaimStatsService,
         private readonly userService: UserService,
         private readonly recentUpdatesService: RecentUpdatesService,
         private readonly partnerService: PartnerService,
         private readonly otherPassengersService: OtherPassengerService,
         private readonly claimPersistenceService: ClaimPersistenceService,
+        private readonly duplicateService: DuplicateService,
     ) {}
 
     @Post(':claimId/passenger')
@@ -92,10 +96,13 @@ export class AdminController {
             throw new NotFoundException(PARTNER_NOT_FOUND);
         }
 
-        await this.claimService.addPartnerBulk(
+        await this.claimPersistenceService.updateMany(
+            {
+                referrer: partner.referralCode,
+                referredById: partner.id,
+                referrerSource: ADMIN_REFERRER_SOURCE,
+            },
             claimIds,
-            partner.referralCode,
-            partner.id,
         );
     }
 
@@ -104,7 +111,10 @@ export class AdminController {
     async deleteFromPartnerBulk(@Body() dto: DeleteFromPartnerDto) {
         const { claimIds } = dto;
 
-        await this.claimService.deletePartnerBulk(claimIds);
+        await this.claimPersistenceService.updateMany(
+            { referrer: null, referredById: null, referrerSource: null },
+            claimIds,
+        );
     }
 
     @Post('partner')
@@ -146,15 +156,15 @@ export class AdminController {
     async revokeClaim(@Body() dto: DeleteDuplicatesDto) {
         const { claimId } = dto;
 
-        const duplicates = await this.claimService.getDuplicates(claimId);
+        const duplicates = await this.duplicateService.getMany(claimId);
 
         const claimsIdsToRevoke = duplicates.map((d) => d.duplicatedClaimId);
 
-        await this.claimService.archiveMany(claimsIdsToRevoke);
-        await this.claimService.deleteDuplicates([
-            ...claimsIdsToRevoke,
-            claimId,
-        ]);
+        await this.claimPersistenceService.updateMany(
+            { archived: true },
+            claimsIdsToRevoke,
+        );
+        await this.duplicateService.deleteMany([...claimsIdsToRevoke, claimId]);
     }
 
     @Get()
@@ -193,7 +203,7 @@ export class AdminController {
                   ? ViewClaimType.ACCOUNTANT
                   : ViewClaimType.FULL;
 
-        return this.claimService.getUserClaims(userId, +page, {
+        return this.claimSearchService.getUserClaims(userId, +page, {
             archived:
                 archived == undefined ? undefined : archived == YesOrNo.YES,
             duplicated:
@@ -270,7 +280,7 @@ export class AdminController {
                 ? req.user.id
                 : undefined;
 
-        const stats = await this.claimService.getUserClaimsStats(
+        const stats = await this.claimStatsService.getClaimsStats(
             userId,
             agentId,
             dateFrom && dateTo
@@ -306,7 +316,7 @@ export class AdminController {
             throw new ForbiddenException(HAVE_NO_RIGHTS_ON_CLAIM);
         }
 
-        await this.claimService.setArchived(claimId, archived);
+        await this.claimPersistenceService.update({ archived }, claimId);
     }
 
     @Get(':claimId')
@@ -339,7 +349,10 @@ export class AdminController {
             throw new BadRequestException(CLAIM_NOT_FOUND);
         }
 
-        return await this.claimService.updateClaim(dto, claimId);
+        return await this.claimPersistenceService.updateFullObject(
+            dto,
+            claimId,
+        );
     }
 
     @Patch(':claimId/agent')
@@ -362,7 +375,10 @@ export class AdminController {
             throw new NotFoundException(AGENT_NOT_FOUND);
         }
 
-        return await this.claimService.addAgent(claimId, agentId);
+        return await this.claimPersistenceService.update(
+            { assignedAt: new Date(), agentId },
+            claimId,
+        );
     }
 
     @Delete(':claimId/agent')
@@ -379,6 +395,9 @@ export class AdminController {
             throw new BadRequestException(CLAIM_NOT_FOUND);
         }
 
-        return this.claimService.addAgent(claimId, null);
+        return this.claimPersistenceService.update(
+            { agentId: null, assignedAt: new Date() },
+            claimId,
+        );
     }
 }

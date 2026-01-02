@@ -12,9 +12,9 @@ import { SEND_NEW_DOCUMENT_REQUEST_QUEUE_KEY } from './constants';
 import { Queue } from 'bullmq';
 import { SendNewDocumentRequestJobDataInterface } from './interfaces/send-new-document-request-job-data.interface';
 import { Languages } from '../../language/enums/languages.enums';
-import { IFullClaim } from '../interfaces/full-claim.interface';
 import { DAY, MINUTE } from '../../../common/constants/time.constants';
 import { getNextWorkTime } from '../../../common/utils/getNextWorkTime';
+import { IFullClaim } from '../../claim-persistence/types/claim-persistence.types';
 
 @Injectable()
 export class DocumentRequestService {

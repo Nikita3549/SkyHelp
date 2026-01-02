@@ -15,7 +15,7 @@ import { TokenService } from '../../../token/token.service';
 import { ClaimService } from '../../claim.service';
 import { ActivityService } from '../../activity/activity.service';
 import { ClaimActivityType } from '@prisma/client';
-import { ClaimPersistenceService } from '../../../claim-persistence/claim-persistence.service';
+import { ClaimPersistenceService } from '../../../claim-persistence/services/claim-persistence.service';
 
 @Injectable()
 @Controller('claims/payment')

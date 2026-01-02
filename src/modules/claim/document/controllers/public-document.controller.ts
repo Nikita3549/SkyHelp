@@ -15,7 +15,7 @@ import { UploadDocumentsJwtQueryDto } from '../dto/upload-documents-jwt-query.dt
 import { DocumentType } from '@prisma/client';
 import { validateClaimJwt } from '../../../../common/utils/validate-claim-jwt';
 import { CLAIM_NOT_FOUND } from '../../constants';
-import { ClaimPersistenceService } from '../../../claim-persistence/claim-persistence.service';
+import { ClaimPersistenceService } from '../../../claim-persistence/services/claim-persistence.service';
 
 @Controller('claims/documents/public')
 export class PublicDocumentController {
@@ -74,7 +74,7 @@ export class PublicDocumentController {
         }
 
         if (step) {
-            await this.claimService.updateStep(claimId, step);
+            await this.claimPersistenceService.update({ step }, claimId);
         }
 
         return await this.documentService.saveDocuments(

@@ -14,7 +14,7 @@ import { InjectQueue } from '@nestjs/bullmq';
 import { GENERATE_ASSIGNMENT_QUEUE_KEY } from '../processors/constants/generate-assignment-queue-key';
 import { Queue } from 'bullmq';
 import { IGenerateAssignmentJobData } from '../processors/interfaces/generateAssignmentJobData';
-import { ClaimPersistenceService } from '../../../claim-persistence/claim-persistence.service';
+import { ClaimPersistenceService } from '../../../claim-persistence/services/claim-persistence.service';
 import { ClaimService } from '../../claim.service';
 
 @Injectable()

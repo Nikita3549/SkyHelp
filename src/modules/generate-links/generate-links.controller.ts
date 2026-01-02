@@ -37,7 +37,7 @@ import { OtherPassengerService } from '../claim/other-passenger/other-passenger.
 import { OtherPassengerCopiedLinksService } from '../claim/other-passenger/other-passenger-copied-links/other-passenger-copied-links.service';
 import { CustomerService } from '../claim/customer/customer.service';
 import { RoleGuard } from '../../common/guards/role.guard';
-import { ClaimPersistenceService } from '../claim-persistence/claim-persistence.service';
+import { ClaimPersistenceService } from '../claim-persistence/services/claim-persistence.service';
 
 @Controller('links')
 @UseGuards(JwtAuthGuard)

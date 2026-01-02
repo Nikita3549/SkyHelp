@@ -35,7 +35,7 @@ import { DocumentsUploadInterceptor } from '../../common/interceptors/documents/
 import { EmailService } from '../email/email.service';
 import { GmailOfficeService } from '../gmail/services/gmail-office.service';
 import { EmailAttachmentService } from '../email-attachment/email-attachment.service';
-import { ClaimPersistenceService } from '../claim-persistence/claim-persistence.service';
+import { ClaimPersistenceService } from '../claim-persistence/services/claim-persistence.service';
 
 @Controller('letters')
 @UseGuards(

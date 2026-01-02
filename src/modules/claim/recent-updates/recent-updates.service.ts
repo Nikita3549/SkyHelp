@@ -9,7 +9,7 @@ import {
 import { ClaimService } from '../claim.service';
 import { ActivityService } from '../activity/activity.service';
 import { FINAL_STEP } from '../constants';
-import { ClaimPersistenceService } from '../../claim-persistence/claim-persistence.service';
+import { ClaimPersistenceService } from '../../claim-persistence/services/claim-persistence.service';
 
 @Injectable()
 export class RecentUpdatesService {

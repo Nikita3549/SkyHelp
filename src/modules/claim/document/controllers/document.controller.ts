@@ -39,7 +39,7 @@ import { PatchPassengerIdDto } from '../dto/patch-passenger-id.dto';
 import { HttpStatusCode } from 'axios';
 import { RoleGuard } from '../../../../common/guards/role.guard';
 import { ISignedUrlResponse } from './interfaces/signed-url-response.interface';
-import { ClaimPersistenceService } from '../../../claim-persistence/claim-persistence.service';
+import { ClaimPersistenceService } from '../../../claim-persistence/services/claim-persistence.service';
 
 @Controller('claims/documents')
 @UseGuards(JwtAuthGuard)

@@ -15,7 +15,7 @@ import { ClaimService } from '../../claim.service';
 import { TokenService } from '../../../token/token.service';
 import { RecentUpdatesService } from '../../recent-updates/recent-updates.service';
 import { DocumentRequestService } from '../../document-request/document-request.service';
-import { ClaimPersistenceService } from '../../../claim-persistence/claim-persistence.service';
+import { ClaimPersistenceService } from '../../../claim-persistence/services/claim-persistence.service';
 import { UploadSignDto } from '../../customer/dto/upload-sign.dto';
 import {
     CLAIM_NOT_FOUND,

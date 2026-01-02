@@ -8,7 +8,7 @@ import { CLAIM_NOT_FOUND, HAVE_NO_RIGHTS_ON_CLAIM } from '../constants';
 import { BadRequestException } from '@nestjs/common/exceptions/bad-request.exception';
 import { ActivityService } from './activity.service';
 import { JwtAuthGuard } from '../../../common/guards/jwtAuth.guard';
-import { ClaimPersistenceService } from '../../claim-persistence/claim-persistence.service';
+import { ClaimPersistenceService } from '../../claim-persistence/services/claim-persistence.service';
 
 @Controller('activities')
 @UseGuards(JwtAuthGuard)

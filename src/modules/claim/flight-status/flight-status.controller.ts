@@ -19,7 +19,7 @@ import { CreateFlightStatusDto } from './dto/create-flight-status.dto';
 import { CLAIM_NOT_FOUND } from '../constants';
 import { RoleGuard } from '../../../common/guards/role.guard';
 import { AirlineService } from '../../airline/airline.service';
-import { ClaimPersistenceService } from '../../claim-persistence/claim-persistence.service';
+import { ClaimPersistenceService } from '../../claim-persistence/services/claim-persistence.service';
 
 @Controller('claims/flight-statuses')
 @UseGuards(JwtAuthGuard, new RoleGuard([UserRole.ADMIN]))

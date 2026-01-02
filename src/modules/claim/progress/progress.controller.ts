@@ -35,7 +35,7 @@ import { AuthRequest } from '../../../common/interfaces/AuthRequest.interface';
 import { MINUTE } from '../../../common/constants/time.constants';
 import { UpdateProgressComments } from './dto/update-progress-comments';
 import { RoleGuard } from '../../../common/guards/role.guard';
-import { ClaimPersistenceService } from '../../claim-persistence/claim-persistence.service';
+import { ClaimPersistenceService } from '../../claim-persistence/services/claim-persistence.service';
 
 @Controller('claims/progresses')
 @UseGuards(

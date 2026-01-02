@@ -21,7 +21,7 @@ import { RoleGuard } from '../../../../common/guards/role.guard';
 import { RequestPaymentDetailsDto } from '../dto/request-payment-details.dto';
 import { Languages } from '../../../language/enums/languages.enums';
 import { omit } from '../../../../common/utils/omit';
-import { ClaimPersistenceService } from '../../../claim-persistence/claim-persistence.service';
+import { ClaimPersistenceService } from '../../../claim-persistence/services/claim-persistence.service';
 
 @Controller('claims/payment')
 @UseGuards(JwtAuthGuard)
