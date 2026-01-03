@@ -23,7 +23,10 @@ export class ClaimIncludeProvider {
         config?: IGetIncludeConfig,
     ): AffiliateInclude | AccountantInclude | FullInclude;
 
-    getInclude(viewType?: ViewClaimType, config?: IGetIncludeConfig) {
+    getInclude(
+        viewType: ViewClaimType = ViewClaimType.FULL,
+        config?: IGetIncludeConfig,
+    ) {
         switch (viewType) {
             case ViewClaimType.FULL:
                 return this.fullClaimInclude(config);
