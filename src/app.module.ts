@@ -24,7 +24,6 @@ import { EmailResumeClickModule } from './modules/email-resume-click/email-resum
 import { UnsubscribeEmailModule } from './modules/unsubscribe-email/unsubscribe-email.module';
 import { GenerateLinksModule } from './modules/generate-links/generate-links.module';
 import { SendToCeoModule } from './modules/send-to-ceo/send-to-ceo.module';
-import { BotModule } from './modules/bot/bot.module';
 import { PartnerModule } from './modules/referral/partner/partner.module';
 import { ReferralTransactionModule } from './modules/referral/referral-transaction/referral-transaction.module';
 import { PayoutModule } from './modules/referral/payout/payout.module';
@@ -67,7 +66,6 @@ import { ClaimPersistenceModule } from './modules/claim-persistence/claim-persis
         UnsubscribeEmailModule,
         GenerateLinksModule,
         SendToCeoModule,
-        BotModule,
         PartnerModule,
         ReferralTransactionModule,
         PayoutModule,
