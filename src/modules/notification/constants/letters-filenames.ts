@@ -4,7 +4,6 @@ export const LETTERS_FILENAMES = {
         FINISH_CLAIM: 'finishClaim.html',
         NEW_STATUS: 'newStatus.html',
         DOCUMENT_REQUEST: 'documentRequests.html',
-        MISSING_DOCUMENTS: 'missingDocuments.html',
         REQUEST_PAYMENT_DETAILS: 'requestPaymentDetails.html',
         REMINDERS: {
             CLAIM_RECEIVED: 'reminders/claimReceived.html',
