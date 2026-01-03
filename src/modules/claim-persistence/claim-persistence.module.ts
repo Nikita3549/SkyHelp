@@ -9,6 +9,7 @@ import { ClaimStatsService } from './services/claim-stats.service';
         ClaimPersistenceService,
         ClaimIncludeProvider,
         ClaimSearchService,
+        ClaimStatsService,
     ],
     exports: [ClaimPersistenceService, ClaimSearchService, ClaimStatsService],
 })
