@@ -15,6 +15,7 @@ RUN apt-get update -y && apt-get install -y openssl libssl-dev
 COPY package.json ./
 COPY prisma ./prisma
 COPY fonts ./fonts
+COPY init-db ./init-db
 COPY assets ./assets
 RUN npm install --only=prod
 COPY --from=build /opt/api/dist ./dist
