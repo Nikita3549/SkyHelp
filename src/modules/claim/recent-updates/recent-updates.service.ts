@@ -66,7 +66,7 @@ export class RecentUpdatesService {
         });
     }
 
-    async unviewRecentUpdatesByClaimId(claimId: string) {
+    async markRecentUpdatesAsViewed(claimId: string) {
         return this.prisma.claimRecentUpdates.updateMany({
             data: {
                 status: ClaimRecentUpdatesStatus.VIEWED,

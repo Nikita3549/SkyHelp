@@ -250,10 +250,10 @@ export class AdminController {
             throw new NotFoundException(CLAIM_NOT_FOUND);
         }
 
-        await this.recentUpdatesService.unviewRecentUpdatesByClaimId(claimId);
+        await this.recentUpdatesService.markRecentUpdatesAsViewed(claimId);
 
         await this.claimPersistenceService.updateHasRecentUpdate(
-            { hasRecentUpdate: true },
+            { hasRecentUpdate: false },
             claimId,
         );
     }
