@@ -68,7 +68,7 @@ services:
       - ELASTIC_PASSWORD=${ELASTICSEARCH_PASSWORD}
       - xpack.security.http.ssl.enabled=false
     ports:
-      - ${ELASTICSEARCH_PORT}:${ELASTICSEARCH_PORT}
+      - ${ELASTICSEARCH_PORT}:9200
 networks:
   main:
     driver: bridge

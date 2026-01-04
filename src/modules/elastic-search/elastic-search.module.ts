@@ -8,7 +8,7 @@ const ElasticClient: Provider = {
     provide: ELASTIC_CLIENT_TOKEN,
     useFactory: () => {
         return new Client({
-            node: `http://${process.env.ELASTICSEARCH_HOST!}:${process.env.ELASTICSEARCH_PORT!}`,
+            node: `http://${process.env.ELASTICSEARCH_HOST!}:9200`,
             auth: {
                 username: process.env.ELASTICSEARCH_USER!,
                 password: process.env.ELASTICSEARCH_PASSWORD!,
