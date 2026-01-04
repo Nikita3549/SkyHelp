@@ -78,9 +78,6 @@ jobs:
               exit 1
             fi
 
-            echo "🧹 Cleaning up dangling images"
-            docker image prune -f
-
             echo "✅ PROD Deployment complete"
 
       - name: Deploy DEV
@@ -99,11 +96,5 @@ jobs:
             echo "🔧 Building and restarting DEV containers"
             docker compose -f docker-compose.yml -f docker-compose.dev.yml -p dev --profile api up --build -d --remove-orphans
 
-
-            echo "🧹 Cleaning up dangling images"
-            docker image prune -f
-
-            echo "🧹 Deep cleaning system"
-            docker system prune -a -f
 
             echo "✅ DEV Deployment complete"
