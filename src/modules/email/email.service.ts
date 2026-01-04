@@ -47,14 +47,6 @@ export class EmailService {
                 id: emailId,
             },
         });
-        await this.recentUpdatesService.saveRecentUpdate(
-            {
-                type: ClaimRecentUpdatesType.EMAIL,
-                updatedEntityId: emailId,
-                entityData: `${email.fromEmail}`,
-            },
-            newClaimId,
-        );
 
         return email;
     }
