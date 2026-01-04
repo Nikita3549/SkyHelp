@@ -15,7 +15,7 @@ RUN npm run build
 FROM node:22-slim
 WORKDIR opt/api
 
-RUN apt-get update -y && apt-get install -y openssl libssl-dev
+RUN apt-get update -y && apt-get install -y openssl libssl-dev && apt-get install -y curl
 
 COPY prisma ./prisma
 COPY package*.json ./
