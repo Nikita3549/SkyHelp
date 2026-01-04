@@ -15,6 +15,10 @@ services:
       - main
     volumes:
       - redis_data:/data
+  elasticsearch:
+    container_name: dev_elasticsearch
+    networks:
+      - main
   api:
     container_name: dev_api
     networks:

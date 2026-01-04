@@ -57,18 +57,17 @@ services:
       - db-static
     command: sh -c "cd /opt/api/ && npx prisma migrate deploy && npx prisma generate && npm run start:prod"
   elasticsearch:
+    container_name: elasticsearch
+    networks:
+      - main
     image: docker.elastic.co/elasticsearch/elasticsearch:8.11.1
     environment:
       - discovery.type=single-node
-      - xpack.security.enabled=false
+      - xpack.security.enabled=true
+      - ELASTIC_PASSWORD=${ELASTICSEARCH_PASSWORD}
+      - xpack.security.http.ssl.enabled=false
     ports:
-      - "9200:9200"
-  kibana:
-    image: docker.elastic.co/kibana/kibana:8.11.1
-    ports:
-      - "5601:5601"
-    depends_on:
-      - elasticsearch
+      - ${ELASTICSEARCH_PORT}:9200
 networks:
   main:
     driver: bridge
