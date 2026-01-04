@@ -1,15 +1,20 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { IAirline } from './interfaces/airline.interface';
 import { Pool } from 'pg';
 import { IDbAirline } from './interfaces/db-airline.interface';
 import * as process from 'process';
+import { Client } from '@elastic/elasticsearch';
+import { ELASTIC_CLIENT_TOKEN } from '../elastic-search/constants/elastic-client.token';
 
 @Injectable()
 export class AirlineService implements OnModuleInit {
     private pool: Pool;
 
-    constructor(private readonly configService: ConfigService) {}
+    constructor(
+        private readonly configService: ConfigService,
+        @Inject(ELASTIC_CLIENT_TOKEN) private readonly esClient: Client,
+    ) {}
 
     async onModuleInit() {
         this.pool = new Pool({
@@ -85,49 +90,111 @@ export class AirlineService implements OnModuleInit {
     }
 
     public async getAirlinesByName(name: string): Promise<IAirline[]> {
-        const dbAirlines = await this.pool.query<IDbAirline>(
-            'SELECT\n' +
-                '  id,\n' +
-                '  name,\n' +
-                '  alias,\n' +
-                '  iata_code,\n' +
-                '  icao_code,\n' +
-                '  callsign,\n' +
-                '  country,\n' +
-                '  active,\n' +
-                '  CASE\n' +
-                '    WHEN iata_code ILIKE $1 THEN 1\n' +
-                '    WHEN icao_code ILIKE $1 THEN 2\n' +
-                '    WHEN name ILIKE $1 THEN 3\n' +
-                "    WHEN iata_code ILIKE '%' || $1 || '%' THEN 4\n" +
-                "    WHEN icao_code ILIKE '%' || $1 || '%' THEN 5\n" +
-                "    WHEN name ILIKE '%' || $1 || '%' THEN 6\n" +
-                '    ELSE 7\n' +
-                '  END AS relevance\n' +
-                'FROM airlines\n' +
-                'WHERE active = true\n' +
-                '  AND (\n' +
-                "    iata_code ILIKE '%' || $1 || '%'\n" +
-                "    OR icao_code ILIKE '%' || $1 || '%'\n" +
-                "    OR name ILIKE '%' || $1 || '%'\n" +
-                '  )\n' +
-                'ORDER BY relevance, name\n' +
-                'LIMIT 10;\n',
-            [name],
-        );
+        const query = name.trim();
+        if (!query) return [];
 
-        return dbAirlines.rows.flatMap((a) => {
-            if (!a.icao_code || !a.name || !a.iata_code) {
-                return [];
-            }
+        const queryUpper = query.toUpperCase();
+        const isCodeCandidate = query.length >= 2 && query.length <= 3;
 
-            return [
-                {
-                    icao: a.icao_code,
-                    iata: a.iata_code,
-                    name: a.name,
+        const result = await this.esClient.search({
+            index: 'airlines',
+            size: 15,
+            body: {
+                query: {
+                    function_score: {
+                        query: {
+                            bool: {
+                                must: [{ term: { active: 'Y' } }],
+                                should: [
+                                    ...(isCodeCandidate
+                                        ? [
+                                              {
+                                                  term: {
+                                                      iata_code: {
+                                                          value: queryUpper,
+                                                          boost: 10000,
+                                                      },
+                                                  },
+                                              },
+                                              {
+                                                  term: {
+                                                      icao_code: {
+                                                          value: queryUpper,
+                                                          boost: 5000,
+                                                      },
+                                                  },
+                                              },
+                                          ]
+                                        : []),
+
+                                    {
+                                        term: {
+                                            'name.keyword': {
+                                                value: query,
+                                                case_insensitive: true,
+                                                boost: 8000,
+                                            },
+                                        },
+                                    },
+
+                                    {
+                                        term: {
+                                            'country.keyword': {
+                                                value: query,
+                                                case_insensitive: true,
+                                                boost: 5000,
+                                            },
+                                        },
+                                    },
+
+                                    {
+                                        multi_match: {
+                                            query: query,
+                                            type: 'phrase_prefix',
+                                            fields: [
+                                                'name^3',
+                                                'callsign^2',
+                                                'country',
+                                            ],
+                                            boost: 1000,
+                                        },
+                                    },
+
+                                    {
+                                        multi_match: {
+                                            query: query,
+                                            fields: ['name', 'callsign'],
+                                            fuzziness: 'AUTO',
+                                            prefix_length: 2,
+                                            boost: 10,
+                                        },
+                                    },
+                                ],
+                                minimum_should_match: 1,
+                            },
+                        },
+                        functions: [
+                            {
+                                field_value_factor: {
+                                    field: 'popularity',
+                                    modifier: 'log1p',
+                                    factor: 2,
+                                    missing: 1,
+                                },
+                            },
+                        ],
+                        boost_mode: 'multiply',
+                    },
                 },
-            ];
+            },
         });
+
+        return result.hits.hits.map((hit: any) => ({
+            icao: hit._source.icao_code,
+            iata: hit._source.iata_code,
+            name: hit._source.name,
+            country: hit._source.country,
+            callsign: hit._source.callsign,
+        }));
     }
 }

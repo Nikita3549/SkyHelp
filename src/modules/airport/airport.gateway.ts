@@ -20,26 +20,6 @@ export class AirportGateway {
         private readonly cacheService: CacheService,
     ) {}
 
-    // async handleConnection(client: Socket) {
-    //     try {
-    //         constants token: string | undefined =
-    //             client.handshake.auth?.token ||
-    //             client.handshake.headers.authorization?.split(' ')[1];
-    //
-    //         if (!token) {
-    //             throw new Error();
-    //         }
-    //
-    //         constants { id: userId } =
-    //             this.tokenService.verifyJWT<JwtPayload>(token);
-    //
-    //         (client as AuthSocket).data.userId = userId;
-    //     } catch (e: unknown) {
-    //         client.emit('exception', INVALID_TOKEN);
-    //         client.disconnect();
-    //     }
-    // }
-
     @SubscribeMessage('lookupAirportCode')
     async handleLookupAirportCode(_client: Socket, dto: LookupAirportDto) {
         const { name: airportName } = dto;

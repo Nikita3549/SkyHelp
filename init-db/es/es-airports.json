@@ -1,0 +1,26 @@
+{
+  "properties": {
+    "name": {
+      "type": "text",
+      "analyzer": "standard",
+      "fields": {
+        "keyword": { "type": "keyword", "ignore_above": 256 }
+      }
+    },
+    "city": {
+      "type": "text",
+      "fields": {
+        "keyword": { "type": "keyword", "ignore_above": 256 }
+      }
+    },
+    "country": {
+      "type": "text",
+      "fields": {
+        "keyword": { "type": "keyword", "ignore_above": 256 }
+      }
+    },
+    "iata_code": { "type": "keyword" },
+    "icao_code": { "type": "keyword" },
+    "popularity": { "type": "integer" }
+  }
+}

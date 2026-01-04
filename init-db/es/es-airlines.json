@@ -1,0 +1,16 @@
+{
+  "properties": {
+    "name": {
+      "type": "text",
+      "fields": { "keyword": { "type": "keyword" } }
+    },
+    "iata_code": { "type": "keyword" },
+    "icao_code": { "type": "keyword" },
+    "country": {
+      "type": "text",
+      "fields": { "keyword": { "type": "keyword" } }
+    },
+    "active": { "type": "keyword" },
+    "popularity": { "type": "integer" }
+  }
+}

@@ -1,0 +1,1 @@
+export const ELASTIC_CLIENT_TOKEN = 'ELASTIC_CLIENT';

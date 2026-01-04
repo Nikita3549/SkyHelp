@@ -32,6 +32,7 @@ import { PaymentModule } from './modules/claim/payment/payment.module';
 import { PrelitTemplatesModule } from './modules/prelit-templates/prelit-templates.module';
 import { S3Module } from './modules/s3/s3.module';
 import { ClaimPersistenceModule } from './modules/claim-persistence/claim-persistence.module';
+import { ElasticSearchModule } from './modules/elastic-search/elastic-search.module';
 
 @Module({
     imports: [
@@ -73,6 +74,7 @@ import { ClaimPersistenceModule } from './modules/claim-persistence/claim-persis
         PrelitTemplatesModule,
         S3Module,
         ClaimPersistenceModule,
+        ElasticSearchModule,
     ],
     controllers: [AppController],
     providers: [AppService],
