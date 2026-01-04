@@ -32,6 +32,7 @@ export class NotificationService {
                 emailCategory: letter.emailCategory,
                 templateFilename: letter.templateFileName,
                 context: letter.context,
+                claimId: letter.claimId,
             },
             { saveInDb: letter.saveInDb },
         );
