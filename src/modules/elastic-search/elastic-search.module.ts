@@ -13,6 +13,9 @@ const ElasticClient: Provider = {
                 username: process.env.ELASTICSEARCH_USER!,
                 password: process.env.ELASTICSEARCH_PASSWORD!,
             },
+            maxRetries: 10,
+            requestTimeout: 60000,
+            sniffOnStart: false,
         });
     },
 };
