@@ -55,6 +55,7 @@ services:
       - db
       - redis
       - db-static
+      - elasticsearch
     command: sh -c "cd /opt/api/ && npx prisma migrate deploy && npx prisma generate && npm run start:prod"
   elasticsearch:
     container_name: elasticsearch
@@ -67,7 +68,7 @@ services:
       - ELASTIC_PASSWORD=${ELASTICSEARCH_PASSWORD}
       - xpack.security.http.ssl.enabled=false
     ports:
-      - ${ELASTICSEARCH_PORT}:9200
+      - ${ELASTICSEARCH_PORT}:${ELASTICSEARCH_PORT}
 networks:
   main:
     driver: bridge
