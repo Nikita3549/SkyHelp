@@ -36,7 +36,9 @@ async function bootstrap() {
     isProd() &&
         app.useWebSocketAdapter(new SocketIoAdapter(app, configService));
 
-    app.setGlobalPrefix('v1');
+    app.setGlobalPrefix('v1', {
+        exclude: ['health'],
+    });
     app.use(cookieParser());
     app.useGlobalPipes(
         new ValidationPipe({
