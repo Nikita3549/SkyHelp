@@ -50,16 +50,6 @@ export class SearchSyncService implements OnModuleInit {
             'airports',
             'SELECT id, name, city, country, iata_code, icao_code FROM airports',
         );
-
-        await this.prepareIndex(
-            'airlines',
-            settings,
-            await this.loadJson('es-airlines.json'),
-        );
-        await this.syncTable(
-            'airlines',
-            "SELECT id, name, iata_code, icao_code, callsign, country, active FROM airlines WHERE active = 'Y'",
-        );
     }
 
     private async loadJson(fileName: string) {
