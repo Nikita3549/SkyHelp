@@ -2108,10 +2108,15 @@
     "FlightInfoCard.departure": "Plecare",
     "FlightInfoCard.arrival": "Sosire",
     "CustomerInfoCard.customer_information": "Informații despre client",
+    "CustomerInfoCard.passengerInformation": "Informații despre pasager",
     "CustomerInfoCard.name": "Nume",
+    "CustomerInfoCard.firstName": "Prenume",
+    "CustomerInfoCard.lastName": "Nume de familie",
     "CustomerInfoCard.email": "Email",
     "CustomerInfoCard.phone": "Telefon",
     "CustomerInfoCard.address": "Adresă",
+    "CustomerInfoCard.language": "Limba",
+    "CustomerInfoCard.notifyViaWhatsApp": "Notificare prin WhatsApp",
     "CustomerInfoCard.not_available": "N/A",
     "CommunicationTab.compose_email": "Compune email",
     "CommunicationTab.email_log": "Jurnal emailuri",
@@ -4055,5 +4060,9 @@
     "ClaimDetailsSection.tabs.documentRequests": "Cereri documente",
     "ClaimDetailsSection.tabs.activity": "Activitate",
     "ClaimDetailsSection.tabs.precourt": "Prejudecată",
-    "ClaimDetailsSection.tabs.new": "Nou"
+    "ClaimDetailsSection.tabs.new": "Nou",
+    "ClaimDetailsDetails.tabs.currentClaim": "Cerere curentă",
+    "ClaimDetailsDetails.tabs.allUserClaims": "Toate cererile utilizatorului",
+    "ClaimStatusCard.continueFormLink" : "Continuare formular Link",
+    "admin.claims.details.passengers" : "pasager"
 }

@@ -2109,10 +2109,15 @@
     "FlightInfoCard.departure": " Kalkış",
     "FlightInfoCard.arrival": " Varış",
     "CustomerInfoCard.customer_information": " Müşteri Bilgileri",
+    "CustomerInfoCard.passengerInformation": " Yolcu Bilgileri",
     "CustomerInfoCard.name": " Adı",
+    "CustomerInfoCard.firstName": " Adı",
+    "CustomerInfoCard.lastName": " Soyadı",
     "CustomerInfoCard.email": " Email",
     "CustomerInfoCard.phone": " Telefon",
     "CustomerInfoCard.address": " Adres",
+    "CustomerInfoCard.language": " Dil",
+    "CustomerInfoCard.notifyViaWhatsApp": " WhatsApp ile bildir",
     "CustomerInfoCard.not_available": " Yok",
     "CommunicationTab.compose_email": " E-posta Oluştur",
     "CommunicationTab.email_log": " E-posta Geçmişi",
@@ -4078,5 +4083,9 @@
     "ClaimDetailsSection.tabs.documentRequests": "Belge istekleri",
     "ClaimDetailsSection.tabs.activity": "Aktivite",
     "ClaimDetailsSection.tabs.precourt": "Mahkeme öncesi",
-    "ClaimDetailsSection.tabs.new": "Yeni"
+    "ClaimDetailsSection.tabs.new": "Yeni",
+    "ClaimDetailsDetails.tabs.currentClaim": "Mevcut talep",
+    "ClaimDetailsDetails.tabs.allUserClaims": "Tüm kullanıcı talepleri",
+    "ClaimStatusCard.continueFormLink" : "Form linki ile devam et",
+    "admin.claims.details.passengers" : "yolcu"
 }

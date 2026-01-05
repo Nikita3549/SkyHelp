@@ -2107,10 +2107,15 @@
     "FlightInfoCard.departure": "Departure",
     "FlightInfoCard.arrival": "Arrival",
     "CustomerInfoCard.customer_information": "Customer Information",
+    "CustomerInfoCard.passengerInformation": "Passenger information",
     "CustomerInfoCard.name": "Name",
+    "CustomerInfoCard.firstName": "First name",
+    "CustomerInfoCard.lastName": "Last Name",
     "CustomerInfoCard.email": "Email",
     "CustomerInfoCard.phone": "Phone",
     "CustomerInfoCard.address": "Address",
+    "CustomerInfoCard.language": "Language",
+    "CustomerInfoCard.notifyViaWhatsApp": "Notify via WhatsApp",
     "CustomerInfoCard.not_available": "N/A",
     "CommunicationTab.compose_email": "Compose Email",
     "CommunicationTab.email_log": "Email Log",
@@ -4054,5 +4059,9 @@
     "ClaimDetailsSection.tabs.documentRequests": "Docs requests",
     "ClaimDetailsSection.tabs.activity": "Activity",
     "ClaimDetailsSection.tabs.precourt": "Precourt",
-    "ClaimDetailsSection.tabs.new": "New"
+    "ClaimDetailsSection.tabs.new": "New",
+    "ClaimDetailsDetails.tabs.currentClaim": "Current claim",
+    "ClaimDetailsDetails.tabs.allUserClaims": "All user claims", 
+    "ClaimStatusCard.continueFormLink" : "Continue form Link",
+    "admin.claims.details.passengers" : "passenger"
 }

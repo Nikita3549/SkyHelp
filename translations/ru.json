@@ -2108,10 +2108,15 @@
     "FlightInfoCard.departure": "Вылет",
     "FlightInfoCard.arrival": "Прилет",
     "CustomerInfoCard.customer_information": "Информация о клиенте",
+    "CustomerInfoCard.passengerInformation": "Информация о пассажире",
     "CustomerInfoCard.name": "Имя",
+    "CustomerInfoCard.firstName": "Имя",
+    "CustomerInfoCard.lastName": "Фамилия",
     "CustomerInfoCard.email": "Электронная почта",
     "CustomerInfoCard.phone": "Телефон",
     "CustomerInfoCard.address": "Адрес",
+    "CustomerInfoCard.language": "Язык",
+    "CustomerInfoCard.notifyViaWhatsApp": "Уведомлять через WhatsApp",
     "CustomerInfoCard.not_available": "Н/Д",
     "CommunicationTab.compose_email": "Написать письмо",
     "CommunicationTab.email_log": "Журнал писем",
@@ -4055,5 +4060,9 @@
     "ClaimDetailsSection.tabs.documentRequests": "Запросы документов",
     "ClaimDetailsSection.tabs.activity": "Активность",
     "ClaimDetailsSection.tabs.precourt": "Досудебное",
-    "ClaimDetailsSection.tabs.new": "Новое"
+    "ClaimDetailsSection.tabs.new": "Новое",
+    "ClaimDetailsDetails.tabs.currentClaim": "Текущая заявка",
+    "ClaimDetailsDetails.tabs.allUserClaims": "Все заявки пользователя",
+    "ClaimStatusCard.continueFormLink" : "Ссылка на продолжение формы",
+    "admin.claims.details.passengers" : "пассажир"
 }
