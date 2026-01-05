@@ -2112,7 +2112,7 @@
     "CustomerInfoCard.name": "Имя",
     "CustomerInfoCard.firstName": "Имя",
     "CustomerInfoCard.lastName": "Фамилия",
-    "CustomerInfoCard.email": "Электронная почта",
+    "CustomerInfoCard.email": "Почта",
     "CustomerInfoCard.phone": "Телефон",
     "CustomerInfoCard.address": "Адрес",
     "CustomerInfoCard.language": "Язык",
