@@ -4082,5 +4082,14 @@
     "PaymentDetailsCard.requestPaymentDetails" : "Request payment details",
     "PaymentDetailsCard.requestAlreadySent" : "Request already sent",
     "FlightStatusCard.title" : "Flight Status",
-    "FastLinks.title" : "Fast Link"
+    "FastLinks.title" : "Fast Link",
+    "EmailForm.emailTemplate" : "Email Template",
+    "EmailForm.selectTemplate" : "Select Template",
+    "EmailForm.to" : "To",
+    "EmailForm.choose" : "Choose",
+    "EmailForm.noEmailsAvailable" : "No emails available",
+    "EmailForm.subject" : "Subject",
+    "EmailForm.message" : "Message",
+    "EmailForm.addAttachments" : "Add Attachments",
+    "EmailForm.or" : "or"
 }

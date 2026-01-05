@@ -4082,5 +4082,15 @@
     "PaymentDetailsCard.wise" : "Wise",
     "PaymentDetailsCard.requestPaymentDetails" : "Solicită detalii de plată",
     "PaymentDetailsCard.requestAlreadySent" : "Solicitare deja trimisă",
-    "FlightStatusCard.title" : "Statut zbor"
+    "FlightStatusCard.title" : "Statut zbor",
+    "FastLinks.title" : "Link rapid",
+    "EmailForm.emailTemplate" : "Șablon email",
+    "EmailForm.selectTemplate" : "Selectați șablonul",
+    "EmailForm.to" : "Către",
+    "EmailForm.choose" : "Alege",
+    "EmailForm.noEmailsAvailable" : "Nu există email-uri disponibile",
+    "EmailForm.subject" : "Subiect",
+    "EmailForm.message" : "Mesaj",
+    "EmailForm.addAttachments" : "Adaugă atașamente",
+    "EmailForm.or" : "sau"
 }

@@ -4106,5 +4106,14 @@
     "PaymentDetailsCard.requestPaymentDetails" : "Ödeme detaylarını iste",
     "PaymentDetailsCard.requestAlreadySent" : "Ödeme detayları isteği zaten gönderildi",
     "FlightStatusCard.title" : "Uçuş Durumu",
-    "FastLinks.title" : "Hızlı Bağlantılar"
+    "FastLinks.title" : "Hızlı Bağlantılar",
+    "EmailForm.emailTemplate" : "Email Şablonu",
+    "EmailForm.selectTemplate" : "Şablon Seç",
+    "EmailForm.to" : "Kime",
+    "EmailForm.choose" : "Seç",
+    "EmailForm.noEmailsAvailable" : "E-posta yok",
+    "EmailForm.subject" : "Konu",
+    "EmailForm.message" : "Mesaj",
+    "EmailForm.addAttachments" : "Ekler Ekle",
+    "EmailForm.or" : "veya"
 }

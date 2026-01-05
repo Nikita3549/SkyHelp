@@ -4072,6 +4072,15 @@
     "PaymentDetailsCard.requestPaymentDetails" : "Запросити деталі платежу",
     "PaymentDetailsCard.requestAlreadySent" : "Запит на деталі платежу вже надіслано",
     "FlightStatusCard.title" : "Статус рейса",
-    "FastLinks.title" : "Швидкі посилання"
+    "FastLinks.title" : "Швидкі посилання",
+    "EmailForm.emailTemplate" : "Шаблон email",
+    "EmailForm.selectTemplate" : "Виберіть шаблон",
+    "EmailForm.to" : "Кому",
+    "EmailForm.choose" : "Вибрати",
+    "EmailForm.noEmailsAvailable" : "Немає доступних email",
+    "EmailForm.subject" : "Тема",
+    "EmailForm.message" : "Повідомлення",
+    "EmailForm.addAttachments" : "Додати вкладення",
+    "EmailForm.or" : "або"
 }
 
