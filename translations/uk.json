@@ -4053,6 +4053,13 @@
     "ClaimDetailsDetails.tabs.currentClaim": "Поточна заявка",
     "ClaimDetailsDetails.tabs.allUserClaims": "Всі заявки користувача",
     "ClaimStatusCard.continueFormLink" : "Продовжити форму посилання",
-    "admin.claims.details.passengers" : "пасажир"
+    "admin.claims.details.passengers" : "пасажир",
+    "OtherPassengersDetailsCard.parentFirstName" : "Ім'я батька",
+    "OtherPassengersDetailsCard.parentLastName" : "Прізвище батька",
+    "OtherPassengersDetailsCard.birthday" : "Дата народження",
+    "OtherPassengersDetailsCard.assignmentLinkSent" : "Посилання на призначення надіслано",
+    "OtherPassengersDetailsCard.assignmentLinkOpened" : "Посилання на призначення відкрито",
+    "OtherPassengersDetailsCard.documentsLinkSent" : "Посилання на документи надіслано",
+    "OtherPassengersDetailsCard.documentsLinkOpened" : "Посилання на документи відкрито"
 }
 

@@ -4064,5 +4064,12 @@
     "ClaimDetailsDetails.tabs.currentClaim": "Cerere curentă",
     "ClaimDetailsDetails.tabs.allUserClaims": "Toate cererile utilizatorului",
     "ClaimStatusCard.continueFormLink" : "Continuare formular Link",
-    "admin.claims.details.passengers" : "pasager"
+    "admin.claims.details.passengers" : "pasager",
+    "OtherPassengersDetailsCard.parentFirstName" : "Prenumele părintelui",
+    "OtherPassengersDetailsCard.parentLastName" : "Numele de familie al părintelui",
+    "OtherPassengersDetailsCard.birthday" : "Data nașterii",
+    "OtherPassengersDetailsCard.assignmentLinkSent" : "Link de atribuire trimis",
+    "OtherPassengersDetailsCard.assignmentLinkOpened" : "Link de atribuire deschis",
+    "OtherPassengersDetailsCard.documentsLinkSent" : "Link de documente trimis",
+    "OtherPassengersDetailsCard.documentsLinkOpened" : "Link de documente deschis"
 }

@@ -4063,5 +4063,12 @@
     "ClaimDetailsDetails.tabs.currentClaim": "Current claim",
     "ClaimDetailsDetails.tabs.allUserClaims": "All user claims", 
     "ClaimStatusCard.continueFormLink" : "Continue form Link",
-    "admin.claims.details.passengers" : "passenger"
+    "admin.claims.details.passengers" : "passenger",
+    "OtherPassengersDetailsCard.parentFirstName" : "Parent First name",
+    "OtherPassengersDetailsCard.parentLastName" : "Parent last name",
+    "OtherPassengersDetailsCard.birthday" : "Birthday",
+    "OtherPassengersDetailsCard.assignmentLinkSent" : "Assignment Link Sent",
+    "OtherPassengersDetailsCard.assignmentLinkOpened" : "Assignment Link Opened",
+    "OtherPassengersDetailsCard.documentsLinkSent" : "Documents Link Sent",
+    "OtherPassengersDetailsCard.documentsLinkOpened" : "Documents Link Opened"
 }

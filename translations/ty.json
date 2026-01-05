@@ -4087,5 +4087,12 @@
     "ClaimDetailsDetails.tabs.currentClaim": "Mevcut talep",
     "ClaimDetailsDetails.tabs.allUserClaims": "Tüm kullanıcı talepleri",
     "ClaimStatusCard.continueFormLink" : "Form linki ile devam et",
-    "admin.claims.details.passengers" : "yolcu"
+    "admin.claims.details.passengers" : "yolcu",
+    "OtherPassengersDetailsCard.parentFirstName" : "Ebeveyn Adı",
+    "OtherPassengersDetailsCard.parentLastName" : "Ebeveyn Soyadı",
+    "OtherPassengersDetailsCard.birthday" : "Doğum Tarihi",
+    "OtherPassengersDetailsCard.assignmentLinkSent" : "Atama Bağlantısı Gönderildi",
+    "OtherPassengersDetailsCard.assignmentLinkOpened" : "Atama Bağlantısı Açıldı",
+    "OtherPassengersDetailsCard.documentsLinkSent" : "Belgeler Bağlantısı Gönderildi",
+    "OtherPassengersDetailsCard.documentsLinkOpened" : "Belgeler Bağlantısı Açıldı"
 }
