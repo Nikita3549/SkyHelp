@@ -4102,5 +4102,9 @@
     "PaymentDetailsCard.paymentMethod" : "Ödeme Yöntemi",
     "PaymentDetailsCard.bankName" : "Banka Adı",
     "PaymentDetailsCard.paypal" : "Paypal",
-    "PaymentDetailsCard.wise" : "Wise"
+    "PaymentDetailsCard.wise" : "Wise",
+    "PaymentDetailsCard.requestPaymentDetails" : "Ödeme detaylarını iste",
+    "PaymentDetailsCard.requestAlreadySent" : "Ödeme detayları isteği zaten gönderildi",
+    "FlightStatusCard.title" : "Uçuş Durumu",
+    "FastLinks.title" : "Hızlı Bağlantılar"
 }

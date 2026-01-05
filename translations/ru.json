@@ -4079,5 +4079,9 @@
     "PaymentDetailsCard.paymentMethod" : "Способ оплаты",
     "PaymentDetailsCard.bankName" : "Название банка",
     "PaymentDetailsCard.paypal" : "Paypal",
-    "PaymentDetailsCard.wise" : "Wise"
+    "PaymentDetailsCard.wise" : "Wise",
+    "PaymentDetailsCard.requestPaymentDetails" : "Запросить детали платежа",
+    "PaymentDetailsCard.requestAlreadySent" : "Запрос уже отправлен",
+    "FlightStatusCard.title" : "Статус рейса",
+    "FastLinks.title" : "Быстрые ссылки"
 }

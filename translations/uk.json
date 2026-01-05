@@ -4068,6 +4068,10 @@
     "PaymentDetailsCard.paymentMethod" : "Спосіб оплати",
     "PaymentDetailsCard.bankName" : "Назва банку",
     "PaymentDetailsCard.paypal" : "Paypal",
-    "PaymentDetailsCard.wise" : "Wise"
+    "PaymentDetailsCard.wise" : "Wise",
+    "PaymentDetailsCard.requestPaymentDetails" : "Запросити деталі платежу",
+    "PaymentDetailsCard.requestAlreadySent" : "Запит на деталі платежу вже надіслано",
+    "FlightStatusCard.title" : "Статус рейса",
+    "FastLinks.title" : "Швидкі посилання"
 }
 

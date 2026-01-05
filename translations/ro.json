@@ -4079,5 +4079,8 @@
     "PaymentDetailsCard.paymentMethod" : "Metodă de plată",
     "PaymentDetailsCard.bankName" : "Numele băncii",
     "PaymentDetailsCard.paypal" : "Paypal",
-    "PaymentDetailsCard.wise" : "Wise"
+    "PaymentDetailsCard.wise" : "Wise",
+    "PaymentDetailsCard.requestPaymentDetails" : "Solicită detalii de plată",
+    "PaymentDetailsCard.requestAlreadySent" : "Solicitare deja trimisă",
+    "FlightStatusCard.title" : "Statut zbor"
 }
