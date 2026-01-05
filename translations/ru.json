@@ -2069,7 +2069,7 @@
     "FlightInfoForm.error_at_least_one_leg": "Необходимо указать хотя бы один сегмент",
     "CustomerInfoForm.customer_information": "Информация о клиенте",
     "CustomerInfoForm.name": "Имя",
-    "CustomerInfoForm.email": "Электронная почта",
+    "CustomerInfoForm.email": "Почта",
     "CustomerInfoForm.phone": "Телефон",
     "CustomerInfoForm.address": "Адрес",
     "CustomerInfoForm.error_name_required": "Имя обязательно для заполнения",
