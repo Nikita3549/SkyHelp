@@ -1812,7 +1812,7 @@
     "bankRegionSelector.other.description": "Банки за пределами Молдовы и ЕС",
     "paymentWarning.message": "⚠️ Важно: Платёжные данные должны принадлежать пассажиру, подающему заявку. Имя владельца счёта должно точно совпадать с именем пассажира, указанным в этой заявке.",
     "moldovaBankFields.accountName": "Имя владельца счёта",
-    "moldovaBankFields.accountNamePlaceholder": "Введите имя владельца счёта",
+    "moldovaBankFields.accountNamePlaceholder": "Имя Фамилия",
     "moldovaBankFields.idnp": "IDNP",
     "moldovaBankFields.idnpPlaceholder": "Введите IDNP",
     "moldovaBankFields.bankName": "Название банка",
