@@ -4070,5 +4070,13 @@
     "GoogleLoginButton.failed.toast.description": "Google ile giriş yapma işlemi sırasında bir hata oluştu.",
     "GoogleLoginButton.button": "Google",
     "AuthContext.login.social-auth-only.title": "Şifre belirlenmedi",
-    "AuthContext.login.social-auth-only.description": "Bu hesap sosyal medya üzerinden oluşturuldu. Lütfen sosyal medya ile giriş yapın veya şifre belirlemek için \"Şifremi Unuttum\" seçeneğini kullanın."
+    "AuthContext.login.social-auth-only.description": "Bu hesap sosyal medya üzerinden oluşturuldu. Lütfen sosyal medya ile giriş yapın veya şifre belirlemek için \"Şifremi Unuttum\" seçeneğini kullanın.",
+    "ClaimDetailsSection.tabs.details": "Talep Detayları",
+    "ClaimDetailsSection.tabs.communication": "İletişim",
+    "ClaimDetailsSection.tabs.progress": "Progres",
+    "ClaimDetailsSection.tabs.documents": "Belgeler",
+    "ClaimDetailsSection.tabs.documentRequests": "Belge istekleri",
+    "ClaimDetailsSection.tabs.activity": "Aktivite",
+    "ClaimDetailsSection.tabs.precourt": "Mahkeme öncesi",
+    "ClaimDetailsSection.tabs.new": "Yeni"
 }

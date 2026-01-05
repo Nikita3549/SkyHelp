@@ -4046,5 +4046,13 @@
     "AuthContext.login.social-auth-only.description": "This account was created via social media. Please sign in with social media or use \"Forgot Password\" to set a password.",
     "CompensationDetailsCard.calculating": "Calculating",
     "signatureStep.rotatePhone": "Rotate your phone", 
-    "PartnerLayout.otherLinks.title": "Other Links"
+    "PartnerLayout.otherLinks.title": "Other Links",
+    "ClaimDetailsSection.tabs.details": "Claim Details",
+    "ClaimDetailsSection.tabs.communication": "Communication",
+    "ClaimDetailsSection.tabs.progress": "Progress",
+    "ClaimDetailsSection.tabs.documents": "Documents",
+    "ClaimDetailsSection.tabs.documentRequests": "Docs requests",
+    "ClaimDetailsSection.tabs.activity": "Activity",
+    "ClaimDetailsSection.tabs.precourt": "Precourt",
+    "ClaimDetailsSection.tabs.new": "New"
 }

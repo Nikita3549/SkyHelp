@@ -4047,5 +4047,13 @@
     "GoogleLoginButton.failed.toast.description": "A apărut o eroare în timpul procesului de conectare cu Google.",
     "GoogleLoginButton.button": "Google",
     "AuthContext.login.social-auth-only.title": "Parola nu este setată",
-    "AuthContext.login.social-auth-only.description": "Acest cont a fost creat prin rețelele sociale. Vă rugăm să vă conectați prin rețelele sociale sau să utilizați „Am uitat parola” pentru a seta o parolă."
+    "AuthContext.login.social-auth-only.description": "Acest cont a fost creat prin rețelele sociale. Vă rugăm să vă conectați prin rețelele sociale sau să utilizați \"Am uitat parola\" pentru a seta o parolă.",
+    "ClaimDetailsSection.tabs.details": "Detalii cerere",
+    "ClaimDetailsSection.tabs.communication": "Comunicare",
+    "ClaimDetailsSection.tabs.progress": "Progres",
+    "ClaimDetailsSection.tabs.documents": "Documente",
+    "ClaimDetailsSection.tabs.documentRequests": "Cereri documente",
+    "ClaimDetailsSection.tabs.activity": "Activitate",
+    "ClaimDetailsSection.tabs.precourt": "Prejudecată",
+    "ClaimDetailsSection.tabs.new": "Nou"
 }

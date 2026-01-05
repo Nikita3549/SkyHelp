@@ -4036,6 +4036,14 @@
     "GoogleLoginButton.failed.toast.description": "Під час входу через Google сталася помилка.",
     "GoogleLoginButton.button": "Google",
     "AuthContext.login.social-auth-only.title": "Пароль не встановлено",
-    "AuthContext.login.social-auth-only.description": "Цей обліковий запис було створено через соціальні мережі. Будь ласка, увійдіть через соцмережу або скористайтеся функцією «Забули пароль», щоб встановити його."
+    "AuthContext.login.social-auth-only.description": "Цей обліковий запис було створено через соціальні мережі. Будь ласка, увійдіть через соцмережу або скористайтеся функцією «Забули пароль», щоб встановити його.",
+    "ClaimDetailsSection.tabs.details": "Деталі заявки",
+    "ClaimDetailsSection.tabs.communication": "Комунікація",
+    "ClaimDetailsSection.tabs.progress": "Прогрес",
+    "ClaimDetailsSection.tabs.documents": "Документи",
+    "ClaimDetailsSection.tabs.documentRequests": "Запити документів",
+    "ClaimDetailsSection.tabs.activity": "Активність",
+    "ClaimDetailsSection.tabs.precourt": "Передсудове",
+    "ClaimDetailsSection.tabs.new": "Нове"
 }
 
