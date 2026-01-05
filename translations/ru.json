@@ -4097,5 +4097,10 @@
     "DocumentsSelection.selectDocumentsToAttachToEmail" : "Выберите документы для прикрепления к email",
     "DocumentsSelection.noDocumentsAvailable" : "Нет доступных документов",
     "DocumentsSelection.uploadDocumentsToClaimFirst" : "Загрузите документы в заявку сначала",
-    "DocumentsSelection.addFromSystem" : "Добавить из системы"
+    "DocumentsSelection.addFromSystem" : "Добавить из системы",
+    "FlightInfoCard.flightNumberIcao" : "Номер рейса (ICAO)",
+    "Timeline.newStep" : "Новый шаг",
+    "Timeline.saving" : "Сохранение...",
+    "Timeline.saved" : "Сохранено",
+    "Timeline.save" : "Сохранить"
 }

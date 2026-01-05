@@ -4097,5 +4097,10 @@
     "DocumentsSelection.selectDocumentsToAttachToEmail" : "Selectați documente pentru a atașa la email",
     "DocumentsSelection.noDocumentsAvailable" : "Nu există documente disponibile",
     "DocumentsSelection.uploadDocumentsToClaimFirst" : "Încarcă documente la cerere mai întâi", 
-    "DocumentsSelection.addFromSystem" : "Adaugă din sistem"
+    "DocumentsSelection.addFromSystem" : "Adaugă din sistem",
+    "FlightInfoCard.flightNumberIcao" : "Număr zbor (ICAO)",
+    "Timeline.newStep" : "Nou pas",
+    "Timeline.saving" : "Se salvează...",
+    "Timeline.saved" : "Salvat",
+    "Timeline.save" : "Salvează"
 }

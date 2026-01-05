@@ -4120,5 +4120,10 @@
     "DocumentsSelection.selectDocumentsToAttachToEmail" : "Email'e ekleyeceğiniz belgeleri seçin",
     "DocumentsSelection.noDocumentsAvailable" : "Mevcut belge yok",
     "DocumentsSelection.uploadDocumentsToClaimFirst" : "Belgeyi talebe yüklemek için önce yükleyin",
-    "DocumentsSelection.addFromSystem" : "Sistemden ekle"
+    "DocumentsSelection.addFromSystem" : "Sistemden ekle",
+    "FlightInfoCard.flightNumberIcao" : "Uçuş Numarası (ICAO)",
+    "Timeline.newStep" : "Yeni adım",
+    "Timeline.saving" : "Kaydediliyor...",
+    "Timeline.saved" : "Kaydedildi",
+    "Timeline.save" : "Kaydet"
 }

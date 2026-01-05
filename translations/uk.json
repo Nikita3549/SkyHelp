@@ -4086,6 +4086,11 @@
     "DocumentsSelection.selectDocumentsToAttachToEmail" : "Виберіть документи для прикріплення до email",
     "DocumentsSelection.noDocumentsAvailable" : "Немає доступних документів",
     "DocumentsSelection.uploadDocumentsToClaimFirst" : "Завантажте документи в заявку спочатку",
-    "DocumentsSelection.addFromSystem" : "Додати з системи"
+    "DocumentsSelection.addFromSystem" : "Додати з системи",
+    "FlightInfoCard.flightNumberIcao" : "Номер рейса (ICAO)",
+    "Timeline.newStep" : "Новий крок",
+    "Timeline.saving" : "Збереження...",
+    "Timeline.saved" : "Збережено",
+    "Timeline.save" : "Зберегти"
 }
 

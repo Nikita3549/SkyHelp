@@ -4096,5 +4096,10 @@
     "DocumentsSelection.selectDocumentsToAttachToEmail" : "Select documents to attach to email",
     "DocumentsSelection.noDocumentsAvailable" : "No documents available",
     "DocumentsSelection.uploadDocumentsToClaimFirst" : "Upload documents to claim first",
-    "DocumentsSelection.addFromSystem" : "Add from system"
+    "DocumentsSelection.addFromSystem" : "Add from system",
+    "FlightInfoCard.flightNumberIcao" : "Flight Number (ICAO)",
+    "Timeline.newStep" : "New step",
+    "Timeline.saving" : "Saving...",
+    "Timeline.saved" : "Saved",
+    "Timeline.save" : "Save"
 }
