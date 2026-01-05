@@ -4071,5 +4071,13 @@
     "OtherPassengersDetailsCard.assignmentLinkSent" : "Link de atribuire trimis",
     "OtherPassengersDetailsCard.assignmentLinkOpened" : "Link de atribuire deschis",
     "OtherPassengersDetailsCard.documentsLinkSent" : "Link de documente trimis",
-    "OtherPassengersDetailsCard.documentsLinkOpened" : "Link de documente deschis"
+    "OtherPassengersDetailsCard.documentsLinkOpened" : "Link de documente deschis",
+    "OtherPassengersDetailsCard.linksInfo" : "Informații link-uri",
+    "PassengersCard.addPassenger" : " + Adaugă pasager",
+    "ClaimStatusCard.comment" : "Comentariu",
+    "ClaimStatusCard.addCommentPlaceholder" : "Adaugă un comentariu",
+    "PaymentDetailsCard.paymentMethod" : "Metodă de plată",
+    "PaymentDetailsCard.bankName" : "Numele băncii",
+    "PaymentDetailsCard.paypal" : "Paypal",
+    "PaymentDetailsCard.wise" : "Wise"
 }

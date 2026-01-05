@@ -4071,5 +4071,13 @@
     "OtherPassengersDetailsCard.assignmentLinkSent" : "Ссылка на назначение отправлена",
     "OtherPassengersDetailsCard.assignmentLinkOpened" : "Ссылка на назначение открыта",
     "OtherPassengersDetailsCard.documentsLinkSent" : "Ссылка на документы отправлена",
-    "OtherPassengersDetailsCard.documentsLinkOpened" : "Ссылка на документы открыта"
+    "OtherPassengersDetailsCard.documentsLinkOpened" : "Ссылка на документы открыта",
+    "OtherPassengersDetailsCard.linksInfo" : "Информация о ссылках",
+    "PassengersCard.addPassenger" : " + Добавить пассажира",
+    "ClaimStatusCard.comment" : "Комментарий",
+    "ClaimStatusCard.addCommentPlaceholder" : "Добавить комментарий",
+    "PaymentDetailsCard.paymentMethod" : "Способ оплаты",
+    "PaymentDetailsCard.bankName" : "Название банка",
+    "PaymentDetailsCard.paypal" : "Paypal",
+    "PaymentDetailsCard.wise" : "Wise"
 }

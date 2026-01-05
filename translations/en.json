@@ -4070,5 +4070,13 @@
     "OtherPassengersDetailsCard.assignmentLinkSent" : "Assignment Link Sent",
     "OtherPassengersDetailsCard.assignmentLinkOpened" : "Assignment Link Opened",
     "OtherPassengersDetailsCard.documentsLinkSent" : "Documents Link Sent",
-    "OtherPassengersDetailsCard.documentsLinkOpened" : "Documents Link Opened"
+    "OtherPassengersDetailsCard.documentsLinkOpened" : "Documents Link Opened",
+    "OtherPassengersDetailsCard.linksInfo" : "Links Info", 
+    "PassengersCard.addPassenger" : " + Add Passenger",
+    "ClaimStatusCard.comment" : "Comment",
+    "ClaimStatusCard.addCommentPlaceholder" : "Add a comment",
+    "PaymentDetailsCard.paymentMethod" : "Payment Method",
+    "PaymentDetailsCard.bankName" : "Bank Name",
+    "PaymentDetailsCard.paypal" : "Paypal",
+    "PaymentDetailsCard.wise" : "Wise"
 }

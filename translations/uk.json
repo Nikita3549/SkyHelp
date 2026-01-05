@@ -4060,6 +4060,14 @@
     "OtherPassengersDetailsCard.assignmentLinkSent" : "Посилання на призначення надіслано",
     "OtherPassengersDetailsCard.assignmentLinkOpened" : "Посилання на призначення відкрито",
     "OtherPassengersDetailsCard.documentsLinkSent" : "Посилання на документи надіслано",
-    "OtherPassengersDetailsCard.documentsLinkOpened" : "Посилання на документи відкрито"
+    "OtherPassengersDetailsCard.documentsLinkOpened" : "Посилання на документи відкрито",
+    "OtherPassengersDetailsCard.linksInfo" : "Інформація про посилання",
+    "PassengersCard.addPassenger" : " + Додати пасажира",
+    "ClaimStatusCard.comment" : "Коментар",
+    "ClaimStatusCard.addCommentPlaceholder" : "Додати коментар",
+    "PaymentDetailsCard.paymentMethod" : "Спосіб оплати",
+    "PaymentDetailsCard.bankName" : "Назва банку",
+    "PaymentDetailsCard.paypal" : "Paypal",
+    "PaymentDetailsCard.wise" : "Wise"
 }
 

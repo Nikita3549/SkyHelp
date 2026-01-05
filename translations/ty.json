@@ -4094,5 +4094,13 @@
     "OtherPassengersDetailsCard.assignmentLinkSent" : "Atama Bağlantısı Gönderildi",
     "OtherPassengersDetailsCard.assignmentLinkOpened" : "Atama Bağlantısı Açıldı",
     "OtherPassengersDetailsCard.documentsLinkSent" : "Belgeler Bağlantısı Gönderildi",
-    "OtherPassengersDetailsCard.documentsLinkOpened" : "Belgeler Bağlantısı Açıldı"
+    "OtherPassengersDetailsCard.documentsLinkOpened" : "Belgeler Bağlantısı Açıldı",
+    "OtherPassengersDetailsCard.linksInfo" : "Bağlantı Bilgisi",
+    "PassengersCard.addPassenger" : " + Yolcu Ekle",
+    "ClaimStatusCard.comment" : "Yorum",
+    "ClaimStatusCard.addCommentPlaceholder" : "Yorum ekle",
+    "PaymentDetailsCard.paymentMethod" : "Ödeme Yöntemi",
+    "PaymentDetailsCard.bankName" : "Banka Adı",
+    "PaymentDetailsCard.paypal" : "Paypal",
+    "PaymentDetailsCard.wise" : "Wise"
 }
