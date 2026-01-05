@@ -13,9 +13,6 @@ const ElasticClient: Provider = {
                 username: process.env.ELASTICSEARCH_USER!,
                 password: process.env.ELASTICSEARCH_PASSWORD!,
             },
-            agent: {
-                keepAlive: true,
-            },
         });
     },
 };
