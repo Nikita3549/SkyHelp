@@ -4102,5 +4102,7 @@
     "Timeline.newStep" : "Новый шаг",
     "Timeline.saving" : "Сохранение...",
     "Timeline.saved" : "Сохранено",
-    "Timeline.save" : "Сохранить"
+    "Timeline.save" : "Сохранить",
+    "EditClaimdetails.edit" : "Редактировать",
+    "EditClaimdetails.cancelEdit" : "Отменить редактирование"
 }

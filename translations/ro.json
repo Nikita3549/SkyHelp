@@ -4102,5 +4102,7 @@
     "Timeline.newStep" : "Nou pas",
     "Timeline.saving" : "Se salvează...",
     "Timeline.saved" : "Salvat",
-    "Timeline.save" : "Salvează"
+    "Timeline.save" : "Salvează",
+    "EditClaimdetails.edit" : "Editare",
+    "EditClaimdetails.cancelEdit" : "Anulează editarea"
 }

@@ -4101,5 +4101,7 @@
     "Timeline.newStep" : "New step",
     "Timeline.saving" : "Saving...",
     "Timeline.saved" : "Saved",
-    "Timeline.save" : "Save"
+    "Timeline.save" : "Save",
+    "EditClaimdetails.edit" : "Edit",
+    "EditClaimdetails.cancelEdit" : "Cancel Edit"
 }

@@ -4091,6 +4091,8 @@
     "Timeline.newStep" : "Новий крок",
     "Timeline.saving" : "Збереження...",
     "Timeline.saved" : "Збережено",
-    "Timeline.save" : "Зберегти"
+    "Timeline.save" : "Зберегти",
+    "EditClaimdetails.edit" : "Редагувати",
+    "EditClaimdetails.cancelEdit" : "Відмінити редагування"
 }
 
