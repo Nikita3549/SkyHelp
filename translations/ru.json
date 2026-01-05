@@ -4092,5 +4092,10 @@
     "EmailForm.subject" : "Тема",
     "EmailForm.message" : "Сообщение",
     "EmailForm.addAttachments" : "Добавить вложения",
-    "EmailForm.or" : "или"
+    "EmailForm.or" : "или",
+    "DocumentsSelection.systemDocuments" : "Системные документы",
+    "DocumentsSelection.selectDocumentsToAttachToEmail" : "Выберите документы для прикрепления к email",
+    "DocumentsSelection.noDocumentsAvailable" : "Нет доступных документов",
+    "DocumentsSelection.uploadDocumentsToClaimFirst" : "Загрузите документы в заявку сначала",
+    "DocumentsSelection.addFromSystem" : "Добавить из системы"
 }

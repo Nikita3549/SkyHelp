@@ -4081,6 +4081,11 @@
     "EmailForm.subject" : "Тема",
     "EmailForm.message" : "Повідомлення",
     "EmailForm.addAttachments" : "Додати вкладення",
-    "EmailForm.or" : "або"
+    "EmailForm.or" : "або",
+    "DocumentsSelection.systemDocuments" : "Системні документи",
+    "DocumentsSelection.selectDocumentsToAttachToEmail" : "Виберіть документи для прикріплення до email",
+    "DocumentsSelection.noDocumentsAvailable" : "Немає доступних документів",
+    "DocumentsSelection.uploadDocumentsToClaimFirst" : "Завантажте документи в заявку спочатку",
+    "DocumentsSelection.addFromSystem" : "Додати з системи"
 }
 

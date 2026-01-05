@@ -4091,5 +4091,10 @@
     "EmailForm.subject" : "Subject",
     "EmailForm.message" : "Message",
     "EmailForm.addAttachments" : "Add Attachments",
-    "EmailForm.or" : "or"
+    "EmailForm.or" : "or",
+    "DocumentsSelection.systemDocuments" : "System Documents",
+    "DocumentsSelection.selectDocumentsToAttachToEmail" : "Select documents to attach to email",
+    "DocumentsSelection.noDocumentsAvailable" : "No documents available",
+    "DocumentsSelection.uploadDocumentsToClaimFirst" : "Upload documents to claim first",
+    "DocumentsSelection.addFromSystem" : "Add from system"
 }

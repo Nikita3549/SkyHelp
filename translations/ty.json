@@ -4115,5 +4115,10 @@
     "EmailForm.subject" : "Konu",
     "EmailForm.message" : "Mesaj",
     "EmailForm.addAttachments" : "Ekler Ekle",
-    "EmailForm.or" : "veya"
+    "EmailForm.or" : "veya",
+    "DocumentsSelection.systemDocuments" : "Sistem Belgeleri",
+    "DocumentsSelection.selectDocumentsToAttachToEmail" : "Email'e ekleyeceğiniz belgeleri seçin",
+    "DocumentsSelection.noDocumentsAvailable" : "Mevcut belge yok",
+    "DocumentsSelection.uploadDocumentsToClaimFirst" : "Belgeyi talebe yüklemek için önce yükleyin",
+    "DocumentsSelection.addFromSystem" : "Sistemden ekle"
 }
