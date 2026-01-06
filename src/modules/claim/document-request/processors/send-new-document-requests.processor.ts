@@ -53,6 +53,7 @@ export class SendNewDocumentRequestsProcessor extends WorkerHost {
                         passengerId: r.passengerId,
                         passengerName: passenger.firstName,
                         isCustomer: passenger.isCustomer,
+                        isMinor: passenger.isMinor,
                     });
 
                     await this.notificationService.sendLetter(
@@ -92,6 +93,7 @@ export class SendNewDocumentRequestsProcessor extends WorkerHost {
         passengerId: string;
         isCustomer: boolean;
         passengerName: string;
+        isMinor: boolean;
     }): Promise<{ continueLink: string }> {
         const {
             documentRequestReason,
@@ -99,6 +101,7 @@ export class SendNewDocumentRequestsProcessor extends WorkerHost {
             passengerId,
             isCustomer,
             passengerName,
+            isMinor,
         } = data;
         if (documentRequestReason == DocumentRequestReason.MISSING_DOCUMENT) {
             throw new Error(
@@ -147,6 +150,7 @@ export class SendNewDocumentRequestsProcessor extends WorkerHost {
                             passengerId,
                             jwt,
                             false,
+                            isMinor,
                         );
                 }
                 break;

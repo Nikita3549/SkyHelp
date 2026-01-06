@@ -244,6 +244,7 @@ export class GenerateLinksController {
             passenger.id,
             jwt,
             requireParentInfo,
+            passenger.isMinor,
         );
         return { link };
     }
@@ -298,6 +299,7 @@ export class PublicGenerateLinksController {
             passenger.id,
             jwt,
             requireParentInfo,
+            passenger.isMinor,
         );
 
         return { link };

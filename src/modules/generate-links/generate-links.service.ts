@@ -91,8 +91,9 @@ export class GenerateLinksService {
         passengerId: string,
         jwt: string,
         requireParentInfo: boolean,
+        isMinor: boolean,
     ) {
-        const url = `/sign?passengerId=${encodeURIComponent(passengerId)}&claim=${encodeURIComponent(jwt)}${requireParentInfo ? `&requireParentInfo=yes` : ''}`;
+        const url = `/sign?passengerId=${encodeURIComponent(passengerId)}&claim=${encodeURIComponent(jwt)}&isMinor=${isMinor ? 'yes' : 'no'}${requireParentInfo ? `&requireParentInfo=yes` : ''}`;
 
         const shortenUrl = await this.urlShortenerService.saveShortenUrl(
             url,
