@@ -73,7 +73,6 @@ services:
       - db
       - redis
       - db-static
-      - elasticsearch
     command: sh -c "cd /opt/api/ && npx prisma migrate deploy && npm run start:prod"
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:${API_PORT}/health"]
