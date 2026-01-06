@@ -106,26 +106,29 @@ export class GmailOfficeService implements OnModuleInit {
         if (!subject || !isInbox) {
             return;
         }
-        const email = await this.emailService.saveEmail({
-            id: messageId,
-            threadId: gmailThreadId,
-            messageId,
-            inReplyTo,
-            references,
-            subject,
-            normalizedSubject,
-            fromName,
-            fromEmail,
-            toName,
-            toEmail,
-            snippet,
-            bodyPlain,
-            bodyHtml,
-            sizeEstimate,
-            internalDate: internalDate == null ? null : +internalDate,
-            headersJson,
-            isInbox,
-        });
+        const email = await this.emailService.saveEmail(
+            {
+                id: messageId,
+                threadId: gmailThreadId,
+                messageId,
+                inReplyTo,
+                references,
+                subject,
+                normalizedSubject,
+                fromName,
+                fromEmail,
+                toName,
+                toEmail,
+                snippet,
+                bodyPlain,
+                bodyHtml,
+                sizeEstimate,
+                internalDate: internalDate == null ? null : +internalDate,
+                headersJson,
+                isInbox,
+            },
+            { saveRecentUpdate: true },
+        );
         if (!email) {
             return;
         }

@@ -71,7 +71,10 @@ export class EmailService {
         return claim?.id || null;
     }
 
-    async saveEmail(data: GmailEmailPayload) {
+    async saveEmail(
+        data: GmailEmailPayload,
+        options?: { saveRecentUpdate?: boolean },
+    ) {
         const internalDate = data.internalDate
             ? data.internalDate instanceof Date
                 ? data.internalDate
@@ -110,7 +113,7 @@ export class EmailService {
             },
         });
 
-        if (email.claimId) {
+        if (email.claimId && options?.saveRecentUpdate) {
             await this.recentUpdatesService.saveRecentUpdate(
                 {
                     type: ClaimRecentUpdatesType.EMAIL,
