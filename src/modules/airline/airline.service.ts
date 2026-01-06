@@ -4,17 +4,12 @@ import { IAirline } from './interfaces/airline.interface';
 import { Pool } from 'pg';
 import { IDbAirline } from './interfaces/db-airline.interface';
 import * as process from 'process';
-import { Client } from '@elastic/elasticsearch';
-import { ELASTIC_CLIENT_TOKEN } from '../elastic-search/constants/elastic-client.token';
 
 @Injectable()
 export class AirlineService implements OnModuleInit {
     private pool: Pool;
 
-    constructor(
-        private readonly configService: ConfigService,
-        @Inject(ELASTIC_CLIENT_TOKEN) private readonly esClient: Client,
-    ) {}
+    constructor(private readonly configService: ConfigService) {}
 
     async onModuleInit() {
         this.pool = new Pool({

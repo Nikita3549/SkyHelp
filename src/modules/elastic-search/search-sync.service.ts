@@ -7,6 +7,7 @@ import { Client } from '@elastic/elasticsearch';
 import * as process from 'process';
 import { ElasticSearchConfigsPath } from '../../common/constants/paths/ElasticSearchConfigsPath';
 import { ELASTIC_CLIENT_TOKEN } from './constants/elastic-client.token';
+import { isProd } from '../../common/utils/isProd';
 
 @Injectable()
 export class SearchSyncService implements OnModuleInit {
@@ -18,6 +19,8 @@ export class SearchSyncService implements OnModuleInit {
     ) {}
 
     async onModuleInit() {
+        if (!isProd()) return;
+
         this.pool = new Pool({
             user: this.configService.getOrThrow<string>('DATABASE_STATIC_USER'),
             database: this.configService.getOrThrow<string>(

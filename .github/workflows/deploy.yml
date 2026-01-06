@@ -71,17 +71,19 @@ jobs:
               -d "$DATABASE_STATIC_DBNAME" \
               -f /docker-entrypoint-initdb.d/update.sql
 
-            if ! docker compose --profile api up --build -d --remove-orphans; then
+            if ! docker compose --profile api --profile elasticsearch up --build -d --remove-orphans; then
               echo "❌ Docker Compose failed — rolling back"
               git reset --hard $last_commit
-              docker compose --profile api up -d --remove-orphans || { echo "❌ Rollback failed"; exit 1; }
+              docker compose --profile api --profile elasticsearch up -d --remove-orphans || { echo "❌ Rollback failed"; exit 1; }
               exit 1
             fi
 
             echo "✅ PROD Deployment complete"
-
       - name: Deploy DEV
         uses: appleboy/ssh-action@v0.1.10
+        if: |
+          github.event_name == 'push' || 
+          (github.event_name == 'workflow_dispatch' && github.event.inputs.environment != 'prod')
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
@@ -95,6 +97,5 @@ jobs:
 
             echo "🔧 Building and restarting DEV containers"
             docker compose -f docker-compose.yml -f docker-compose.dev.yml -p dev --profile api up --build -d --remove-orphans
-
 
             echo "✅ DEV Deployment complete"

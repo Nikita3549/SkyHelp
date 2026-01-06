@@ -3,10 +3,13 @@ import { SearchSyncService } from './search-sync.service';
 import { Client } from '@elastic/elasticsearch';
 import { ELASTIC_CLIENT_TOKEN } from './constants/elastic-client.token';
 import * as process from 'process';
+import { isProd } from '../../common/utils/isProd';
 
 const ElasticClient: Provider = {
     provide: ELASTIC_CLIENT_TOKEN,
     useFactory: () => {
+        if (!isProd()) return null;
+
         return new Client({
             node: `http://${process.env.ELASTICSEARCH_HOST!}:9200`,
             auth: {
