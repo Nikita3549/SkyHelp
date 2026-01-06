@@ -152,7 +152,7 @@ export const buildCancellationTemplateDataUtil = (dto: {
             size: 10.5,
             text: formatDate(dto.date, 'dd.mm.yyyy'),
             x: 176,
-            y: 525,
+            y: 604,
             fontWeight: 'REGULAR',
         },
         {
@@ -161,7 +161,7 @@ export const buildCancellationTemplateDataUtil = (dto: {
             size: 10.5,
             text: dto.claimId,
             x: 224,
-            y: 509,
+            y: 588,
             fontWeight: 'REGULAR',
         },
         {
@@ -170,7 +170,7 @@ export const buildCancellationTemplateDataUtil = (dto: {
             size: 10.5,
             text: formatDate(new Date()),
             x: 466,
-            y: 144,
+            y: 224,
             fontWeight: 'BOLD',
         },
     ];
