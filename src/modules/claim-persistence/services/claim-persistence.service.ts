@@ -200,7 +200,7 @@ export class ClaimPersistenceService {
             duplicatedClaims,
         } = extraData;
 
-        return await this.prisma.claim.create({
+        return this.prisma.claim.create({
             data: {
                 id: numericId,
                 ...(userId ? { user: { connect: { id: userId } } } : {}),

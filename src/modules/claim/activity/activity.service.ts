@@ -41,7 +41,7 @@ export class ActivityService {
             where,
             skip,
             orderBy: {
-                createdAt: 'desc',
+                createdAt: 'asc',
             },
         });
     }
