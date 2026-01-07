@@ -99,9 +99,11 @@ jobs:
               -d "$DATABASE_STATIC_DBNAME" \
               -f /docker-entrypoint-initdb.d/update.sql
 
-            if ! docker compose --profile api --profile elasticsearch up -d --remove-orphans; then
+            if ! docker compose --profile api --profile elasticsearch up -d --remove-orphans --wait; then
               echo "❌ Docker Compose failed - rolling back"
-              sed -i "s/^IMAGE_TAG=.*/IMAGE_TAG=$STABLE_TAG/" .env
+              export IMAGE_TAG=$STABLE_TAG
+            
+              docker compose --profile api pull
               
               docker compose --profile api --profile elasticsearch up -d --remove-orphans
               exit 1
