@@ -2559,6 +2559,7 @@
     "LegalLinks.alsoConfirm": "I also confirm that I have read the",
     "LegalLinks.assignmentAgreement": "Assignment Agreement",
     "InfoBox.signatureHint": "Your signature should closely resemble the signature on your ID.",
+    "InfoBox.minorSignatureHint": "This passenger is a minor — a parent or official guardian must sign. Your signature should closely resemble the signature on your ID.",
     "BankTransferFields.bankNameLabel": "Bank Name",
     "BankTransferFields.bankNamePlaceholder": "Enter bank name",
     "BankTransferFields.accountNameLabel": "Account Holder Name",

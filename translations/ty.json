@@ -2561,6 +2561,7 @@
     "LegalLinks.alsoConfirm": " Şartları kabul ediyorum",
     "LegalLinks.assignmentAgreement": " Atama Sözleşmesi",
     "InfoBox.signatureHint": " İmzanız, pasaportunuzdaki imzanızla benzer olmalıdır.",
+    "InfoBox.minorSignatureHint": "Bu yolcu reşit değil — bir ebeveyn veya resmi vasi imzalamalıdır. İmzanız, pasaportunuzdaki imzanızla benzer olmalıdır.",
     "BankTransferFields.bankNameLabel": " Banka Adı",
     "BankTransferFields.bankNamePlaceholder": " Banka adını girin",
     "BankTransferFields.accountNameLabel": " Hesap Sahibi Adı",

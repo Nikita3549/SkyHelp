@@ -2597,6 +2597,7 @@
     "LegalLinks.alsoConfirm": "Я також підтверджую, що прочитав",
     "LegalLinks.assignmentAgreement": "Угоду про передачу",
     "InfoBox.signatureHint": "Ваш підпис повинен близько відповідати підпису на вашому посвідченні особи.",
+    "InfoBox.minorSignatureHint": "Цей пасажир неповнолітній — підписати повинен батько або офіційний представник. Ваш підпис повинен близько відповідати підпису на вашому посвідченні особи.",
     "BankTransferFields.bankNameLabel": "Назва банку",
     "BankTransferFields.bankNamePlaceholder": "Введіть назву банку",
     "BankTransferFields.accountNameLabel": "Ім'я власника рахунку",

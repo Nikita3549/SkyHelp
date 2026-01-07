@@ -2560,6 +2560,7 @@
     "LegalLinks.alsoConfirm": "Confirm de asemenea că am citit",
     "LegalLinks.assignmentAgreement": "Acordul de cesiune",
     "InfoBox.signatureHint": "Semnătura ta ar trebui să semene cât mai mult cu cea din actul de identitate.",
+    "InfoBox.minorSignatureHint": "Acest pasager este minor — un părinte sau tutore oficial trebuie să semneze. Semnătura ta ar trebui să semene cât mai mult cu cea din actul de identitate.",
     "BankTransferFields.bankNameLabel": "Nume bancă",
     "BankTransferFields.bankNamePlaceholder": "Introdu numele băncii",
     "BankTransferFields.accountNameLabel": "Nume titular cont",
