@@ -361,7 +361,7 @@ export class PublicClaimController {
                     claimId: claim.id,
                     airlineName: claim.details.airlines.name,
                     dashboardLink:
-                        await this.generateLinksService.authorizedDashboardLink(
+                        await this.generateLinksService.authorizedLoginLink(
                             claim.userId,
                         ),
                 }),

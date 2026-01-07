@@ -104,8 +104,8 @@ export class GenerateLinksService {
         return link;
     }
 
-    async authorizedDashboardLink(userId: string | null) {
-        let baseLink = `${this.configService.getOrThrow('FRONTEND_URL')}/dashboard`;
+    async authorizedLoginLink(userId: string | null) {
+        let baseLink = `${this.configService.getOrThrow('FRONTEND_URL')}/login`;
         if (!userId) {
             return baseLink;
         }

@@ -93,7 +93,7 @@ export class SendNewProgressEmailProcessor extends WorkerHost {
                 claimId: emailData.claimId,
                 comments: progress.comments,
                 dashboardLink:
-                    await this.generateLinksService.authorizedDashboardLink(
+                    await this.generateLinksService.authorizedLoginLink(
                         claim.userId,
                     ),
             }),

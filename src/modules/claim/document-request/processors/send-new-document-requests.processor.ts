@@ -83,7 +83,7 @@ export class SendNewDocumentRequestsProcessor extends WorkerHost {
                 claimId,
                 customerName,
                 dashboardLink:
-                    await this.generateLinksService.authorizedDashboardLink(
+                    await this.generateLinksService.authorizedLoginLink(
                         claim.userId,
                     ),
             }),
