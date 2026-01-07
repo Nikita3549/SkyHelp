@@ -3502,6 +3502,7 @@
     "DocumentsTab.Action.ChangeType": "Змінити тип",
     "SignatureStep.title": "Підписати документ",
     "SignatureStep.description": "Будь ласка, прочитайте та підпишіть юридичний документ, щоб продовжити.",
+    "SignatureStep.termsAgreement": "Підписуючи, ви погоджуєтеся з Умовами використання та Прайс-листом, а також підтверджуєте, що прочитали та погоджуєтеся з Договором цесії та Договором для неповнолітніх.",
     "SignatureStep.documentLabel": "Підписання документа",
     "SignatureStep.loading.title": "Завантаження інтерфейсу підписання...",
     "SignatureStep.error.title": "Помилка підписання",

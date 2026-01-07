@@ -3515,6 +3515,7 @@
     "DocumentsTab.Action.ChangeType": "Изменить тип",
     "SignatureStep.title": "Подпишите документ",
     "SignatureStep.description": "Пожалуйста, ознакомьтесь и подпишите юридический документ, чтобы продолжить.",
+    "SignatureStep.termsAgreement": "Подписывая, вы соглашаетесь с Условиями использования и Прайс-листом, а также подтверждаете, что прочитали и согласны с Договором цессии и Договором для несовершеннолетних.",
     "SignatureStep.documentLabel": "Подписание документа",
     "SignatureStep.loading.title": "Загрузка интерфейса для подписи...",
     "SignatureStep.error.title": "Ошибка при подписании",

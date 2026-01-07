@@ -3517,6 +3517,7 @@
     "DocumentsTab.Action.ChangeType": "Türü Değiştir",
     "SignatureStep.title": "Belgeyi İmzala",
     "SignatureStep.description": "Devam etmek için lütfen yasal belgeyi okuyun ve imzalayın.",
+    "SignatureStep.termsAgreement": "İmzalayarak Kullanım Koşulları ve Fiyat Listesini kabul ettiğinizi, ayrıca Devir Sözleşmesi ve Küçükler Sözleşmesini okuduğunuzu ve kabul ettiğinizi onaylarsınız.",
     "SignatureStep.documentLabel": "Belge İmzalama",
     "SignatureStep.loading.title": "İmzalama arayüzü yükleniyor...",
     "SignatureStep.error.title": "İmzalama Hatası",

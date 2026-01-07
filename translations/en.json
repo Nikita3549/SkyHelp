@@ -3512,6 +3512,7 @@
     "DocumentsTab.Action.ChangeType": "Change Type",
     "SignatureStep.title": "Sign the Document",
     "SignatureStep.description": "Please read and sign the legal document to proceed.",
+    "SignatureStep.termsAgreement": "By signing you agree to Terms and Conditions and Price List, you are also confirm that you have read and agree with the Assignment Agreement and Minor Agreement.",
     "SignatureStep.documentLabel": "Document Signing",
     "SignatureStep.loading.title": "Loading signing interface...",
     "SignatureStep.error.title": "Signing Error",

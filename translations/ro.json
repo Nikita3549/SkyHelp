@@ -3514,6 +3514,7 @@
     "DocumentsTab.Action.ChangeType": "Schimbă tipul",
     "SignatureStep.title": "Semnează documentul",
     "SignatureStep.description": "Te rugăm să citești și să semnezi documentul legal pentru a continua.",
+    "SignatureStep.termsAgreement": "Prin semnare, ești de acord cu Termenii și Condițiile și Lista de Prețuri, confirmi de asemenea că ai citit și ești de acord cu Acordul de Cesiune și Acordul pentru Minori.",
     "SignatureStep.documentLabel": "Semnarea documentului",
     "SignatureStep.loading.title": "Se încarcă interfața de semnare...",
     "SignatureStep.error.title": "Eroare la semnare",
