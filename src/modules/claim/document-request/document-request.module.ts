@@ -17,7 +17,7 @@ import { ClaimPersistenceModule } from '../../claim-persistence/claim-persistenc
         }),
         NotificationModule,
         RedisModule,
-        GenerateLinksModule,
+        forwardRef(() => GenerateLinksModule),
         ClaimPersistenceModule,
     ],
     controllers: [DocumentRequestController],

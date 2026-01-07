@@ -57,6 +57,7 @@ import { ClaimCreatedLetter } from '../notification/letters/definitions/claim/cl
 import { ClaimPersistenceService } from '../claim-persistence/services/claim-persistence.service';
 import { IFullClaim } from '../claim-persistence/types/claim-persistence.types';
 import { ClaimSearchService } from '../claim-persistence/services/claim-search.service';
+import { GenerateLinksService } from '../generate-links/generate-links.service';
 
 @Controller('claims')
 @UseGuards(JwtOrApiKeyAuth)
@@ -82,7 +83,6 @@ export class PublicClaimController {
         private readonly flightService: FlightService,
         private readonly airportService: AirportService,
         private readonly notificationService: NotificationService,
-        private readonly configService: ConfigService,
         private readonly documentService: DocumentService,
         private readonly customerService: CustomerService,
         private readonly authService: AuthService,
@@ -93,6 +93,7 @@ export class PublicClaimController {
         @InjectQueue(CLAIM_REMINDER_QUEUE_KEY)
         private readonly claimReminderQueue: Queue,
         private readonly claimPersistenceService: ClaimPersistenceService,
+        private readonly generateLinksService: GenerateLinksService,
     ) {}
 
     @Post()
@@ -359,7 +360,10 @@ export class PublicClaimController {
                     language: language,
                     claimId: claim.id,
                     airlineName: claim.details.airlines.name,
-                    dashboardLink: `${this.configService.getOrThrow('FRONTEND_URL')}/dashboard`,
+                    dashboardLink:
+                        await this.generateLinksService.authorizedDashboardLink(
+                            claim.userId,
+                        ),
                 }),
             );
         }

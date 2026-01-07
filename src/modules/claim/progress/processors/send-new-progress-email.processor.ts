@@ -12,6 +12,7 @@ import { PrismaService } from '../../../prisma/prisma.service';
 import { NewStatusLetter } from '../../../notification/letters/definitions/claim/new-status.letter';
 import { ConfigService } from '@nestjs/config';
 import { ClaimPersistenceService } from '../../../claim-persistence/services/claim-persistence.service';
+import { GenerateLinksService } from '../../../generate-links/generate-links.service';
 
 @Processor(SEND_NEW_PROGRESS_EMAIL_QUEUE_KEY)
 export class SendNewProgressEmailProcessor extends WorkerHost {
@@ -22,6 +23,7 @@ export class SendNewProgressEmailProcessor extends WorkerHost {
         private readonly prisma: PrismaService,
         private readonly configService: ConfigService,
         private readonly claimPersistenceService: ClaimPersistenceService,
+        private readonly generateLinksService: GenerateLinksService,
     ) {
         super();
     }
@@ -90,7 +92,10 @@ export class SendNewProgressEmailProcessor extends WorkerHost {
                 clientName: emailData.clientName,
                 claimId: emailData.claimId,
                 comments: progress.comments,
-                dashboardLink: `${this.configService.getOrThrow('FRONTEND_URL')}/dashboard`,
+                dashboardLink:
+                    await this.generateLinksService.authorizedDashboardLink(
+                        claim.userId,
+                    ),
             }),
         );
     }

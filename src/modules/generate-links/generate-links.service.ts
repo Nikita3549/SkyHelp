@@ -5,6 +5,8 @@ import { UrlShortenerService } from './url-shortener/url-shortener.service';
 import { OtherPassengerCopiedLinkType } from '@prisma/client';
 import { CONTINUE_LINKS_EXP } from '../claim/constants';
 import { TokenService } from '../token/token.service';
+import { AuthService } from '../auth/auth.service';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class GenerateLinksService {
@@ -14,15 +16,17 @@ export class GenerateLinksService {
         private readonly configService: ConfigService,
         private readonly urlShortenerService: UrlShortenerService,
         private readonly tokenService: TokenService,
+        private readonly authService: AuthService,
+        private readonly userService: UserService,
     ) {
         this.FRONTEND_URL = this.configService.getOrThrow('FRONTEND_URL');
     }
 
-    generateScanLink(sessionId: string) {
+    scanLink(sessionId: string) {
         return `${this.FRONTEND_URL}/scan?sessionId=${sessionId}`;
     }
 
-    async generateLinkJwt(
+    async continueJwtLink(
         claimId: string,
         otherPassengerData?: {
             id: string;
@@ -40,7 +44,7 @@ export class GenerateLinksService {
         );
     }
 
-    async generateUploadDocuments(
+    async uploadDocuments(
         passengerId: string,
         claimId: string,
         jwt: string,
@@ -59,11 +63,7 @@ export class GenerateLinksService {
         return link;
     }
 
-    async generateSignCustomer(
-        customerId: string,
-        claimId: string,
-        jwt: string,
-    ) {
+    async signCustomer(customerId: string, claimId: string, jwt: string) {
         const url = `/sign/customer?customerId=${encodeURIComponent(customerId)}&claimId=${encodeURIComponent(claimId)}&claim=${encodeURIComponent(jwt)}`;
 
         const shortenUrl = await this.urlShortenerService.saveShortenUrl(
@@ -75,7 +75,7 @@ export class GenerateLinksService {
         return link;
     }
 
-    async generatePaymentDetails(jwt: string) {
+    async paymentDetails(jwt: string) {
         const url = `/payment-details?token=${encodeURIComponent(jwt)}`;
 
         const shortenUrl = await this.urlShortenerService.saveShortenUrl(
@@ -87,7 +87,7 @@ export class GenerateLinksService {
         return link;
     }
 
-    async generateSignOtherPassenger(
+    async signOtherPassenger(
         passengerId: string,
         jwt: string,
         requireParentInfo: boolean,
@@ -102,5 +102,21 @@ export class GenerateLinksService {
         const link = `${this.FRONTEND_URL}${shortenUrl}`;
 
         return link;
+    }
+
+    async authorizedDashboardLink(userId: string | null) {
+        let baseLink = `${this.configService.getOrThrow('FRONTEND_URL')}/dashboard`;
+        if (!userId) {
+            return baseLink;
+        }
+        const user = await this.userService.getUserById(userId);
+
+        if (!user) {
+            return baseLink;
+        }
+
+        const { jwt: userJwt } = this.authService.generateUserJwt(user);
+
+        return `${baseLink}?userJwt=${userJwt}`;
     }
 }

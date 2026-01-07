@@ -82,7 +82,10 @@ export class SendNewDocumentRequestsProcessor extends WorkerHost {
                 documentRequestsData: mappedDocumentRequests,
                 claimId,
                 customerName,
-                dashboardLink: `${this.configService.getOrThrow('FRONTEND_URL')}/dashboard`,
+                dashboardLink:
+                    await this.generateLinksService.authorizedDashboardLink(
+                        claim.userId,
+                    ),
             }),
         );
     }
@@ -110,43 +113,40 @@ export class SendNewDocumentRequestsProcessor extends WorkerHost {
         }
 
         let continueLink: string;
-        const jwt = await this.generateLinksService.generateLinkJwt(claimId);
+        const jwt = await this.generateLinksService.continueJwtLink(claimId);
         switch (documentRequestReason) {
             case DocumentRequestReason.PASSPORT_IMAGE_UNCLEAR:
-                continueLink =
-                    await this.generateLinksService.generateUploadDocuments(
-                        passengerId,
-                        claimId,
-                        jwt,
-                        JSON.stringify({
-                            documentTypes: [DocumentType.PASSPORT],
-                        }),
-                        passengerName,
-                    );
+                continueLink = await this.generateLinksService.uploadDocuments(
+                    passengerId,
+                    claimId,
+                    jwt,
+                    JSON.stringify({
+                        documentTypes: [DocumentType.PASSPORT],
+                    }),
+                    passengerName,
+                );
                 break;
             case DocumentRequestReason.PASSPORT_MISMATCH:
-                continueLink =
-                    await this.generateLinksService.generateUploadDocuments(
-                        passengerId,
-                        claimId,
-                        jwt,
-                        JSON.stringify({
-                            documentTypes: [DocumentType.PASSPORT],
-                        }),
-                        passengerName,
-                    );
+                continueLink = await this.generateLinksService.uploadDocuments(
+                    passengerId,
+                    claimId,
+                    jwt,
+                    JSON.stringify({
+                        documentTypes: [DocumentType.PASSPORT],
+                    }),
+                    passengerName,
+                );
                 break;
             case DocumentRequestReason.SIGNATURE_MISMATCH:
                 if (isCustomer) {
-                    continueLink =
-                        await this.generateLinksService.generateSignCustomer(
-                            passengerId,
-                            claimId,
-                            jwt,
-                        );
+                    continueLink = await this.generateLinksService.signCustomer(
+                        passengerId,
+                        claimId,
+                        jwt,
+                    );
                 } else {
                     continueLink =
-                        await this.generateLinksService.generateSignOtherPassenger(
+                        await this.generateLinksService.signOtherPassenger(
                             passengerId,
                             jwt,
                             false,

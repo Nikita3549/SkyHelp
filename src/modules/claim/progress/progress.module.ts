@@ -9,6 +9,7 @@ import { SendNewProgressEmailProcessor } from './processors/send-new-progress-em
 import { LanguageModule } from '../../language/language.module';
 import { ReferralTransactionModule } from '../../referral/referral-transaction/referral-transaction.module';
 import { ClaimPersistenceModule } from '../../claim-persistence/claim-persistence.module';
+import { GenerateLinksModule } from '../../generate-links/generate-links.module';
 
 @Module({
     imports: [
@@ -19,6 +20,7 @@ import { ClaimPersistenceModule } from '../../claim-persistence/claim-persistenc
         LanguageModule,
         ReferralTransactionModule,
         ClaimPersistenceModule,
+        GenerateLinksModule,
     ],
     controllers: [ProgressController],
     providers: [ProgressService, SendNewProgressEmailProcessor],

@@ -87,7 +87,7 @@ export class GenerateLinksController {
 
         let jwt: string;
         if (passenger) {
-            jwt = await this.generateLinksService.generateLinkJwt(
+            jwt = await this.generateLinksService.continueJwtLink(
                 query.claimId,
                 {
                     id: passenger.id,
@@ -101,7 +101,7 @@ export class GenerateLinksController {
                 OtherPassengerCopiedLinkType.DOCUMENT,
             );
         } else if (customer) {
-            jwt = await this.generateLinksService.generateLinkJwt(
+            jwt = await this.generateLinksService.continueJwtLink(
                 query.claimId,
             );
         } else {
@@ -112,7 +112,7 @@ export class GenerateLinksController {
             ? `${passenger.firstName} ${passenger.lastName}`
             : `${customer!.firstName} ${customer!.lastName}`;
 
-        const link = await this.generateLinksService.generateUploadDocuments(
+        const link = await this.generateLinksService.uploadDocuments(
             query.passengerId,
             query.claimId,
             jwt,
@@ -162,7 +162,7 @@ export class GenerateLinksController {
 
         let jwt: string;
         if (passenger) {
-            jwt = await this.generateLinksService.generateLinkJwt(
+            jwt = await this.generateLinksService.continueJwtLink(
                 query.claimId,
                 {
                     id: passenger.id,
@@ -176,7 +176,7 @@ export class GenerateLinksController {
                 OtherPassengerCopiedLinkType.DOCUMENT,
             );
         } else if (customer) {
-            jwt = await this.generateLinksService.generateLinkJwt(
+            jwt = await this.generateLinksService.continueJwtLink(
                 query.claimId,
             );
         } else {
@@ -187,7 +187,7 @@ export class GenerateLinksController {
             ? `${passenger.firstName} ${passenger.lastName}`
             : `${customer!.firstName} ${customer!.lastName}`;
 
-        const link = await this.generateLinksService.generateUploadDocuments(
+        const link = await this.generateLinksService.uploadDocuments(
             query.passengerId,
             query.claimId,
             jwt,
@@ -201,10 +201,10 @@ export class GenerateLinksController {
 
     @Get('sign-customer')
     async copySignCustomer(@Query() query: SignCustomerDto) {
-        const jwt = await this.generateLinksService.generateLinkJwt(
+        const jwt = await this.generateLinksService.continueJwtLink(
             query.claimId,
         );
-        const link = await this.generateLinksService.generateSignCustomer(
+        const link = await this.generateLinksService.signCustomer(
             query.customerId,
             query.claimId,
             jwt,
@@ -222,7 +222,7 @@ export class GenerateLinksController {
             throw new NotFoundException(PASSENGER_NOT_FOUND);
         }
 
-        const jwt = await this.generateLinksService.generateLinkJwt(
+        const jwt = await this.generateLinksService.continueJwtLink(
             query.claimId,
             {
                 id: passenger.id,
@@ -240,7 +240,7 @@ export class GenerateLinksController {
             passenger.isMinor &&
             (!passenger.parentFirstName || !passenger.parentLastName);
 
-        const link = await this.generateLinksService.generateSignOtherPassenger(
+        const link = await this.generateLinksService.signOtherPassenger(
             passenger.id,
             jwt,
             requireParentInfo,
@@ -277,7 +277,7 @@ export class PublicGenerateLinksController {
             throw new NotFoundException(PASSENGER_NOT_FOUND);
         }
 
-        const jwt = await this.generateLinksService.generateLinkJwt(
+        const jwt = await this.generateLinksService.continueJwtLink(
             token.claimId,
             {
                 id: passenger.id,
@@ -295,7 +295,7 @@ export class PublicGenerateLinksController {
             passenger.isMinor &&
             (!passenger.parentFirstName || !passenger.parentLastName);
 
-        const link = await this.generateLinksService.generateSignOtherPassenger(
+        const link = await this.generateLinksService.signOtherPassenger(
             passenger.id,
             jwt,
             requireParentInfo,
@@ -323,7 +323,7 @@ export class PublicGenerateLinksController {
             throw new BadRequestException(PASSENGER_NOT_FOUND);
         }
 
-        const jwt = await this.generateLinksService.generateLinkJwt(
+        const jwt = await this.generateLinksService.continueJwtLink(
             token.claimId,
             {
                 id: passenger.id,
@@ -336,7 +336,7 @@ export class PublicGenerateLinksController {
             OtherPassengerCopiedLinkType.DOCUMENT,
         );
 
-        const link = await this.generateLinksService.generateUploadDocuments(
+        const link = await this.generateLinksService.uploadDocuments(
             passengerId,
             token.claimId,
             jwt,
@@ -350,7 +350,7 @@ export class PublicGenerateLinksController {
     generateQRUuidLink() {
         const sessionId = uuid();
 
-        const link = this.generateLinksService.generateScanLink(sessionId);
+        const link = this.generateLinksService.scanLink(sessionId);
 
         return {
             sessionId,

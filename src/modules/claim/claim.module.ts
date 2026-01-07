@@ -37,6 +37,7 @@ import { FlightStatusModule } from './flight-status/flight-status.module';
 import { ClaimReminderProcessor } from './processors/claim-reminder.processor';
 import { ClaimPersistenceModule } from '../claim-persistence/claim-persistence.module';
 import { DuplicateModule } from './duplicate/duplicate.module';
+import { GenerateLinksModule } from '../generate-links/generate-links.module';
 
 @Module({
     imports: [
@@ -76,6 +77,7 @@ import { DuplicateModule } from './duplicate/duplicate.module';
         PartnerModule,
         FlightStatusModule,
         DuplicateModule,
+        GenerateLinksModule,
     ],
     controllers: [ClaimController, AdminController, PublicClaimController],
     providers: [

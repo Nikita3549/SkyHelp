@@ -108,7 +108,7 @@ export class CustomerController {
             );
 
             const paymentDetailsLink =
-                await this.generateLinksService.generatePaymentDetails(linkJwt);
+                await this.generateLinksService.paymentDetails(linkJwt);
 
             await this.notificationService.sendLetter(
                 new PaymentRequestLetter({

@@ -93,7 +93,7 @@ export class OtherPassengerController {
             ))!;
 
             const paymentDetailsLink =
-                await this.generateLinksService.generatePaymentDetails(linkJwt);
+                await this.generateLinksService.paymentDetails(linkJwt);
 
             await this.notificationService.sendLetter(
                 new PaymentRequestLetter({
