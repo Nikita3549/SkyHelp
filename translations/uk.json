@@ -4096,6 +4096,7 @@
     "Timeline.saved" : "Збережено",
     "Timeline.save" : "Зберегти",
     "EditClaimdetails.edit" : "Редагувати",
-    "EditClaimdetails.cancelEdit" : "Відмінити редагування"
+    "EditClaimdetails.cancelEdit" : "Відмінити редагування",
+    "delayed_or_lost_baggage" : "Затриманий або втрачений багаж"
 }
 

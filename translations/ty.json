@@ -4128,5 +4128,6 @@
     "Timeline.newStep" : "Yeni adım",
     "Timeline.saving" : "Kaydediliyor...",
     "Timeline.saved" : "Kaydedildi",
-    "Timeline.save" : "Kaydet"
+    "Timeline.save" : "Kaydet",
+    "delayed_or_lost_baggage" : "Geciken veya Kayıp Bagaj"
 }

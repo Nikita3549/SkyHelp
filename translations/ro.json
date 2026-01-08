@@ -4107,5 +4107,6 @@
     "Timeline.saved" : "Salvat",
     "Timeline.save" : "Salvează",
     "EditClaimdetails.edit" : "Editare",
-    "EditClaimdetails.cancelEdit" : "Anulează editarea"
+    "EditClaimdetails.cancelEdit" : "Anulează editarea",
+    "delayed_or_lost_baggage" : "Bagaj întârziat sau pierdut"
 }
