@@ -32,7 +32,7 @@ export class BoardingPassService {
 
         try {
             const { data } = await axios.post<BoardingPassApiResponse[]>(
-                this.configService.getOrThrow('BOARDING_PASS_API_URL'),
+                `${this.configService.getOrThrow('BOARDING_PASS_API_URL')}/scan/boarding-pass`,
                 form,
                 {
                     headers: form.getHeaders(),
@@ -54,7 +54,13 @@ export class BoardingPassService {
             );
         }
 
-        const boardingPassData = results[0];
+        return this.parseBoardingPassResponseData(results);
+    }
+
+    async parseBoardingPassResponseData(
+        data: BoardingPassApiResponse[],
+    ): Promise<IBoardingPassData> {
+        const boardingPassData = data[0];
 
         if (
             !boardingPassData?.Flight_number ||
@@ -101,7 +107,7 @@ export class BoardingPassService {
         );
 
         return {
-            passengers: results.map((r) => ({
+            passengers: data.map((r) => ({
                 passengerName: r.Passenger_Name,
             })),
             bookingRef: boardingPassData.Booking_reference,

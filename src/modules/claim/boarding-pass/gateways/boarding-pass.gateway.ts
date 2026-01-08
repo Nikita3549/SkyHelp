@@ -7,12 +7,11 @@ import {
     WsException,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { SendBoardingPassData } from './dto/send-boarding-pass-data.dto';
-import { UseFilters, UsePipes, ValidationPipe } from '@nestjs/common';
-import { ValidationFilter } from '../../../common/filters/validation.filter';
-import { AirlineService } from '../../airline/airline.service';
-import { AirportService } from '../../airport/airport.service';
-import { IBoardingPassData } from './interfaces/boarding-pass-data.interface';
+import { SendBoardingPassData } from '../dto/send-boarding-pass-data.dto';
+import { UsePipes, ValidationPipe } from '@nestjs/common';
+import { IBoardingPassData } from '../interfaces/boarding-pass-data.interface';
+import { AirlineService } from '../../../airline/airline.service';
+import { AirportService } from '../../../airport/airport.service';
 
 @WebSocketGateway({
     namespace: '/ws/boarding-pass',
@@ -20,15 +19,14 @@ import { IBoardingPassData } from './interfaces/boarding-pass-data.interface';
         origin: '*',
     },
 })
-@UseFilters(new ValidationFilter())
 @UsePipes(new ValidationPipe({ transform: true }))
 export class BoardingPassGateway implements OnGatewayConnection {
+    @WebSocketServer() server: Server;
+
     constructor(
         private readonly airlineService: AirlineService,
         private readonly airportService: AirportService,
     ) {}
-
-    @WebSocketServer() server: Server;
 
     handleConnection(client: Socket) {
         const sessionId = client.handshake.query?.sessionId;
@@ -44,8 +42,8 @@ export class BoardingPassGateway implements OnGatewayConnection {
     }
 
     @SubscribeMessage('boarding-pass.send')
-    async handleMessage(
-        client: Socket,
+    async boardingPassSend(
+        _client: Socket,
         @MessageBody() payload: SendBoardingPassData,
     ) {
         const {
