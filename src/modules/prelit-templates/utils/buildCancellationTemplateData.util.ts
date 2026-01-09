@@ -1,15 +1,11 @@
 import { rgb } from 'pdf-lib';
 import { ICoordinates } from '../interfaces/coordinates.interface';
 import { formatDate } from '../../../common/utils/formatDate';
+import { GenerateTemplateDto } from '../dto/generate-template.dto';
 
-export const buildCancellationTemplateDataUtil = (dto: {
-    passengerName: string;
-    claimId: string;
-    date: Date;
-    flightNumber: string;
-    departureAirport: string;
-    arrivalAirport: string;
-}): ICoordinates[] => {
+export const buildCancellationTemplateDataUtil = (
+    dto: GenerateTemplateDto,
+): ICoordinates[] => {
     return [
         {
             page: 1,
