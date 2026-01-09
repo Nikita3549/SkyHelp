@@ -1,4 +1,5 @@
 import {
+    ConnectedSocket,
     MessageBody,
     SubscribeMessage,
     WebSocketGateway,
@@ -55,7 +56,7 @@ export class BoardingPassScanGateway implements OnModuleInit {
 
     @SubscribeMessage('boarding-pass.send')
     async boardingPassSendFrame(
-        client: Socket,
+        @ConnectedSocket() client: Socket,
         @MessageBody() payload: { image: string },
     ) {
         if (!payload.image || typeof payload.image !== 'string') {
