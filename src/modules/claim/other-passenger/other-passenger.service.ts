@@ -11,6 +11,7 @@ export class OtherPassengerService {
         return this.prisma.otherPassenger.update({
             data: {
                 isSigned,
+                signedAt: new Date(),
             },
             where: {
                 id: passengerId,

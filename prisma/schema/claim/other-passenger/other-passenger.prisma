@@ -9,6 +9,7 @@ model OtherPassenger {
   address       String
   birthday      DateTime?
   isSigned      Boolean                @default(false)
+  signedAt      DateTime?              @map("signed_at")
   compensation  Int                    @default(0)
   email         String?
   paymentStatus PassengerPaymentStatus @default(PENDING)

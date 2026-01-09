@@ -298,6 +298,7 @@ export class PublicClaimController {
             customer: {
                 ...claim.customer,
                 isSigned: true,
+                signedAt: new Date(),
             },
         };
     }

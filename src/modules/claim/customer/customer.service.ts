@@ -46,6 +46,7 @@ export class CustomerService {
         return this.prisma.claimCustomer.update({
             data: {
                 isSigned,
+                signedAt: new Date(),
             },
             where: {
                 id: customerId,

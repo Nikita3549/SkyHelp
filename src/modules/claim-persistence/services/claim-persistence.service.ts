@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
-import { Claim, ClaimStatus, Prisma } from '@prisma/client';
+import { Claim, ClaimStatus, DocumentType, Prisma } from '@prisma/client';
 import { BasePassenger } from '../interfaces/base-passenger.interface';
 import { ViewClaimType } from '../enums/view-claim-type.enum';
 import { ClaimIncludeProvider } from '../providers/claim-include.provider';
@@ -12,11 +12,110 @@ import { ISaveClaimInternalData } from '../interfaces/save-claim-internal-data.i
 import { UpdateClaimDto } from '../../claim/dto/update-claim.dto';
 
 @Injectable()
-export class ClaimPersistenceService {
+export class ClaimPersistenceService implements OnModuleInit {
     constructor(
         private readonly prisma: PrismaService,
         private readonly claimIncludeProvider: ClaimIncludeProvider,
     ) {}
+
+    // Migrate field signedAt
+    async onModuleInit() {
+        const claims = await this.prisma.claim.findMany({
+            include: this.claimIncludeProvider.getInclude(),
+            where: {
+                documents: {
+                    some: {
+                        type: DocumentType.ASSIGNMENT,
+                    },
+                },
+            },
+        });
+
+        for (let i = 0; i < claims.length; i++) {
+            const claim = claims[i];
+
+            const passengerIds = [
+                claim.customer.id,
+                ...claim.passengers.map((p) => p.id),
+            ];
+
+            for (const passengerId of passengerIds) {
+                let latestSignedAt: Date | null = null;
+
+                const assignmentDocuments = claim.documents.filter(
+                    (d) =>
+                        d.passengerId === passengerId &&
+                        d.type === DocumentType.ASSIGNMENT,
+                );
+
+                for (const document of assignmentDocuments) {
+                    const signedAt = this.extractDateFromFileName(
+                        document.name,
+                        claim.id,
+                    );
+
+                    if (
+                        signedAt &&
+                        (!latestSignedAt || signedAt > latestSignedAt)
+                    ) {
+                        latestSignedAt = signedAt;
+                    }
+                }
+
+                if (latestSignedAt) {
+                    await this.updatePassenger(passengerId, {
+                        signedAt: latestSignedAt,
+                    });
+                }
+            }
+        }
+    }
+
+    private async updatePassenger(
+        passengerId: string,
+        data: { signedAt: Date },
+    ) {
+        await this.prisma.claimCustomer.updateMany({
+            where: {
+                id: passengerId,
+            },
+            data: {
+                signedAt: data.signedAt,
+            },
+        });
+
+        await this.prisma.otherPassenger.updateMany({
+            where: {
+                id: passengerId,
+            },
+            data: {
+                signedAt: data.signedAt,
+            },
+        });
+    }
+
+    private extractDateFromFileName(fileName: string, claimId: string): Date {
+        const dateRegex = /(\d{2})\.(\d{2})\.(\d{4})/;
+        const match = fileName.match(dateRegex);
+
+        if (!match) {
+            throw new Error(
+                `Cant find date at filename, filename: ${fileName}, claim: ${claimId}`,
+            );
+        }
+
+        const [_, day, month, year] = match;
+
+        const date = new Date(Number(year), Number(month) - 1, Number(day));
+
+        if (isNaN(date.getTime())) {
+            throw new Error(
+                `Incorrect data format filename: ${fileName}, claim: ${claimId}`,
+            );
+        }
+
+        return date;
+    }
 
     async findOneById(
         claimId: string,
