@@ -94,27 +94,34 @@ export class ClaimPersistenceService implements OnModuleInit {
         });
     }
 
-    private extractDateFromFileName(fileName: string, claimId: string): Date {
-        const dateRegex = /(\d{2})\.(\d{2})\.(\d{4})/;
-        const match = fileName.match(dateRegex);
+    private extractDateFromFileName(
+        fileName: string,
+        claimId: string,
+    ): Date | null {
+        try {
+            const dateRegex = /(\d{2})\.(\d{2})\.(\d{4})/;
+            const match = fileName.match(dateRegex);
 
-        if (!match) {
-            throw new Error(
-                `Cant find date at filename, filename: ${fileName}, claim: ${claimId}`,
-            );
+            if (!match) {
+                throw new Error(
+                    `Cant find date at filename, filename: ${fileName}, claim: ${claimId}`,
+                );
+            }
+
+            const [_, day, month, year] = match;
+
+            const date = new Date(Number(year), Number(month) - 1, Number(day));
+
+            if (isNaN(date.getTime())) {
+                throw new Error(
+                    `Incorrect data format filename: ${fileName}, claim: ${claimId}`,
+                );
+            }
+
+            return date;
+        } catch (e) {
+            return null;
         }
-
-        const [_, day, month, year] = match;
-
-        const date = new Date(Number(year), Number(month) - 1, Number(day));
-
-        if (isNaN(date.getTime())) {
-            throw new Error(
-                `Incorrect data format filename: ${fileName}, claim: ${claimId}`,
-            );
-        }
-
-        return date;
     }
 
     async findOneById(
