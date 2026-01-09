@@ -60,13 +60,18 @@ export class FlightService {
         const accessToken = this.configService.getOrThrow(
             'FLIGHT_IO_ACCESS_TOKEN',
         );
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+
+        const formattedDate = `${year}${month}${day}`;
 
         try {
             const res = await axios.get<FlightIoFlightData>(
                 `${url}/trackbyroute/${accessToken}`,
                 {
                     params: {
-                        date: `${date.getFullYear()}${date.getMonth() + 1}${date.getDate()}`,
+                        date: formattedDate,
                         airport1: departure,
                         airport2: arrival,
                     },
