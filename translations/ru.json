@@ -4108,5 +4108,9 @@
     "EditClaimdetails.edit" : "Редактировать",
     "EditClaimdetails.cancelEdit" : "Отменить редактирование",
     "InfoBox.minorSignatureHint": "Этот пассажир несовершеннолетний — подписать должен родитель либо официальный представитель. Ваша подпись должна максимально соответствовать подписи в вашем удостоверении личности.",
-    "delayed_or_lost_baggage" : "Задержанный или утерянный багаж"
+    "FlightDetailsCard.delayed_or_lost_baggage" : "Задержанный или утерянный багаж",
+    "FlightDetailsCard.other_baggage_problem" : "Другая проблема с багажом",
+    "FlightDetailsCard.damaged_baggage" : "Поврежденный багаж",
+    "PassengerDetailsStep.validation.invalidParentFirstName": "Разрешены только латинские буквы",
+    "PassengerDetailsStep.validation.invalidParentLastName": "Разрешены только латинские буквы"
 }

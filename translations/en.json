@@ -4107,5 +4107,10 @@
     "Timeline.save" : "Save",
     "EditClaimdetails.edit" : "Edit",
     "EditClaimdetails.cancelEdit" : "Cancel Edit",
-    "delayed_or_lost_baggage" : "Delayed or Lost Baggage"
+    "FlightDetailsCard.delayed_or_lost_baggage" : "Delayed or Lost Baggage",
+    "FlightDetailsCard.other_baggage_problem" : "Other Baggage Problem",
+    "FlightDetailsCard.damaged_baggage" : "Damaged Baggage",
+    "PassengerDetailsStep.validation.invalidParentFirstName": "Only Latin letters are allowed",
+    "PassengerDetailsStep.validation.invalidParentLastName": "Only Latin letters are allowed"
+   
 }

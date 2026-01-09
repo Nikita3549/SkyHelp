@@ -4129,5 +4129,9 @@
     "Timeline.saving" : "Kaydediliyor...",
     "Timeline.saved" : "Kaydedildi",
     "Timeline.save" : "Kaydet",
-    "delayed_or_lost_baggage" : "Geciken veya Kayıp Bagaj"
+    "FlightDetailsCard.delayed_or_lost_baggage" : "Geciken veya Kayıp Bagaj",
+    "FlightDetailsCard.other_baggage_problem" : "Diğer Bagaj Problemi",
+    "FlightDetailsCard.damaged_baggage" : "Hasarlı Bagaj",
+    "PassengerDetailsStep.validation.invalidParentFirstName": "Sadece Latin harflerine izin verilir",
+    "PassengerDetailsStep.validation.invalidParentLastName": "Sadece Latin harflerine izin verilir"
 }

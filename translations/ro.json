@@ -4108,5 +4108,9 @@
     "Timeline.save" : "Salvează",
     "EditClaimdetails.edit" : "Editare",
     "EditClaimdetails.cancelEdit" : "Anulează editarea",
-    "delayed_or_lost_baggage" : "Bagaj întârziat sau pierdut"
+    "FlightDetailsCard.delayed_or_lost_baggage" : "Bagaj întârziat sau pierdut",
+    "FlightDetailsCard.other_baggage_problem" : "Altă problemă cu bagajul",
+    "FlightDetailsCard.damaged_baggage" : "Bagaj deteriorat",
+    "PassengerDetailsStep.validation.invalidParentFirstName": "Sunt permise doar litere latine",
+    "PassengerDetailsStep.validation.invalidParentLastName": "Sunt permise doar litere latine"
 }
