@@ -29,4 +29,8 @@ export class GenerateTemplateDto {
 
     @IsEnum(CompensationAmount)
     compensationAmount: CompensationAmount;
+
+    @IsDate()
+    @Transform(({ value }) => new Date(value))
+    signedAt: Date;
 }
