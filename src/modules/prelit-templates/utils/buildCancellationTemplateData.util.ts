@@ -83,7 +83,7 @@ export const buildCancellationTemplateDataUtil = (
             page: 1,
             color: rgb(0, 0, 0),
             size: 10.5,
-            text: dto.departureAirport,
+            text: dto.arrivalAirport,
             x: 108,
             y: 292,
             fontWeight: 'BOLD',
