@@ -1,7 +1,7 @@
 FROM node:22-slim as build
-WORKDIR opt/api
+WORKDIR /opt/api
 
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     python3 make g++ openssl libssl-dev \
     && rm -rf /var/lib/apt/lists/*
 
@@ -15,10 +15,12 @@ COPY tsconfig.json ./
 
 RUN npm run build
 
+RUN npm prune --production
+
 FROM node:22-slim
 WORKDIR /opt/api
 
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     openssl \
     curl \
     libexpat1 libpng16-16 libjpeg62-turbo fontconfig \
@@ -28,9 +30,6 @@ RUN chown -R node:node /opt/api
 
 COPY --chown=node:node prisma ./prisma
 COPY --chown=node:node package.json ./
-
-RUN --mount=type=cache,target=/home/node/.npm \
-    npm install --only=prod
 
 USER node
 
