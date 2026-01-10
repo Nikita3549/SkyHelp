@@ -150,6 +150,7 @@ export class ClaimService {
     scheduleClaimFollowUpEmails(jobData: IJobClaimFollowupData) {
         const delays = [
             HOUR,
+            HOUR * 5,
             DAY,
             TWO_DAYS,
             THREE_DAYS,
