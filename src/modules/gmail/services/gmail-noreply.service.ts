@@ -1,4 +1,4 @@
-import { forwardRef, Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { OAuth2Client } from 'google-auth-library';
 import { gmail_v1, google } from 'googleapis';
 import { ConfigService } from '@nestjs/config';

@@ -1,4 +1,4 @@
-import { forwardRef, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { ClaimController, PublicClaimController } from './claim.controller';
 import { ClaimService } from './claim.service';
 import { FlightModule } from '../flight/flight.module';

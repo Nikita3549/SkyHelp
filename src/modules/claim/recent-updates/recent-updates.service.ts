@@ -6,7 +6,6 @@ import {
     ClaimRecentUpdatesType,
     DocumentType,
 } from '@prisma/client';
-import { ClaimService } from '../claim.service';
 import { ActivityService } from '../activity/activity.service';
 import { FINAL_STEP } from '../constants';
 import { ClaimPersistenceService } from '../../claim-persistence/services/claim-persistence.service';

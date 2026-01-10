@@ -4,7 +4,6 @@ import { SEND_NEW_PROGRESS_EMAIL_QUEUE_KEY } from '../constants';
 import { NotificationService } from '../../../notification/services/notification.service';
 import { ISendNewProgressEmailJobData } from '../interfaces/send-new-progress-email-job-data.interface';
 import { ProgressService } from '../progress.service';
-import { ClaimService } from '../../claim.service';
 import { ReferralTransactionService } from '../../../referral/referral-transaction/referral-transaction.service';
 import { ClaimStatus, Prisma } from '@prisma/client';
 import { REFERRAL_RATE } from '../../../referral/referral-transaction/constants';

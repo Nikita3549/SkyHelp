@@ -5,40 +5,16 @@ import {
     NotFoundException,
     Param,
     Patch,
-    Post,
     Put,
-    Query,
-    UnauthorizedException,
-    UploadedFiles,
     UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../../common/guards/jwtAuth.guard';
 import { UpdatePassengerDto } from '../dto/update-passenger.dto';
-import {
-    CLAIM_NOT_FOUND,
-    CONTINUE_LINKS_EXP,
-    INVALID_JWT,
-    PASSENGER_NOT_FOUND,
-} from '../../constants';
+import { CONTINUE_LINKS_EXP, PASSENGER_NOT_FOUND } from '../../constants';
 import { OtherPassengerService } from '../other-passenger.service';
 import { DocumentService } from '../../document/services/document.service';
-import { ClaimService } from '../../claim.service';
-import { UploadSignDto } from '../../customer/dto/upload-sign.dto';
-import { JwtQueryDto } from '../../dto/jwt-query.dto';
-import { CreateOtherPassengersDto } from '../dto/create-other-passengers.dto';
-import { validateClaimJwt } from '../../../../common/utils/validate-claim-jwt';
 import { TokenService } from '../../../token/token.service';
-import {
-    ClaimRecentUpdatesType,
-    ClaimStatus,
-    DocumentRequestStatus,
-    PassengerPaymentStatus,
-    UserRole,
-} from '@prisma/client';
-import { DocumentsUploadInterceptor } from '../../../../common/interceptors/documents/documents-upload.interceptor';
-import { UploadOtherPassengerDto } from '../dto/upload-other-passenger.dto';
-import { RecentUpdatesService } from '../../recent-updates/recent-updates.service';
-import { DocumentRequestService } from '../../document-request/document-request.service';
+import { ClaimStatus, PassengerPaymentStatus, UserRole } from '@prisma/client';
 import { RoleGuard } from '../../../../common/guards/role.guard';
 import { UpdatePaymentStatusDto } from '../../customer/dto/update-payment-status.dto';
 import { Languages } from '../../../language/enums/languages.enums';

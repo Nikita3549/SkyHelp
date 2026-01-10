@@ -27,9 +27,11 @@ export class FinishClaimLetter extends BaseLetter<IFinishClaimLetterData> {
             claimLink: this.data.continueClaimLink,
         };
     }
+
     get claimId(): string {
         return this.data.claimId;
     }
+
     get emailCategory(): EmailCategory.MARKETING {
         return EmailCategory.MARKETING;
     }

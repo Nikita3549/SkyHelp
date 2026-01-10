@@ -1,4 +1,4 @@
-import { forwardRef, Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { gmail_v1, google } from 'googleapis';
 import { OAuth2Client } from 'google-auth-library';
 import { ConfigService } from '@nestjs/config';
@@ -8,11 +8,6 @@ import { IAttachment } from '../interfaces/attachment.interface';
 import { AttachmentNotFoundError } from '../errors/attachment-not-found.error';
 import { ParsedMailbox, parseOneAddress } from 'email-addresses';
 import * as path from 'path';
-import { ClaimService } from '../../claim/claim.service';
-import { GmailOfficeService } from './gmail-office.service';
-import { EmailAttachmentService } from '../../email-attachment/email-attachment.service';
-import { EmailService } from '../../email/email.service';
-import { GmailNoreplyService } from './gmail-noreply.service';
 import { EmailCategory } from '../enums/email-type.enum';
 import { MINUTE } from '../../../common/constants/time.constants';
 import { S3Service } from '../../s3/s3.service';

@@ -14,7 +14,6 @@ import {
     PAYMENT_DETAILS_ALREADY_REQUESTED,
 } from '../../constants';
 import { PaymentService } from '../payment.service';
-import { ClaimService } from '../../claim.service';
 import { JwtAuthGuard } from '../../../../common/guards/jwtAuth.guard';
 import { UserRole } from '@prisma/client';
 import { RoleGuard } from '../../../../common/guards/role.guard';

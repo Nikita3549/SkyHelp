@@ -9,7 +9,6 @@ import { JwtAuthGuard } from '../../../common/guards/jwtAuth.guard';
 import { StateDto } from './dto/state.dto';
 import { CLAIM_NOT_FOUND } from '../constants';
 import { StateService } from './state.service';
-import { ClaimService } from '../claim.service';
 import { UserRole } from '@prisma/client';
 import { RoleGuard } from '../../../common/guards/role.guard';
 import { ClaimPersistenceService } from '../../claim-persistence/services/claim-persistence.service';

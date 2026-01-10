@@ -4,7 +4,6 @@ import {
     PublicCustomerController,
 } from './customer.controller';
 import { CustomerService } from './customer.service';
-import { ClaimModule } from '../claim.module';
 import { DocumentModule } from '../document/document.module';
 import { TokenModule } from '../../token/token.module';
 import { RecentUpdatesModule } from '../recent-updates/recent-updates.module';

@@ -34,7 +34,6 @@ import { JwtQueryDto } from './dto/jwt-query.dto';
 import { IJwtPayload } from '../token/interfaces/jwtPayload';
 import { AirportService } from '../airport/airport.service';
 import { NotificationService } from '../notification/services/notification.service';
-import { ConfigService } from '@nestjs/config';
 import { UpdateFormStateDto } from './dto/update-form-state.dto';
 import { DocumentService } from './document/services/document.service';
 import { CustomerService } from './customer/customer.service';

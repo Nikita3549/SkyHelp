@@ -25,7 +25,6 @@ import {
     INVALID_JWT,
     PASSENGER_NOT_FOUND,
 } from '../claim/constants';
-import { ClaimService } from '../claim/claim.service';
 import { AuthRequest } from '../../common/interfaces/AuthRequest.interface';
 import {
     DocumentType,

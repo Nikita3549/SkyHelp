@@ -11,7 +11,6 @@ import {
 } from '@nestjs/common';
 import { OtherPassengerService } from '../other-passenger.service';
 import { DocumentService } from '../../document/services/document.service';
-import { ClaimService } from '../../claim.service';
 import { TokenService } from '../../../token/token.service';
 import { RecentUpdatesService } from '../../recent-updates/recent-updates.service';
 import { DocumentRequestService } from '../../document-request/document-request.service';

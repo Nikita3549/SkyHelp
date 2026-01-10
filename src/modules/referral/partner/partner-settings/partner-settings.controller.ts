@@ -13,7 +13,6 @@ import { UpdatePartnerSettingsDto } from './dto/update-partner-settings.dto';
 import { PartnerSettingsService } from './partner-settings.service';
 import { AuthRequest } from '../../../../common/interfaces/AuthRequest.interface';
 import { UserRole } from '@prisma/client';
-import { PartnerService } from '../partner.service';
 import {
     HAVE_NO_RIGHTS_ON_PARTNER_DATA,
     PARTNER_NOT_FOUND,

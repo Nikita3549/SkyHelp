@@ -19,7 +19,6 @@ import {
     SEND_NEW_PROGRESS_EMAIL_QUEUE_DELAY,
     SEND_NEW_PROGRESS_EMAIL_QUEUE_KEY,
 } from './constants';
-import { ClaimService } from '../claim.service';
 import { Languages } from '../../language/enums/languages.enums';
 import { isLanguage } from '../../../common/utils/isLanguage';
 import { CreateProgressDto } from './dto/create-progress.dto';

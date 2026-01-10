@@ -9,7 +9,6 @@ import { IPaymentDetailsRequestJobData } from '../interfaces/job-data/payment-de
 import { GenerateLinksService } from '../../generate-links/generate-links.service';
 import { TokenService } from '../../token/token.service';
 import { PaymentRequestLetter } from '../../notification/letters/definitions/claim/payment-request.letter';
-import { Languages } from '../../language/enums/languages.enums';
 
 @Processor(REQUEST_PAYMENT_DETAILS_QUEUE_KEY)
 export class RequestPaymentDetailsProcessor extends WorkerHost {

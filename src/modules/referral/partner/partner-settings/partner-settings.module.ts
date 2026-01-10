@@ -1,7 +1,6 @@
-import { forwardRef, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { PartnerSettingsController } from './partner-settings.controller';
 import { PartnerSettingsService } from './partner-settings.service';
-import { PartnerModule } from '../partner.module';
 
 @Module({
     controllers: [PartnerSettingsController],

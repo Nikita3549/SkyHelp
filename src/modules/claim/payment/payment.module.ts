@@ -1,7 +1,6 @@
-import { forwardRef, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { PaymentController } from './controllers/payment.controller';
 import { PaymentService } from './payment.service';
-import { ClaimModule } from '../claim.module';
 import { BullModule } from '@nestjs/bullmq';
 import { REQUEST_PAYMENT_DETAILS_QUEUE_KEY } from '../constants';
 import { GenerateLinksModule } from '../../generate-links/generate-links.module';

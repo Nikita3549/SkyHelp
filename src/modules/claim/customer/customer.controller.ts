@@ -10,7 +10,6 @@ import {
     UnauthorizedException,
     UseGuards,
 } from '@nestjs/common';
-import { ClaimService } from '../claim.service';
 import { CustomerDto } from './dto/customer.dto';
 import {
     CLAIM_NOT_FOUND,
@@ -29,7 +28,6 @@ import {
     UserRole,
 } from '@prisma/client';
 import { TokenService } from '../../token/token.service';
-import { RecentUpdatesService } from '../recent-updates/recent-updates.service';
 import { DocumentRequestService } from '../document-request/document-request.service';
 import { RoleGuard } from '../../../common/guards/role.guard';
 import { UpdatePaymentStatusDto } from './dto/update-payment-status.dto';

@@ -7,7 +7,6 @@ import {
 } from '../constants';
 import { NotificationService } from '../../notification/services/notification.service';
 import { IJobClaimFollowupData } from '../interfaces/job-data/job-data.interface';
-import { ClaimService } from '../claim.service';
 import { EmailResumeClickService } from '../../email-resume-click/email-resume-click.service';
 import { FinishClaimLetter } from '../../notification/letters/definitions/claim/finish-claim.letter';
 import { ClaimPersistenceService } from '../../claim-persistence/services/claim-persistence.service';

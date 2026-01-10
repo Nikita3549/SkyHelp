@@ -20,7 +20,6 @@ import { GetLettersQueryDto } from './dto/get-letters-query.dto';
 import { SendLetterDto } from './dto/send-letter.dto';
 import { ConfigService } from '@nestjs/config';
 import { ATTACHMENT_NOT_FOUND } from '../gmail/constants';
-import { ClaimService } from '../claim/claim.service';
 import { UpdateStatusDto } from './dto/update-status.dto';
 import { AGENT_MUST_HAVE_CLAIM_ID, LETTER_NOT_FOUND } from './constants';
 import { UpdateLetterDto } from './dto/update-letter.dto';

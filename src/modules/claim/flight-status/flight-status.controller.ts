@@ -11,7 +11,6 @@ import {
 import { JwtAuthGuard } from '../../../common/guards/jwtAuth.guard';
 import { FlightStatusService } from './flight-status.service';
 import { FLIGHT_STATUS_NOT_FOUND } from './constants';
-import { ClaimService } from '../claim.service';
 import { ClaimFlightStatusSource, UserRole } from '@prisma/client';
 import { FlightService } from '../../flight/flight.service';
 import { IFlightStatus } from '../../flight/interfaces/flight-status.interface';

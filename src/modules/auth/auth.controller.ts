@@ -44,7 +44,6 @@ import { ResetPasswordDto } from './dto/reset-password.dto';
 import { JwtAuthGuard } from '../../common/guards/jwtAuth.guard';
 import { AuthRequest } from '../../common/interfaces/AuthRequest.interface';
 import { IClaimJwt } from '../claim/interfaces/claim-jwt.interface';
-import { ClaimService } from '../claim/claim.service';
 import { hashPassword } from './utils/hashPassword';
 import { GoogleLoginDto } from './dto/google-login.dto';
 import { ResetPasswordCodeLetter } from '../notification/letters/definitions/auth/reset-password-code.letter';

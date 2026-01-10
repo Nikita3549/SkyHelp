@@ -1,6 +1,6 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
-import { Claim, ClaimStatus, DocumentType, Prisma } from '@prisma/client';
+import { Claim, ClaimStatus, Prisma } from '@prisma/client';
 import { BasePassenger } from '../interfaces/base-passenger.interface';
 import { ViewClaimType } from '../enums/view-claim-type.enum';
 import { ClaimIncludeProvider } from '../providers/claim-include.provider';

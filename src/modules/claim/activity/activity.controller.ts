@@ -2,7 +2,6 @@ import { Controller, Get, Query, Req, UseGuards } from '@nestjs/common';
 import { AuthRequest } from '../../../common/interfaces/AuthRequest.interface';
 import { GetActivitiesQuery } from './dto/get-activities.query';
 import { UserRole } from '@prisma/client';
-import { ClaimService } from '../claim.service';
 import { ForbiddenException } from '@nestjs/common/exceptions/forbidden.exception';
 import { CLAIM_NOT_FOUND, HAVE_NO_RIGHTS_ON_CLAIM } from '../constants';
 import { BadRequestException } from '@nestjs/common/exceptions/bad-request.exception';

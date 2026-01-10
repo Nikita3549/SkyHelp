@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { LetterController } from './letter.controller';
 import { GmailModule } from '../gmail/gmail.module';
-import { ClaimModule } from '../claim/claim.module';
 import { EmailModule } from '../email/email.module';
 import { EmailAttachmentModule } from '../email-attachment/email-attachment.module';
 import { ClaimPersistenceModule } from '../claim-persistence/claim-persistence.module';
