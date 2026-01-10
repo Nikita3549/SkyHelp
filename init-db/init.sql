@@ -1,5 +1,5 @@
-CREATE TABLE airports (
-    id SERIAL PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS airports (
+    id INTEGER,
     name TEXT,
     city TEXT,
     country TEXT,
@@ -12,8 +12,25 @@ CREATE TABLE airports (
     dst TEXT,
     tz TEXT,
     type TEXT,
-    source TEXT
+    source TEXT,
+    PRIMARY KEY (id, name)
 );
+
+TRUNCATE airports;
+
+COPY airports FROM '/docker-entrypoint-initdb.d/airports.csv'
+WITH (FORMAT csv, HEADER true, NULL '\N');
+
+CREATE TEMP TABLE airports_ru_tmp (LIKE airports INCLUDING ALL);
+
+COPY airports_ru_tmp FROM '/docker-entrypoint-initdb.d/airports-ru.csv'
+WITH (FORMAT csv, HEADER true, NULL '\N');
+
+INSERT INTO airports
+SELECT * FROM airports_ru_tmp
+ON CONFLICT (id, name) DO NOTHING;
+
+DROP TABLE airports_ru_tmp;
 
 CREATE TABLE airlines (
     id SERIAL PRIMARY KEY,
@@ -33,8 +50,3 @@ WITH (
     HEADER true,
     NULL '\N'
 );
-
-COPY airports
-FROM '/docker-entrypoint-initdb.d/airports.csv'
-DELIMITER ','
-CSV HEADER;
