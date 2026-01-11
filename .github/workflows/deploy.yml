@@ -141,6 +141,12 @@ jobs:
             export IMAGE_TAG=${{ env.FINAL_TAG }}
 
             docker compose --profile api pull
+            
+            source .env
+            docker exec -i dev_db-static psql \
+              -U "$DATABASE_STATIC_USER" \
+              -d "$DATABASE_STATIC_DBNAME" \
+              -f /docker-entrypoint-initdb.d/update.sql
 
             echo "🔧 Building and restarting DEV containers"
             docker compose -f docker-compose.yml -f docker-compose.dev.yml -p dev --profile api up -d --remove-orphans
