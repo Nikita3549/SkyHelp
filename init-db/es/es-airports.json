@@ -21,6 +21,7 @@
     },
     "iata_code": { "type": "keyword" },
     "icao_code": { "type": "keyword" },
+    "language": { "type": "keyword" },
     "popularity": { "type": "integer" }
   }
 }

@@ -51,7 +51,7 @@ export class SearchSyncService implements OnModuleInit {
         );
         await this.syncTable(
             'airports',
-            'SELECT id, name, city, country, iata_code, icao_code FROM airports',
+            'SELECT id, name, city, country, iata_code, icao_code, language FROM airports',
         );
     }
 
@@ -84,7 +84,13 @@ export class SearchSyncService implements OnModuleInit {
         }
 
         const operations = rows.flatMap((doc) => [
-            { index: { _index: index, _id: doc.id.toString() } },
+            {
+                index: {
+                    _index: index,
+                    // ИСПРАВЛЕНИЕ: Добавляем language в ID, чтобы записи не затирали друг друга
+                    _id: `${doc.id}_${doc.iata_code || 'no-code'}_${doc.language}`,
+                },
+            },
             doc,
         ]);
 

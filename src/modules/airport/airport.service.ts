@@ -125,6 +125,10 @@ export class AirportService implements OnModuleInit {
                                         },
                                     ],
                                     minimum_should_match: 1,
+
+                                    filter: isLikelyCode
+                                        ? [{ term: { language: 'en' } }]
+                                        : [],
                                 },
                             },
 

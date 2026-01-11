@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS airports (
     tz TEXT,
     type TEXT,
     source TEXT,
+    language TEXT,
     PRIMARY KEY (id, name)
 );
 

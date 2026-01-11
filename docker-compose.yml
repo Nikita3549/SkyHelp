@@ -27,6 +27,7 @@ services:
         image: postgres:17-alpine
         container_name: db-static
         restart: always
+
         environment:
             POSTGRES_USER: ${DATABASE_STATIC_USER}
             POSTGRES_PASSWORD: ${DATABASE_STATIC_PASSWORD}
@@ -65,6 +66,8 @@ services:
             start_period: 10s
     api:
         image: nikita3549/skyhelp-api:${IMAGE_TAG:-latest}
+        build:
+            context: .
         container_name: api
         profiles:
             - api

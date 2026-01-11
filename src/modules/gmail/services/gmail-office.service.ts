@@ -199,6 +199,10 @@ export class GmailOfficeService implements OnModuleInit {
             ),
         );
 
+        subscription.on('error', (err) => {
+            console.error('PubSub Subscription ignored error:', err.message);
+        });
+
         subscription.on('message', async (message) => {
             try {
                 JSON.parse(message.data.toString('utf8'));
