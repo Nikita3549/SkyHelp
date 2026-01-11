@@ -210,7 +210,7 @@ export class AirportService implements OnModuleInit {
 
     public async getAirportByIcao(icao: string): Promise<IDbAirport | null> {
         const airport = await this.pool.query<IDbAirport>(
-            `SELECT * FROM airports WHERE icao_code = $1`,
+            `SELECT * FROM airports WHERE icao_code = $1 AND language = 'en'`,
             [icao],
         );
 
@@ -219,7 +219,7 @@ export class AirportService implements OnModuleInit {
 
     public async getAirportByIata(iata: string): Promise<IDbAirport | null> {
         const airport = await this.pool.query<IDbAirport>(
-            `SELECT * FROM airports WHERE iata_code = $1`,
+            `SELECT * FROM airports WHERE iata_code = $1 AND language = 'en'`,
             [iata],
         );
 
