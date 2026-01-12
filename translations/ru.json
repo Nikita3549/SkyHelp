@@ -1839,7 +1839,7 @@
     "DetailsTab.toast.successDescription": "Успешно обновлено",
     "DetailsTab.toast.errorTitle": "Ошибка",
     "DetailsTab.toast.errorDescription": "Не удалось обновить данные",
-    "PaymentDetailsSection.title": "Платёжные данные",
+    "PaymentDetailsSection.title": "Данные банка",
     "PaymentDetailsSection.methodLabel": "Способ выплаты",
     "PaymentDetailsSection.bankTransfer": "Банковский перевод",
     "PaymentDetailsSection.paypal": "PayPal",

@@ -1839,7 +1839,7 @@
     "DetailsTab.toast.successDescription": "Actualizat cu succes",
     "DetailsTab.toast.errorTitle": "Eroare",
     "DetailsTab.toast.errorDescription": "Actualizarea datelor a eșuat",
-    "PaymentDetailsSection.title": "Detalii de plată",
+    "PaymentDetailsSection.title": "Detalii de bancare",
     "PaymentDetailsSection.methodLabel": "Metodă de plată",
     "PaymentDetailsSection.bankTransfer": "Transfer bancar",
     "PaymentDetailsSection.paypal": "PayPal",

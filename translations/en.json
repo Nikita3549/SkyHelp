@@ -1838,7 +1838,7 @@
     "DetailsTab.toast.successDescription": "Successfully updated",
     "DetailsTab.toast.errorTitle": "Error",
     "DetailsTab.toast.errorDescription": "Failed to update data",
-    "PaymentDetailsSection.title": "Payment Details",
+    "PaymentDetailsSection.title": "Bank Details",
     "PaymentDetailsSection.methodLabel": "Payment Method",
     "PaymentDetailsSection.bankTransfer": "Bank Transfer",
     "PaymentDetailsSection.paypal": "PayPal",

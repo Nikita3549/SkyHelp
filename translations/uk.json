@@ -1838,7 +1838,7 @@
     "DetailsTab.toast.successDescription": "Успішно оновлено",
     "DetailsTab.toast.errorTitle": "Помилка",
     "DetailsTab.toast.errorDescription": "Не вдалося оновити дані",
-    "PaymentDetailsSection.title": "Платіжні реквізити",
+    "PaymentDetailsSection.title": "Деталі банку",
     "PaymentDetailsSection.methodLabel": "Спосіб оплати",
     "PaymentDetailsSection.bankTransfer": "Банківський переказ",
     "PaymentDetailsSection.paypal": "PayPal",

@@ -1839,7 +1839,7 @@
     "DetailsTab.toast.successDescription": " Başarıyla güncellendi",
     "DetailsTab.toast.errorTitle": " Hata",
     "DetailsTab.toast.errorDescription": " Veri güncellenemedi",
-    "PaymentDetailsSection.title": " Ödeme Detayları",
+    "PaymentDetailsSection.title": "Bank Detayları",
     "PaymentDetailsSection.methodLabel": " Ödeme Yöntemi",
     "PaymentDetailsSection.bankTransfer": " Banka Transferi",
     "PaymentDetailsSection.paypal": " PayPal",
