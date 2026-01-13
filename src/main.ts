@@ -16,6 +16,8 @@ async function bootstrap() {
     const configService = app.get(ConfigService);
     const port = configService.getOrThrow<number>('API_PORT');
 
+    app.enableShutdownHooks();
+
     if (isProd()) {
         const allowedOrigins: string[] =
             configService.get('FRONTEND_ALLOWED_ORIGINS')?.split(',') ?? [];
