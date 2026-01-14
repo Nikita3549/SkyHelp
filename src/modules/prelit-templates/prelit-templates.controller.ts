@@ -1,7 +1,13 @@
-import { Body, Controller, Post, Res, UseGuards } from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    Post,
+    Res,
+    StreamableFile,
+    UseGuards,
+} from '@nestjs/common';
 import { GenerateTemplateDto } from './dto/generate-template.dto';
 import { PrelitTemplatesService } from './prelit-templates.service';
-import { Readable } from 'stream';
 import { Response } from 'express';
 import { buildCancellationTemplateDataUtil } from './utils/buildCancellationTemplateData.util';
 import { RoleGuard } from '../../common/guards/role.guard';
@@ -22,10 +28,7 @@ export class PrelitTemplatesController {
     ) {}
 
     @Post('cancellation')
-    async generateCancellation(
-        @Body() dto: GenerateTemplateDto,
-        @Res() res: Response,
-    ) {
+    async generateCancellation(@Body() dto: GenerateTemplateDto) {
         const pdfBytes = await this.prelitTemplatesService.fillTemplate(
             buildCancellationTemplateDataUtil(dto),
             PRELIT_TEMPLATES_FILENAMES.CANCELLATION[dto.compensationAmount],
@@ -33,21 +36,14 @@ export class PrelitTemplatesController {
 
         const buffer = Buffer.from(pdfBytes);
 
-        const stream = Readable.from(buffer);
-
-        res.set({
-            'Content-Type': 'application/pdf',
-            'Content-Length': buffer.length,
+        return new StreamableFile(buffer, {
+            type: 'application/pdf',
+            length: buffer.length,
         });
-
-        stream.pipe(res);
     }
 
     @Post('delay')
-    async generateDelay(
-        @Body() dto: GenerateTemplateDto,
-        @Res() res: Response,
-    ) {
+    async generateDelay(@Body() dto: GenerateTemplateDto) {
         const pdfBytes = await this.prelitTemplatesService.fillTemplate(
             buildDelayTemplateDataUtil(dto),
             PRELIT_TEMPLATES_FILENAMES.DELAY[dto.compensationAmount],
@@ -55,21 +51,14 @@ export class PrelitTemplatesController {
 
         const buffer = Buffer.from(pdfBytes);
 
-        const stream = Readable.from(buffer);
-
-        res.set({
-            'Content-Type': 'application/pdf',
-            'Content-Length': buffer.length,
+        return new StreamableFile(buffer, {
+            type: 'application/pdf',
+            length: buffer.length,
         });
-
-        stream.pipe(res);
     }
 
     @Post('overbooking')
-    async generateOverbooking(
-        @Body() dto: GenerateTemplateDto,
-        @Res() res: Response,
-    ) {
+    async generateOverbooking(@Body() dto: GenerateTemplateDto) {
         const pdfBytes = await this.prelitTemplatesService.fillTemplate(
             buildOverbookingTemplateDataUtil(dto),
             PRELIT_TEMPLATES_FILENAMES.OVERBOOKING[dto.compensationAmount],
@@ -77,13 +66,9 @@ export class PrelitTemplatesController {
 
         const buffer = Buffer.from(pdfBytes);
 
-        const stream = Readable.from(buffer);
-
-        res.set({
-            'Content-Type': 'application/pdf',
-            'Content-Length': buffer.length,
+        return new StreamableFile(buffer, {
+            type: 'application/pdf',
+            length: buffer.length,
         });
-
-        stream.pipe(res);
     }
 }
