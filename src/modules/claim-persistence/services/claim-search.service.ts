@@ -114,9 +114,11 @@ export class ClaimSearchService {
           FROM "claims"
                LEFT JOIN "claim_customers" ON "claims"."customer_id" = "claim_customers"."id"
                LEFT JOIN "claim_details" ON "claim_details"."id" = "claims"."details_id"
+               LEFT JOIN "claim_states" ON "claim_states"."id" = "claims"."state_id"
           WHERE (
               REPLACE("claim_details"."booking_ref", ' ', '') ILIKE ${`%${normalized}%`}
               OR REPLACE("claim_details"."flight_number", ' ', '') ILIKE ${`%${normalized}%`}
+              OR REPLACE("claim_states"."comments", ' ', '') ILIKE ${`%${normalized}%`}
               OR REPLACE("claim_customers"."phone", ' ', '') ILIKE ${`%${normalized}%`}
               OR REPLACE("claim_customers"."email", ' ', '') ILIKE ${`%${normalized}%`}
               OR REPLACE("claim_customers"."first_name", ' ', '') ILIKE ${`%${normalized}%`}
