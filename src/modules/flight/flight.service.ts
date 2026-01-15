@@ -49,7 +49,6 @@ export class FlightService {
                 source: ClaimFlightStatusSource.FLIGHT_IO,
             };
         } catch (e) {
-            console.error(e);
             return null;
         }
     }
