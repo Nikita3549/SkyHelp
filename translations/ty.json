@@ -3722,6 +3722,7 @@
     "StatusBadge.sentToAirline": "Havayoluna gönderildi",
     "StatusBadge.waitingAirline": "Havayolu yanıtı bekleniyor",
     "StatusBadge.approved": "Onaylandı",
+    "StatusBadge.paymentReceived": "Ödeme alındı",
     "StatusBadge.paid": "Ödendi",
     "StatusBadge.legalProcess": "Hukuki süreç",
     "StatusBadge.closed": "Kapatıldı",

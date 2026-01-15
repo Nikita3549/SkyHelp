@@ -1982,6 +1982,7 @@
     "StatusBadge.pending": "В ожидании",
     "StatusBadge.inProgress": "В процессе",
     "StatusBadge.escalated": "Передано на рассмотрение",
+    "StatusBadge.paymentReceived": "Платёж получен",
     "StatusBadge.completed": "Завершено",
     "StatusBadge.rejected": "Отклонено",
     "StatusBadge.notEligible": "Не подлежит компенсации",

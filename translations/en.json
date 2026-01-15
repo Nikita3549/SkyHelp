@@ -3697,6 +3697,7 @@
     "StatusBadge.sentToAirline": "Sent to Airline",
     "StatusBadge.waitingAirline": "Waiting for Airline",
     "StatusBadge.approved": "Approved",
+    "StatusBadge.paymentReceived": "Payment Received",
     "StatusBadge.paid": "Paid",
     "StatusBadge.legalProcess": "Legal Process",
     "StatusBadge.closed": "Closed",

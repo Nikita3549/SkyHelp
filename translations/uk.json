@@ -3687,6 +3687,7 @@
     "StatusBadge.sentToAirline": "Відправлено авіакомпанії",
     "StatusBadge.waitingAirline": "Очікування авіакомпанії",
     "StatusBadge.approved": "Схвалено",
+    "StatusBadge.paymentReceived": "Платіж отримано",
     "StatusBadge.paid": "Сплачено",
     "StatusBadge.legalProcess": "Судовий процес",
     "StatusBadge.closed": "Закрито",
