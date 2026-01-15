@@ -27,6 +27,11 @@ export class RecentUpdatesService {
         },
         claimId: string,
     ) {
+        const documentType = recentUpdateData?.documentType;
+        if (documentType && documentType == DocumentType.PASSENGER_PAYOUT) {
+            return;
+        }
+
         const claim = await this.claimPersistenceService.findOneById(claimId);
 
         if (!claim) {
