@@ -4113,5 +4113,8 @@
     "FlightDetailsCard.damaged_baggage" : "Bagaj deteriorat",
     "PassengerDetailsStep.validation.invalidParentFirstName": "Sunt permise doar litere latine",
     "PassengerDetailsStep.validation.invalidParentLastName": "Sunt permise doar litere latine",
-    "PassengersPaymentStatus.amountPerPassenger" : "Sumă per pasager"
+    "PassengersPaymentStatus.amountPerPassenger" : "Sumă per pasager",
+    "PaymentDetailsCard.notAvailable" : "Nu este disponibil",
+    "PaymentDetailsCard.noPaymentDetailsAvailable" : "Nu există detalii de plată disponibile",
+    "PaymentDetailsCard.paymentInfo" : "Detalii de plată"
 }

@@ -4102,6 +4102,9 @@
     "FlightDetailsCard.damaged_baggage" : "Пошкоджений багаж",
     "PassengerDetailsStep.validation.invalidParentFirstName": "Дозволені тільки латинські літери",
     "PassengerDetailsStep.validation.invalidParentLastName": "Дозволені тільки латинські літери",
-    "PassengersPaymentStatus.amountPerPassenger" : "Сума на пасажира"
+    "PassengersPaymentStatus.amountPerPassenger" : "Сума на пасажира",
+    "PaymentDetailsCard.notAvailable" : "Не доступно",
+    "PaymentDetailsCard.noPaymentDetailsAvailable" : "Платёжные данные не доступны",
+    "PaymentDetailsCard.paymentInfo" : "Платёжные данные"
 }
 

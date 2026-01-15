@@ -4134,5 +4134,8 @@
     "FlightDetailsCard.damaged_baggage" : "Hasarlı Bagaj",
     "PassengerDetailsStep.validation.invalidParentFirstName": "Sadece Latin harflerine izin verilir",
     "PassengerDetailsStep.validation.invalidParentLastName": "Sadece Latin harflerine izin verilir",
-    "PassengersPaymentStatus.amountPerPassenger" : "Yolcu başına ödeme"
-}
+    "PassengersPaymentStatus.amountPerPassenger" : "Yolcu başına ödeme",
+    "PaymentDetailsCard.notAvailable" : "Mevcut değil",
+    "PaymentDetailsCard.noPaymentDetailsAvailable" : "Ödeme detayları mevcut değil",
+    "PaymentDetailsCard.paymentInfo" : "Ödeme detayları"
+}   
