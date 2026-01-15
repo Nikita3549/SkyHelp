@@ -4111,6 +4111,7 @@
     "FlightDetailsCard.other_baggage_problem" : "Other Baggage Problem",
     "FlightDetailsCard.damaged_baggage" : "Damaged Baggage",
     "PassengerDetailsStep.validation.invalidParentFirstName": "Only Latin letters are allowed",
-    "PassengerDetailsStep.validation.invalidParentLastName": "Only Latin letters are allowed"
+    "PassengerDetailsStep.validation.invalidParentLastName": "Only Latin letters are allowed",
+    "PassengersPaymentStatus.amountPerPassenger" : "Amount per passenger"
    
 }

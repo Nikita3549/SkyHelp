@@ -4133,5 +4133,6 @@
     "FlightDetailsCard.other_baggage_problem" : "Diğer Bagaj Problemi",
     "FlightDetailsCard.damaged_baggage" : "Hasarlı Bagaj",
     "PassengerDetailsStep.validation.invalidParentFirstName": "Sadece Latin harflerine izin verilir",
-    "PassengerDetailsStep.validation.invalidParentLastName": "Sadece Latin harflerine izin verilir"
+    "PassengerDetailsStep.validation.invalidParentLastName": "Sadece Latin harflerine izin verilir",
+    "PassengersPaymentStatus.amountPerPassenger" : "Yolcu başına ödeme"
 }
