@@ -103,7 +103,11 @@ export class UserService {
     async saveUser(registerData: ISaveUserData): Promise<IPublicUserData> {
         return this.prisma.user.create({
             data: {
-                ...registerData,
+                email: registerData.email.trim(),
+                hashedPassword: registerData.hashedPassword,
+                name: registerData.name,
+                secondName: registerData.secondName,
+                role: registerData?.role,
             },
             omit: {
                 hashedPassword: true,
