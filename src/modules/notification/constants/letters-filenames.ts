@@ -3,6 +3,7 @@ export const LETTERS_FILENAMES = {
         CREATE_CLAIM: 'createClaim.html',
         FINISH_CLAIM: 'finishClaim.html',
         NEW_STATUS: 'newStatus.html',
+        SENT_TO_AIRLINE: 'sentToAirline.html',
         DOCUMENT_REQUEST: 'documentRequests.html',
         REQUEST_PAYMENT_DETAILS: 'requestPaymentDetails.html',
         REMINDERS: {

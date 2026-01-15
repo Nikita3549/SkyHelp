@@ -12,6 +12,7 @@ import { NewStatusLetter } from '../../../notification/letters/definitions/claim
 import { ConfigService } from '@nestjs/config';
 import { ClaimPersistenceService } from '../../../claim-persistence/services/claim-persistence.service';
 import { GenerateLinksService } from '../../../generate-links/generate-links.service';
+import { SendToAirlineLetter } from '../../../notification/letters/definitions/claim/sent-to-airline.letter';
 
 @Processor(SEND_NEW_PROGRESS_EMAIL_QUEUE_KEY)
 export class SendNewProgressEmailProcessor extends WorkerHost {
@@ -82,20 +83,34 @@ export class SendNewProgressEmailProcessor extends WorkerHost {
             }
         });
 
-        await this.notificationService.sendLetter(
-            new NewStatusLetter({
-                to: emailData.to,
-                language: emailData.language,
-                title: emailData.title,
-                description: emailData.description,
-                clientName: emailData.clientName,
-                claimId: emailData.claimId,
-                comments: progress.comments,
-                dashboardLink:
-                    await this.generateLinksService.authorizedLoginLink(
-                        claim.userId,
-                    ),
-            }),
-        );
+        const dashboardLink =
+            await this.generateLinksService.authorizedLoginLink(claim.userId);
+
+        switch (newClaimStatus) {
+            case ClaimStatus.SENT_TO_AIRLINE:
+                await this.notificationService.sendLetter(
+                    new SendToAirlineLetter({
+                        to: emailData.to,
+                        language: emailData.language,
+                        clientName: emailData.clientName,
+                        claimId: emailData.claimId,
+                        dashboardLink,
+                    }),
+                );
+                break;
+            default:
+                await this.notificationService.sendLetter(
+                    new NewStatusLetter({
+                        to: emailData.to,
+                        language: emailData.language,
+                        title: emailData.title,
+                        description: emailData.description,
+                        clientName: emailData.clientName,
+                        claimId: emailData.claimId,
+                        comments: progress.comments,
+                        dashboardLink,
+                    }),
+                );
+        }
     }
 }
