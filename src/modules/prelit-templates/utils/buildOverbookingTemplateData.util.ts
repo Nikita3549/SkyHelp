@@ -47,7 +47,7 @@ export const buildOverbookingTemplateDataUtil = (
             page: 1,
             color: rgb(0, 0, 0),
             size: 10.5,
-            text: formatDate(dto.date),
+            text: formatDate(dto.signedAt),
             x: 419,
             y: 406,
             fontWeight: 'BOLD',
