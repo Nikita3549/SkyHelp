@@ -6,6 +6,7 @@ interface ISendToAirlineLetterData extends IBaseLetterData {
     claimId: string;
     dashboardLink: string;
     clientName: string;
+    comments: string | null;
 }
 
 export class SendToAirlineLetter extends BaseLetter<ISendToAirlineLetterData> {
@@ -22,6 +23,7 @@ export class SendToAirlineLetter extends BaseLetter<ISendToAirlineLetterData> {
             claimId: this.data.claimId,
             clientName: this.data.clientName,
             dashboardLink: this.data.dashboardLink,
+            comments: this.data.comments ?? '',
         };
     }
 
