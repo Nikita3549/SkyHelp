@@ -52,10 +52,21 @@ export class BoardingPassScanGateway implements OnModuleInit, OnModuleDestroy {
                 .to(response.clientId)
                 .emit('boarding-pass.data', boardingPassData);
         };
+
+        this.scanLiveClient.on('error', (_err) => {});
     }
 
     async onModuleDestroy() {
-        this.scanLiveClient.close();
+        if (this.scanLiveClient) {
+            if (
+                this.scanLiveClient.readyState == 1 ||
+                this.scanLiveClient.readyState == 0
+            ) {
+                try {
+                    this.scanLiveClient.close();
+                } catch (err) {}
+            }
+        }
     }
 
     @SubscribeMessage('boarding-pass.send')

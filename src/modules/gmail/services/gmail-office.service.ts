@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { OAuth2Client } from 'google-auth-library';
 import { gmail_v1, google } from 'googleapis';
 import { Interval } from '@nestjs/schedule';
-import { PubSub } from '@google-cloud/pubsub';
+import { PubSub, Subscription } from '@google-cloud/pubsub';
 import { GmailService } from './gmail.service';
 import { isProd } from '../../../common/utils/isProd';
 import { DAY, HOUR, MINUTE } from '../../../common/constants/time.constants';
@@ -19,6 +19,7 @@ export class GmailOfficeService implements OnModuleInit, OnModuleDestroy {
     private pubsub: PubSub;
     private expiration: number | null = null;
     private startHistoryId: string;
+    private subscription: Subscription;
 
     constructor(
         private readonly configService: ConfigService,
@@ -44,6 +45,10 @@ export class GmailOfficeService implements OnModuleInit, OnModuleDestroy {
     }
 
     async onModuleDestroy() {
+        if (this.subscription) {
+            await this.subscription.close();
+        }
+
         await this.pubsub.close();
     }
 
@@ -202,6 +207,8 @@ export class GmailOfficeService implements OnModuleInit, OnModuleDestroy {
                 'GMAIL_OFFICE_PUBSUB_SUBSCRIPTION_NAME',
             ),
         );
+
+        this.subscription = subscription;
 
         subscription.on('error', (err) => {
             console.error('PubSub Subscription ignored error:', err.message);

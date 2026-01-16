@@ -67,7 +67,6 @@ services:
         image: nikita3549/skyhelp-api:${IMAGE_TAG:-latest}
         build:
             context: .
-        stop_grace_period: 30s
         container_name: api
         profiles:
             - api
