@@ -23,6 +23,8 @@ WORKDIR /opt/api
 RUN apt-get update && apt-get install -y --no-install-recommends \
     openssl \
     curl \
+    iproute2 \
+    net-tools \
     libexpat1 libpng16-16 libjpeg62-turbo fontconfig \
     && rm -rf /var/lib/apt/lists/*
 
