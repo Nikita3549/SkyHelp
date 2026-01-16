@@ -11,7 +11,7 @@
     "start": "nest start",
     "start:dev": "npm run check-env && nest start --watch --max-old-space-size=4096",
     "start:debug": "nest start --debug --watch",
-    "start:prod": "NODE_ENV=PROD node dist/main",
+    "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",

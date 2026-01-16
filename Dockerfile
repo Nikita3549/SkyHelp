@@ -38,3 +38,6 @@ COPY --chown=node:node init-db ./init-db
 COPY --chown=node:node assets ./assets
 COPY --chown=node:node --from=build /opt/api/node_modules ./node_modules
 COPY --chown=node:node --from=build /opt/api/dist ./dist
+
+ENTRYPOINT npx prisma migrate deploy && \
+    exec node dist/main

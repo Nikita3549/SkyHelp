@@ -1,4 +1,4 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { OAuth2Client } from 'google-auth-library';
 import { gmail_v1, google } from 'googleapis';
@@ -12,7 +12,7 @@ import { EmailAttachmentService } from '../../email-attachment/email-attachment.
 import Gmail = gmail_v1.Gmail;
 
 @Injectable()
-export class GmailOfficeService implements OnModuleInit {
+export class GmailOfficeService implements OnModuleInit, OnModuleDestroy {
     private oauth2Client: OAuth2Client;
     private _accessToken: string;
     private gmail: Gmail;
@@ -41,6 +41,41 @@ export class GmailOfficeService implements OnModuleInit {
                 ),
             },
         });
+    }
+
+    async onModuleDestroy() {
+        await this.pubsub.close();
+    }
+
+    async onModuleInit() {
+        try {
+            this.oauth2Client = new google.auth.OAuth2(
+                this.configService.getOrThrow('GMAIL_OFFICE_CLIENT_ID'),
+                this.configService.getOrThrow('GMAIL_OFFICE_SECRET'),
+                this.configService.getOrThrow('GMAIL_OFFICE_REDIRECT_URI'),
+            );
+
+            this.oauth2Client.setCredentials({
+                refresh_token: this.configService.getOrThrow(
+                    'GMAIL_OFFICE_REFRESH_TOKEN',
+                ),
+            });
+
+            this.gmail = google.gmail({
+                version: 'v1',
+                auth: this.oauth2Client,
+            });
+
+            await this.refreshAccessToken();
+
+            if (!isProd()) return;
+
+            await this.watchMailbox();
+
+            this.pullMessages();
+        } catch (err) {
+            throw err;
+        }
     }
 
     async sendEmailWithAttachments(
@@ -157,37 +192,6 @@ export class GmailOfficeService implements OnModuleInit {
                 });
             })();
         });
-    }
-
-    async onModuleInit() {
-        try {
-            this.oauth2Client = new google.auth.OAuth2(
-                this.configService.getOrThrow('GMAIL_OFFICE_CLIENT_ID'),
-                this.configService.getOrThrow('GMAIL_OFFICE_SECRET'),
-                this.configService.getOrThrow('GMAIL_OFFICE_REDIRECT_URI'),
-            );
-
-            this.oauth2Client.setCredentials({
-                refresh_token: this.configService.getOrThrow(
-                    'GMAIL_OFFICE_REFRESH_TOKEN',
-                ),
-            });
-
-            this.gmail = google.gmail({
-                version: 'v1',
-                auth: this.oauth2Client,
-            });
-
-            await this.refreshAccessToken();
-
-            if (!isProd()) return;
-
-            await this.watchMailbox();
-
-            this.pullMessages();
-        } catch (err) {
-            throw err;
-        }
     }
 
     pullMessages() {

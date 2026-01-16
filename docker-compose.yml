@@ -27,7 +27,6 @@ services:
         image: postgres:17-alpine
         container_name: db-static
         restart: always
-
         environment:
             POSTGRES_USER: ${DATABASE_STATIC_USER}
             POSTGRES_PASSWORD: ${DATABASE_STATIC_PASSWORD}
@@ -83,7 +82,8 @@ services:
             - db
             - redis
             - db-static
-        command: sh -c "cd /opt/api/ && npx prisma migrate deploy && npm run start:prod"
+        environment:
+            - NODE_ENV=PROD
         healthcheck:
             test: ['CMD-SHELL', 'curl -f http://localhost:${API_PORT}/health']
             interval: 10s

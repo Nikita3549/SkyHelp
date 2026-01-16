@@ -1,4 +1,9 @@
-import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import {
+    Inject,
+    Injectable,
+    OnModuleDestroy,
+    OnModuleInit,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Pool } from 'pg';
 import * as fs from 'fs/promises';
@@ -10,7 +15,7 @@ import { ELASTIC_CLIENT_TOKEN } from './constants/elastic-client.token';
 import { isProd } from '../../common/utils/isProd';
 
 @Injectable()
-export class SearchSyncService implements OnModuleInit {
+export class SearchSyncService implements OnModuleInit, OnModuleDestroy {
     private pool: Pool;
 
     constructor(
@@ -39,6 +44,12 @@ export class SearchSyncService implements OnModuleInit {
         });
 
         await this.runFullSync();
+    }
+
+    async onModuleDestroy() {
+        await this.pool.end();
+
+        await this.esClient.close();
     }
 
     async runFullSync() {

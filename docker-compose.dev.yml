@@ -21,9 +21,10 @@ services:
       - main
   api:
     container_name: dev_api
+    environment:
+      - NODE_ENV=DEV
     networks:
       - main
-    command: sh -c "cd /opt/api/ && npx prisma migrate deploy && NODE_ENV=DEV node dist/main"
 
 networks:
   main:

@@ -1,4 +1,9 @@
-import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import {
+    Inject,
+    Injectable,
+    OnModuleDestroy,
+    OnModuleInit,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Pool } from 'pg';
 import { IDbAirport } from './interfaces/db-airport.interface';
@@ -9,7 +14,7 @@ import { IAirport } from './interfaces/airport.interface';
 import { isProd } from '../../common/utils/isProd';
 
 @Injectable()
-export class AirportService implements OnModuleInit {
+export class AirportService implements OnModuleInit, OnModuleDestroy {
     private pool: Pool;
 
     constructor(
@@ -28,6 +33,10 @@ export class AirportService implements OnModuleInit {
                     ? this.configService.getOrThrow('DATABASE_STATIC_PORT')
                     : 5432,
         });
+    }
+
+    async onModuleDestroy() {
+        await this.pool.end();
     }
 
     public async getAirportsByName(name: string): Promise<IAirport[]> {

@@ -9,7 +9,7 @@ import {
 import { Server, Socket } from 'socket.io';
 import WebSocket, { WebSocket as RawWebSocket } from 'ws';
 import { BoardingPassService } from '../boarding-pass.service';
-import { OnModuleInit } from '@nestjs/common';
+import { OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { IBoardingPassApiScanResponse } from '../interfaces/boarding-pass-api-scan.response';
 import { ConfigService } from '@nestjs/config';
 
@@ -19,7 +19,7 @@ import { ConfigService } from '@nestjs/config';
         origin: '*',
     },
 })
-export class BoardingPassScanGateway implements OnModuleInit {
+export class BoardingPassScanGateway implements OnModuleInit, OnModuleDestroy {
     @WebSocketServer() server: Server;
     scanLiveClient: RawWebSocket;
 
@@ -52,6 +52,10 @@ export class BoardingPassScanGateway implements OnModuleInit {
                 .to(response.clientId)
                 .emit('boarding-pass.data', boardingPassData);
         };
+    }
+
+    async onModuleDestroy() {
+        this.scanLiveClient.close();
     }
 
     @SubscribeMessage('boarding-pass.send')
