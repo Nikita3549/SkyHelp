@@ -7697,4 +7697,4 @@ id,name,city,country,iata_code,icao_code,latitude,longitude,altitude,timezone_of
 14108,"Krechevitsy Air Base","Novgorod","Russia",\N,"ULLK",58.625,31.385000228881836,85,\N,\N,\N,"airport","OurAirports",en
 14109,"Desierto de Atacama Airport","Copiapo","Chile","CPO","SCAT",-27.2611999512,-70.7791976929,670,\N,\N,\N,"airport","OurAirports",en
 14110,"Melitopol Air Base","Melitopol","Ukraine",\N,"UKDM",46.880001,35.305,0,\N,\N,\N,"airport","OurAirports",en
-10001,Berlin Brandenburg Airport,Brandenburg,Germany,BER,EDDB,52.3628,13.5038,47.85,1,E,Europe/Berlin,airport,OurAirports,en
+10001,Berlin Brandenburg Airport,Brandenburg,Germany,BER,EDDB,52.3628,13.5038,47,1,E,Europe/Berlin,airport,OurAirports,en
