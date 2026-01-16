@@ -4,7 +4,11 @@ import { NotificationService } from '../../../notification/services/notification
 import { SEND_NEW_DOCUMENT_REQUEST_QUEUE_KEY } from '../constants';
 import { DocumentRequestService } from '../document-request.service';
 import { SendNewDocumentRequestJobDataInterface } from '../interfaces/send-new-document-request-job-data.interface';
-import { DocumentRequestReason, DocumentType } from '@prisma/client';
+import {
+    DocumentRequestReason,
+    DocumentRequestStatus,
+    DocumentType,
+} from '@prisma/client';
 import { Languages } from '../../../language/enums/languages.enums';
 import { DocumentRequestLetter } from '../../../notification/letters/definitions/claim/document-request.letter';
 import { ConfigService } from '@nestjs/config';
@@ -73,6 +77,14 @@ export class SendNewDocumentRequestsProcessor extends WorkerHost {
                 };
             }),
         );
+
+        // Send only specialized doc request
+        if (
+            documentRequests.length == 1 &&
+            documentRequests[0].reason != DocumentRequestReason.MISSING_DOCUMENT
+        ) {
+            return;
+        }
 
         await this.notificationService.sendLetter(
             new DocumentRequestLetter({
