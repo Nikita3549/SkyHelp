@@ -95,6 +95,7 @@ export class SendNewProgressEmailProcessor extends WorkerHost {
                         clientName: emailData.clientName,
                         claimId: emailData.claimId,
                         dashboardLink,
+                        comments: progress.comments,
                     }),
                 );
                 break;
