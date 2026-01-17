@@ -170,8 +170,8 @@ export class GmailOfficeService implements OnModuleInit, OnModuleDestroy {
         if (!email) {
             return;
         }
-        attachments.forEach((attachment) => {
-            (async () => {
+        for (const attachment of attachments) {
+            try {
                 const { filename, data, mimeType } =
                     await this.gmailService.getAttachmentByIdFromGmail(
                         messageId,
@@ -181,10 +181,7 @@ export class GmailOfficeService implements OnModuleInit, OnModuleDestroy {
                     );
 
                 const { s3Key } = await this.gmailService.uploadFileBuffer(
-                    {
-                        filename,
-                        data,
-                    },
+                    { filename, data },
                     email,
                 );
 
@@ -195,8 +192,13 @@ export class GmailOfficeService implements OnModuleInit, OnModuleDestroy {
                     s3Key,
                     emailId: email.id,
                 });
-            })();
-        });
+            } catch (err) {
+                console.error(
+                    `Failed to process attachment ${attachment.id} for message ${messageId}:`,
+                    err,
+                );
+            }
+        }
     }
 
     pullMessages() {
