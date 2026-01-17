@@ -8,24 +8,28 @@ export class DetailService {
 
     async updateDetails(dto: FlightDto, claimId: string) {
         if (dto?.arrivalAirport) {
-            await this.prisma.arrivalAirport.updateMany({
-                where: {
-                    id: dto.arrivalAirport.id,
-                },
-                data: {
-                    ...dto.arrivalAirport,
-                },
-            });
+            await this.prisma.arrivalAirport
+                .update({
+                    where: {
+                        id: dto.arrivalAirport.id,
+                    },
+                    data: {
+                        ...dto.arrivalAirport,
+                    },
+                })
+                .catch();
         }
         if (dto?.departureAirport) {
-            await this.prisma.departureAirport.updateMany({
-                where: {
-                    id: dto.departureAirport.id,
-                },
-                data: {
-                    ...dto.departureAirport,
-                },
-            });
+            await this.prisma.departureAirport
+                .update({
+                    where: {
+                        id: dto.departureAirport.id,
+                    },
+                    data: {
+                        ...dto.departureAirport,
+                    },
+                })
+                .catch();
         }
 
         return this.prisma.claimDetails.update({
