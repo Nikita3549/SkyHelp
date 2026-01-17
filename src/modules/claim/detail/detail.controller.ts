@@ -6,13 +6,13 @@ import {
     UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../common/guards/jwtAuth.guard';
-import { FlightDto } from './dto/flight.dto';
 import { CLAIM_NOT_FOUND } from '../constants';
 import { DetailService } from './detail.service';
 import { UserRole } from '@prisma/client';
 import { RoleGuard } from '../../../common/guards/role.guard';
 import { DocumentService } from '../document/services/document.service';
 import { ClaimPersistenceService } from '../../claim-persistence/services/claim-persistence.service';
+import { UpdateDetailsDto } from './dto/update-details.dto';
 
 @Controller('claims/details')
 @UseGuards(JwtAuthGuard)
@@ -25,7 +25,7 @@ export class DetailController {
 
     @UseGuards(new RoleGuard([UserRole.ADMIN, UserRole.AGENT]))
     @Put('admin')
-    async updateDetails(@Body() dto: FlightDto) {
+    async updateDetails(@Body() dto: UpdateDetailsDto) {
         const { claimId } = dto;
 
         const claim = await this.claimPersistenceService.findOneById(claimId);

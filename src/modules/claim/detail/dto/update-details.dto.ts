@@ -1,4 +1,5 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsString, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
 
 class AirportUpdateDto {
     @IsString()
@@ -35,7 +36,7 @@ class AirlineUpdateDto {
     name?: string;
 }
 
-export class FlightDto {
+export class UpdateDetailsDto {
     @IsString()
     claimId: string;
 
@@ -53,9 +54,13 @@ export class FlightDto {
     airline?: AirlineUpdateDto;
 
     @IsOptional()
+    @ValidateNested()
+    @Type(() => AirportUpdateDto)
     arrivalAirport?: AirportUpdateDto;
 
     @IsOptional()
+    @ValidateNested()
+    @Type(() => AirportUpdateDto)
     departureAirport?: AirportUpdateDto;
 
     @IsOptional()

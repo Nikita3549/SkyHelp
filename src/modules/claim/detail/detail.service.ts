@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { FlightDto } from './dto/flight.dto';
 import { PrismaService } from '../../prisma/prisma.service';
+import { UpdateDetailsDto } from './dto/update-details.dto';
 
 @Injectable()
 export class DetailService {
     constructor(private readonly prisma: PrismaService) {}
 
-    async updateDetails(dto: FlightDto, claimId: string) {
+    async updateDetails(dto: UpdateDetailsDto, claimId: string) {
         if (dto?.arrivalAirport) {
             await this.prisma.arrivalAirport
                 .update({
