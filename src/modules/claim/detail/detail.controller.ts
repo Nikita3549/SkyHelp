@@ -2,6 +2,10 @@ import {
     BadRequestException,
     Body,
     Controller,
+    Delete,
+    HttpCode,
+    HttpStatus,
+    Param,
     Put,
     UseGuards,
 } from '@nestjs/common';
@@ -46,5 +50,11 @@ export class DetailController {
         ]);
 
         return details;
+    }
+
+    @Delete(':routeId/route')
+    @HttpCode(HttpStatus.NO_CONTENT)
+    async deleteRoute(@Param('routeId') routeId: string) {
+        await this.detailService.deleteRoute(routeId);
     }
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { UpdateDetailsDto } from './dto/update-details.dto';
 
@@ -61,6 +61,24 @@ export class DetailService {
                           },
                       }
                     : undefined,
+            },
+        });
+    }
+
+    async deleteRoute(routeId: string) {
+        const route = await this.prisma.route.findFirst({
+            where: {
+                id: routeId,
+            },
+        });
+
+        if (!route) {
+            throw new NotFoundException('Route not found');
+        }
+
+        return this.prisma.route.delete({
+            where: {
+                id: routeId,
             },
         });
     }
