@@ -9,6 +9,8 @@ import {
 import { Queue } from 'bullmq';
 import { IPaymentDetailsRequestJobData } from '../interfaces/job-data/payment-details-request-job-data.interface';
 import { UpdatePaymentDto } from './dto/update-payment.dto';
+import { RedisService } from '../../redis/redis.service';
+import { DAY, DAY_IN_SECONDS } from '../../../common/constants/time.constants';
 
 @Injectable()
 export class PaymentService {
@@ -16,6 +18,7 @@ export class PaymentService {
         private readonly prisma: PrismaService,
         @InjectQueue(REQUEST_PAYMENT_DETAILS_QUEUE_KEY)
         private readonly requestPaymentDetailsQueue: Queue,
+        private readonly redisService: RedisService,
     ) {}
 
     async schedulePaymentDetailsRequests(
@@ -59,5 +62,25 @@ export class PaymentService {
                 region: dto.region,
             },
         });
+    }
+
+    async setBlockPaymentRequests(claimId: string, block: boolean) {
+        await this.redisService.setex(
+            this.generateBlockPaymentRequestsKey(claimId),
+            DAY_IN_SECONDS * 7,
+            `${block}`,
+        );
+    }
+
+    async getBlockPaymentRequests(claimId: string): Promise<boolean> {
+        const value = await this.redisService.get(
+            this.generateBlockPaymentRequestsKey(claimId),
+        );
+
+        return value == 'true';
+    }
+
+    private generateBlockPaymentRequestsKey(claimId: string): string {
+        return `${claimId}:block-payment-requests`;
     }
 }

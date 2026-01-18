@@ -21,6 +21,7 @@ import { RequestPaymentDetailsDto } from '../dto/request-payment-details.dto';
 import { Languages } from '../../../language/enums/languages.enums';
 import { omit } from '../../../../common/utils/omit';
 import { ClaimPersistenceService } from '../../../claim-persistence/services/claim-persistence.service';
+import { RedisService } from '../../../redis/redis.service';
 
 @Controller('claims/payment')
 @UseGuards(JwtAuthGuard)
@@ -77,6 +78,8 @@ export class PaymentController {
             customerName: claim.customer.firstName,
             customerEmail: claim.customer.email,
         });
+
+        await this.paymentService.setBlockPaymentRequests(claimId, false);
 
         await this.claimPersistenceService.updateIsPaymentRequested(
             { isPaymentRequested: true },

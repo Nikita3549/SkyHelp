@@ -10,6 +10,7 @@ import { TokenModule } from '../../token/token.module';
 import { PaymentPublicController } from './controllers/payment-public.controller';
 import { ActivityModule } from '../activity/activity.module';
 import { ClaimPersistenceModule } from '../../claim-persistence/claim-persistence.module';
+import { RedisModule } from '../../redis/redis.module';
 
 @Module({
     imports: [
@@ -21,6 +22,7 @@ import { ClaimPersistenceModule } from '../../claim-persistence/claim-persistenc
         TokenModule,
         ActivityModule,
         ClaimPersistenceModule,
+        RedisModule,
     ],
     controllers: [PaymentController, PaymentPublicController],
     providers: [PaymentService, RequestPaymentDetailsProcessor],

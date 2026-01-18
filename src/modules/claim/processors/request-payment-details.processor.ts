@@ -9,6 +9,7 @@ import { IPaymentDetailsRequestJobData } from '../interfaces/job-data/payment-de
 import { GenerateLinksService } from '../../generate-links/generate-links.service';
 import { TokenService } from '../../token/token.service';
 import { PaymentRequestLetter } from '../../notification/letters/definitions/claim/payment-request.letter';
+import { PaymentService } from '../payment/payment.service';
 
 @Processor(REQUEST_PAYMENT_DETAILS_QUEUE_KEY)
 export class RequestPaymentDetailsProcessor extends WorkerHost {
@@ -16,6 +17,7 @@ export class RequestPaymentDetailsProcessor extends WorkerHost {
         private readonly notificationService: NotificationService,
         private readonly generateLinksService: GenerateLinksService,
         private readonly tokenService: TokenService,
+        private readonly paymentService: PaymentService,
     ) {
         super();
     }
@@ -23,6 +25,13 @@ export class RequestPaymentDetailsProcessor extends WorkerHost {
     async process(jobData: Job<IPaymentDetailsRequestJobData>) {
         const { claimId, customerEmail, customerName, customerLanguage } =
             jobData.data;
+
+        const isBlocked =
+            await this.paymentService.getBlockPaymentRequests(claimId);
+
+        if (isBlocked) {
+            return;
+        }
 
         const linkJwt = this.tokenService.generateJWT(
             {

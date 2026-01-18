@@ -58,6 +58,8 @@ export class PaymentPublicController {
             claimId,
         );
 
+        await this.paymentService.setBlockPaymentRequests(claimId, true);
+
         await this.activityService.saveActivity(
             {
                 title: 'Payment details updated',
