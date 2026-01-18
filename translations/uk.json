@@ -3868,6 +3868,7 @@
     "documents.uploadedFiles": "Завантажені файли:",
     "documents.documentRequirements": "Вимоги до документів",
     "documents.documentRequirementsDescription": "Будь ласка, завантажте чітке фото або скан вашого {{documentType}}. Переконайтеся, що весь текст читабельний і документ не прострочений.",
+    "documents.signatureMismatch": "Ваш підпис в угоді не збігається з підписом у вашому паспорті. Будь ласка, підпишіть документ точно так, як зазначено в паспорті.",
     "documents.takePhoto": "Зробити фото",
     "documents.withPhone": "Телефоном",
     "documents.useComputerCamera": "Використати камеру комп'ютера",

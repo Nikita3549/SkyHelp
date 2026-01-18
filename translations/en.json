@@ -3878,6 +3878,7 @@
     "documents.uploadedFiles": "Uploaded Files:",
     "documents.documentRequirements": "Document Requirements",
     "documents.documentRequirementsDescription": "Please upload a clear photo or scan of your {{documentType}}. Make sure all text is readable and the document is not expired.",
+    "documents.signatureMismatch": "Your signature on the agreement does not match the signature in your passport. Please sign the document exactly as it appears in your passport.",
     "documents.takePhoto": "Take a photo",
     "documents.withPhone": "With phone",
     "documents.useComputerCamera": "Use computer camera",

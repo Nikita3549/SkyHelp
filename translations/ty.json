@@ -3903,6 +3903,7 @@
     "documents.uploadedFiles": "Yüklenen dosyalar:",
     "documents.documentRequirements": "Belge Gereksinimleri",
     "documents.documentRequirementsDescription": "Lütfen {{documentType}} belgenizin net bir fotoğrafını veya taramasını yükleyin. Metnin okunaklı olduğundan ve belgenin geçerli olduğundan emin olun.",
+    "documents.signatureMismatch": "Sözleşmedeki imzanız pasaportunuzdaki imza ile eşleşmiyor. Lütfen belgeyi pasaportunuzda göründüğü şekilde aynen imzalayın.",
     "documents.takePhoto": "Fotoğraf çek",
     "documents.withPhone": "Telefonla",
     "documents.useComputerCamera": "Bilgisayar kamerasını kullan",
