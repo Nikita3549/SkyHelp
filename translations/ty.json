@@ -2090,6 +2090,7 @@
     "ClaimStatusForm.error_select_status": " Durum seçin",
     "PaymentDetailsCard.payment_details": " Ödeme Detayları",
     "PaymentDetailsCard.payment_method": " Ödeme Yöntemi",
+    "PaymentDetailsCard.bankTransfer" : "Banka Transferi",
     "PaymentDetailsCard.details": " Detaylar",
     "PaymentDetailsCard.not_available": " Yok",
     "IssueDetailsCard.issue_details": " Sorun Detayları",

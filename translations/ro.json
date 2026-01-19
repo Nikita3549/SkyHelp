@@ -4083,6 +4083,7 @@
     "ClaimStatusCard.addCommentPlaceholder" : "Adaugă un comentariu",
     "PaymentDetailsCard.paymentMethod" : "Metodă de plată",
     "PaymentDetailsCard.bankName" : "Numele băncii",
+    "PaymentDetailsCard.bankTransfer" : "Transfer bancar",
     "PaymentDetailsCard.paypal" : "Paypal",
     "PaymentDetailsCard.wise" : "Wise",
     "PaymentDetailsCard.requestPaymentDetails" : "Solicită detalii de plată",

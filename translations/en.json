@@ -4082,6 +4082,7 @@
     "ClaimStatusCard.addCommentPlaceholder" : "Add a comment",
     "PaymentDetailsCard.paymentMethod" : "Payment Method",
     "PaymentDetailsCard.bankName" : "Bank Name",
+    "PaymentDetailsCard.bankTransfer" : "Bank Transfer",
     "PaymentDetailsCard.paypal" : "Paypal",
     "PaymentDetailsCard.wise" : "Wise",
     "PaymentDetailsCard.requestPaymentDetails" : "Request payment details",

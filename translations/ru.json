@@ -4082,6 +4082,7 @@
     "ClaimStatusCard.addCommentPlaceholder" : "Добавить комментарий",
     "PaymentDetailsCard.paymentMethod" : "Способ оплаты",
     "PaymentDetailsCard.bankName" : "Название банка",
+    "PaymentDetailsCard.bankTransfer" : "Банковский перевод",
     "PaymentDetailsCard.paypal" : "Paypal",
     "PaymentDetailsCard.wise" : "Wise",
     "PaymentDetailsCard.requestPaymentDetails" : "Запросить детали платежа",

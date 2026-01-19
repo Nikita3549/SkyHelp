@@ -2088,6 +2088,7 @@
     "ClaimStatusForm.error_date_required": "Дата обов'язкова",
     "PaymentDetailsCard.payment_details": "Платіжні реквізити",
     "PaymentDetailsCard.payment_method": "Спосіб оплати",
+    "PaymentDetailsCard.bankTransfer" : "Банківський перевод",
     "PaymentDetailsCard.details": "Деталі",
     "PaymentDetailsCard.not_available": "Н/Д",
     "IssueDetailsCard.issue_details": "Деталі проблеми",
