@@ -4177,5 +4177,10 @@
     "PaymentDocumentsModal.toast.deleteFailed.title": "Silme başarısız",
     "PaymentDocumentsModal.toast.deleteFailed.description": "Belge silinemedi.",
     "PaymentDocumentsModal.toast.previewError.title": "Önizleme Hatası",
-    "PaymentDocumentsModal.toast.previewError.description": "Belge önizlenemedi"
+    "PaymentDocumentsModal.toast.previewError.description": "Belge önizlenemedi",
+    "emailTemplates.followup": "Takip",
+    "emailTemplates.final": "Final",
+    "emailTemplates.documents": "Belgeler",
+    "emailTemplates.passport": "Pasaport",
+    "emailTemplates.request": "İstek"
 }   

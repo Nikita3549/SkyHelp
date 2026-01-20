@@ -4145,6 +4145,11 @@
     "PaymentDocumentsModal.toast.deleteFailed.title": "Помилка видалення",
     "PaymentDocumentsModal.toast.deleteFailed.description": "Не вдалося видалити документ.",
     "PaymentDocumentsModal.toast.previewError.title": "Помилка попереднього перегляду",
-    "PaymentDocumentsModal.toast.previewError.description": "Не вдалося відкрити попередній перегляд документа"
+    "PaymentDocumentsModal.toast.previewError.description": "Не вдалося відкрити попередній перегляд документа",
+    "emailTemplates.followup": "Подальше",
+    "emailTemplates.final": "Фінальне",
+    "emailTemplates.documents": "Документи",
+    "emailTemplates.passport": "Паспорт",
+    "emailTemplates.request": "Запит"
 }
 

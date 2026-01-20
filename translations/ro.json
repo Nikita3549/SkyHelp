@@ -4156,5 +4156,10 @@
     "PaymentDocumentsModal.toast.deleteFailed.title": "Ștergerea a eșuat",
     "PaymentDocumentsModal.toast.deleteFailed.description": "Nu s-a putut șterge documentul.",
     "PaymentDocumentsModal.toast.previewError.title": "Eroare la previzualizare",
-    "PaymentDocumentsModal.toast.previewError.description": "Nu s-a putut previzualiza documentul"
+    "PaymentDocumentsModal.toast.previewError.description": "Nu s-a putut previzualiza documentul",
+    "emailTemplates.followup": "Urmărire",
+    "emailTemplates.final": "Final",
+    "emailTemplates.documents": "Documente",
+    "emailTemplates.passport": "Pașaport",
+    "emailTemplates.request": "Cerere"
 }

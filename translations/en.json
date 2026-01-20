@@ -4155,5 +4155,10 @@
     "PaymentDocumentsModal.toast.deleteFailed.title": "Delete failed",
     "PaymentDocumentsModal.toast.deleteFailed.description": "Failed to delete document.",
     "PaymentDocumentsModal.toast.previewError.title": "Preview Error",
-    "PaymentDocumentsModal.toast.previewError.description": "Failed to preview document"
+    "PaymentDocumentsModal.toast.previewError.description": "Failed to preview document",
+    "emailTemplates.followup": "Follow-up",
+    "emailTemplates.final": "Final",
+    "emailTemplates.documents": "Documents",
+    "emailTemplates.passport": "Passport",
+    "emailTemplates.request": "Request"
 }

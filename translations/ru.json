@@ -4156,5 +4156,10 @@
     "PaymentDocumentsModal.toast.deleteFailed.title": "Ошибка удаления",
     "PaymentDocumentsModal.toast.deleteFailed.description": "Не удалось удалить документ.",
     "PaymentDocumentsModal.toast.previewError.title": "Ошибка предпросмотра",
-    "PaymentDocumentsModal.toast.previewError.description": "Не удалось открыть предпросмотр документа"
+    "PaymentDocumentsModal.toast.previewError.description": "Не удалось открыть предпросмотр документа",
+    "emailTemplates.followup": "Последующее",
+    "emailTemplates.final": "Финальное",
+    "emailTemplates.documents": "Документы",
+    "emailTemplates.passport": "Паспорт",
+    "emailTemplates.request": "Запрос"
 }
