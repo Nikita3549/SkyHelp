@@ -4157,11 +4157,11 @@
     "PaymentDocumentsModal.toast.deleteFailed.description": "Nu s-a putut șterge documentul.",
     "PaymentDocumentsModal.toast.previewError.title": "Eroare la previzualizare",
     "PaymentDocumentsModal.toast.previewError.description": "Nu s-a putut previzualiza documentul",
-    "emailTemplates.followup": "Urmărire",
-    "emailTemplates.final": "Final",
-    "emailTemplates.documents": "Documente",
-    "emailTemplates.passport": "Pașaport",
-    "emailTemplates.request": "Cerere",
+    "emailTemplates.followup": "Email de urmărire",
+    "emailTemplates.final": "Avertisment final înainte de acțiune legală",
+    "emailTemplates.documents": "Rambursare cheltuieli",
+    "emailTemplates.passport": "Încarcă pașaportul",
+    "emailTemplates.request": "Cerere de compensație",
     "moldovaBankFields.selectFromList": "Selectează din listă",
     "moldovaBankFields.other" : "Altul"
 }

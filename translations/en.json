@@ -4156,11 +4156,11 @@
     "PaymentDocumentsModal.toast.deleteFailed.description": "Failed to delete document.",
     "PaymentDocumentsModal.toast.previewError.title": "Preview Error",
     "PaymentDocumentsModal.toast.previewError.description": "Failed to preview document",
-    "emailTemplates.followup": "Follow-up",
-    "emailTemplates.final": "Final",
-    "emailTemplates.documents": "Documents",
-    "emailTemplates.passport": "Passport",
-    "emailTemplates.request": "Request",
+    "emailTemplates.followup": "Follow up email",
+    "emailTemplates.final": "Final warning before legal action",
+    "emailTemplates.documents": "Reimbursement of expences",
+    "emailTemplates.passport": "Upload Passport",
+    "emailTemplates.request": "Compensation Request",
     "moldovaBankFields.selectFromList": "Select from list",
     "moldovaBankFields.other" : "Other"
 }

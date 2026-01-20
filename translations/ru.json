@@ -4157,11 +4157,11 @@
     "PaymentDocumentsModal.toast.deleteFailed.description": "Не удалось удалить документ.",
     "PaymentDocumentsModal.toast.previewError.title": "Ошибка предпросмотра",
     "PaymentDocumentsModal.toast.previewError.description": "Не удалось открыть предпросмотр документа",
-    "emailTemplates.followup": "Последующее",
-    "emailTemplates.final": "Финальное",
-    "emailTemplates.documents": "Документы",
-    "emailTemplates.passport": "Паспорт",
-    "emailTemplates.request": "Запрос",
+    "emailTemplates.followup": "Последующее письмо",
+    "emailTemplates.final": "Финальное предупреждение перед судебным разбирательством",
+    "emailTemplates.documents": "Возмещение расходов",
+    "emailTemplates.passport": "Загрузить паспорт",
+    "emailTemplates.request": "Запрос на компенсацию",
     "moldovaBankFields.selectFromList": "Выбрать из списка",
     "moldovaBankFields.other" : "Другое"
 }
