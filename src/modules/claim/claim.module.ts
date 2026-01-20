@@ -38,6 +38,7 @@ import { ClaimReminderProcessor } from './processors/claim-reminder.processor';
 import { ClaimPersistenceModule } from '../claim-persistence/claim-persistence.module';
 import { DuplicateModule } from './duplicate/duplicate.module';
 import { GenerateLinksModule } from '../generate-links/generate-links.module';
+import { StaffMessageModule } from './staff-message/staff-message.module';
 
 @Module({
     imports: [
@@ -78,6 +79,7 @@ import { GenerateLinksModule } from '../generate-links/generate-links.module';
         FlightStatusModule,
         DuplicateModule,
         GenerateLinksModule,
+        StaffMessageModule,
     ],
     controllers: [ClaimController, AdminController, PublicClaimController],
     providers: [

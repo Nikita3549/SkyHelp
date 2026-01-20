@@ -39,6 +39,7 @@ model Claim {
   duplicatedOf DuplicatedClaim[] @relation("ClaimDuplicate")
   referredById String?           @map("referred_by_id")
   referredBy   Partner?          @relation("Referrals", fields: [referredById], references: [id])
+  stafMessages StaffMessage[]
 
   @@index([agentId])
   @@index([agentId, createdAt])

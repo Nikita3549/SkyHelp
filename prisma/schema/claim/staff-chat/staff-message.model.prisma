@@ -1,0 +1,12 @@
+model StaffMessage {
+  id      String    @id @default(uuid())
+  fromId  String    @map("from_id")
+  sentAt  DateTime? @map("sent_at")
+  body    String
+  claimId String    @map("claim_id")
+
+  claim    Claim @relation(fields: [claimId], references: [id])
+  fromUser User  @relation(fields: [fromId], references: [id])
+
+  @@map("staff_messages")
+}
