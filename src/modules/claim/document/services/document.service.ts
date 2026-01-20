@@ -115,7 +115,11 @@ export class DocumentService {
     }
 
     async getDocumentByIds(ids: string[]) {
-        return this.documentDbService.getMany(ids);
+        const documents = await this.documentDbService.getMany(ids);
+
+        return ids
+            .map((id) => documents.find((d) => d.id == id))
+            .filter((d) => !!d);
     }
 
     async saveDocuments(
