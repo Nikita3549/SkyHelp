@@ -4161,5 +4161,7 @@
     "emailTemplates.final": "Final",
     "emailTemplates.documents": "Documente",
     "emailTemplates.passport": "Pașaport",
-    "emailTemplates.request": "Cerere"
+    "emailTemplates.request": "Cerere",
+    "moldovaBankFields.selectFromList": "Selectează din listă",
+    "moldovaBankFields.other" : "Altul"
 }

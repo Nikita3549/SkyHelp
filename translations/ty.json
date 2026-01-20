@@ -4182,5 +4182,7 @@
     "emailTemplates.final": "Final",
     "emailTemplates.documents": "Belgeler",
     "emailTemplates.passport": "Pasaport",
-    "emailTemplates.request": "İstek"
+    "emailTemplates.request": "İstek",
+    "moldovaBankFields.selectFromList": "Listeden seç",
+    "moldovaBankFields.other" : "Diğer"
 }   

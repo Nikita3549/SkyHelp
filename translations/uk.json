@@ -4150,6 +4150,8 @@
     "emailTemplates.final": "Фінальне",
     "emailTemplates.documents": "Документи",
     "emailTemplates.passport": "Паспорт",
-    "emailTemplates.request": "Запит"
+    "emailTemplates.request": "Запит",
+    "moldovaBankFields.selectFromList": "Вибрати зі списку",
+    "moldovaBankFields.other" : "Інше"
 }
 
