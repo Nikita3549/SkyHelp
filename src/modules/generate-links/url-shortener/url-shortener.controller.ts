@@ -31,14 +31,11 @@ export class UrlShortenerController {
         const searchParams = new URLSearchParams(originalUrl.split('?')[1]);
         const jwt = searchParams.get('claim') || searchParams.get('token');
 
-        if (!jwt) {
-            throw new BadRequestException(
-                'Invalid link, please create new one',
-            );
-        }
-
         let isValid: boolean;
         try {
+            if (!jwt) {
+                throw new Error();
+            }
             const jwtPayload = await this.tokenService.verifyJWT(jwt);
 
             if (isOtherPassengerLinkJwt(jwtPayload)) {

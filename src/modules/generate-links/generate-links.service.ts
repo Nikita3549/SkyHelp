@@ -105,18 +105,34 @@ export class GenerateLinksService {
     }
 
     async authorizedLoginLink(userId: string | null) {
-        let baseLink = `${this.configService.getOrThrow('FRONTEND_URL')}/login`;
+        const url = await this.getAuthorizedLoginLinkUrl(userId);
+
+        const shortenUrl = await this.urlShortenerService.saveShortenUrl(
+            url,
+            `/login/?id=${generateNumericId(15)}`,
+        );
+
+        const link = `${this.FRONTEND_URL}${shortenUrl}`;
+
+        return link;
+    }
+
+    private async getAuthorizedLoginLinkUrl(
+        userId: string | null,
+    ): Promise<string> {
+        const baseUrl = '/login';
+
         if (!userId) {
-            return baseLink;
+            return baseUrl;
         }
         const user = await this.userService.getUserById(userId);
 
         if (!user) {
-            return baseLink;
+            return baseUrl;
         }
 
         const { jwt: userJwt } = this.authService.generateUserJwt(user);
 
-        return `${baseLink}?userJwt=${userJwt}`;
+        return `${baseUrl}?userJwt=${userJwt}`;
     }
 }
