@@ -16,6 +16,7 @@ import { StaffMessage } from '@prisma/client';
 import { AuthRequest } from '../../../common/interfaces/AuthRequest.interface';
 import { GetMessagesDto } from './dto/get-messages.dto';
 import { SendMessageDto } from './dto/send-message.dto';
+import { IStaffMessageWithUser } from './interfaces/staff-message-with-user.interface';
 
 @Controller('claims/staff-chat/messages')
 @UseGuards(JwtAuthGuard, new RoleGuard(StaffRoles))
@@ -23,7 +24,9 @@ export class StaffMessageController {
     constructor(private readonly staffChatService: StaffMessageService) {}
 
     @Get()
-    async getMessages(@Query() dto: GetMessagesDto): Promise<StaffMessage[]> {
+    async getMessages(
+        @Query() dto: GetMessagesDto,
+    ): Promise<IStaffMessageWithUser[]> {
         return this.staffChatService.findMessages(dto.claimId);
     }
 
@@ -31,7 +34,7 @@ export class StaffMessageController {
     async sendMessages(
         @Req() req: AuthRequest,
         @Body() dto: SendMessageDto,
-    ): Promise<StaffMessage> {
+    ): Promise<IStaffMessageWithUser> {
         return this.staffChatService.createMessage({
             fromId: req.user.id,
             claimId: dto.claimId,
