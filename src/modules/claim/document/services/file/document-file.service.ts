@@ -7,12 +7,16 @@ import { pngToJpeg } from './utils/png-to-jpeg.converter';
 import { convertDocToPdf } from './utils/doc-to-pdf.converter';
 import { S3Service } from '../../../../s3/s3.service';
 import { Document } from '@prisma/client';
+import { PrelitDirectoryPath } from '../../../../../common/constants/paths/PrelitDirectoryPath';
 
 @Injectable()
 export class DocumentFileService {
     constructor(private readonly S3Service: S3Service) {}
 
-    async mergeFiles(documents: Document[]): Promise<NodeJS.ReadableStream> {
+    async mergeFiles(
+        documents: Document[],
+        options?: { addDefaultPrelitDocument: boolean },
+    ): Promise<NodeJS.ReadableStream> {
         const mergedPdf = await PDFDocument.create();
 
         for (const document of documents) {
@@ -79,6 +83,18 @@ export class DocumentFileService {
                 await fs.unlink(tempInput).catch(() => null);
                 await fs.unlink(tempOutput).catch(() => null);
             }
+        }
+
+        if (options?.addDefaultPrelitDocument) {
+            const buffer = await fs.readFile(
+                path.join(PrelitDirectoryPath, 'prelit-default-document.pdf'),
+            );
+            const pdf = await PDFDocument.load(buffer);
+            const copiedPages = await mergedPdf.copyPages(
+                pdf,
+                pdf.getPageIndices(),
+            );
+            copiedPages.forEach((p) => mergedPdf.addPage(p));
         }
 
         const mergedBytes = await mergedPdf.save();

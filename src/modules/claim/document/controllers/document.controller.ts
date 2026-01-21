@@ -46,7 +46,6 @@ import { ClaimPersistenceService } from '../../../claim-persistence/services/cla
 export class DocumentController {
     constructor(
         private readonly documentService: DocumentService,
-        private readonly claimService: ClaimService,
         private readonly recentUpdatesService: RecentUpdatesService,
         private readonly documentRequestService: DocumentRequestService,
         private readonly claimPersistenceService: ClaimPersistenceService,
@@ -63,7 +62,10 @@ export class DocumentController {
             'Content-Disposition': 'attachment; filename=merged.pdf',
         });
 
-        const mergedStream = await this.documentService.mergeFiles(documents);
+        const mergedStream = await this.documentService.mergeFiles(documents, {
+            addDefaultPrelitDocument: !!dto?.withPrecourtDocument,
+        });
+
         mergedStream.pipe(res);
     }
 

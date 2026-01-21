@@ -80,8 +80,11 @@ export class DocumentService {
     }
 
     // ------------------ FILE ------------------
-    async mergeFiles(documents: Document[]): Promise<NodeJS.ReadableStream> {
-        return this.documentFileService.mergeFiles(documents);
+    async mergeFiles(
+        documents: Document[],
+        options?: { addDefaultPrelitDocument: boolean },
+    ): Promise<NodeJS.ReadableStream> {
+        return this.documentFileService.mergeFiles(documents, options);
     }
 
     async getSignedUrl(
