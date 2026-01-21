@@ -149,6 +149,6 @@ jobs:
               -f /docker-entrypoint-initdb.d/update.sql
 
             echo "🔧 Building and restarting DEV containers"
-            docker compose -f docker-compose.yml -f docker-compose.dev.yml -p dev --profile api up -d --remove-orphans
+            docker compose -f docker-compose.yml -f docker-compose.dev.yml -p dev --profile api up --wait -d --remove-orphans
 
             echo "✅ DEV Deployment complete"
