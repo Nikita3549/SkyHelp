@@ -4163,5 +4163,17 @@
     "emailTemplates.passport": "Încarcă pașaportul",
     "emailTemplates.request": "Cerere de compensație",
     "moldovaBankFields.selectFromList": "Selectează din listă",
-    "moldovaBankFields.other" : "Altul"
+    "moldovaBankFields.other" : "Altul",
+    "FlightStatusCard.table.source": "Sursă",
+    "FlightStatusCard.table.status": "Status",
+    "FlightStatusCard.table.info": "Informații",
+    "FlightStatusCard.status.cancel": "Anulat",
+    "FlightStatusCard.status.delay": "Întârziere",
+    "FlightStatusCard.status.onTime": "La timp",
+    "FlightStatusCard.status.noData": "Fără date",
+    "FlightStatusCard.menu.moreOptions": "Mai multe opțiuni",
+    "FlightStatusCard.menu.refresh": "Reîmprospătează",
+    "FlightStatusCard.menu.refreshing": "Se reîmprospătează...",
+    "FlightStatusCard.menu.creating": "Se creează...",
+    "FlightStatusCard.menu.checkManually": "Verifică manual"
 }

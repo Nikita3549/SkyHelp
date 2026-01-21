@@ -4184,5 +4184,17 @@
     "emailTemplates.passport": "Pasaport Yükle",
     "emailTemplates.request": "Tazminat Talebi",
     "moldovaBankFields.selectFromList": "Listeden seç",
-    "moldovaBankFields.other" : "Diğer"
+    "moldovaBankFields.other" : "Diğer",
+    "FlightStatusCard.table.source": "Kaynak",
+    "FlightStatusCard.table.status": "Durum",
+    "FlightStatusCard.table.info": "Bilgi",
+    "FlightStatusCard.status.cancel": "İptal",
+    "FlightStatusCard.status.delay": "Gecikme",
+    "FlightStatusCard.status.onTime": "Zamanında",
+    "FlightStatusCard.status.noData": "Veri yok",
+    "FlightStatusCard.menu.moreOptions": "Daha fazla seçenek",
+    "FlightStatusCard.menu.refresh": "Yenile",
+    "FlightStatusCard.menu.refreshing": "Yenileniyor...",
+    "FlightStatusCard.menu.creating": "Oluşturuluyor...",
+    "FlightStatusCard.menu.checkManually": "Manuel kontrol et"
 }   

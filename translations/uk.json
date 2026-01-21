@@ -4152,6 +4152,18 @@
     "emailTemplates.passport": "Завантажити паспорт",
     "emailTemplates.request": "Запит на компенсацію",
     "moldovaBankFields.selectFromList": "Вибрати зі списку",
-    "moldovaBankFields.other" : "Інше"
+    "moldovaBankFields.other" : "Інше",
+    "FlightStatusCard.table.source": "Джерело",
+    "FlightStatusCard.table.status": "Статус",
+    "FlightStatusCard.table.info": "Інформація",
+    "FlightStatusCard.status.cancel": "Скасовано",
+    "FlightStatusCard.status.delay": "Затримка",
+    "FlightStatusCard.status.onTime": "Вчасно",
+    "FlightStatusCard.status.noData": "Немає даних",
+    "FlightStatusCard.menu.moreOptions": "Більше опцій",
+    "FlightStatusCard.menu.refresh": "Оновити",
+    "FlightStatusCard.menu.refreshing": "Оновлення...",
+    "FlightStatusCard.menu.creating": "Створення...",
+    "FlightStatusCard.menu.checkManually": "Перевірити вручну"
 }
 

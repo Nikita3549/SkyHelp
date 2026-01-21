@@ -4162,5 +4162,17 @@
     "emailTemplates.passport": "Upload Passport",
     "emailTemplates.request": "Compensation Request",
     "moldovaBankFields.selectFromList": "Select from list",
-    "moldovaBankFields.other" : "Other"
+    "moldovaBankFields.other" : "Other",
+    "FlightStatusCard.table.source": "Source",
+    "FlightStatusCard.table.status": "Status",
+    "FlightStatusCard.table.info": "Info",
+    "FlightStatusCard.status.cancel": "Cancel",
+    "FlightStatusCard.status.delay": "Delay",
+    "FlightStatusCard.status.onTime": "On time",
+    "FlightStatusCard.status.noData": "No data",
+    "FlightStatusCard.menu.moreOptions": "More options",
+    "FlightStatusCard.menu.refresh": "Refresh",
+    "FlightStatusCard.menu.refreshing": "Refreshing...",
+    "FlightStatusCard.menu.creating": "Creating...",
+    "FlightStatusCard.menu.checkManually": "Check manually"
 }
