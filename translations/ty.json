@@ -4148,7 +4148,7 @@
     "PaymentDocumentsModal.airline.title": "Havayolundan Alınan Ödeme Belgeleri",
     "PaymentDocumentsModal.airline.description": "Havayolundan alınan ödemenin kanıtını yükleyin",
     "PaymentDocumentsModal.payment.title": "Müşterilerden/Yolculardan Alınan Ödeme Belgeleri",
-    "PaymentDocumentsModal.payment.description": "Müşterilerden/yolculardan alınan ödemenin kanıtını yükleyin",
+    "PaymentDocumentsModal.payment.description": "Müşteriden alınan transferin kanıtını yükleyin",
     "PaymentDocumentsModal.existingDocuments": "Mevcut belgeler ({count})",
     "PaymentDocumentsModal.selectedFiles": "Seçilen dosyalar ({count})",
     "PaymentDocumentsModal.clearAll": "Tümünü temizle",

@@ -4126,7 +4126,7 @@
     "PaymentDocumentsModal.airline.title": "Airline Payment Received Documents",
     "PaymentDocumentsModal.airline.description": "Upload proof of payment received from the airline",
     "PaymentDocumentsModal.payment.title": "Customer Payment Received Documents",
-    "PaymentDocumentsModal.payment.description": "Upload proof of payment received from customers/passengers",
+    "PaymentDocumentsModal.payment.description": "Upload proof of transfer from client",
     "PaymentDocumentsModal.existingDocuments": "Existing documents ({count})",
     "PaymentDocumentsModal.selectedFiles": "Selected files ({count})",
     "PaymentDocumentsModal.clearAll": "Clear all",

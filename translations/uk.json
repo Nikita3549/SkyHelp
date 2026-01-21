@@ -4116,7 +4116,7 @@
     "PaymentDocumentsModal.airline.title": "Документи про отримання платежу від авіакомпанії",
     "PaymentDocumentsModal.airline.description": "Завантажте підтвердження платежу, отриманого від авіакомпанії",
     "PaymentDocumentsModal.payment.title": "Документи про отримання платежу від клієнтів/пасажирів",
-    "PaymentDocumentsModal.payment.description": "Завантажте підтвердження платежу, отриманого від клієнтів/пасажирів",
+    "PaymentDocumentsModal.payment.description": "Завантажте підтвердження переказу від клієнта",
     "PaymentDocumentsModal.existingDocuments": "Існуючі документи ({count})",
     "PaymentDocumentsModal.selectedFiles": "Вибрані файли ({count})",
     "PaymentDocumentsModal.clearAll": "Очистити все",

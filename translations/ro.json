@@ -4127,7 +4127,7 @@
     "PaymentDocumentsModal.airline.title": "Documente de plată primite de la compania aeriană",
     "PaymentDocumentsModal.airline.description": "Încărcați dovada plății primite de la compania aeriană",
     "PaymentDocumentsModal.payment.title": "Documente de plată primite de la clienți/pasageri",
-    "PaymentDocumentsModal.payment.description": "Încărcați dovada plății primite de la clienți/pasageri",
+    "PaymentDocumentsModal.payment.description": "Încărcați dovada transferului de la client",
     "PaymentDocumentsModal.existingDocuments": "Documente existente ({count})",
     "PaymentDocumentsModal.selectedFiles": "Fișiere selectate ({count})",
     "PaymentDocumentsModal.clearAll": "Șterge tot",
