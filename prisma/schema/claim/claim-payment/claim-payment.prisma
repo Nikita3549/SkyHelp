@@ -4,6 +4,7 @@ model ClaimPayment {
   termsAgreed   Boolean?       @map("terms_agreed")
   paymentMethod PaymentMethod? @map("payment_method")
   bankName      String?        @map("bank_name")
+  bankAddress   String?        @map("bank_address")
   accountName   String?        @map("account_name")
   accountNumber String?        @map("account_number")
   iban          String?        @map("iban")
