@@ -314,6 +314,7 @@ export class ClaimPersistenceService {
                               idnp: newClaim.payment.idnp,
                               bic: newClaim.payment.bic,
                               region: newClaim.payment.region,
+                              bankAddress: newClaim.payment.bankAddress,
                           }
                         : undefined,
                 },

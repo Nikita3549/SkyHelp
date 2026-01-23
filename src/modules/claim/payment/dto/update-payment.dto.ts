@@ -40,4 +40,8 @@ export class UpdatePaymentDto {
     @IsOptional()
     @IsEnum(PaymentRegion)
     region?: PaymentRegion;
+
+    @IsOptional()
+    @IsString()
+    bankAddress?: string;
 }

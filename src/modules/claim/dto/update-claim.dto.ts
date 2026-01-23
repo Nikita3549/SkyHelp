@@ -59,6 +59,10 @@ class PaymentDto {
     @IsOptional()
     @IsEnum(PaymentRegion)
     region?: PaymentRegion;
+
+    @IsOptional()
+    @IsString()
+    bankAddress?: string;
 }
 
 export class UpdateClaimDto {

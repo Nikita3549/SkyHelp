@@ -43,4 +43,8 @@ export class UpdateAdminPaymentDto {
     @IsOptional()
     @IsEnum(PaymentRegion)
     region?: PaymentRegion;
+
+    @IsOptional()
+    @IsString()
+    bankAddress?: string;
 }

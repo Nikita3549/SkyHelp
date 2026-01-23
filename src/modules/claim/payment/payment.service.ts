@@ -60,6 +60,7 @@ export class PaymentService {
                 idnp: dto.idnp,
                 bic: dto.bic,
                 region: dto.region,
+                bankAddress: dto.bankAddress,
             },
         });
     }
