@@ -314,19 +314,20 @@ export class GmailOfficeService implements OnModuleInit, OnModuleDestroy {
                 for (const record of history.data.history!) {
                     if (record.messagesAdded) {
                         for (const msg of record.messagesAdded) {
-                            const messageId = msg.message!.id as string;
+                            try {
+                                const messageId = msg.message!.id as string;
 
-                            const message = await this.gmail.users.messages.get(
-                                {
-                                    userId: 'me',
-                                    id: messageId,
-                                    format: 'full',
-                                },
-                            );
+                                const message =
+                                    await this.gmail.users.messages.get({
+                                        userId: 'me',
+                                        id: messageId,
+                                        format: 'full',
+                                    });
 
-                            this.startHistoryId = record.id!;
+                                this.startHistoryId = record.id!;
 
-                            resolve(message.data);
+                                resolve(message.data);
+                            } catch (_e) {}
                         }
                     }
                 }
