@@ -1827,6 +1827,8 @@
     "euBankFields.ibanPlaceholder": "IBAN girin",
     "euBankFields.swiftBic": "SWIFT/BIC Kodu",
     "euBankFields.swiftBicPlaceholder": "SWIFT/BIC kodunu girin",
+    "euBankFields.bankAddress": "Banka Adresi",
+    "euBankFields.bankAddressPlaceholder": "Banka adresini girin",
     "otherCountriesBankFields.accountName": "Hesap Sahibinin Adı",
     "otherCountriesBankFields.accountNamePlaceholder": "Hesap sahibinin adını girin",
     "otherCountriesBankFields.bankName": "Banka Adı",
@@ -1835,6 +1837,8 @@
     "otherCountriesBankFields.swiftBicPlaceholder": "SWIFT/BIC kodunu girin",
     "otherCountriesBankFields.routingNumber": "Yönlendirme Numarası (varsa)",
     "otherCountriesBankFields.routingNumberPlaceholder": "Yönlendirme numarasını girin",
+    "otherCountriesBankFields.bankAddress": "Banka Adresi",
+    "otherCountriesBankFields.bankAddressPlaceholder": "Banka adresini girin",
     "DetailsTab.toast.successTitle": " Başarılı",
     "DetailsTab.toast.successDescription": " Başarıyla güncellendi",
     "DetailsTab.toast.errorTitle": " Hata",
@@ -4197,4 +4201,4 @@
     "FlightStatusCard.menu.refreshing": "Yenileniyor...",
     "FlightStatusCard.menu.creating": "Oluşturuluyor...",
     "FlightStatusCard.menu.checkManually": "Manuel kontrol et"
-}   
+}
