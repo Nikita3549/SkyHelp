@@ -1,0 +1,14 @@
+model MeteoStatusRunway {
+  id String @id @default(uuid())
+
+  runwayId    String? @map("runway_id")
+  crosswindKt Float?  @map("crosswind_kt")
+  headwindKt  Float?  @map("headwind_kt")
+  isSafe      Boolean @map("is_safe")
+
+  meteoStatusId String @map("meteo_status_id")
+
+  meteoStatus MeteoStatus @relation(fields: [meteoStatusId], references: [id], onDelete: Cascade)
+
+  @@map("meteo_status_runways")
+}

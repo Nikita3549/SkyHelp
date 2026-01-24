@@ -1,4 +1,4 @@
-import { IsOptional, IsString, ValidateNested } from 'class-validator';
+import { IsDate, IsOptional, IsString, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 
 class AirportUpdateDto {
@@ -40,11 +40,13 @@ export class UpdateDetailsDto {
     @IsString()
     claimId: string;
 
-    @IsString()
-    date: string;
+    @IsDate()
+    @Type(() => Date)
+    date: Date;
 
+    @IsOptional()
     @IsString()
-    flightNumber: string;
+    flightNumber?: string;
 
     @IsOptional()
     @IsString()
@@ -66,4 +68,6 @@ export class UpdateDetailsDto {
     @IsOptional()
     @IsString()
     airlineLink?: string;
+
+    hasTime?: boolean;
 }

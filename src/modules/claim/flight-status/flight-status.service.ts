@@ -1,19 +1,34 @@
 import { Injectable } from '@nestjs/common';
 import { ClaimFlightStatusSource } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { DetailService } from '../detail/detail.service';
 
 @Injectable()
 export class FlightStatusService {
-    constructor(private readonly prisma: PrismaService) {}
+    constructor(
+        private readonly prisma: PrismaService,
+        private readonly detailsService: DetailService,
+    ) {}
 
     async createFlightStatus(
         flightStatusData: {
             isCancelled: boolean;
             delayMinutes: number;
             source: ClaimFlightStatusSource;
+            exactTime?: Date;
         },
         claimId: string,
     ) {
+        if (flightStatusData?.exactTime) {
+            await this.detailsService.updateDetails(
+                {
+                    date: flightStatusData.exactTime,
+                    hasTime: !!flightStatusData.exactTime,
+                },
+                claimId,
+            );
+        }
+
         return this.prisma.claimFlightStatus.create({
             data: {
                 isCancelled: flightStatusData.isCancelled,

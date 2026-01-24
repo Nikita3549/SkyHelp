@@ -105,6 +105,8 @@ export class PublicClaimController {
         let userId: string | null = null;
         let userToken: string | null = null;
         let referredById: string | null = null;
+        const troubledRoute =
+            dto.details.routes.find((r) => r.troubled) || dto.details.routes[0];
 
         const fullRoutes = await Promise.all(
             dto.details.routes.map(async (r) => {
@@ -202,6 +204,7 @@ export class PublicClaimController {
             airlineIcao: claim.details.airlines.icao,
             flightDate: claim.details.date,
             claimId: claim.id,
+            airportIcao: troubledRoute.departureAirport.icao,
         };
 
         await this.claimReminderQueue.add(

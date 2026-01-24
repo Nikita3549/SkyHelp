@@ -6,7 +6,10 @@ import { UpdateDetailsDto } from './dto/update-details.dto';
 export class DetailService {
     constructor(private readonly prisma: PrismaService) {}
 
-    async updateDetails(dto: UpdateDetailsDto, claimId: string) {
+    async updateDetails(
+        dto: Omit<UpdateDetailsDto, 'claimId'>,
+        claimId: string,
+    ) {
         if (dto?.arrivalAirport) {
             await this.prisma.arrivalAirport
                 .update({
@@ -46,6 +49,7 @@ export class DetailService {
                 date: new Date(dto.date),
                 bookingRef: dto.bookingRef,
                 airlineLink: dto.airlineLink,
+                hasTime: dto.hasTime,
                 airlines: dto.airline
                     ? {
                           update: {

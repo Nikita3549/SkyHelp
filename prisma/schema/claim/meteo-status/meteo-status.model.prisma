@@ -1,0 +1,23 @@
+model MeteoStatus {
+  id              String    @id @default(uuid())
+  claimId         String    @map("claim_id")
+  observedTimeUtc DateTime? @map("observed_time_utc")
+  visibilityM     Float?    @map("visibility_m")
+  windDir         Float?    @map("wind_dir")
+  windSpeedKt     Float?    @map("wind_speed_kt")
+  windGustKt      Float?    @map("wind_gust_kt")
+  ceilingFt       Float?    @map("ceiling_ft")
+
+  isSnoclo     Boolean? @map("is_snoclo")
+  hasWindshear Boolean? @map("has_windshear")
+  rawMetarText String?  @map("raw_metar_text")
+
+  takeoffOk Boolean            @default(true) @map("takeoff_ok")
+  landingOk Boolean            @default(true) @map("lenging_ok")
+  reason    MeteoStatusReason?
+
+  claim   Claim               @relation(fields: [claimId], references: [id])
+  runways MeteoStatusRunway[]
+
+  @@map("meteo_statuses")
+}

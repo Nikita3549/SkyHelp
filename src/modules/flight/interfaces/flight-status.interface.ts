@@ -4,4 +4,5 @@ export interface IFlightStatus {
     delayMinutes: number;
     isCancelled: boolean;
     source: ClaimFlightStatusSource;
+    exactTime?: Date;
 }

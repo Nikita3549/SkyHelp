@@ -6,20 +6,22 @@ import { IAddFlightStatusJobData } from '../interfaces/job-data/add-flight-statu
 import { FlightService } from '../../flight/flight.service';
 import { FlightStatusService } from '../flight-status/flight-status.service';
 import { AirlineService } from '../../airline/airline.service';
+import { MeteoStatusService } from '../meteo-status/meteo-status.service';
 
 @Processor(ADD_FLIGHT_STATUS_QUEUE_KEY)
 export class AddFlightStatusProcessor extends WorkerHost {
     constructor(
-        private readonly claimService: ClaimService,
         private readonly flightService: FlightService,
         private readonly flightStatusService: FlightStatusService,
         private readonly airlineService: AirlineService,
+        private readonly meteoStatusService: MeteoStatusService,
     ) {
         super();
     }
 
     async process(job: Job<IAddFlightStatusJobData>) {
-        const { airlineIcao, flightNumber, flightDate, claimId } = job.data;
+        const { airlineIcao, flightNumber, flightDate, claimId, airportIcao } =
+            job.data;
         const airline = await this.airlineService.getAirlineByIcao(airlineIcao);
 
         const flightCode = flightNumber.slice(2);
@@ -27,6 +29,8 @@ export class AddFlightStatusProcessor extends WorkerHost {
         if (!flightCode) {
             return;
         }
+
+        let exactTime: Date | undefined;
 
         // const flightFromOAG = await this.flightService.getFlightFromOAG(
         //     flightCode,
@@ -53,11 +57,16 @@ export class AddFlightStatusProcessor extends WorkerHost {
             );
 
         if (flightFromFlightIo) {
+            if (flightFromFlightIo.exactTime) {
+                exactTime = flightFromFlightIo.exactTime;
+            }
+
             await this.flightStatusService.createFlightStatus(
                 {
                     isCancelled: flightFromFlightIo.isCancelled,
                     delayMinutes: flightFromFlightIo.delayMinutes,
                     source: flightFromFlightIo.source,
+                    exactTime: flightFromFlightIo.exactTime,
                 },
                 claimId,
             );
@@ -97,6 +106,15 @@ export class AddFlightStatusProcessor extends WorkerHost {
                 },
                 claimId,
             );
+        }
+
+        if (exactTime && airportIcao) {
+            const meteoStatus = await this.meteoStatusService.fetchMeteoStatus({
+                airportIcao: airportIcao,
+                time: exactTime,
+            });
+
+            await this.meteoStatusService.create(meteoStatus, claimId);
         }
     }
 }

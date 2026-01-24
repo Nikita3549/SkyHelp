@@ -3,4 +3,5 @@ export interface IAddFlightStatusJobData {
     airlineIcao: string;
     flightDate: Date;
     claimId: string;
+    airportIcao?: string;
 }

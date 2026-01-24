@@ -1,0 +1,7 @@
+enum MeteoStatusReason {
+  RVR_LOW
+  SNOCLO
+  CROSSWIND_HIGH
+  CEILING_LOW
+  WINDSHEAR
+}

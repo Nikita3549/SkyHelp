@@ -16,11 +16,19 @@ export function parseFlightIoFlightStatus(
     const status = statusItem?.status as string | undefined;
 
     if (status === 'Cancelled') {
-        return { isCancelled: true, delayMinutes: 0 };
+        return {
+            isCancelled: true,
+            delayMinutes: 0,
+            exactTime: new Date(departure.departureDateTime),
+        };
     }
 
     if (status !== 'Arrived' || !arrival) {
-        return { isCancelled: false, delayMinutes: 0 };
+        return {
+            isCancelled: false,
+            delayMinutes: 0,
+            exactTime: new Date(departure.departureDateTime),
+        };
     }
 
     const { scheduledTime, inGateTime, arrivalDateTime } = arrival;
@@ -69,7 +77,11 @@ export function parseFlightIoFlightStatus(
         (arrivalDateTime ? new Date(arrivalDateTime) : null);
 
     if (!scheduled || !actual) {
-        return { isCancelled: false, delayMinutes: 0 };
+        return {
+            isCancelled: false,
+            delayMinutes: 0,
+            exactTime: new Date(departure.departureDateTime),
+        };
     }
 
     const delayMinutes = Math.max(
@@ -80,5 +92,6 @@ export function parseFlightIoFlightStatus(
     return {
         isCancelled: false,
         delayMinutes,
+        exactTime: new Date(departure.departureDateTime),
     };
 }

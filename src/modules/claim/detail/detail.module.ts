@@ -8,5 +8,6 @@ import { ClaimPersistenceModule } from '../../claim-persistence/claim-persistenc
     imports: [DocumentModule, ClaimPersistenceModule],
     controllers: [DetailController],
     providers: [DetailService],
+    exports: [DetailService],
 })
 export class DetailModule {}

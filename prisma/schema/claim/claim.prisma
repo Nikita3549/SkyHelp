@@ -35,11 +35,12 @@ model Claim {
   referrerSource     String?              @map("referrer_source")
   referalTransaction ReferralTransaction?
 
-  duplicates   DuplicatedClaim[] @relation("ClaimOriginal")
-  duplicatedOf DuplicatedClaim[] @relation("ClaimDuplicate")
-  referredById String?           @map("referred_by_id")
-  referredBy   Partner?          @relation("Referrals", fields: [referredById], references: [id])
-  stafMessages StaffMessage[]
+  duplicates    DuplicatedClaim[] @relation("ClaimOriginal")
+  duplicatedOf  DuplicatedClaim[] @relation("ClaimDuplicate")
+  referredById  String?           @map("referred_by_id")
+  referredBy    Partner?          @relation("Referrals", fields: [referredById], references: [id])
+  stafMessages  StaffMessage[]
+  meteoStatuses MeteoStatus[]
 
   @@index([agentId])
   @@index([agentId, createdAt])

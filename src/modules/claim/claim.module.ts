@@ -39,6 +39,7 @@ import { ClaimPersistenceModule } from '../claim-persistence/claim-persistence.m
 import { DuplicateModule } from './duplicate/duplicate.module';
 import { GenerateLinksModule } from '../generate-links/generate-links.module';
 import { StaffMessageModule } from './staff-message/staff-message.module';
+import { MeteoStatusModule } from './meteo-status/meteo-status.module';
 
 @Module({
     imports: [
@@ -80,6 +81,8 @@ import { StaffMessageModule } from './staff-message/staff-message.module';
         DuplicateModule,
         GenerateLinksModule,
         StaffMessageModule,
+        MeteoStatusModule,
+        MeteoStatusModule,
     ],
     controllers: [ClaimController, AdminController, PublicClaimController],
     providers: [
