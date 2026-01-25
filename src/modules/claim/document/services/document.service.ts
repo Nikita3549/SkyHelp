@@ -81,7 +81,7 @@ export class DocumentService {
 
     // ------------------ FILE ------------------
     async mergeFiles(
-        documents: Document[],
+        documents: { buffer: Buffer; name: string }[],
         options?: { addDefaultPrelitDocument: boolean },
     ): Promise<NodeJS.ReadableStream> {
         return this.documentFileService.mergeFiles(documents, options);

@@ -40,6 +40,7 @@ import { HttpStatusCode } from 'axios';
 import { RoleGuard } from '../../../../common/guards/role.guard';
 import { ISignedUrlResponse } from './interfaces/signed-url-response.interface';
 import { ClaimPersistenceService } from '../../../claim-persistence/services/claim-persistence.service';
+import { S3Service } from '../../../s3/s3.service';
 
 @Controller('claims/documents')
 @UseGuards(JwtAuthGuard)
@@ -49,12 +50,18 @@ export class DocumentController {
         private readonly recentUpdatesService: RecentUpdatesService,
         private readonly documentRequestService: DocumentRequestService,
         private readonly claimPersistenceService: ClaimPersistenceService,
+        private readonly S3Service: S3Service,
     ) {}
 
     @Post('merge')
-    async mergeDocuments(@Res() res: Response, @Body() dto: MergeDocumentsDto) {
+    @DocumentsUploadInterceptor()
+    async mergeDocuments(
+        @Res() res: Response,
+        @Body() dto: MergeDocumentsDto,
+        @UploadedFiles() files: Express.Multer.File[] = [],
+    ) {
         const { documentIds } = dto;
-        const documents =
+        const claimDocuments =
             await this.documentService.getDocumentByIds(documentIds);
 
         res.set({
@@ -62,9 +69,25 @@ export class DocumentController {
             'Content-Disposition': 'attachment; filename=merged.pdf',
         });
 
-        const mergedStream = await this.documentService.mergeFiles(documents, {
-            addDefaultPrelitDocument: !!dto?.withPrecourtDocument,
-        });
+        const claimDocumentsBuffer = await Promise.all(
+            claimDocuments.map(async (doc) => ({
+                buffer: await this.S3Service.getBuffer(doc.s3Key),
+                name: doc.name,
+            })),
+        );
+
+        const mergedStream = await this.documentService.mergeFiles(
+            [
+                ...claimDocumentsBuffer,
+                ...files.map((file) => ({
+                    buffer: file.buffer,
+                    name: file.originalname,
+                })),
+            ],
+            {
+                addDefaultPrelitDocument: !!dto?.withPrecourtDocument,
+            },
+        );
 
         mergedStream.pipe(res);
     }

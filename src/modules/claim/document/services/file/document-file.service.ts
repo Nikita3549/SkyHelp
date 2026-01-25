@@ -5,33 +5,28 @@ import * as path from 'path';
 import { PassThrough } from 'stream';
 import { pngToJpeg } from './utils/png-to-jpeg.converter';
 import { convertDocToPdf } from './utils/doc-to-pdf.converter';
-import { S3Service } from '../../../../s3/s3.service';
-import { Document } from '@prisma/client';
 import { PrelitDirectoryPath } from '../../../../../common/constants/paths/PrelitDirectoryPath';
 
 @Injectable()
 export class DocumentFileService {
-    constructor(private readonly S3Service: S3Service) {}
-
     async mergeFiles(
-        documents: Document[],
+        documents: { buffer: Buffer; name: string }[],
         options?: { addDefaultPrelitDocument: boolean },
     ): Promise<NodeJS.ReadableStream> {
         const mergedPdf = await PDFDocument.create();
 
         for (const document of documents) {
-            const buffer = await this.S3Service.getBuffer(document.s3Key);
             const ext = path.extname(document.name).toLowerCase();
 
             if (ext === '.pdf') {
-                const pdf = await PDFDocument.load(buffer);
+                const pdf = await PDFDocument.load(document.buffer);
                 const copiedPages = await mergedPdf.copyPages(
                     pdf,
                     pdf.getPageIndices(),
                 );
                 copiedPages.forEach((p) => mergedPdf.addPage(p));
             } else if (ext === '.jpg' || ext === '.jpeg') {
-                const img = await mergedPdf.embedJpg(buffer);
+                const img = await mergedPdf.embedJpg(document.buffer);
                 const page = mergedPdf.addPage([img.width, img.height]);
                 page.drawImage(img, {
                     x: 0,
@@ -41,7 +36,7 @@ export class DocumentFileService {
                 });
             } else if (ext === '.png') {
                 try {
-                    const img = await mergedPdf.embedPng(buffer);
+                    const img = await mergedPdf.embedPng(document.buffer);
                     const page = mergedPdf.addPage([img.width, img.height]);
                     page.drawImage(img, {
                         x: 0,
@@ -51,7 +46,7 @@ export class DocumentFileService {
                     });
                 } catch (error) {
                     try {
-                        const jpegBuffer = await pngToJpeg(buffer);
+                        const jpegBuffer = await pngToJpeg(document.buffer);
                         const img = await mergedPdf.embedJpg(jpegBuffer);
                         const page = mergedPdf.addPage([img.width, img.height]);
                         page.drawImage(img, {
@@ -69,7 +64,7 @@ export class DocumentFileService {
             } else if (ext === '.doc' || ext === '.docx') {
                 const tempInput = path.join('/tmp', document.name);
                 const tempOutput = tempInput.replace(ext, '.pdf');
-                await fs.writeFile(tempInput, buffer);
+                await fs.writeFile(tempInput, document.buffer);
                 await convertDocToPdf(tempInput, tempOutput);
 
                 const pdfBuffer = await fs.readFile(tempOutput);
