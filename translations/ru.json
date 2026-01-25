@@ -4184,5 +4184,6 @@
     "Meteo.visibility": "Видимость",
     "Meteo.ceiling": "Потолок облачности",
     "Meteo.windshear": "Сдвиг ветра",
-    "Meteo.snoclo": "SNOCLO"
+    "Meteo.snoclo": "SNOCLO",
+    "Meteo.windgust" : "Порывы ветра"
 }

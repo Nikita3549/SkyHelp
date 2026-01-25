@@ -4173,6 +4173,7 @@
     "Meteo.visibility": "Видимість",
     "Meteo.ceiling": "Висота хмарності",
     "Meteo.windshear": "Зсув вітру",
-    "Meteo.snoclo": "SNOCLO"
+    "Meteo.snoclo": "SNOCLO",
+    "Meteo.windgust" : "Шквали вітру"
 }
 

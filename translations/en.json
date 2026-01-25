@@ -4183,5 +4183,6 @@
     "Meteo.visibility": "Visibility",
     "Meteo.ceiling": "Ceiling",
     "Meteo.windshear": "Wind shear",
-    "Meteo.snoclo": "SNOCLO"
+    "Meteo.snoclo": "SNOCLO",
+    "Meteo.windgust" : "Wind gust"
 }

@@ -4205,5 +4205,6 @@
     "Meteo.visibility": "Görüş",
     "Meteo.ceiling": "Tavan",
     "Meteo.windshear": "Rüzgar kesmesi",
-    "Meteo.snoclo": "SNOCLO"
+    "Meteo.snoclo": "SNOCLO",
+    "Meteo.windgust" : "Rüzgar tünel"
 }   

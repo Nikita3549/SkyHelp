@@ -4184,5 +4184,6 @@
     "Meteo.visibility": "Vizibilitate",
     "Meteo.ceiling": "Plafon",
     "Meteo.windshear": "Forfecare de vânt",
-    "Meteo.snoclo": "SNOCLO"
+    "Meteo.snoclo": "SNOCLO",
+    "Meteo.windgust" : "Vânt"
 }
