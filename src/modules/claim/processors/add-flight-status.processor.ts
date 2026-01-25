@@ -108,8 +108,29 @@ export class AddFlightStatusProcessor extends WorkerHost {
             );
         }
 
-        console.log(exactTime);
-        console.log(airportIcao);
+        const flightFromChisinauAirport =
+            await this.flightService.getFlightFromChisinauAirport({
+                airlineIata: airline?.iata || airlineIcao,
+                date: new Date(flightDate),
+                flightCode: flightCode,
+            });
+
+        if (flightFromChisinauAirport) {
+            if (flightFromChisinauAirport.exactTime) {
+                exactTime = flightFromChisinauAirport.exactTime;
+            }
+
+            await this.flightStatusService.createFlightStatus(
+                {
+                    isCancelled: flightFromChisinauAirport.isCancelled,
+                    delayMinutes: flightFromChisinauAirport.delayMinutes,
+                    source: flightFromChisinauAirport.source,
+                    exactTime: flightFromChisinauAirport.exactTime,
+                },
+                claimId,
+            );
+        }
+
         if (exactTime && airportIcao) {
             const meteoStatus = await this.meteoStatusService.fetchMeteoStatus({
                 airportIcao: airportIcao,

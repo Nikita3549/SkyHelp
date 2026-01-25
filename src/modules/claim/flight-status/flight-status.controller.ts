@@ -49,6 +49,8 @@ export class FlightStatusController {
         const flightDate = new Date(claim.details.date);
         let newFlightStatus: IFlightStatus | null;
 
+        const airline =
+            await this.airlinesService.getAirlineByIcao(airlineIcao);
         switch (flightStatus.source) {
             case ClaimFlightStatusSource.OAG:
                 newFlightStatus = await this.flightService.getFlightFromOAG(
@@ -74,8 +76,6 @@ export class FlightStatusController {
                     );
                 break;
             case ClaimFlightStatusSource.FLIGHT_IO:
-                const airline =
-                    await this.airlinesService.getAirlineByIcao(airlineIcao);
                 if (!airline) {
                     throw new NotFoundException(FLIGHT_STATUS_NOT_FOUND);
                 }
@@ -85,6 +85,17 @@ export class FlightStatusController {
                         airline.iata,
                         flightDate,
                     );
+                break;
+            case ClaimFlightStatusSource.CHISINAU_AIRPORT:
+                if (!airline) {
+                    throw new NotFoundException(FLIGHT_STATUS_NOT_FOUND);
+                }
+                newFlightStatus =
+                    await this.flightService.getFlightFromChisinauAirport({
+                        flightCode,
+                        airlineIata: airline.iata,
+                        date: flightDate,
+                    });
                 break;
         }
 
@@ -124,6 +135,8 @@ export class FlightStatusController {
 
         let newFlightStatus: IFlightStatus | null;
 
+        const airline =
+            await this.airlinesService.getAirlineByIcao(airlineIcao);
         switch (source) {
             // case ClaimFlightStatusSource.OAG:
             //     newFlightStatus = await this.flightService.getFlightFromOAG(
@@ -147,6 +160,17 @@ export class FlightStatusController {
                         airlineIcao,
                         flightDate,
                     );
+                break;
+            case ClaimFlightStatusSource.CHISINAU_AIRPORT:
+                if (!airline) {
+                    throw new NotFoundException(FLIGHT_STATUS_NOT_FOUND);
+                }
+                newFlightStatus =
+                    await this.flightService.getFlightFromChisinauAirport({
+                        flightCode,
+                        airlineIata: airline.iata,
+                        date: flightDate,
+                    });
                 break;
             default:
                 throw new BadRequestException('Invalid source');

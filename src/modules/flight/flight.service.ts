@@ -17,6 +17,7 @@ import { IFullOAGFlight } from './interfaces/oag/oag-flight-full-info.interface'
 import { FlightIoFlightData } from './interfaces/flight-io/flight-io-flight-data';
 import { parseFlightIoFlightStatus } from './utils/parse-flight-io-flight-status';
 import { FlightIoFlightStatus } from './interfaces/flight-io/flight-io-flight-status';
+import { IChisinauAirportFlight } from './interfaces/chisinau-airport/chisinau-airport-flight.interface';
 
 @Injectable()
 export class FlightService {
@@ -80,6 +81,40 @@ export class FlightService {
             return res.data.flights.filter((f) => f.airlineCode == company);
         } catch (e) {
             return [];
+        }
+    }
+
+    async getFlightFromChisinauAirport(data: {
+        flightCode: string;
+        airlineIata: string;
+        date: Date;
+    }): Promise<IFlightStatus | null> {
+        try {
+            const { data: flights } = await axios.get<IChisinauAirportFlight[]>(
+                `${this.configService.getOrThrow('CHISINAU_AIRPORT_API_URL')}/flights`,
+                {
+                    params: {
+                        flight_no: `${data.airlineIata} ${data.flightCode}`,
+                        date: formatDate(data.date, 'yyyy-mm-dd'),
+                        airline: data.airlineIata,
+                    },
+                },
+            );
+
+            const flight = flights.at(-1);
+
+            if (!flight) {
+                return null;
+            }
+
+            return {
+                delayMinutes: flight.delay_minutes,
+                isCancelled: flight.status == 'cancelled',
+                exactTime: new Date(flight.scheduled_time),
+                source: ClaimFlightStatusSource.CHISINAU_AIRPORT,
+            };
+        } catch (_e) {
+            return null;
         }
     }
 

@@ -3,4 +3,5 @@ enum ClaimFlightStatusSource {
   FLIGHT_STATS
   OAG
   FLIGHT_IO
+  CHISINAU_AIRPORT
 }
