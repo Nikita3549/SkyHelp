@@ -90,7 +90,7 @@ export class FlightService {
         date: Date;
     }): Promise<IFlightStatus | null> {
         try {
-            const { data: flights } = await axios.get<IChisinauAirportFlight[]>(
+            const res = await axios.get<IChisinauAirportFlight>(
                 `${this.configService.getOrThrow('CHISINAU_AIRPORT_API_URL')}/flights`,
                 {
                     params: {
@@ -100,6 +100,7 @@ export class FlightService {
                     },
                 },
             );
+            const flights = res.data.data;
 
             const flight = flights.at(-1);
 
@@ -109,7 +110,11 @@ export class FlightService {
 
             return {
                 delayMinutes: flight.delay_minutes,
-                isCancelled: flight.status == 'cancelled',
+                isCancelled:
+                    flight.status != 'DE' &&
+                    flight.status != 'AR' &&
+                    flight.status != 'RE' &&
+                    flight.status != 'PR',
                 exactTime: new Date(flight.scheduled_time),
                 source: ClaimFlightStatusSource.CHISINAU_AIRPORT,
             };
