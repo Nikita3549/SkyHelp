@@ -4168,6 +4168,11 @@
     "FlightStatusCard.menu.refresh": "Оновити",
     "FlightStatusCard.menu.refreshing": "Оновлення...",
     "FlightStatusCard.menu.creating": "Створення...",
-    "FlightStatusCard.menu.checkManually": "Перевірити вручну"
+    "FlightStatusCard.menu.checkManually": "Перевірити вручну",
+    "Meteo.wind": "Вітер",
+    "Meteo.visibility": "Видимість",
+    "Meteo.ceiling": "Висота хмарності",
+    "Meteo.windshear": "Зсув вітру",
+    "Meteo.snoclo": "SNOCLO"
 }
 

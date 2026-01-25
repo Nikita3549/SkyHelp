@@ -4178,5 +4178,10 @@
     "FlightStatusCard.menu.refresh": "Refresh",
     "FlightStatusCard.menu.refreshing": "Refreshing...",
     "FlightStatusCard.menu.creating": "Creating...",
-    "FlightStatusCard.menu.checkManually": "Check manually"
+    "FlightStatusCard.menu.checkManually": "Check manually",
+    "Meteo.wind": "Wind",
+    "Meteo.visibility": "Visibility",
+    "Meteo.ceiling": "Ceiling",
+    "Meteo.windshear": "Wind shear",
+    "Meteo.snoclo": "SNOCLO"
 }

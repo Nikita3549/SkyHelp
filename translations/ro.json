@@ -4179,5 +4179,10 @@
     "FlightStatusCard.menu.refresh": "Reîmprospătează",
     "FlightStatusCard.menu.refreshing": "Se reîmprospătează...",
     "FlightStatusCard.menu.creating": "Se creează...",
-    "FlightStatusCard.menu.checkManually": "Verifică manual"
+    "FlightStatusCard.menu.checkManually": "Verifică manual",
+    "Meteo.wind": "Vânt",
+    "Meteo.visibility": "Vizibilitate",
+    "Meteo.ceiling": "Plafon",
+    "Meteo.windshear": "Forfecare de vânt",
+    "Meteo.snoclo": "SNOCLO"
 }

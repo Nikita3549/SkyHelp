@@ -4200,5 +4200,10 @@
     "FlightStatusCard.menu.refresh": "Yenile",
     "FlightStatusCard.menu.refreshing": "Yenileniyor...",
     "FlightStatusCard.menu.creating": "Oluşturuluyor...",
-    "FlightStatusCard.menu.checkManually": "Manuel kontrol et"
-}
+    "FlightStatusCard.menu.checkManually": "Manuel kontrol et",
+    "Meteo.wind": "Rüzgar",
+    "Meteo.visibility": "Görüş",
+    "Meteo.ceiling": "Tavan",
+    "Meteo.windshear": "Rüzgar kesmesi",
+    "Meteo.snoclo": "SNOCLO"
+}   

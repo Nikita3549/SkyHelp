@@ -4179,5 +4179,10 @@
     "FlightStatusCard.menu.refresh": "Обновить",
     "FlightStatusCard.menu.refreshing": "Обновление...",
     "FlightStatusCard.menu.creating": "Создание...",
-    "FlightStatusCard.menu.checkManually": "Проверить вручную"
+    "FlightStatusCard.menu.checkManually": "Проверить вручную",
+    "Meteo.wind": "Ветер",
+    "Meteo.visibility": "Видимость",
+    "Meteo.ceiling": "Потолок облачности",
+    "Meteo.windshear": "Сдвиг ветра",
+    "Meteo.snoclo": "SNOCLO"
 }
