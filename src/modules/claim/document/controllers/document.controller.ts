@@ -78,11 +78,11 @@ export class DocumentController {
 
         const mergedStream = await this.documentService.mergeFiles(
             [
-                ...claimDocumentsBuffer,
                 ...files.map((file) => ({
                     buffer: file.buffer,
                     name: file.originalname,
                 })),
+                ...claimDocumentsBuffer,
             ],
             {
                 addDefaultPrelitDocument: !!dto?.withPrecourtDocument,
