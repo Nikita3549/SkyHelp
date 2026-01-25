@@ -4206,5 +4206,6 @@
     "Meteo.ceiling": "Tavan",
     "Meteo.windshear": "Rüzgar kesmesi",
     "Meteo.snoclo": "SNOCLO",
-    "Meteo.windgust" : "Rüzgar tünel"
+    "Meteo.windgust" : "Rüzgar tünel",
+    "Meteo.temperature" : "Sıcaklık"
 }   

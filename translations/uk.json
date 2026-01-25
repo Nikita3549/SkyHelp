@@ -4174,6 +4174,7 @@
     "Meteo.ceiling": "Висота хмарності",
     "Meteo.windshear": "Зсув вітру",
     "Meteo.snoclo": "SNOCLO",
-    "Meteo.windgust" : "Шквали вітру"
+    "Meteo.windgust" : "Шквали вітру",
+    "Meteo.temperature" : "Температура"
 }
 

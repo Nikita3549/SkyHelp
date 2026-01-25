@@ -4185,5 +4185,6 @@
     "Meteo.ceiling": "Потолок облачности",
     "Meteo.windshear": "Сдвиг ветра",
     "Meteo.snoclo": "SNOCLO",
-    "Meteo.windgust" : "Порывы ветра"
+    "Meteo.windgust" : "Порывы ветра",
+    "Meteo.temperature" : "Температура"
 }

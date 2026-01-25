@@ -4185,5 +4185,6 @@
     "Meteo.ceiling": "Plafon",
     "Meteo.windshear": "Forfecare de vânt",
     "Meteo.snoclo": "SNOCLO",
-    "Meteo.windgust" : "Vânt"
+    "Meteo.windgust" : "Vânt",
+    "Meteo.temperature" : "Temperatură"
 }

@@ -4184,5 +4184,6 @@
     "Meteo.ceiling": "Ceiling",
     "Meteo.windshear": "Wind shear",
     "Meteo.snoclo": "SNOCLO",
-    "Meteo.windgust" : "Wind gust"
+    "Meteo.windgust" : "Wind gust",
+    "Meteo.temperature" : "Temperature"
 }
