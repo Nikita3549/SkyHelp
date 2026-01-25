@@ -7,6 +7,7 @@ model MeteoStatus {
   windSpeedKt     Float?    @map("wind_speed_kt")
   windGustKt      Float?    @map("wind_gust_kt")
   ceilingFt       Float?    @map("ceiling_ft")
+  temperature     Float?
 
   isSnoclo     Boolean? @map("is_snoclo")
   hasWindshear Boolean? @map("has_windshear")

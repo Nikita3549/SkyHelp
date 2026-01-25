@@ -16,6 +16,7 @@ export interface IDecisionStatus {
 export interface IMeteoData {
     observedTimeUtc: string;
     ceilingFt: number | null;
+    temperature: number | null;
     runways: IRunwayStatus[];
     visibilityM: number;
     windDir: number;
