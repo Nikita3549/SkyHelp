@@ -5,6 +5,7 @@ import {
     NotFoundException,
     Param,
     Post,
+    Query,
     UseGuards,
 } from '@nestjs/common';
 import { IMeteoData } from './interfaces/metar-data.interfaces';
@@ -33,9 +34,9 @@ export class MeteoStatusController {
         private readonly claimPersistenceService: ClaimPersistenceService,
     ) {}
 
-    @Post()
+    @Get('fetch')
     async generateMeteoStatus(
-        @Body() dto: GenerateMeteoStatusDto,
+        @Query() dto: GenerateMeteoStatusDto,
         @Param('claimId') claimId: string,
     ): Promise<IMeteoData> {
         const claim = await this.claimPersistenceService.findOneById(claimId);
