@@ -35,7 +35,7 @@ export class MeteoStatusService {
             isSnoclo: entity.isSnoclo || false,
             hasWindshear: entity.hasWindshear || false,
             rawMetarText: entity.rawMetarText || '',
-            runways: entity.runways.map((r) => ({
+            runways: entity.runways?.map((r) => ({
                 id: r.runwayId || '',
                 crosswindKt: r.crosswindKt || 0,
                 headwindKt: r.headwindKt || 0,
@@ -66,7 +66,7 @@ export class MeteoStatusService {
                 landingOk: data.decision.landingOk,
                 reason: data.decision.reason,
                 runways: {
-                    create: data.runways.map((r) => ({
+                    create: data.runways?.map((r) => ({
                         runwayId: r.id,
                         crosswindKt: r.crosswindKt,
                         headwindKt: r.headwindKt,
@@ -80,30 +80,53 @@ export class MeteoStatusService {
     async fetchMeteoStatus(flightData: {
         airportIcao: string;
         time: Date;
-    }): Promise<IMeteoData> {
-        try {
+    }): Promise<IMeteoData | null> {
+        const fetch = async (
+            targetTime: Date,
+        ): Promise<IAirportWeatherResponse> => {
+            const formattedTime = targetTime
+                .toISOString()
+                .replace(/\.\d{3}/, '');
+
             const { data } = await axios.get<IAirportWeatherResponse>(
                 `${this.configService.getOrThrow('METAR_URL')}/metar`,
                 {
                     params: {
                         api_key: this.configService.getOrThrow('METAR_API_KEY'),
                         id: flightData.airportIcao,
-                        time: flightData.time.toISOString(),
+                        time: formattedTime,
                     },
                 },
             );
+            return data;
+        };
 
-            return this.mapToMeteoData(data);
+        try {
+            let response = await fetch(flightData.time);
+
+            if (response?.status == false) {
+                const hourEarlier = new Date(
+                    flightData.time.getTime() - 60 * 60 * 1000,
+                );
+
+                response = await fetch(hourEarlier);
+            }
+
+            if (!response || !response.status) {
+                return null;
+            }
+
+            return this.mapToMeteoData(response);
         } catch (error) {
             console.error('Failed to fetch airport status', error);
-            throw error;
+            return null;
         }
     }
 
     private mapToMeteoData(apiData: IAirportWeatherResponse): IMeteoData {
         const { metar, runways } = apiData;
 
-        const runwayStatuses: IRunwayStatus[] = runways.map((r) => ({
+        const runwayStatuses: IRunwayStatus[] = runways?.map((r) => ({
             id: `${r.id_l}/${r.id_h}`,
             crosswindKt: Math.abs(r.xwnd),
             headwindKt: r.hwnd,

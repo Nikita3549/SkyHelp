@@ -108,13 +108,17 @@ export class AddFlightStatusProcessor extends WorkerHost {
             );
         }
 
+        console.log(exactTime);
+        console.log(airportIcao);
         if (exactTime && airportIcao) {
             const meteoStatus = await this.meteoStatusService.fetchMeteoStatus({
                 airportIcao: airportIcao,
                 time: exactTime,
             });
 
-            await this.meteoStatusService.create(meteoStatus, claimId);
+            if (meteoStatus) {
+                await this.meteoStatusService.create(meteoStatus, claimId);
+            }
         }
     }
 }
