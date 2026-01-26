@@ -3424,7 +3424,7 @@
     "SignatureStep.passengers.copy": "Скопировать ссылку",
     "SignatureStep.passengers.sign-now": "Подписать сейчас",
     "SignatureStep.passengers.copy.toast.title": "Скопировано",
-    "SignatureStep.passengers.copy.toast.description": "Ссылка успешно скопирована в буфер обмена",
+    "SignatureStep.passengers.copy.toast.description": "Ссылка для продолжения заполнения формы скопирована в буфер обмена",
     "OtherPassengerForm.label.firstName": "Имя",
     "OtherPassengerForm.label.lastName": "Фамилия",
     "OtherPassengerForm.label.address": "Адрес",

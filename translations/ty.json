@@ -3427,7 +3427,7 @@
     "SignatureStep.passengers.copy": "Bağlantıyı kopyala",
     "SignatureStep.passengers.sign-now": "Şimdi imzala",
     "SignatureStep.passengers.copy.toast.title": "Kopyalandı",
-    "SignatureStep.passengers.copy.toast.description": "Panoya başarıyla kopyalandı",
+    "SignatureStep.passengers.copy.toast.description": "Bağlantıyı kopyaladı",
     "OtherPassengerForm.label.firstName": "Ad",
     "OtherPassengerForm.label.lastName": "Soyad",
     "OtherPassengerForm.label.address": "Adres",

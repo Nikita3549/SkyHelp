@@ -3423,7 +3423,7 @@
     "SignatureStep.passengers.copy": "Copiază linkul",
     "SignatureStep.passengers.sign-now": "Semnează acum",
     "SignatureStep.passengers.copy.toast.title": "Copiat",
-    "SignatureStep.passengers.copy.toast.description": "Link copiat cu succes în clipboard",
+    "SignatureStep.passengers.copy.toast.description": "Linkul pentru continuarea formularului a fost copiat în clipboard",
     "OtherPassengerForm.label.firstName": "Prenume",
     "OtherPassengerForm.label.lastName": "Nume",
     "OtherPassengerForm.label.address": "Adresă",

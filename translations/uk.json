@@ -3412,7 +3412,7 @@
     "SignatureStep.passengers.copy": "Скопіювати посилання",
     "SignatureStep.passengers.sign-now": "Підписати зараз",
     "SignatureStep.passengers.copy.toast.title": "Скопійовано",
-    "SignatureStep.passengers.copy.toast.description": "Успішно скопійовано в буфер обміну",
+    "SignatureStep.passengers.copy.toast.description": "Посилання для продовження заповнення формы скопійовано в буфер обміну",
     "OtherPassengerForm.label.firstName": "Ім'я",
     "OtherPassengerForm.label.lastName": "Прізвище",
     "OtherPassengerForm.label.address": "Адреса",

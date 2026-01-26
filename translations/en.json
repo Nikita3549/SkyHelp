@@ -3421,7 +3421,7 @@
     "SignatureStep.passengers.copy": "Copy link",
     "SignatureStep.passengers.sign-now": "Sign now",
     "SignatureStep.passengers.copy.toast.title": "Copied",
-    "SignatureStep.passengers.copy.toast.description": "Successfully copied in clipboard",
+    "SignatureStep.passengers.copy.toast.description": "Link for continuing the form has been copied to your clipboard",
     "OtherPassengerForm.label.firstName": "First name",
     "OtherPassengerForm.label.lastName": "Last name",
     "OtherPassengerForm.label.address": "Address",
