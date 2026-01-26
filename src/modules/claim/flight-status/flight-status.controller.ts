@@ -19,6 +19,7 @@ import { CLAIM_NOT_FOUND } from '../constants';
 import { RoleGuard } from '../../../common/guards/role.guard';
 import { AirlineService } from '../../airline/airline.service';
 import { ClaimPersistenceService } from '../../claim-persistence/services/claim-persistence.service';
+import { MeteoStatusService } from '../meteo-status/meteo-status.service';
 
 @Controller('claims/flight-statuses')
 @UseGuards(JwtAuthGuard, new RoleGuard([UserRole.ADMIN]))
@@ -28,6 +29,7 @@ export class FlightStatusController {
         private readonly flightService: FlightService,
         private readonly airlinesService: AirlineService,
         private readonly claimPersistenceService: ClaimPersistenceService,
+        private readonly meteoStatusService: MeteoStatusService,
     ) {}
 
     @Put(':flightStatusId')
@@ -48,6 +50,10 @@ export class FlightStatusController {
         const airlineIcao = claim.details.airlines.icao;
         const flightDate = new Date(claim.details.date);
         let newFlightStatus: IFlightStatus | null;
+
+        const troubledRoute =
+            claim.details.routes.find((r) => r.troubled) ||
+            claim.details.routes[0];
 
         const airline =
             await this.airlinesService.getAirlineByIcao(airlineIcao);
@@ -85,6 +91,21 @@ export class FlightStatusController {
                         airline.iata,
                         flightDate,
                     );
+
+                if (newFlightStatus?.exactTime) {
+                    const meteoStatus =
+                        await this.meteoStatusService.fetchMeteoStatus({
+                            airportIcao: troubledRoute.DepartureAirport.icao,
+                            time: newFlightStatus.exactTime,
+                        });
+
+                    if (meteoStatus) {
+                        await this.meteoStatusService.create(
+                            meteoStatus,
+                            claim.id,
+                        );
+                    }
+                }
                 break;
             case ClaimFlightStatusSource.CHISINAU_AIRPORT:
                 if (!airline) {
@@ -96,6 +117,21 @@ export class FlightStatusController {
                         airlineIata: airline.iata,
                         date: flightDate,
                     });
+
+                if (newFlightStatus?.exactTime) {
+                    const meteoStatus =
+                        await this.meteoStatusService.fetchMeteoStatus({
+                            airportIcao: troubledRoute.DepartureAirport.icao,
+                            time: newFlightStatus.exactTime,
+                        });
+
+                    if (meteoStatus) {
+                        await this.meteoStatusService.create(
+                            meteoStatus,
+                            claim.id,
+                        );
+                    }
+                }
                 break;
         }
 

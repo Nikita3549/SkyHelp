@@ -5,6 +5,7 @@ import { FlightModule } from '../../flight/flight.module';
 import { AirlineModule } from '../../airline/airline.module';
 import { ClaimPersistenceModule } from '../../claim-persistence/claim-persistence.module';
 import { DetailModule } from '../detail/detail.module';
+import { MeteoStatusModule } from '../meteo-status/meteo-status.module';
 
 @Module({
     imports: [
@@ -12,6 +13,7 @@ import { DetailModule } from '../detail/detail.module';
         AirlineModule,
         ClaimPersistenceModule,
         DetailModule,
+        MeteoStatusModule,
     ],
     providers: [FlightStatusService],
     controllers: [FlightStatusController],
