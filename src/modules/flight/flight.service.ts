@@ -111,7 +111,7 @@ export class FlightService {
             return {
                 delayMinutes: flight.delay_minutes,
                 isCancelled: false,
-                exactTime: new Date(flight.scheduled_time),
+                exactTime: new Date(flight.local_scheduled_time),
                 source: ClaimFlightStatusSource.CHISINAU_AIRPORT,
             };
         } catch (_e) {

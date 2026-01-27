@@ -7,6 +7,7 @@ export interface IChisinauAirportFlight {
         origin: string; // iata
         type: string;
         scheduled_time: string;
+        local_scheduled_time: string;
         actual_time: string | null;
         status: string | null;
         delay_minutes: number;
