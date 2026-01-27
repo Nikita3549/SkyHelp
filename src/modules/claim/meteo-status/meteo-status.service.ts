@@ -51,6 +51,8 @@ export class MeteoStatusService {
     }
 
     async create(data: IMeteoData, claimId: string) {
+        await this.deleteAllByClaimId(claimId);
+
         return this.prisma.meteoStatus.create({
             data: {
                 claimId: claimId,
@@ -75,6 +77,18 @@ export class MeteoStatusService {
                         isSafe: r.isSafe,
                     })),
                 },
+            },
+        });
+    }
+
+    async deleteAllByClaimId(claimId: string) {
+        if (!claimId) {
+            return;
+        }
+
+        await this.prisma.meteoStatus.deleteMany({
+            where: {
+                claimId,
             },
         });
     }
