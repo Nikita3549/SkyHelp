@@ -13,8 +13,9 @@ import { CLAIM_NOT_FOUND, INVALID_JWT } from '../../constants';
 import { PaymentService } from '../payment.service';
 import { TokenService } from '../../../token/token.service';
 import { ActivityService } from '../../activity/activity.service';
-import { ClaimActivityType } from '@prisma/client';
+import { ClaimActivityType, ClaimRecentUpdatesType } from '@prisma/client';
 import { ClaimPersistenceService } from '../../../claim-persistence/services/claim-persistence.service';
+import { RecentUpdatesService } from '../../recent-updates/recent-updates.service';
 
 @Injectable()
 @Controller('claims/payment')
@@ -22,8 +23,8 @@ export class PaymentPublicController {
     constructor(
         private readonly paymentService: PaymentService,
         private readonly tokenService: TokenService,
-        private readonly activityService: ActivityService,
         private readonly claimPersistenceService: ClaimPersistenceService,
+        private readonly recentUpdatesService: RecentUpdatesService,
     ) {}
 
     @Post()
@@ -60,11 +61,11 @@ export class PaymentPublicController {
 
         await this.paymentService.setBlockPaymentRequests(claimId, true);
 
-        await this.activityService.saveActivity(
+        await this.recentUpdatesService.saveRecentUpdate(
             {
-                title: 'Payment details updated',
-                description: `New payment details were added`,
-                type: ClaimActivityType.PAYMENT_UPDATED,
+                updatedEntityId: claim.paymentId || '',
+                entityData: '',
+                type: ClaimRecentUpdatesType.PAYMENT_DETAILS,
             },
             claimId,
         );

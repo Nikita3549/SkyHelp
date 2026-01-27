@@ -1,4 +1,5 @@
 enum ClaimRecentUpdatesType {
   DOCUMENT
   EMAIL
+  PAYMENT_DETAILS
 }

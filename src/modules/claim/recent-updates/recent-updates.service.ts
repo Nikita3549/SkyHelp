@@ -130,6 +130,11 @@ export class RecentUpdatesService {
                 description = `New email from ${data.entityData}`;
                 activityType = ClaimActivityType.EMAIL;
                 break;
+            case ClaimRecentUpdatesType.PAYMENT_DETAILS:
+                title = `Payment details updated`;
+                description = `New payment details were added`;
+                activityType = ClaimActivityType.PAYMENT_UPDATED;
+                break;
         }
 
         await this.activityService.saveActivity(

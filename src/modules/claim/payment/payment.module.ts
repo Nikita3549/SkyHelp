@@ -11,6 +11,7 @@ import { PaymentPublicController } from './controllers/payment-public.controller
 import { ActivityModule } from '../activity/activity.module';
 import { ClaimPersistenceModule } from '../../claim-persistence/claim-persistence.module';
 import { RedisModule } from '../../redis/redis.module';
+import { RecentUpdatesModule } from '../recent-updates/recent-updates.module';
 
 @Module({
     imports: [
@@ -20,9 +21,9 @@ import { RedisModule } from '../../redis/redis.module';
         NotificationModule,
         GenerateLinksModule,
         TokenModule,
-        ActivityModule,
         ClaimPersistenceModule,
         RedisModule,
+        RecentUpdatesModule,
     ],
     controllers: [PaymentController, PaymentPublicController],
     providers: [PaymentService, RequestPaymentDetailsProcessor],
