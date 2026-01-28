@@ -3,10 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { Pool } from 'pg';
 
 @Injectable()
-export class DbStaticService
-    extends Pool
-    implements OnModuleInit, OnModuleDestroy
-{
+export class DbStaticService extends Pool implements OnModuleDestroy {
     constructor(private readonly configService: ConfigService) {
         super({
             user: configService.getOrThrow('DATABASE_STATIC_USER'),
@@ -18,10 +15,6 @@ export class DbStaticService
                     ? configService.getOrThrow('DATABASE_STATIC_PORT')
                     : 5432,
         });
-    }
-
-    async onModuleInit() {
-        await this.connect();
     }
 
     async onModuleDestroy() {
