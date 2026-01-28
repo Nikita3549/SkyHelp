@@ -4,6 +4,7 @@ import { Client } from '@elastic/elasticsearch';
 import { ELASTIC_CLIENT_TOKEN } from './constants/elastic-client.token';
 import * as process from 'process';
 import { isProd } from '../../common/utils/isProd';
+import { DbStaticModule } from '../db-static/db-static.module';
 
 const ElasticClient: Provider = {
     provide: ELASTIC_CLIENT_TOKEN,
@@ -21,6 +22,7 @@ const ElasticClient: Provider = {
 };
 
 @Module({
+    imports: [DbStaticModule],
     providers: [SearchSyncService, ElasticClient],
     exports: [ElasticClient],
 })

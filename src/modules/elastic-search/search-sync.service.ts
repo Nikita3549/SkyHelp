@@ -1,56 +1,18 @@
-import {
-    Inject,
-    Injectable,
-    OnModuleDestroy,
-    OnModuleInit,
-} from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { Pool } from 'pg';
+import { Inject, Injectable } from '@nestjs/common';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import { Client } from '@elastic/elasticsearch';
-import * as process from 'process';
 import { ElasticSearchConfigsPath } from '../../common/constants/paths/ElasticSearchConfigsPath';
 import { ELASTIC_CLIENT_TOKEN } from './constants/elastic-client.token';
 import { isProd } from '../../common/utils/isProd';
+import { DbStaticService } from '../db-static/db-static.service';
 
 @Injectable()
-export class SearchSyncService implements OnModuleInit, OnModuleDestroy {
-    private pool: Pool;
-
+export class SearchSyncService {
     constructor(
-        private readonly configService: ConfigService,
         @Inject(ELASTIC_CLIENT_TOKEN) private readonly esClient: Client,
+        private readonly dbStatic: DbStaticService,
     ) {}
-
-    async onModuleInit() {
-        if (!isProd()) return;
-
-        this.pool = new Pool({
-            user: this.configService.getOrThrow<string>('DATABASE_STATIC_USER'),
-            database: this.configService.getOrThrow<string>(
-                'DATABASE_STATIC_DBNAME',
-            ),
-            password: this.configService.getOrThrow<string>(
-                'DATABASE_STATIC_PASSWORD',
-            ),
-            host: this.configService.getOrThrow<string>('DATABASE_STATIC_HOST'),
-            port:
-                process.env.NODE_ENV === 'LOCAL_DEV'
-                    ? this.configService.getOrThrow<number>(
-                          'DATABASE_STATIC_PORT',
-                      )
-                    : 5432,
-        });
-
-        await this.runFullSync();
-    }
-
-    async onModuleDestroy() {
-        await this.pool.end();
-
-        await this.esClient.close();
-    }
 
     async runFullSync() {
         const settings = await this.loadJson('es-settings.json');
@@ -87,7 +49,9 @@ export class SearchSyncService implements OnModuleInit, OnModuleDestroy {
     }
 
     private async syncTable(index: string, sql: string) {
-        const res = await this.pool.query(sql);
+        if (!isProd()) return;
+
+        const res = await this.dbStatic.query(sql);
         const rows = res.rows;
 
         if (rows.length === 0) {
@@ -98,7 +62,6 @@ export class SearchSyncService implements OnModuleInit, OnModuleDestroy {
             {
                 index: {
                     _index: index,
-                    // ИСПРАВЛЕНИЕ: Добавляем language в ID, чтобы записи не затирали друг друга
                     _id: `${doc.id}_${doc.iata_code || 'no-code'}_${doc.language}`,
                 },
             },

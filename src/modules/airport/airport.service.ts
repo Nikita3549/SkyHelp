@@ -1,42 +1,22 @@
-import {
-    Inject,
-    Injectable,
-    OnModuleDestroy,
-    OnModuleInit,
-} from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Pool } from 'pg';
 import { IDbAirport } from './interfaces/db-airport.interface';
-import * as process from 'process';
 import { Client } from '@elastic/elasticsearch';
 import { ELASTIC_CLIENT_TOKEN } from '../elastic-search/constants/elastic-client.token';
 import { IAirport } from './interfaces/airport.interface';
 import { isProd } from '../../common/utils/isProd';
+import { DbStaticService } from '../db-static/db-static.service';
 
 @Injectable()
-export class AirportService implements OnModuleInit, OnModuleDestroy {
-    private pool: Pool;
-
+export class AirportService {
     constructor(
         private readonly configService: ConfigService,
         @Inject(ELASTIC_CLIENT_TOKEN) private readonly esClient: Client,
+        private readonly dbStatic: DbStaticService,
     ) {}
 
-    onModuleInit() {
-        this.pool = new Pool({
-            user: this.configService.getOrThrow('DATABASE_STATIC_USER'),
-            database: this.configService.getOrThrow('DATABASE_STATIC_DBNAME'),
-            password: this.configService.getOrThrow('DATABASE_STATIC_PASSWORD'),
-            host: this.configService.getOrThrow('DATABASE_STATIC_HOST'),
-            port:
-                process.env.NODE_ENV == 'LOCAL_DEV'
-                    ? this.configService.getOrThrow('DATABASE_STATIC_PORT')
-                    : 5432,
-        });
-    }
-
     async onModuleDestroy() {
-        await this.pool.end();
+        await this.dbStatic.end();
     }
 
     public async getAirportsByName(name: string): Promise<IAirport[]> {
@@ -167,7 +147,7 @@ export class AirportService implements OnModuleInit, OnModuleDestroy {
             }));
         } else {
             const dbAirports = (
-                await this.pool.query<IDbAirport>(
+                await this.dbStatic.query<IDbAirport>(
                     'SELECT\n' +
                         '  id,\n' +
                         '  name,\n' +
@@ -218,7 +198,7 @@ export class AirportService implements OnModuleInit, OnModuleDestroy {
     }
 
     public async getAirportByIcao(icao: string): Promise<IDbAirport | null> {
-        const airport = await this.pool.query<IDbAirport>(
+        const airport = await this.dbStatic.query<IDbAirport>(
             `SELECT * FROM airports WHERE icao_code = $1 AND language = 'en'`,
             [icao],
         );
@@ -227,7 +207,7 @@ export class AirportService implements OnModuleInit, OnModuleDestroy {
     }
 
     public async getAirportByIata(iata: string): Promise<IDbAirport | null> {
-        const airport = await this.pool.query<IDbAirport>(
+        const airport = await this.dbStatic.query<IDbAirport>(
             `SELECT * FROM airports WHERE iata_code = $1 AND language = 'en'`,
             [iata],
         );

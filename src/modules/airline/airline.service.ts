@@ -1,35 +1,14 @@
-import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { Injectable } from '@nestjs/common';
 import { IAirline } from './interfaces/airline.interface';
-import { Pool } from 'pg';
 import { IDbAirline } from './interfaces/db-airline.interface';
-import * as process from 'process';
+import { DbStaticService } from '../db-static/db-static.service';
 
 @Injectable()
-export class AirlineService implements OnModuleInit, OnModuleDestroy {
-    private pool: Pool;
-
-    constructor(private readonly configService: ConfigService) {}
-
-    async onModuleInit() {
-        this.pool = new Pool({
-            user: this.configService.getOrThrow('DATABASE_STATIC_USER'),
-            database: this.configService.getOrThrow('DATABASE_STATIC_DBNAME'),
-            password: this.configService.getOrThrow('DATABASE_STATIC_PASSWORD'),
-            host: this.configService.getOrThrow('DATABASE_STATIC_HOST'),
-            port:
-                process.env.NODE_ENV == 'LOCAL_DEV'
-                    ? this.configService.getOrThrow('DATABASE_STATIC_PORT')
-                    : 5432,
-        });
-    }
-
-    async onModuleDestroy() {
-        await this.pool.end();
-    }
+export class AirlineService {
+    constructor(private readonly dbStatic: DbStaticService) {}
 
     async getAirlineByIcao(icao: string): Promise<IAirline | null> {
-        const result = await this.pool.query<IDbAirline>(
+        const result = await this.dbStatic.query<IDbAirline>(
             `SELECT
             id,
             name,
@@ -59,7 +38,7 @@ export class AirlineService implements OnModuleInit, OnModuleDestroy {
     }
 
     async getAirlineByIata(iata: string): Promise<IAirline | null> {
-        const result = await this.pool.query<IDbAirline>(
+        const result = await this.dbStatic.query<IDbAirline>(
             `SELECT
             id,
             name,
@@ -89,7 +68,7 @@ export class AirlineService implements OnModuleInit, OnModuleDestroy {
     }
 
     public async getAirlinesByName(name: string): Promise<IAirline[]> {
-        const dbAirlines = await this.pool.query<IDbAirline>(
+        const dbAirlines = await this.dbStatic.query<IDbAirline>(
             'SELECT\n' +
                 '  id,\n' +
                 '  name,\n' +

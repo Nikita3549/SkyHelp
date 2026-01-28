@@ -33,6 +33,7 @@ import { PrelitTemplatesModule } from './modules/prelit-templates/prelit-templat
 import { S3Module } from './modules/s3/s3.module';
 import { ClaimPersistenceModule } from './modules/claim-persistence/claim-persistence.module';
 import { ElasticSearchModule } from './modules/elastic-search/elastic-search.module';
+import { DbStaticModule } from './modules/db-static/db-static.module';
 
 @Module({
     imports: [
@@ -75,6 +76,7 @@ import { ElasticSearchModule } from './modules/elastic-search/elastic-search.mod
         S3Module,
         ClaimPersistenceModule,
         ElasticSearchModule,
+        DbStaticModule,
     ],
     controllers: [AppController],
     providers: [AppService],
