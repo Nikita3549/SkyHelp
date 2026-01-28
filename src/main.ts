@@ -56,6 +56,17 @@ async function bootstrap() {
     app.use(express.json({ limit: '10mb' }));
 
     await app.listen(port);
+
+    process.on('SIGINT', async () => {
+        await app.close();
+        process.exit(0);
+    });
+
+    process.on('SIGTERM', async () => {
+        await app.close();
+        process.exit(0);
+    });
+
     console.log(`App is running on port ${port}`);
 }
 
