@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ClaimStatus, Prisma } from '@prisma/client';
+import { ClaimStatus, PassengerPaymentStatus, Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 
 @Injectable()
@@ -29,7 +29,8 @@ export class ClaimStatsService {
             paid,
             approved,
             active,
-            completedAmountAgg,
+            paidCustomersAmount,
+            paidOtherPassengersAmount,
             claimsByDay,
             successByMonth,
         ] = await this.prisma.$transaction([
@@ -84,20 +85,37 @@ export class ClaimStatsService {
                 },
             }),
 
-            // sum of ClaimState.amount where state.status = PAID
-            this.prisma.claimState.aggregate({
+            // sum of claim.customer.compensation where state.status = PAID
+            this.prisma.claimCustomer.aggregate({
                 where: {
-                    status: ClaimStatus.PAID,
+                    paymentStatus: PassengerPaymentStatus.PAID,
                     Claim: {
                         some: {
                             userId,
                             agentId,
                             archived: false,
                             ...(dateWhere ? { createdAt: dateWhere } : {}),
+                            state: {
+                                status: ClaimStatus.PAID,
+                            },
                         },
                     },
                 },
-                _sum: { amount: true },
+                _sum: { compensation: true },
+            }),
+
+            // sum of claim.passengers.compensation where state.status = PAID
+            this.prisma.otherPassenger.aggregate({
+                where: {
+                    paymentStatus: PassengerPaymentStatus.PAID,
+                    claim: {
+                        userId,
+                        agentId,
+                        archived: false,
+                        ...(dateWhere ? { createdAt: dateWhere } : {}),
+                    },
+                },
+                _sum: { compensation: true },
             }),
 
             // claims/day
@@ -141,7 +159,9 @@ export class ClaimStatsService {
             },
         });
 
-        const completedAmount = completedAmountAgg._sum.amount ?? 0;
+        const completedAmount =
+            (paidCustomersAmount._sum.compensation ?? 0) +
+            (paidOtherPassengersAmount._sum.compensation ?? 0);
 
         return {
             total,
