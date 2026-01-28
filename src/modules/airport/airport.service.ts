@@ -10,14 +10,9 @@ import { DbStaticService } from '../db-static/db-static.service';
 @Injectable()
 export class AirportService {
     constructor(
-        private readonly configService: ConfigService,
         @Inject(ELASTIC_CLIENT_TOKEN) private readonly esClient: Client,
         private readonly dbStatic: DbStaticService,
     ) {}
-
-    async onModuleDestroy() {
-        await this.dbStatic.end();
-    }
 
     public async getAirportsByName(name: string): Promise<IAirport[]> {
         if (isProd()) {

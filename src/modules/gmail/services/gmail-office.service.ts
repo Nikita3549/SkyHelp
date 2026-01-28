@@ -49,7 +49,9 @@ export class GmailOfficeService implements OnModuleInit, OnModuleDestroy {
             await this.subscription.close();
         }
 
-        await this.pubsub.close();
+        if (this?.pubsub) {
+            await this.pubsub.close();
+        }
     }
 
     async onModuleInit() {
