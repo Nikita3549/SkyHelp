@@ -3,7 +3,7 @@ import { Job } from 'bullmq';
 import {
     CLAIM_FOLLOWUP_QUEUE_KEY,
     CLAIM_NOT_FOUND,
-    PAYMENT_STEP,
+    BOOKING_REF_STEP,
 } from '../constants';
 import { NotificationService } from '../../notification/services/notification.service';
 import { IJobClaimFollowupData } from '../interfaces/job-data/job-data.interface';
@@ -37,7 +37,7 @@ export class ClaimFollowupProcessor extends WorkerHost {
             throw new Error(CLAIM_NOT_FOUND);
         }
 
-        if (claim.step >= PAYMENT_STEP || claim.archived) {
+        if (claim.step >= BOOKING_REF_STEP || claim.archived) {
             return;
         }
 

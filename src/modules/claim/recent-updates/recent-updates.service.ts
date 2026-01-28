@@ -7,7 +7,7 @@ import {
     DocumentType,
 } from '@prisma/client';
 import { ActivityService } from '../activity/activity.service';
-import { FINAL_STEP, PAYMENT_STEP } from '../constants';
+import { FINAL_STEP, BOOKING_REF_STEP } from '../constants';
 import { ClaimPersistenceService } from '../../claim-persistence/services/claim-persistence.service';
 
 @Injectable()
@@ -40,7 +40,10 @@ export class RecentUpdatesService {
             );
         }
 
-        if (claim.step < PAYMENT_STEP) {
+        if (
+            claim.step < BOOKING_REF_STEP &&
+            recentUpdateData.type == ClaimRecentUpdatesType.DOCUMENT
+        ) {
             return;
         }
         await this.saveActivity(
