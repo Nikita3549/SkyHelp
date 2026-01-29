@@ -1,11 +1,13 @@
-import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import { Injectable, OnModuleDestroy } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Pool } from 'pg';
 
 @Injectable()
-export class DbStaticService extends Pool implements OnModuleDestroy {
+export class DbStaticService implements OnModuleDestroy {
+    readonly pool: Pool;
+
     constructor(private readonly configService: ConfigService) {
-        super({
+        this.pool = new Pool({
             user: configService.getOrThrow('DATABASE_STATIC_USER'),
             database: configService.getOrThrow('DATABASE_STATIC_DBNAME'),
             password: configService.getOrThrow('DATABASE_STATIC_PASSWORD'),
@@ -18,6 +20,6 @@ export class DbStaticService extends Pool implements OnModuleDestroy {
     }
 
     async onModuleDestroy() {
-        await this.end();
+        await this.pool.end();
     }
 }

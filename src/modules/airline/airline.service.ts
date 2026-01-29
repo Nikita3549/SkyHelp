@@ -8,7 +8,7 @@ export class AirlineService {
     constructor(private readonly dbStatic: DbStaticService) {}
 
     async getAirlineByIcao(icao: string): Promise<IAirline | null> {
-        const result = await this.dbStatic.query<IDbAirline>(
+        const result = await this.dbStatic.pool.query<IDbAirline>(
             `SELECT
             id,
             name,
@@ -38,7 +38,7 @@ export class AirlineService {
     }
 
     async getAirlineByIata(iata: string): Promise<IAirline | null> {
-        const result = await this.dbStatic.query<IDbAirline>(
+        const result = await this.dbStatic.pool.query<IDbAirline>(
             `SELECT
             id,
             name,
@@ -68,7 +68,7 @@ export class AirlineService {
     }
 
     public async getAirlinesByName(name: string): Promise<IAirline[]> {
-        const dbAirlines = await this.dbStatic.query<IDbAirline>(
+        const dbAirlines = await this.dbStatic.pool.query<IDbAirline>(
             'SELECT\n' +
                 '  id,\n' +
                 '  name,\n' +

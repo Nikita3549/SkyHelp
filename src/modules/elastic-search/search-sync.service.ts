@@ -51,7 +51,7 @@ export class SearchSyncService {
     private async syncTable(index: string, sql: string) {
         if (!isProd()) return;
 
-        const res = await this.dbStatic.query(sql);
+        const res = await this.dbStatic.pool.query(sql);
         const rows = res.rows;
 
         if (rows.length === 0) {

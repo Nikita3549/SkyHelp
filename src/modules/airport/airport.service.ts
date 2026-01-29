@@ -142,7 +142,7 @@ export class AirportService {
             }));
         } else {
             const dbAirports = (
-                await this.dbStatic.query<IDbAirport>(
+                await this.dbStatic.pool.query<IDbAirport>(
                     'SELECT\n' +
                         '  id,\n' +
                         '  name,\n' +
@@ -193,7 +193,7 @@ export class AirportService {
     }
 
     public async getAirportByIcao(icao: string): Promise<IDbAirport | null> {
-        const airport = await this.dbStatic.query<IDbAirport>(
+        const airport = await this.dbStatic.pool.query<IDbAirport>(
             `SELECT * FROM airports WHERE icao_code = $1 AND language = 'en'`,
             [icao],
         );
@@ -202,7 +202,7 @@ export class AirportService {
     }
 
     public async getAirportByIata(iata: string): Promise<IDbAirport | null> {
-        const airport = await this.dbStatic.query<IDbAirport>(
+        const airport = await this.dbStatic.pool.query<IDbAirport>(
             `SELECT * FROM airports WHERE iata_code = $1 AND language = 'en'`,
             [iata],
         );
