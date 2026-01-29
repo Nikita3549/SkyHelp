@@ -16,6 +16,7 @@ import { Queue } from 'bullmq';
 import { IGenerateAssignmentJobData } from '../processors/interfaces/generateAssignmentJobData';
 import { ClaimPersistenceService } from '../../../claim-persistence/services/claim-persistence.service';
 import { ClaimService } from '../../claim.service';
+import { MergeDocumentsExtensions } from '../constants/merge-documents-extensions.enum';
 
 @Injectable()
 export class DocumentService {
@@ -82,8 +83,11 @@ export class DocumentService {
     // ------------------ FILE ------------------
     async mergeFiles(
         documents: { buffer: Buffer; name: string }[],
-        options?: { addDefaultPrelitDocument: boolean },
-    ): Promise<NodeJS.ReadableStream> {
+        options?: {
+            addDefaultPrelitDocument: boolean;
+            mergedFileExtension: MergeDocumentsExtensions;
+        },
+    ): Promise<Buffer> {
         return this.documentFileService.mergeFiles(documents, options);
     }
 

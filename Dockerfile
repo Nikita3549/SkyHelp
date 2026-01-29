@@ -2,7 +2,7 @@ FROM node:22-slim as build
 WORKDIR /opt/api
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    python3 make g++ openssl libssl-dev \
+    python3 make g++ openssl libssl-dev poppler-utils \
     && rm -rf /var/lib/apt/lists/*
 
 COPY package.json nest-cli.json ./
@@ -22,6 +22,7 @@ WORKDIR /opt/api
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     openssl \
+    poppler-utils \
     curl \
     iproute2 \
     net-tools \

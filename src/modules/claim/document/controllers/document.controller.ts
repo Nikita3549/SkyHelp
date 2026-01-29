@@ -13,6 +13,7 @@ import {
     Query,
     Req,
     Res,
+    StreamableFile,
     UploadedFiles,
     UseGuards,
 } from '@nestjs/common';
@@ -41,6 +42,7 @@ import { RoleGuard } from '../../../../common/guards/role.guard';
 import { ISignedUrlResponse } from './interfaces/signed-url-response.interface';
 import { ClaimPersistenceService } from '../../../claim-persistence/services/claim-persistence.service';
 import { S3Service } from '../../../s3/s3.service';
+import { MergeDocumentsExtensions } from '../constants/merge-documents-extensions.enum';
 
 @Controller('claims/documents')
 @UseGuards(JwtAuthGuard)
@@ -56,18 +58,13 @@ export class DocumentController {
     @Post('merge')
     @DocumentsUploadInterceptor()
     async mergeDocuments(
-        @Res() res: Response,
+        @Res({ passthrough: true }) res: Response,
         @Body() dto: MergeDocumentsDto,
         @UploadedFiles() files: Express.Multer.File[] = [],
     ) {
-        const { documentIds } = dto;
+        const { documentIds, withPrecourtDocument, extension } = dto;
         const claimDocuments =
             await this.documentService.getDocumentByIds(documentIds);
-
-        res.set({
-            'Content-Type': 'application/pdf',
-            'Content-Disposition': 'attachment; filename=merged.pdf',
-        });
 
         const claimDocumentsBuffer = await Promise.all(
             claimDocuments.map(async (doc) => ({
@@ -76,7 +73,7 @@ export class DocumentController {
             })),
         );
 
-        const mergedStream = await this.documentService.mergeFiles(
+        const mergedFileBuffer = await this.documentService.mergeFiles(
             [
                 ...files.map((file) => ({
                     buffer: file.buffer,
@@ -85,11 +82,20 @@ export class DocumentController {
                 ...claimDocumentsBuffer,
             ],
             {
-                addDefaultPrelitDocument: !!dto?.withPrecourtDocument,
+                addDefaultPrelitDocument: !!withPrecourtDocument,
+                mergedFileExtension: extension,
             },
         );
 
-        mergedStream.pipe(res);
+        res.set({
+            'Content-Type':
+                extension == MergeDocumentsExtensions.pdf
+                    ? 'application/pdf'
+                    : 'image/png',
+            'Content-Disposition': `attachment; filename=merged.${extension}`,
+        });
+
+        return new StreamableFile(mergedFileBuffer);
     }
 
     @Delete(':documentId/admin')
