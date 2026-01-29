@@ -68,9 +68,6 @@ export class PaymentController {
         if (!claim) {
             throw new NotFoundException(CLAIM_NOT_FOUND);
         }
-        if (claim.state.isPaymentRequested) {
-            throw new ForbiddenException(PAYMENT_DETAILS_ALREADY_REQUESTED);
-        }
 
         await this.paymentService.schedulePaymentDetailsRequests({
             claimId: claim.id,
