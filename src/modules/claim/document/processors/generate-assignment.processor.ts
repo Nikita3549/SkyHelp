@@ -28,9 +28,10 @@ export class GenerateAssignmentProcessor extends WorkerHost {
             const assignmentFileName = generateAssignmentName(
                 passenger.firstName,
                 passenger.lastName,
+                new Date(),
             );
 
-            const commonData = {
+            const commonData: IAssignmentData = {
                 claimId: claim.id,
                 fileName: assignmentFileName,
                 firstName: passenger.firstName,
@@ -39,6 +40,7 @@ export class GenerateAssignmentProcessor extends WorkerHost {
                 airlineName: claim.details.airlines.name,
                 date: new Date(claim.details.date),
                 flightNumber: claim.details.flightNumber,
+                signDate: new Date(),
             };
 
             let result;

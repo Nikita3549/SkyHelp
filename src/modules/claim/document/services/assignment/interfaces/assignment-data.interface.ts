@@ -7,4 +7,5 @@ export interface IAssignmentData {
     date: Date;
     flightNumber: string;
     airlineName: string;
+    signDate: Date;
 }

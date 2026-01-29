@@ -193,7 +193,7 @@ export class DocumentAssignmentService implements OnModuleInit {
         passenger: BasePassenger,
         assignment: Document,
     ) {
-        const assignmentData = {
+        const assignmentData: IAssignmentData = {
             address: passenger.address,
             airlineName: claim.details.airlines.name,
             firstName: passenger.firstName,
@@ -202,6 +202,7 @@ export class DocumentAssignmentService implements OnModuleInit {
             lastName: passenger.lastName,
             flightNumber: claim.details.flightNumber,
             fileName: assignment.name,
+            signDate: passenger.signedAt || new Date(),
         };
         const file = !passenger.isMinor
             ? await this.saveSignature(
@@ -230,6 +231,7 @@ export class DocumentAssignmentService implements OnModuleInit {
                     name: generateAssignmentName(
                         passenger.firstName,
                         passenger.lastName,
+                        passenger.signedAt || new Date(),
                     ),
                     buffer: file.buffer,
                     passengerId: assignment.passengerId,
@@ -343,7 +345,7 @@ export class DocumentAssignmentService implements OnModuleInit {
             bold: PDFFont;
         },
     ) {
-        const today = formatDate(new Date(), 'dd.MMMM.yyyy');
+        const today = formatDate(assignmentData.signDate, 'dd.MMMM.yyyy');
         titlePage.drawText(today, {
             x: 253,
             y: 685,
@@ -425,7 +427,7 @@ export class DocumentAssignmentService implements OnModuleInit {
             bold: PDFFont;
         },
     ) {
-        const today = formatDate(new Date(), 'dd.mm.yyyy');
+        const today = formatDate(assignmentData.signDate, 'dd.mm.yyyy');
         titlePage.drawText(today, {
             x: 270,
             y: 690,
