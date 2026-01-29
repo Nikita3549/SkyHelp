@@ -3705,6 +3705,7 @@
     "StatusBadge.paid": "Paid",
     "StatusBadge.legalProcess": "Legal Process",
     "StatusBadge.closed": "Closed",
+    "StatusBadge.paymentFailed" : "Payment Failed",
     "DashboardClient.overview": "Overview",
     "DashboardClient.documents": "Documents",
     "DashboardClient.claim": "Claim",

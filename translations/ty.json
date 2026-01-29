@@ -1988,6 +1988,7 @@
     "StatusBadge.escalated": " Yükseltildi",
     "StatusBadge.completed": " Tamamlandı",
     "StatusBadge.rejected": " Reddedildi",
+    "StatusBadge.paymentFailed" : "Ödeme başarısız",
     "StatusBadge.notEligible": " Uygun Değil",
     "DocumentsTab.toastSuccessTitle": " Başarılı",
     "DocumentsTab.toastSuccessDescription": " Yükleme başarılı",

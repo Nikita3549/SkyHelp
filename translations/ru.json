@@ -1990,6 +1990,7 @@
     "StatusBadge.completed": "Завершено",
     "StatusBadge.rejected": "Отклонено",
     "StatusBadge.notEligible": "Не подлежит компенсации",
+    "StatusBadge.paymentFailed" : "Платёж не прошёл",
     "DocumentsTab.toastSuccessTitle": "Успешно",
     "DocumentsTab.toastSuccessDescription": "Файл успешно загружен",
     "DocumentsTab.download": "Скачать",

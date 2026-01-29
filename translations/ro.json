@@ -1989,6 +1989,7 @@
     "StatusBadge.completed": "Finalizată",
     "StatusBadge.rejected": "Respinsă",
     "StatusBadge.notEligible": "Neeligibil",
+    "StatusBadge.paymentFailed" : "Plată nereușită",
     "DocumentsTab.toastSuccessTitle": "Succes",
     "DocumentsTab.toastSuccessDescription": "Încărcare reușită",
     "DocumentsTab.download": "Descarcă",

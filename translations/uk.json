@@ -1987,6 +1987,7 @@
     "StatusBadge.escalated": "Ескальовано",
     "StatusBadge.completed": "Завершено",
     "StatusBadge.rejected": "Відхилено",
+    "StatusBadge.paymentFailed" : "Платіж не пройшов",
     "StatusBadge.notEligible": "Не відповідає",
     "DocumentsTab.toastSuccessTitle": "Успіх",
     "DocumentsTab.toastSuccessDescription": "Завантаження успішне",
