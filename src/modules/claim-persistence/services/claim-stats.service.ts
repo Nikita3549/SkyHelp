@@ -95,9 +95,6 @@ export class ClaimStatsService {
                             agentId,
                             archived: false,
                             ...(dateWhere ? { createdAt: dateWhere } : {}),
-                            state: {
-                                status: ClaimStatus.PAID,
-                            },
                         },
                     },
                 },
