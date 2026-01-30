@@ -4187,5 +4187,6 @@
     "Meteo.snoclo": "SNOCLO",
     "Meteo.windgust" : "Wind gust",
     "Meteo.temperature" : "Temperature",
-    "moldovaBankFields.helper" : "Bank account should be in MDL"
+    "moldovaBankFields.helper" : "Bank account should be in MDL",
+    "emailForm.aiRefine" : "AI Refine"
 }

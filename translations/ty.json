@@ -4208,5 +4208,6 @@
     "Meteo.windshear": "Rüzgar kesmesi",
     "Meteo.snoclo": "SNOCLO",
     "Meteo.windgust" : "Rüzgar tünel",
-    "Meteo.temperature" : "Sıcaklık"
+    "Meteo.temperature" : "Sıcaklık",
+    "emailForm.aiRefine" :  "AI Refine"
 }   
