@@ -164,6 +164,9 @@ export class FlightService {
                     delayMinutes,
                     isCancelled: actualCancelled,
                     source: ClaimFlightStatusSource.FLIGHT_AWARE,
+                    exactTime: flight?.scheduled_out
+                        ? new Date(flight?.scheduled_out)
+                        : undefined,
                 };
             }
 

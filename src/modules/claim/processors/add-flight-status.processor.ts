@@ -49,29 +49,6 @@ export class AddFlightStatusProcessor extends WorkerHost {
         //     );
         // }
 
-        const flightFromFlightIo =
-            await this.flightService.getFlightStatusFromFlightIo(
-                flightCode,
-                airline ? airline.iata : airlineIcao,
-                new Date(flightDate),
-            );
-
-        if (flightFromFlightIo) {
-            if (flightFromFlightIo.exactTime) {
-                exactTime = flightFromFlightIo.exactTime;
-            }
-
-            await this.flightStatusService.createFlightStatus(
-                {
-                    isCancelled: flightFromFlightIo.isCancelled,
-                    delayMinutes: flightFromFlightIo.delayMinutes,
-                    source: flightFromFlightIo.source,
-                    exactTime: flightFromFlightIo.exactTime,
-                },
-                claimId,
-            );
-        }
-
         const flightFromFlightStats =
             await this.flightService.getFlightFromFlightStats(
                 flightCode,
@@ -98,11 +75,37 @@ export class AddFlightStatusProcessor extends WorkerHost {
             );
 
         if (flightFromFlightAware) {
+            if (flightFromFlightAware.exactTime) {
+                exactTime = flightFromFlightAware.exactTime;
+            }
             await this.flightStatusService.createFlightStatus(
                 {
                     isCancelled: flightFromFlightAware.isCancelled,
                     delayMinutes: flightFromFlightAware.delayMinutes,
                     source: flightFromFlightAware.source,
+                },
+                claimId,
+            );
+        }
+
+        const flightFromFlightIo =
+            await this.flightService.getFlightStatusFromFlightIo(
+                flightCode,
+                airline ? airline.iata : airlineIcao,
+                new Date(flightDate),
+            );
+
+        if (flightFromFlightIo) {
+            if (flightFromFlightIo.exactTime) {
+                exactTime = flightFromFlightIo.exactTime;
+            }
+
+            await this.flightStatusService.createFlightStatus(
+                {
+                    isCancelled: flightFromFlightIo.isCancelled,
+                    delayMinutes: flightFromFlightIo.delayMinutes,
+                    source: flightFromFlightIo.source,
+                    exactTime: flightFromFlightIo.exactTime,
                 },
                 claimId,
             );
