@@ -4176,6 +4176,7 @@
     "Meteo.windshear": "Зсув вітру",
     "Meteo.snoclo": "SNOCLO",
     "Meteo.windgust" : "Шквали вітру",
-    "Meteo.temperature" : "Температура"
+    "Meteo.temperature" : "Температура",
+    "moldovaBankFields.helper" : "Банковский аккаунт должен быть в MDL"
 }
 

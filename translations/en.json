@@ -4186,5 +4186,6 @@
     "Meteo.windshear": "Wind shear",
     "Meteo.snoclo": "SNOCLO",
     "Meteo.windgust" : "Wind gust",
-    "Meteo.temperature" : "Temperature"
+    "Meteo.temperature" : "Temperature",
+    "moldovaBankFields.helper" : "Bank account should be in MDL"
 }
