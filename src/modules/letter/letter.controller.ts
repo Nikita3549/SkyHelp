@@ -3,6 +3,7 @@ import {
     Controller,
     ForbiddenException,
     Get,
+    InternalServerErrorException,
     NotFoundException,
     Param,
     Patch,
@@ -21,7 +22,11 @@ import { SendLetterDto } from './dto/send-letter.dto';
 import { ConfigService } from '@nestjs/config';
 import { ATTACHMENT_NOT_FOUND } from '../gmail/constants';
 import { UpdateStatusDto } from './dto/update-status.dto';
-import { AGENT_MUST_HAVE_CLAIM_ID, LETTER_NOT_FOUND } from './constants';
+import {
+    AGENT_MUST_HAVE_CLAIM_ID,
+    CANNOT_REFINE_EMAIL,
+    LETTER_NOT_FOUND,
+} from './constants';
 import { UpdateLetterDto } from './dto/update-letter.dto';
 import { AuthRequest } from '../../common/interfaces/AuthRequest.interface';
 import { EmailType, UserRole } from '@prisma/client';
@@ -35,6 +40,9 @@ import { EmailService } from '../email/email.service';
 import { GmailOfficeService } from '../gmail/services/gmail-office.service';
 import { EmailAttachmentService } from '../email-attachment/email-attachment.service';
 import { ClaimPersistenceService } from '../claim-persistence/services/claim-persistence.service';
+import { RefineEmailBodyDto } from './dto/refine-email-body.dto';
+import { IRefineEmailBodyResponse } from './responses/refine-email-body-response.interface';
+import { LetterRefinerService } from './letter-refiner.service';
 
 @Controller('letters')
 @UseGuards(
@@ -55,7 +63,24 @@ export class LetterController {
         private readonly gmailOfficeService: GmailOfficeService,
         private readonly emailAttachmentService: EmailAttachmentService,
         private readonly claimPersistenceService: ClaimPersistenceService,
+        private readonly letterRefinerService: LetterRefinerService,
     ) {}
+
+    @Post('refine-body')
+    async rewriteEmailBody(
+        @Body() dto: RefineEmailBodyDto,
+    ): Promise<IRefineEmailBodyResponse> {
+        const refinedBody =
+            await this.letterRefinerService.refineEmailBody(dto);
+
+        if (!refinedBody) {
+            throw new InternalServerErrorException(CANNOT_REFINE_EMAIL);
+        }
+
+        return {
+            body: refinedBody,
+        };
+    }
 
     @Get()
     async getLetters(
