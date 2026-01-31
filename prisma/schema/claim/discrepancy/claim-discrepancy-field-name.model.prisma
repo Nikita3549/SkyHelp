@@ -1,0 +1,4 @@
+enum ClaimDiscrepancyFieldName {
+  FIRST_NAME
+  LAST_NAME
+}

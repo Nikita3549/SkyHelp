@@ -1,0 +1,13 @@
+model ClaimDiscrepancy {
+  id             String                    @id @default(uuid())
+  fieldName      ClaimDiscrepancyFieldName @map("field_name")
+  passengerId    String                    @map("passenger_id")
+  documentId     String                    @map("document_id")
+  extractedValue String                    @map("extracted_value")
+  claimId        String                    @map("claim_id")
+
+  document Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  claim    Claim    @relation(fields: [claimId], references: [id])
+
+  @@map("claim_discrepancy")
+}

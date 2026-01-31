@@ -40,6 +40,7 @@ import { DuplicateModule } from './duplicate/duplicate.module';
 import { GenerateLinksModule } from '../generate-links/generate-links.module';
 import { StaffMessageModule } from './staff-message/staff-message.module';
 import { MeteoStatusModule } from './meteo-status/meteo-status.module';
+import { DiscrepancyHubModule } from './discrepancy-hub/discrepancy-hub.module';
 
 @Module({
     imports: [
@@ -83,6 +84,7 @@ import { MeteoStatusModule } from './meteo-status/meteo-status.module';
         StaffMessageModule,
         MeteoStatusModule,
         MeteoStatusModule,
+        DiscrepancyHubModule,
     ],
     controllers: [ClaimController, AdminController, PublicClaimController],
     providers: [

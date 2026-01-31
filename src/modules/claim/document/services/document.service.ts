@@ -17,6 +17,7 @@ import { IGenerateAssignmentJobData } from '../processors/interfaces/generateAss
 import { ClaimPersistenceService } from '../../../claim-persistence/services/claim-persistence.service';
 import { ClaimService } from '../../claim.service';
 import { MergeDocumentsExtensions } from '../constants/merge-documents-extensions.enum';
+import { DiscrepancyHubService } from '../../discrepancy-hub/discrepancy-hub.service';
 
 @Injectable()
 export class DocumentService {
@@ -29,6 +30,7 @@ export class DocumentService {
         @InjectQueue(GENERATE_ASSIGNMENT_QUEUE_KEY)
         private readonly generateAssignmentQueue: Queue,
         private readonly claimPersistenceService: ClaimPersistenceService,
+        private readonly discrepancyHubService: DiscrepancyHubService,
     ) {}
 
     // ------------------ ASSIGNMENT ------------------
@@ -160,6 +162,16 @@ export class DocumentService {
             docsToSave,
             claimId,
             !!options?.isPublic,
+        );
+
+        this.discrepancyHubService.processPassportDiscrepancy(
+            savedDocuments.map((doc) => ({
+                ...doc,
+                buffer: documentWithKeys.find(
+                    (documentWithKey) => documentWithKey.s3Key == doc.s3Key,
+                )!.buffer,
+            })),
+            claimId,
         );
 
         if (options?.handleIsAllDocumentsUploaded) {

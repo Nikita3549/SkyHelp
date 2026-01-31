@@ -10,5 +10,7 @@ model Document {
   claim       Claim        @relation(fields: [claimId], references: [id], onDelete: Cascade)
   deletedAt   DateTime?    @map("deleted_at")
 
+  claimDiscrepancies ClaimDiscrepancy[]
+
   @@map("documents")
 }

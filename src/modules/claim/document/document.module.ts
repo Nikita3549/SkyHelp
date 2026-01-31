@@ -14,6 +14,7 @@ import { GenerateAssignmentProcessor } from './processors/generate-assignment.pr
 import { BullModule } from '@nestjs/bullmq';
 import { GENERATE_ASSIGNMENT_QUEUE_KEY } from './processors/constants/generate-assignment-queue-key';
 import { ClaimPersistenceModule } from '../../claim-persistence/claim-persistence.module';
+import { DiscrepancyHubModule } from '../discrepancy-hub/discrepancy-hub.module';
 
 @Module({
     imports: [
@@ -26,6 +27,7 @@ import { ClaimPersistenceModule } from '../../claim-persistence/claim-persistenc
             name: GENERATE_ASSIGNMENT_QUEUE_KEY,
         }),
         ClaimPersistenceModule,
+        DiscrepancyHubModule,
     ],
     controllers: [DocumentController, PublicDocumentController],
     providers: [

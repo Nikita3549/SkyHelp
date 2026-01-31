@@ -34,6 +34,7 @@ model Claim {
   referrer           String?
   referrerSource     String?              @map("referrer_source")
   referalTransaction ReferralTransaction?
+  discrepancies      ClaimDiscrepancy[]
 
   duplicates    DuplicatedClaim[] @relation("ClaimOriginal")
   duplicatedOf  DuplicatedClaim[] @relation("ClaimDuplicate")
