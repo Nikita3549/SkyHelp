@@ -91,6 +91,7 @@ export class ClaimIncludeProvider {
                     role: true,
                 },
             },
+            discrepancies: true,
             duplicates: config?.fullDuplicates
                 ? true
                 : { select: { duplicatedClaimId: true } },
@@ -149,6 +150,7 @@ export class ClaimIncludeProvider {
                     isMinor: true,
                 },
             },
+            discrepancies: true,
             duplicates: true,
         } as const;
     }
@@ -204,6 +206,7 @@ export class ClaimIncludeProvider {
             },
             passengers: true,
             duplicates: true,
+            discrepancies: true,
             payment: true,
         } as const;
     }
