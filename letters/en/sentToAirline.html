@@ -1,0 +1,42 @@
+<h1 style="font-size: 22px; font-weight: 600; margin: 0 0 16px; color: #1e3a8a; text-align: start">
+  Your claim has been submitted to the airline!
+</h1>
+
+<p style="font-size: 16px; line-height: 1.6; color: #111827;">
+  Hello, {{clientName}}!
+</p>
+
+<p style="font-size: 16px; line-height: 1.6; color: #111827;">
+  We have submitted your claim <strong>#{{claimId}}</strong> to the airline. From this moment on, the airline is officially required to review your case and provide a response regarding compensation.
+</p>
+
+<p style="font-size: 16px; line-height: 1.6; color: #111827; margin-top: 12px;">
+  Typically, this stage takes between <strong>2 and 6 weeks</strong>. We will monitor the process and follow up with the airline if necessary — no action is required from your side.
+</p>
+
+<p style="font-size: 16px; line-height: 1.6; color: #111827;">
+  You can check the progress of your claim at any time in your personal account by clicking the button below.
+</p>
+
+<p style="font-size: 16px; line-height: 1.6; color: #111827;">
+  If you have any questions, we are always here to help.
+</p>
+
+<p style="font-size: 16px; line-height: 1.6; color: #111827; margin-top: 20px;">
+  Best regards,<br>
+  <strong>SkyHelp Team</strong>
+</p>
+
+{{#if comments}}
+<div style="margin-top: 20px; padding: 16px; background-color: #f8fafc; border-radius: 8px; border-left: 4px solid #3b82f6;">
+  <div style="font-size: 15px; color: #374151; line-height: 1.5; min-height: 1em;">
+    {{comments}}
+  </div>
+</div>
+{{/if}}
+
+<div style="margin: 24px 0; text-align: center;">
+  <a href="{{dashboardLink}}" style="display: inline-block; padding: 12px 24px; background-color: #3b82f6; color: #ffffff; text-decoration: none; font-weight: 600; border-radius: 40px; font-size: 15px;">
+    Personal Account
+  </a>
+</div>

@@ -1,0 +1,31 @@
+<h1 style="font-size: 22px; font-weight: 600; margin: 0 0 16px; color: #1e3a8a; text-align: start">
+  Just one step left!
+</h1>
+
+<p style="font-size: 16px; line-height: 1.6; color: #111827;">
+  Hello, {{clientName}}
+</p>
+
+{{#if (eq compensation 0)}}
+<p style="font-size: 16px; line-height: 1.6; color: #111827;">
+  We noticed you started filling out your claim but haven’t finished it yet. Completing it only takes a minute.
+</p>
+{{else}}
+<p style="font-size: 16px; line-height: 1.6; color: #111827;">
+  We noticed you started filling out your claim but haven’t finished it yet. Completing it only takes a minute, and you might be eligible for compensation of up to <strong>€{{ compensation }}</strong>.
+</p>
+{{/if}}
+
+<p style="font-size: 16px; line-height: 1.6; color: #111827; margin-top: 12px;">
+  Your claim ID: <strong>#{{claimId}}</strong>
+</p>
+
+<p style="font-size: 16px; line-height: 1.6; color: #111827;">
+  You can return to your application using the button below.
+</p>
+
+<div style="margin: 24px 0; text-align: center;">
+  <a href="{{claimLink}}" style="display: inline-block; padding: 12px 24px; background-color: #3b82f6; color: #ffffff; text-decoration: none; font-weight: 600; border-radius: 40px; font-size: 15px;">
+    Resume my claim
+  </a>
+</div>

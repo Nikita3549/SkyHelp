@@ -1,0 +1,42 @@
+<h1 style="font-size: 22px; font-weight: 600; margin: 0 0 16px; color: #1e3a8a; text-align: start">
+  Cererea dumneavoastră a fost trimisă către compania aeriană!
+</h1>
+
+<p style="font-size: 16px; line-height: 1.6; color: #111827;">
+  Bună ziua, {{clientName}}!
+</p>
+
+<p style="font-size: 16px; line-height: 1.6; color: #111827;">
+  Am trimis cererea dumneavoastră <strong>#{{claimId}}</strong> către compania aeriană. Din acest moment, compania este obligată să examineze oficial cazul și să ofere un răspuns privind compensația.
+</p>
+
+<p style="font-size: 16px; line-height: 1.6; color: #111827; margin-top: 12px;">
+  De regulă, această etapă durează între <strong>2 și 6 săptămâni</strong>. Noi vom monitoriza procesul și vom reveni cu mementouri către compania aeriană dacă va fi necesar — dumneavoastră nu trebuie să faceți nimic.
+</p>
+
+<p style="font-size: 16px; line-height: 1.6; color: #111827;">
+  Puteți verifica oricând progresul cererii în cabinetul personal, apăsând butonul de mai jos.
+</p>
+
+<p style="font-size: 16px; line-height: 1.6; color: #111827;">
+  Dacă aveți întrebări — suntem mereu la dispoziția dumneavoastră.
+</p>
+
+<p style="font-size: 16px; line-height: 1.6; color: #111827; margin-top: 20px;">
+  Cu respect,<br>
+  <strong>Echipa SkyHelp</strong>
+</p>
+
+{{#if comments}}
+<div style="margin-top: 20px; padding: 16px; background-color: #f8fafc; border-radius: 8px; border-left: 4px solid #3b82f6;">
+  <div style="font-size: 15px; color: #374151; line-height: 1.5; min-height: 1em;">
+    {{comments}}
+  </div>
+</div>
+{{/if}}
+
+<div style="margin: 24px 0; text-align: center;">
+  <a href="{{dashboardLink}}" style="display: inline-block; padding: 12px 24px; background-color: #3b82f6; color: #ffffff; text-decoration: none; font-weight: 600; border-radius: 40px; font-size: 15px;">
+    Cabinet personal
+  </a>
+</div>
