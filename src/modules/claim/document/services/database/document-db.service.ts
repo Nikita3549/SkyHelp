@@ -95,6 +95,7 @@ export class DocumentDbService {
             type: true,
             claimId: true,
             passengerId: true,
+            s3Key: true,
         };
     }
 }

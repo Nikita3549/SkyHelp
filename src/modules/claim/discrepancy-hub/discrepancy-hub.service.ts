@@ -9,12 +9,14 @@ import {
     DocumentType,
 } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { ClaimPersistenceService } from '../../claim-persistence/services/claim-persistence.service';
 
 @Injectable()
 export class DiscrepancyHubService {
     constructor(
         private readonly configService: ConfigService,
         private readonly prisma: PrismaService,
+        private readonly claimPersistenceService: ClaimPersistenceService,
     ) {}
 
     async processPassportDiscrepancy(
@@ -23,12 +25,21 @@ export class DiscrepancyHubService {
     ) {
         await Promise.all(
             documents.map(async (doc) => {
-                if (doc.type != DocumentType.PASSPORT) {
+                const passenger =
+                    await this.claimPersistenceService.getBasePassenger(
+                        doc.passengerId,
+                    );
+
+                if (doc.type != DocumentType.PASSPORT || !passenger) {
                     return;
                 }
+
                 const passportData = await this.extractPassportData(doc.buffer);
 
-                if (passportData?.firstName) {
+                if (
+                    passportData?.firstName &&
+                    passportData.firstName != passenger.firstName
+                ) {
                     await this.saveDiscrepancy({
                         fieldName: ClaimDiscrepancyFieldName.FIRST_NAME,
                         documentId: doc.id,
@@ -37,7 +48,10 @@ export class DiscrepancyHubService {
                         extractedValue: passportData.firstName,
                     });
                 }
-                if (passportData?.lastName) {
+                if (
+                    passportData?.lastName &&
+                    passportData.lastName != passenger.lastName
+                ) {
                     await this.saveDiscrepancy({
                         fieldName: ClaimDiscrepancyFieldName.LAST_NAME,
                         documentId: doc.id,
