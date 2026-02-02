@@ -199,10 +199,6 @@ export class PublicClaimController {
             compensation: claim.state.amount,
         });
 
-        await this.claimService.scheduleEnsureDocumentRequests({
-            claimId: claim.id,
-        });
-
         const addFlightStatusJobData: IAddFlightStatusJobData = {
             flightNumber: claim.details.flightNumber,
             airlineIcao: claim.details.airlines.icao,
@@ -361,6 +357,10 @@ export class PublicClaimController {
         ))!;
 
         if (step == FINAL_STEP) {
+            await this.claimService.scheduleEnsureDocumentRequests({
+                claimId: claim.id,
+            });
+
             await this.notificationService.sendLetter(
                 new ClaimCreatedLetter({
                     to: claim.customer.email,
