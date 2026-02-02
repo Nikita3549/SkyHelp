@@ -10,6 +10,7 @@ import {
     ADD_FLIGHT_STATUS_QUEUE_KEY,
     CLAIM_FOLLOWUP_QUEUE_KEY,
     CLAIM_REMINDER_QUEUE_KEY,
+    ENSURE_DOCUMENT_REQUESTS_QUEUE_KEY,
 } from './constants';
 import { ClaimFollowupProcessor } from './processors/claim-followup.processor';
 import { ProgressModule } from './progress/progress.module';
@@ -41,6 +42,7 @@ import { GenerateLinksModule } from '../generate-links/generate-links.module';
 import { StaffMessageModule } from './staff-message/staff-message.module';
 import { MeteoStatusModule } from './meteo-status/meteo-status.module';
 import { DiscrepancyHubModule } from './discrepancy-hub/discrepancy-hub.module';
+import { EnsureDocumentRequestsProcessor } from './processors/ensure-document-requests.processor';
 
 @Module({
     imports: [
@@ -58,6 +60,9 @@ import { DiscrepancyHubModule } from './discrepancy-hub/discrepancy-hub.module';
             },
             {
                 name: CLAIM_REMINDER_QUEUE_KEY,
+            },
+            {
+                name: ENSURE_DOCUMENT_REQUESTS_QUEUE_KEY,
             },
         ),
         ProgressModule,
@@ -93,6 +98,7 @@ import { DiscrepancyHubModule } from './discrepancy-hub/discrepancy-hub.module';
         ClaimGateway,
         AddFlightStatusProcessor,
         ClaimReminderProcessor,
+        EnsureDocumentRequestsProcessor,
     ],
     exports: [ClaimService],
 })

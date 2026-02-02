@@ -4,7 +4,9 @@ import {
     CancellationNotice,
     ClaimStatus,
     DelayCategory,
+    DocumentRequestReason,
     DocumentRequestStatus,
+    DocumentRequestType,
     DocumentType,
     Prisma,
     Progress,
@@ -15,6 +17,7 @@ import { InjectQueue } from '@nestjs/bullmq';
 import {
     CLAIM_FOLLOWUP_QUEUE_KEY,
     CONTINUE_LINKS_EXP,
+    ENSURE_DOCUMENT_REQUESTS_QUEUE_KEY,
     FIVE_DAYS,
     FOUR_DAYS,
     SIX_DAYS,
@@ -36,6 +39,7 @@ import { ClaimPersistenceService } from '../claim-persistence/services/claim-per
 import { DuplicateService } from './duplicate/duplicate.service';
 import { IFullClaim } from '../claim-persistence/types/claim-persistence.types';
 import { ICreateClaimExtraData } from './interfaces/create-claim-extra-data.interface';
+import { IEnsureDocumentRequestsJobData } from './interfaces/ensure-document-requests-job-data.interface';
 
 @Injectable()
 export class ClaimService {
@@ -43,6 +47,8 @@ export class ClaimService {
         private readonly prisma: PrismaService,
         @InjectQueue(CLAIM_FOLLOWUP_QUEUE_KEY)
         private readonly claimFollowupQueue: Queue,
+        @InjectQueue(ENSURE_DOCUMENT_REQUESTS_QUEUE_KEY)
+        private readonly ensureDocumentRequestsQueue: Queue,
         private readonly configService: ConfigService,
         private readonly tokenService: TokenService,
         private readonly progressService: ProgressService,
@@ -50,6 +56,61 @@ export class ClaimService {
         private readonly claimPersistenceService: ClaimPersistenceService,
         private readonly duplicateService: DuplicateService,
     ) {}
+
+    async ensureDocumentRequests(claimId: string) {
+        const claim = await this.claimPersistenceService.findOneById(claimId);
+        if (!claim) {
+            throw new Error(
+                "Couldn't find claim while ensure document requests process",
+            );
+        }
+        const allPassengers = [claim.customer, ...claim.passengers];
+        const reqs = await this.documentRequestService.getByClaimId(claim.id);
+
+        for (const passenger of allPassengers) {
+            const documents = claim.documents.filter(
+                (d) => passenger.id == d.passengerId,
+            );
+
+            const checkAndCreate = async (
+                typesToCheck: DocumentType[],
+                typeToCreate: DocumentRequestType,
+            ) => {
+                const hasDoc = typesToCheck.some((type) =>
+                    documents.some((doc) => doc.type === type),
+                );
+                const hasReqs = reqs.some((r) => r.type == typeToCreate);
+
+                if (!hasDoc && !hasReqs) {
+                    await this.documentRequestService.create({
+                        type: typeToCreate,
+                        claimId: claim.id,
+                        passengerId: passenger.id,
+                        reason: DocumentRequestReason.MISSING_DOCUMENT,
+                    });
+                }
+            };
+
+            await Promise.all([
+                await checkAndCreate(
+                    [
+                        DocumentType.DOCUMENT,
+                        DocumentType.ETICKET,
+                        DocumentType.BOARDING_PASS,
+                    ],
+                    DocumentRequestType.BOARDING_PASS,
+                ),
+                await checkAndCreate(
+                    [DocumentType.ASSIGNMENT],
+                    DocumentRequestType.ASSIGNMENT,
+                ),
+                await checkAndCreate(
+                    [DocumentType.PASSPORT],
+                    DocumentType.PASSPORT,
+                ),
+            ]);
+        }
+    }
 
     async handleAllDocumentsUploaded(claimId: string) {
         type RequiredDocumentGroups = {
@@ -147,7 +208,13 @@ export class ClaimService {
         });
     }
 
-    scheduleClaimFollowUpEmails(jobData: IJobClaimFollowupData) {
+    async scheduleEnsureDocumentRequests(
+        jobData: IEnsureDocumentRequestsJobData,
+    ) {
+        await this.claimFollowupQueue.add('ensureDocumentRequests', jobData);
+    }
+
+    async scheduleClaimFollowUpEmails(jobData: IJobClaimFollowupData) {
         const delays = [
             HOUR,
             HOUR * 5,

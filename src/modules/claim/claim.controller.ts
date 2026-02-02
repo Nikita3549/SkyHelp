@@ -190,13 +190,17 @@ export class PublicClaimController {
             }
         }
 
-        this.claimService.scheduleClaimFollowUpEmails({
+        await this.claimService.scheduleClaimFollowUpEmails({
             email: claim.customer.email,
             claimId: claim.id,
             language,
-            continueClaimLink: claim.continueLink!, // after creating continue link isn't null anyway
+            continueClaimLink: claim.continueLink!,
             clientFirstName: claim.customer.firstName,
             compensation: claim.state.amount,
+        });
+
+        await this.claimService.scheduleEnsureDocumentRequests({
+            claimId: claim.id,
         });
 
         const addFlightStatusJobData: IAddFlightStatusJobData = {

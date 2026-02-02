@@ -40,3 +40,5 @@ export const CONTINUE_LINKS_EXP = '30days';
 export const MEGABYTE = 1024 * 1024;
 
 export const INVALID_BOARDING_PASS = 'Invalid boarding pass';
+
+export const ENSURE_DOCUMENT_REQUESTS_QUEUE_KEY = 'ensure-document-requests';
