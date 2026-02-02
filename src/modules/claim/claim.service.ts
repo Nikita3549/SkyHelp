@@ -57,62 +57,6 @@ export class ClaimService {
         private readonly duplicateService: DuplicateService,
     ) {}
 
-    async onModuleInit() {
-        const claims = await this.prisma.claim.findMany({
-            where: {
-                archived: false,
-                OR: [
-                    {
-                        documentRequests: {
-                            none: { type: DocumentRequestType.PASSPORT },
-                        },
-                    },
-                    {
-                        documentRequests: {
-                            none: { type: DocumentRequestType.ASSIGNMENT },
-                        },
-                    },
-                    {
-                        documentRequests: {
-                            none: {
-                                type: {
-                                    in: [
-                                        DocumentRequestType.BOARDING_PASS,
-                                        DocumentRequestType.ETICKET,
-                                    ],
-                                },
-                            },
-                        },
-                    },
-                ],
-            },
-            select: {
-                id: true,
-            },
-        });
-
-        const CHUNK_SIZE = 10;
-        const INTERVAL_MS = 5 * 60 * 1000;
-        const START_DELAY_MS = 12 * 60 * 60 * 1000;
-
-        for (let i = 0; i < claims.length; i += CHUNK_SIZE) {
-            const chunk = claims.slice(i, i + CHUNK_SIZE);
-            const chunkIndex = i / CHUNK_SIZE;
-
-            const currentDelay = START_DELAY_MS + chunkIndex * INTERVAL_MS;
-
-            const claimIds = chunk.map((c) => c.id);
-
-            claimIds.forEach((claimId) => {
-                this.scheduleEnsureDocumentRequests({ claimId }, currentDelay);
-            });
-
-            console.log(
-                `Scheduled ${claimIds.length} claims with delay ${currentDelay / (60 * 60 * 1000)} hours`,
-            );
-        }
-    }
-
     async ensureDocumentRequests(claimId: string) {
         const claim = await this.claimPersistenceService.findOneById(claimId);
         if (!claim) {
