@@ -37,6 +37,7 @@ services:
             - '127.0.0.1:${DATABASE_STATIC_PORT}:5432'
         networks:
             - main
+            - prod_db
         healthcheck:
             test:
                 [
@@ -118,6 +119,8 @@ services:
 networks:
     main:
         driver: bridge
+    prod_db:
+        external: true
 
 volumes:
     db_data:
