@@ -102,7 +102,12 @@ export class LetterController {
             throw new ForbiddenException(AGENT_MUST_HAVE_CLAIM_ID);
         }
 
-        return this.emailService.getEmails(page, claimId, type, status);
+        return this.emailService.getEmails({
+            page,
+            claimId,
+            type,
+            status,
+        });
     }
 
     @Post()

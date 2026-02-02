@@ -127,14 +127,16 @@ export class EmailService {
         return email;
     }
 
-    async getEmails(
-        page: number,
-        claimId?: string | null,
-        type?: EmailType,
-        status?: EmailStatus,
-        pageSize: number = 20,
-    ): Promise<{ letters: Email[]; total: number }> {
-        const skip = (page - 1) * pageSize;
+    async getEmails(filters: {
+        page: number;
+        pageSize?: number;
+        claimId?: string | null;
+        type?: EmailType;
+        status?: EmailStatus;
+    }): Promise<{ letters: Email[]; total: number }> {
+        const { page, pageSize, claimId, type, status } = filters;
+
+        const skip = (page - 1) * (pageSize || 20);
         const where: Prisma.EmailWhereInput = {
             claimId,
             type,

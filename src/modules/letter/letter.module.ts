@@ -5,6 +5,7 @@ import { EmailModule } from '../email/email.module';
 import { EmailAttachmentModule } from '../email-attachment/email-attachment.module';
 import { ClaimPersistenceModule } from '../claim-persistence/claim-persistence.module';
 import { LetterRefinerService } from './letter-refiner.service';
+import { AiDataLetterController } from './ai-data-letter.controller';
 
 @Module({
     imports: [
@@ -14,6 +15,6 @@ import { LetterRefinerService } from './letter-refiner.service';
         ClaimPersistenceModule,
     ],
     providers: [LetterRefinerService],
-    controllers: [LetterController],
+    controllers: [LetterController, AiDataLetterController],
 })
 export class LetterModule {}
