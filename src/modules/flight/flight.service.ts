@@ -18,10 +18,14 @@ import { FlightIoFlightData } from './interfaces/flight-io/flight-io-flight-data
 import { parseFlightIoFlightStatus } from './utils/parse-flight-io-flight-status';
 import { FlightIoFlightStatus } from './interfaces/flight-io/flight-io-flight-status';
 import { IChisinauAirportFlight } from './interfaces/chisinau-airport/chisinau-airport-flight.interface';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class FlightService {
-    constructor(private readonly configService: ConfigService) {}
+    constructor(
+        private readonly configService: ConfigService,
+        private readonly prisma: PrismaService,
+    ) {}
 
     async getFlightStatusFromFlightIo(
         flightCode: string,
@@ -90,6 +94,8 @@ export class FlightService {
         date: Date;
     }): Promise<IFlightStatus | null> {
         try {
+            await this.prisma.flightStatusRequest.create({});
+
             const res = await axios.get<IChisinauAirportFlight>(
                 `${this.configService.getOrThrow('CHISINAU_AIRPORT_API_URL')}/flights`,
                 {
