@@ -31,7 +31,6 @@ import { ClaimPersistenceService } from '../../claim-persistence/services/claim-
 export class DocumentRequestController {
     constructor(
         private readonly documentRequestService: DocumentRequestService,
-        private readonly redis: RedisService,
         private readonly claimPersistenceService: ClaimPersistenceService,
     ) {}
 
@@ -60,24 +59,7 @@ export class DocumentRequestController {
             throw new ForbiddenException(HAVE_NO_RIGHTS_ON_CLAIM);
         }
 
-        const isLocked = await this.redis.get(
-            `claim:${claim.id}:docs_request_email_lock`,
-        );
-
-        if (!isLocked) {
-            await this.documentRequestService.scheduleSendNewDocumentRequests(
-                claim,
-            );
-
-            await this.redis.set(
-                `claim:${claim.id}:docs_request_email_lock`,
-                1,
-                'PX',
-                DAY * 12,
-            );
-        }
-
-        return this.documentRequestService.create(dto);
+        return this.documentRequestService.create(dto, claim);
     }
 
     @Get()

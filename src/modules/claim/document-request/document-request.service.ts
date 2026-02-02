@@ -15,6 +15,7 @@ import { Languages } from '../../language/enums/languages.enums';
 import { DAY, MINUTE } from '../../../common/constants/time.constants';
 import { getNextWorkTime } from '../../../common/utils/getNextWorkTime';
 import { IFullClaim } from '../../claim-persistence/types/claim-persistence.types';
+import { RedisService } from '../../redis/redis.service';
 
 @Injectable()
 export class DocumentRequestService {
@@ -22,9 +23,28 @@ export class DocumentRequestService {
         private readonly prisma: PrismaService,
         @InjectQueue(SEND_NEW_DOCUMENT_REQUEST_QUEUE_KEY)
         private readonly sendNewDocumentRequestQueue: Queue,
+        private readonly redis: RedisService,
     ) {}
 
-    async create(data: CreateDocumentRequestDto): Promise<DocumentRequest> {
+    async create(
+        data: CreateDocumentRequestDto,
+        claim: IFullClaim,
+    ): Promise<DocumentRequest> {
+        const isLocked = await this.redis.get(
+            `claim:${claim.id}:docs_request_email_lock`,
+        );
+
+        if (!isLocked) {
+            await this.scheduleSendNewDocumentRequests(claim);
+
+            await this.redis.set(
+                `claim:${claim.id}:docs_request_email_lock`,
+                1,
+                'PX',
+                DAY * 12,
+            );
+        }
+
         return this.prisma.documentRequest.create({
             data: {
                 ...data,
@@ -101,7 +121,7 @@ export class DocumentRequestService {
 
     async scheduleSendNewDocumentRequests(claim: IFullClaim) {
         const delays = [
-            MINUTE * 5,
+            MINUTE * 0,
             DAY * 2,
             DAY * 4,
             DAY * 6,

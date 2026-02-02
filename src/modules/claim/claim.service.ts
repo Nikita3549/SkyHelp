@@ -82,12 +82,15 @@ export class ClaimService {
                 const hasReqs = reqs.some((r) => r.type == typeToCreate);
 
                 if (!hasDoc && !hasReqs) {
-                    await this.documentRequestService.create({
-                        type: typeToCreate,
-                        claimId: claim.id,
-                        passengerId: passenger.id,
-                        reason: DocumentRequestReason.MISSING_DOCUMENT,
-                    });
+                    await this.documentRequestService.create(
+                        {
+                            type: typeToCreate,
+                            claimId: claim.id,
+                            passengerId: passenger.id,
+                            reason: DocumentRequestReason.MISSING_DOCUMENT,
+                        },
+                        claim,
+                    );
                 }
             };
 
