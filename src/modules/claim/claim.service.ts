@@ -91,8 +91,8 @@ export class ClaimService {
             },
         });
 
-        const CHUNK_SIZE = 50;
-        const INTERVAL_MS = 30 * 60 * 1000;
+        const CHUNK_SIZE = 10;
+        const INTERVAL_MS = 5 * 60 * 1000;
         const START_DELAY_MS = 12 * 60 * 60 * 1000;
 
         for (let i = 0; i < claims.length; i += CHUNK_SIZE) {
