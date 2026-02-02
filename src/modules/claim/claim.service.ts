@@ -29,7 +29,7 @@ import { IJobClaimFollowupData } from './interfaces/job-data/job-data.interface'
 import { ConfigService } from '@nestjs/config';
 import { IClaimJwt } from './interfaces/claim-jwt.interface';
 import { TokenService } from '../token/token.service';
-import { DAY, HOUR } from '../../common/constants/time.constants';
+import { DAY, HOUR, MINUTE } from '../../common/constants/time.constants';
 import { getNextWorkTime } from '../../common/utils/getNextWorkTime';
 import { generateNumericId } from '../../common/utils/generateNumericId';
 import { ProgressService } from './progress/progress.service';
@@ -210,7 +210,8 @@ export class ClaimService {
 
     async scheduleEnsureDocumentRequests(
         jobData: IEnsureDocumentRequestsJobData,
-        delay: number = HOUR,
+        // delay: number = HOUR,
+        delay: number = MINUTE,
     ) {
         await this.ensureDocumentRequestsQueue.add(
             'ensureDocumentRequests',
