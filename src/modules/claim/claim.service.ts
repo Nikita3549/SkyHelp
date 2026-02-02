@@ -211,7 +211,10 @@ export class ClaimService {
     async scheduleEnsureDocumentRequests(
         jobData: IEnsureDocumentRequestsJobData,
     ) {
-        await this.claimFollowupQueue.add('ensureDocumentRequests', jobData);
+        await this.ensureDocumentRequestsQueue.add(
+            'ensureDocumentRequests',
+            jobData,
+        );
     }
 
     async scheduleClaimFollowUpEmails(jobData: IJobClaimFollowupData) {
