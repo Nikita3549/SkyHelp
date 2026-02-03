@@ -4194,5 +4194,6 @@
     "Meteo.windgust" : "Vânt",
     "Meteo.temperature" : "Temperatură",
     "moldovaBankFields.helper" : "Contul bancar trebuie sa fie in MDL",
-    "emailForm.aiRefine" : "AI Imbunǎtǎțire"
+    "emailForm.aiRefine" : "AI Imbunǎtǎțire",
+    "IssueDetailsCard.aiSummaryButton" : "AI"
 }

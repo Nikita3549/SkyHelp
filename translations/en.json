@@ -4193,5 +4193,6 @@
     "Meteo.windgust" : "Wind gust",
     "Meteo.temperature" : "Temperature",
     "moldovaBankFields.helper" : "Bank account should be in MDL",
-    "emailForm.aiRefine" : "AI Refine"
+    "emailForm.aiRefine" : "AI Refine",
+    "IssueDetailsCard.aiSummaryButton" : "AI"
 }

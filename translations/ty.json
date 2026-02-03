@@ -4214,5 +4214,6 @@
     "Meteo.snoclo": "SNOCLO",
     "Meteo.windgust" : "Rüzgar tünel",
     "Meteo.temperature" : "Sıcaklık",
-    "emailForm.aiRefine" :  "AI Refine"
+    "emailForm.aiRefine" :  "AI Refine",
+    "IssueDetailsCard.aiSummaryButton" : "AI"
 }   

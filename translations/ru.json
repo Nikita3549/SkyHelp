@@ -4194,5 +4194,6 @@
     "Meteo.windgust" : "Порывы ветра",
     "Meteo.temperature" : "Температура",
     "moldovaBankFields.helper" : "Банковский аккаунт должен быть в MDL",
-    "emailForm.aiRefine" : "ИИ улучшение"
+    "emailForm.aiRefine" : "ИИ улучшение",
+    "IssueDetailsCard.aiSummaryButton" : "ИИ"
 }
