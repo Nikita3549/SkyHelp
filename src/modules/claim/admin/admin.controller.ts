@@ -42,6 +42,8 @@ import { ClaimPersistenceService } from '../../claim-persistence/services/claim-
 import { DuplicateService } from '../duplicate/duplicate.service';
 import { ClaimSearchService } from '../../claim-persistence/services/claim-search.service';
 import { ClaimStatsService } from '../../claim-persistence/services/claim-stats.service';
+import { ClaimService } from '../claim.service';
+import { GenerateAiSummaryDto } from './dto/generate-ai-summary.dto';
 
 @Controller('claims/admin')
 @UseGuards(
@@ -65,7 +67,33 @@ export class AdminController {
         private readonly otherPassengersService: OtherPassengerService,
         private readonly claimPersistenceService: ClaimPersistenceService,
         private readonly duplicateService: DuplicateService,
+        private readonly claimService: ClaimService,
     ) {}
+
+    @Post(':claimId/ai-summary')
+    async generateAiSummary(
+        @Param('claimId') claimId: string,
+        @Body() dto: GenerateAiSummaryDto,
+    ): Promise<{ summarizedText: string }> {
+        const claim = await this.claimPersistenceService.findOneById(claimId);
+
+        if (!claim) {
+            throw new NotFoundException(CLAIM_NOT_FOUND);
+        }
+
+        const summarized = await this.claimService.summarizeClientInfo(
+            claim.issue.additionalInfo,
+            dto.languages,
+        );
+
+        if (!summarized) {
+            throw new NotFoundException('Summarized info not found');
+        }
+
+        return {
+            summarizedText: summarized,
+        };
+    }
 
     @Post(':claimId/passenger')
     async createOtherPassenger(

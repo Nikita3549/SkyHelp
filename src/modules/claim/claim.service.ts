@@ -40,6 +40,8 @@ import { DuplicateService } from './duplicate/duplicate.service';
 import { IFullClaim } from '../claim-persistence/types/claim-persistence.types';
 import { ICreateClaimExtraData } from './interfaces/create-claim-extra-data.interface';
 import { IEnsureDocumentRequestsJobData } from './interfaces/ensure-document-requests-job-data.interface';
+import axios from 'axios';
+import { Languages } from '../language/enums/languages.enums';
 
 @Injectable()
 export class ClaimService {
@@ -56,6 +58,28 @@ export class ClaimService {
         private readonly claimPersistenceService: ClaimPersistenceService,
         private readonly duplicateService: DuplicateService,
     ) {}
+
+    async summarizeClientInfo(
+        claimAdditionalInfo: string | null,
+        targetLanguage: Languages,
+    ): Promise<string | null> {
+        try {
+            if (!claimAdditionalInfo) {
+                return null;
+            }
+
+            const url = `${this.configService.getOrThrow('SKYHELP_AI_API')}/api/v1/summarize-client-info`;
+            const { data } = await axios.post(url, {
+                text: claimAdditionalInfo,
+                target_language: targetLanguage,
+            });
+
+            return data.processed_text;
+        } catch (e) {
+            console.log('Error while summarizing client info', e);
+            return null;
+        }
+    }
 
     async ensureDocumentRequests(claimId: string) {
         const claim = await this.claimPersistenceService.findOneById(claimId);

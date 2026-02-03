@@ -12,7 +12,7 @@ export class LetterRefinerService {
             const { data } = await axios.post<{
                 processed_text: string;
             }>(
-                `${this.configService.getOrThrow('REWRITE_EMAIL_URL')}/api/v1/rewrite-email`,
+                `${this.configService.getOrThrow('SKYHELP_AI_API')}/api/v1/rewrite-email`,
                 {
                     text: dto.body,
                     target_language: dto.targetLanguage,
