@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { FlightStatusService } from './flight-status.service';
 import { FlightStatusController } from './flight-status.controller';
 import { FlightModule } from '../../flight/flight.module';
@@ -9,7 +9,7 @@ import { MeteoStatusModule } from '../meteo-status/meteo-status.module';
 
 @Module({
     imports: [
-        FlightModule,
+        forwardRef(() => FlightModule),
         AirlineModule,
         ClaimPersistenceModule,
         DetailModule,

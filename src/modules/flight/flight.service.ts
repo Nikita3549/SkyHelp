@@ -19,12 +19,13 @@ import { parseFlightIoFlightStatus } from './utils/parse-flight-io-flight-status
 import { FlightIoFlightStatus } from './interfaces/flight-io/flight-io-flight-status';
 import { IChisinauAirportFlight } from './interfaces/chisinau-airport/chisinau-airport-flight.interface';
 import { PrismaService } from '../prisma/prisma.service';
+import { FlightStatusService } from '../claim/flight-status/flight-status.service';
 
 @Injectable()
 export class FlightService {
     constructor(
         private readonly configService: ConfigService,
-        private readonly prisma: PrismaService,
+        private readonly flightStatusService: FlightStatusService,
     ) {}
 
     async getFlightStatusFromFlightIo(
@@ -33,6 +34,10 @@ export class FlightService {
         date: Date,
     ): Promise<IFlightStatus | null> {
         try {
+            await this.flightStatusService.saveRequestStats(
+                ClaimFlightStatusSource.FLIGHT_IO,
+            );
+
             const url = this.configService.getOrThrow('FLIGHT_IO_URL');
             const accessToken = this.configService.getOrThrow(
                 'FLIGHT_IO_ACCESS_TOKEN',
@@ -94,6 +99,10 @@ export class FlightService {
         date: Date;
     }): Promise<IFlightStatus | null> {
         try {
+            await this.flightStatusService.saveRequestStats(
+                ClaimFlightStatusSource.CHISINAU_AIRPORT,
+            );
+
             const res = await axios.get<IChisinauAirportFlight>(
                 `${this.configService.getOrThrow('CHISINAU_AIRPORT_API_URL')}/flights`,
                 {
@@ -129,6 +138,10 @@ export class FlightService {
         date: Date,
     ): Promise<IFlightStatus | null> {
         try {
+            await this.flightStatusService.saveRequestStats(
+                ClaimFlightStatusSource.FLIGHT_AWARE,
+            );
+
             const flightIdent = `${airlineIcao}${flightCode}`;
 
             const { end: flightDateEnd, start: flightDateStart } =
@@ -186,6 +199,10 @@ export class FlightService {
         date: Date,
     ): Promise<IFlightStatus | null> {
         try {
+            await this.flightStatusService.saveRequestStats(
+                ClaimFlightStatusSource.FLIGHT_STATS,
+            );
+
             const url = `${this.configService.getOrThrow('FLIGHT_STATS_URL')}/flex/flightstatus/rest/v2/json/flight/status/${airlineIcao}/${flightCode}/dep/${date.getUTCFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
 
             const res = await axios.get<FlightStatsResponse>(url, {
@@ -251,6 +268,10 @@ export class FlightService {
         date: Date,
     ): Promise<IFlightStatus | null> {
         try {
+            await this.flightStatusService.saveRequestStats(
+                ClaimFlightStatusSource.OAG,
+            );
+
             const formattedDate = formatDate(date, 'yyyy-mm-dd');
 
             const flightInfo = await axios.get<IOAGFlightInfo>(

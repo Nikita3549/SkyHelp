@@ -1,7 +1,8 @@
 model FlightStatusRequest {
   id String @id @default(uuid())
 
-  requestedAt DateTime @default(now()) @map("requested_at")
+  requestedAt        DateTime                @default(now()) @map("requested_at")
+  flightStatusSource ClaimFlightStatusSource @default(CHISINAU_AIRPORT)
 
   @@map("stats_flight_status_requests")
 }

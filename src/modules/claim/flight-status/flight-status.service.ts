@@ -10,9 +10,11 @@ export class FlightStatusService {
         private readonly detailsService: DetailService,
     ) {}
 
-    async saveRequestStats() {
+    async saveRequestStats(source: ClaimFlightStatusSource) {
         await this.prisma.flightStatusRequest.create({
-            data: {},
+            data: {
+                flightStatusSource: source,
+            },
         });
     }
 
