@@ -94,8 +94,6 @@ export class FlightService {
         date: Date;
     }): Promise<IFlightStatus | null> {
         try {
-            await this.prisma.flightStatusRequest.create({});
-
             const res = await axios.get<IChisinauAirportFlight>(
                 `${this.configService.getOrThrow('CHISINAU_AIRPORT_API_URL')}/flights`,
                 {

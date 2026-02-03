@@ -118,6 +118,8 @@ export class FlightStatusController {
             }
         }
 
+        await this.flightStatusService.saveRequestStats();
+
         if (newFlightStatus) {
             await this.flightStatusService.deleteFlightStatus(flightStatusId);
 
@@ -212,6 +214,8 @@ export class FlightStatusController {
                 await this.meteoStatusService.create(meteoStatus, claim.id);
             }
         }
+
+        await this.flightStatusService.saveRequestStats();
 
         return await this.flightStatusService.createFlightStatus(
             newFlightStatus,

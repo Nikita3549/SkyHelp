@@ -10,6 +10,12 @@ export class FlightStatusService {
         private readonly detailsService: DetailService,
     ) {}
 
+    async saveRequestStats() {
+        await this.prisma.flightStatusRequest.create({
+            data: {},
+        });
+    }
+
     async createFlightStatus(
         flightStatusData: {
             isCancelled: boolean;
