@@ -15,6 +15,7 @@ import { CreateClaimDto } from './dto/create-claim.dto';
 import { ClaimService } from './claim.service';
 import {
     ADD_FLIGHT_STATUS_QUEUE_KEY,
+    BOOKING_REF_STEP,
     CLAIM_NOT_FOUND,
     CLAIM_REMINDER_INTERVAL,
     CLAIM_REMINDER_QUEUE_KEY,
@@ -356,11 +357,12 @@ export class PublicClaimController {
             claimId,
         ))!;
 
-        if (step == FINAL_STEP) {
+        if (step == BOOKING_REF_STEP) {
             await this.claimService.scheduleEnsureDocumentRequests({
                 claimId: claim.id,
             });
-
+        }
+        if (step == FINAL_STEP) {
             await this.notificationService.sendLetter(
                 new ClaimCreatedLetter({
                     to: claim.customer.email,
