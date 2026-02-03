@@ -30,7 +30,7 @@ export class DocumentRequestService {
         data: CreateDocumentRequestDto,
         claim: IFullClaim,
     ): Promise<DocumentRequest> {
-        const docRequest = this.prisma.documentRequest.create({
+        const docRequest = await this.prisma.documentRequest.create({
             data: {
                 ...data,
                 isSent: false,
