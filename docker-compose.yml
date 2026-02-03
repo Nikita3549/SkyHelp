@@ -5,6 +5,7 @@ services:
         restart: always
         networks:
             - main
+            - prod_db
         environment:
             POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
             POSTGRES_USER: ${DATABASE_USER}
@@ -37,7 +38,6 @@ services:
             - '127.0.0.1:${DATABASE_STATIC_PORT}:5432'
         networks:
             - main
-            - prod_db
         healthcheck:
             test:
                 [
