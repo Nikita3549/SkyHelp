@@ -30,6 +30,14 @@ export class DocumentRequestService {
         data: CreateDocumentRequestDto,
         claim: IFullClaim,
     ): Promise<DocumentRequest> {
+        const docRequest = this.prisma.documentRequest.create({
+            data: {
+                ...data,
+                isSent: false,
+                documentType: this.getDocumentTypeByRequestType(data.type),
+            },
+        });
+
         const isLocked = await this.redis.get(
             `claim:${claim.id}:docs_request_email_lock`,
         );
@@ -45,13 +53,7 @@ export class DocumentRequestService {
             );
         }
 
-        return this.prisma.documentRequest.create({
-            data: {
-                ...data,
-                isSent: false,
-                documentType: this.getDocumentTypeByRequestType(data.type),
-            },
-        });
+        return docRequest;
     }
 
     private getDocumentTypeByRequestType(

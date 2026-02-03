@@ -214,7 +214,7 @@ export class ClaimService {
     async scheduleEnsureDocumentRequests(
         jobData: IEnsureDocumentRequestsJobData,
         // delay: number = HOUR,
-        delay: number = MINUTE,
+        delay: number = 0,
     ) {
         await this.ensureDocumentRequestsQueue.add(
             'ensureDocumentRequests',
