@@ -55,6 +55,8 @@ export class FlightStatusController {
             claim.details.routes.find((r) => r.troubled) ||
             claim.details.routes[0];
 
+        await this.flightStatusService.saveRequestStats();
+
         const airline =
             await this.airlinesService.getAirlineByIcao(airlineIcao);
         switch (flightStatus.source) {
@@ -118,8 +120,6 @@ export class FlightStatusController {
             }
         }
 
-        await this.flightStatusService.saveRequestStats();
-
         if (newFlightStatus) {
             await this.flightStatusService.deleteFlightStatus(flightStatusId);
 
@@ -139,6 +139,8 @@ export class FlightStatusController {
         const { claimId, source } = dto;
         const claim = await this.claimPersistenceService.findOneById(claimId);
         if (!claim) throw new NotFoundException(CLAIM_NOT_FOUND);
+
+        await this.flightStatusService.saveRequestStats();
 
         const flightStatus =
             await this.flightStatusService.getFlightStatusBySourceAndClaimId(
@@ -214,8 +216,6 @@ export class FlightStatusController {
                 await this.meteoStatusService.create(meteoStatus, claim.id);
             }
         }
-
-        await this.flightStatusService.saveRequestStats();
 
         return await this.flightStatusService.createFlightStatus(
             newFlightStatus,
