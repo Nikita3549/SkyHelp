@@ -123,7 +123,7 @@ export class DocumentRequestService {
 
     async scheduleSendNewDocumentRequests(claim: IFullClaim) {
         const delays = [
-            MINUTE * 0,
+            MINUTE * 5,
             DAY * 2,
             DAY * 4,
             DAY * 6,
