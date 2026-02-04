@@ -3502,7 +3502,7 @@
     "DocumentsTab.Type.Assignment.Description": "Юридические соглашения, подписанные клиентами",
     "DocumentsTab.Type.Passport.Title": "Паспорт",
     "DocumentsTab.Type.Passport.Description": "Паспорт, удостоверения личности и верификация",
-    "DocumentsTab.Type.General.Title": "Общие документы",
+    "DocumentsTab.Type.General.Title": "Другие",
     "DocumentsTab.Type.General.Description": "Документы",
     "DocumentsTab.EmptyState.Title": "Нет документов",
     "DocumentsTab.EmptyState.Description": "Загрузите, чтобы начать",

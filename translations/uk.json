@@ -3485,7 +3485,7 @@
     "DocumentsTab.Type.Assignment.Description": "Юридичні угоди, підписані клієнтами",
     "DocumentsTab.Type.Passport.Title": "Паспорт",
     "DocumentsTab.Type.Passport.Description": "Паспорт, посвідчення особи та верифікація особи",
-    "DocumentsTab.Type.General.Title": "Загальні документи",
+    "DocumentsTab.Type.General.Title": "Інші",
     "DocumentsTab.Type.General.Description": "Документи",
     "DocumentsTab.EmptyState.Title": "Немає документів",
     "DocumentsTab.EmptyState.Description": "Завантажте, щоб почати",

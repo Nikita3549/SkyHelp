@@ -3498,7 +3498,7 @@
     "DocumentsTab.Type.Assignment.Description": "Legal agreements signed by customers",
     "DocumentsTab.Type.Passport.Title": "Passport",
     "DocumentsTab.Type.Passport.Description": "Passport, ID cards, and identity verification",
-    "DocumentsTab.Type.General.Title": "General Documents",
+    "DocumentsTab.Type.General.Title": "Other",
     "DocumentsTab.Type.General.Description": "Documents",
     "DocumentsTab.EmptyState.Title": "No documents",
     "DocumentsTab.EmptyState.Description": "Upload to get started",

@@ -3505,7 +3505,7 @@
     "DocumentsTab.Type.Assignment.Description": "Müşteriler tarafından imzalanan yasal sözleşmeler",
     "DocumentsTab.Type.Passport.Title": "Pasaport",
     "DocumentsTab.Type.Passport.Description": "Pasaport, kimlik kartları ve kimlik doğrulama",
-    "DocumentsTab.Type.General.Title": "Genel Belgeler",
+    "DocumentsTab.Type.General.Title": "Diğer",
     "DocumentsTab.Type.General.Description": "Belgeler",
     "DocumentsTab.EmptyState.Title": "Belge yok",
     "DocumentsTab.EmptyState.Description": "Başlamak için yükleyin",

@@ -3501,7 +3501,7 @@
     "DocumentsTab.Type.Assignment.Description": "Contracte legale semnate de clienți",
     "DocumentsTab.Type.Passport.Title": "Pașaport",
     "DocumentsTab.Type.Passport.Description": "Pașapoarte, cărți de identitate și verificare identitate",
-    "DocumentsTab.Type.General.Title": "Documente generale",
+    "DocumentsTab.Type.General.Title": "Alte",
     "DocumentsTab.Type.General.Description": "Documente",
     "DocumentsTab.EmptyState.Title": "Nu există documente",
     "DocumentsTab.EmptyState.Description": "Încărcați pentru a începe",
