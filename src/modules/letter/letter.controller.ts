@@ -43,6 +43,8 @@ import { ClaimPersistenceService } from '../claim-persistence/services/claim-per
 import { RefineEmailBodyDto } from './dto/refine-email-body.dto';
 import { IRefineEmailBodyResponse } from './responses/refine-email-body-response.interface';
 import { LetterRefinerService } from './letter-refiner.service';
+import { SuggestReplyDto } from './dto/suggest-reply.dto';
+import { SuggestReplyResponse } from './responses/suggest-reply-response.interface';
 
 @Controller('letters')
 @UseGuards(
@@ -65,6 +67,39 @@ export class LetterController {
         private readonly claimPersistenceService: ClaimPersistenceService,
         private readonly letterRefinerService: LetterRefinerService,
     ) {}
+
+    @Post('suggest-reply')
+    async suggestReply(
+        @Body() dto: SuggestReplyDto,
+    ): Promise<SuggestReplyResponse> {
+        const claim = await this.claimPersistenceService.findOneById(
+            dto.claimId,
+        );
+
+        if (!claim) {
+            throw new NotFoundException(CLAIM_NOT_FOUND);
+        }
+
+        const { letters } = await this.emailService.getEmails({
+            page: 1,
+            pageSize: 100,
+            claimId: dto.claimId,
+        });
+
+        const processedText = await this.letterRefinerService.suggestReply({
+            emails: letters,
+            targetLanguage: dto.targetLanguage,
+            claimStatus: claim.state.status,
+        });
+
+        if (!processedText) {
+            throw new InternalServerErrorException(
+                "Can't process suggesting reply",
+            );
+        }
+
+        return { suggestedReply: processedText };
+    }
 
     @Post('refine-body')
     async rewriteEmailBody(
