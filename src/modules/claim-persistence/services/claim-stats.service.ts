@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ClaimStatus, PassengerPaymentStatus, Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { IAdminClaimsStatsResponse } from '../../claim/admin/interfaces/responses/admin-claims-stats-response.interface';
 
 @Injectable()
 export class ClaimStatsService {
@@ -10,16 +11,7 @@ export class ClaimStatsService {
         userId?: string,
         agentId?: string,
         dateFilter?: { dateFrom: Date; dateTo: Date },
-    ): Promise<{
-        total: number;
-        paid: number;
-        approved: number;
-        active: number;
-        completedAmount: number;
-        claimsByDay: { date: string; count: number }[];
-        successByMonth: { month: string; success: string }[];
-        airlines: { count: number; name: string; icao: string }[];
-    }> {
+    ): Promise<IAdminClaimsStatsResponse> {
         const dateWhere = dateFilter
             ? { gte: dateFilter.dateFrom, lte: dateFilter.dateTo }
             : undefined;
@@ -33,6 +25,7 @@ export class ClaimStatsService {
             paidOtherPassengersAmount,
             claimsByDay,
             successByMonth,
+            claimsViaBoardingPass,
         ] = await this.prisma.$transaction([
             // total claims
             this.prisma.claim.count({
@@ -137,6 +130,18 @@ export class ClaimStatsService {
                     AND c."archived" = false ${dateFilter ? Prisma.sql`AND c."created_at" >= ${dateFilter.dateFrom} AND c."created_at" <= ${dateFilter.dateTo}` : Prisma.empty}
                   GROUP BY month, date_trunc('month', c."created_at")
                   ORDER BY date_trunc('month', c."created_at") DESC`,
+
+            // claims via boarding pass
+            this.prisma.claim.count({
+                where: {
+                    userId,
+                    agentId,
+                    archived: false,
+                    state: {
+                        scannedBoardingPass: true,
+                    },
+                },
+            }),
         ]);
 
         // airlines
@@ -179,6 +184,7 @@ export class ClaimStatsService {
                 icao: s.icao,
                 count: Number(s._count._all), // <- BIGINT FIX
             })),
+            claimsViaBoardingPass,
         };
     }
 }

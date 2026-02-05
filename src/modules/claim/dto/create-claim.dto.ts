@@ -83,6 +83,10 @@ class DetailsDto {
 class StateDto {
     @IsNumber()
     amount: number;
+
+    @IsOptional()
+    @IsBoolean()
+    scannedBoardingPass: boolean = false;
 }
 
 class CustomerDto {

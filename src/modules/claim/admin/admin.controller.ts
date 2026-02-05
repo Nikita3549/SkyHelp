@@ -44,6 +44,7 @@ import { ClaimSearchService } from '../../claim-persistence/services/claim-searc
 import { ClaimStatsService } from '../../claim-persistence/services/claim-stats.service';
 import { ClaimService } from '../claim.service';
 import { GenerateAiSummaryDto } from './dto/generate-ai-summary.dto';
+import { IAdminClaimsStatsResponse } from './interfaces/responses/admin-claims-stats-response.interface';
 
 @Controller('claims/admin')
 @UseGuards(
@@ -298,7 +299,7 @@ export class AdminController {
     async getAdminClaimsStats(
         @Req() req: AuthRequest,
         @Query() query: GetAdminClaimsStatsQuery,
-    ) {
+    ): Promise<IAdminClaimsStatsResponse> {
         const { userId, dateTo, dateFrom } = query;
 
         const agentId =

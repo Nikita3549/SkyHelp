@@ -1,14 +1,15 @@
 model ClaimState {
-  id                 String      @id @default(cuid()) @map("id")
-  status             ClaimStatus @default(CLAIM_RECEIVED) @map("status")
-  amount             Int         @map("amount")
-  hasRecentUpdate    Boolean     @default(false) @map("has_recent_update")
-  updatedAt          DateTime    @updatedAt @map("updated_at")
-  progress           Progress[]
-  isDuplicate        Boolean     @default(false) @map("is_duplicate")
-  isPaymentRequested Boolean     @default(false) @map("is_payment_requested")
-  comments           String?
-  Claim              Claim[]
+  id                  String      @id @default(cuid()) @map("id")
+  status              ClaimStatus @default(CLAIM_RECEIVED) @map("status")
+  amount              Int         @map("amount")
+  hasRecentUpdate     Boolean     @default(false) @map("has_recent_update")
+  updatedAt           DateTime    @updatedAt @map("updated_at")
+  progress            Progress[]
+  isDuplicate         Boolean     @default(false) @map("is_duplicate")
+  isPaymentRequested  Boolean     @default(false) @map("is_payment_requested")
+  comments            String?
+  scannedBoardingPass Boolean     @default(false) @map("scanned_boarding_pass")
+  Claim               Claim[]
 
   @@index([status])
   @@map("claim_states")
