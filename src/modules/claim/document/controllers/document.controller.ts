@@ -142,7 +142,7 @@ export class DocumentController {
             throw new NotFoundException(CLAIM_NOT_FOUND);
         }
 
-        const documents = await this.documentService.saveDocuments(
+        return await this.documentService.saveDocuments(
             files.map((doc) => {
                 return {
                     name: doc.originalname,
@@ -158,20 +158,6 @@ export class DocumentController {
                 isPublic: true,
             },
         );
-
-        documents.forEach((doc) => {
-            this.recentUpdatesService.saveRecentUpdate(
-                {
-                    type: ClaimRecentUpdatesType.DOCUMENT,
-                    updatedEntityId: doc.id,
-                    entityData: doc.name,
-                    documentType: doc.type,
-                },
-                claimId,
-            );
-        });
-
-        return documents;
     }
 
     @Patch(':documentId/admin')
