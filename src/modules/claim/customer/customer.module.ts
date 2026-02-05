@@ -11,6 +11,8 @@ import { DocumentRequestModule } from '../document-request/document-request.modu
 import { NotificationModule } from '../../notification/notification.module';
 import { GenerateLinksModule } from '../../generate-links/generate-links.module';
 import { ClaimPersistenceModule } from '../../claim-persistence/claim-persistence.module';
+import { DiscrepancyPersistenceService } from '../discrepancy-hub/services/discrepancy-persistence.service';
+import { DiscrepancyHubModule } from '../discrepancy-hub/discrepancy-hub.module';
 
 @Module({
     imports: [
@@ -21,6 +23,7 @@ import { ClaimPersistenceModule } from '../../claim-persistence/claim-persistenc
         forwardRef(() => GenerateLinksModule),
         NotificationModule,
         ClaimPersistenceModule,
+        DiscrepancyHubModule,
     ],
     controllers: [CustomerController, PublicCustomerController],
     providers: [CustomerService],

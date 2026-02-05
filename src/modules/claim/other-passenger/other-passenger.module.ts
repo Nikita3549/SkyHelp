@@ -10,6 +10,7 @@ import { NotificationModule } from '../../notification/notification.module';
 import { GenerateLinksModule } from '../../generate-links/generate-links.module';
 import { ClaimPersistenceModule } from '../../claim-persistence/claim-persistence.module';
 import { PublicOtherPassengerController } from './controllers/public-other-passenger.controller';
+import { DiscrepancyHubModule } from '../discrepancy-hub/discrepancy-hub.module';
 
 @Module({
     imports: [
@@ -21,6 +22,7 @@ import { PublicOtherPassengerController } from './controllers/public-other-passe
         NotificationModule,
         forwardRef(() => GenerateLinksModule),
         ClaimPersistenceModule,
+        DiscrepancyHubModule,
     ],
     controllers: [OtherPassengerController, PublicOtherPassengerController],
     providers: [OtherPassengerService],

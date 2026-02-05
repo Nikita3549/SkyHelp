@@ -36,6 +36,7 @@ import { NotificationService } from '../../notification/services/notification.se
 import { Languages } from '../../language/enums/languages.enums';
 import { PaymentRequestLetter } from '../../notification/letters/definitions/claim/payment-request.letter';
 import { ClaimPersistenceService } from '../../claim-persistence/services/claim-persistence.service';
+import { DiscrepancyPersistenceService } from '../discrepancy-hub/services/discrepancy-persistence.service';
 
 @Controller('claims/customer')
 @UseGuards(JwtAuthGuard)
@@ -47,6 +48,7 @@ export class CustomerController {
         private readonly notificationService: NotificationService,
         private readonly documentService: DocumentService,
         private readonly claimPersistenceService: ClaimPersistenceService,
+        private readonly discrepancyPersistenceService: DiscrepancyPersistenceService,
     ) {}
 
     @UseGuards(new RoleGuard([UserRole.ADMIN, UserRole.AGENT]))
@@ -69,9 +71,15 @@ export class CustomerController {
             { updatedAt: new Date() },
             claimId,
         );
+
         await this.documentService.updateAssignmentData(claim.id, [
             claim.customer.id,
         ]);
+
+        await this.discrepancyPersistenceService.refreshDiscrepancies(
+            claim.id,
+            claim.customer.id,
+        );
 
         return customer;
     }

@@ -10,7 +10,11 @@ import {
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../../common/guards/jwtAuth.guard';
 import { UpdatePassengerDto } from '../dto/update-passenger.dto';
-import { CONTINUE_LINKS_EXP, PASSENGER_NOT_FOUND } from '../../constants';
+import {
+    CLAIM_NOT_FOUND,
+    CONTINUE_LINKS_EXP,
+    PASSENGER_NOT_FOUND,
+} from '../../constants';
 import { OtherPassengerService } from '../other-passenger.service';
 import { DocumentService } from '../../document/services/document.service';
 import { TokenService } from '../../../token/token.service';
@@ -22,6 +26,7 @@ import { GenerateLinksService } from '../../../generate-links/generate-links.ser
 import { NotificationService } from '../../../notification/services/notification.service';
 import { PaymentRequestLetter } from '../../../notification/letters/definitions/claim/payment-request.letter';
 import { ClaimPersistenceService } from '../../../claim-persistence/services/claim-persistence.service';
+import { DiscrepancyPersistenceService } from '../../discrepancy-hub/services/discrepancy-persistence.service';
 
 @Controller('claims/passengers')
 @UseGuards(JwtAuthGuard)
@@ -33,6 +38,7 @@ export class OtherPassengerController {
         private readonly notificationService: NotificationService,
         private readonly documentService: DocumentService,
         private readonly claimPersistenceService: ClaimPersistenceService,
+        private readonly discrepancyPersistenceService: DiscrepancyPersistenceService,
     ) {}
 
     @Patch(':passengerId/payment-status')
@@ -57,6 +63,14 @@ export class OtherPassengerController {
             throw new NotFoundException(PASSENGER_NOT_FOUND);
         }
 
+        const claim = await this.claimPersistenceService.findOneById(
+            passenger.claimId,
+        );
+
+        if (!claim) {
+            throw new NotFoundException(CLAIM_NOT_FOUND);
+        }
+
         if (paymentStatus == PassengerPaymentStatus.FAILED) {
             const linkJwt = this.tokenService.generateJWT(
                 {
@@ -64,9 +78,6 @@ export class OtherPassengerController {
                 },
                 { expiresIn: CONTINUE_LINKS_EXP },
             );
-            const claim = (await this.claimPersistenceService.findOneById(
-                passenger.claimId,
-            ))!;
 
             const paymentDetailsLink =
                 await this.generateLinksService.paymentDetails(linkJwt);
@@ -104,15 +115,25 @@ export class OtherPassengerController {
         if (!passenger) {
             throw new BadRequestException(PASSENGER_NOT_FOUND);
         }
-        const claim = (await this.claimPersistenceService.findOneById(
+
+        const claim = await this.claimPersistenceService.findOneById(
             passenger.claimId,
-        ))!;
+        );
+
+        if (!claim) {
+            throw new NotFoundException(CLAIM_NOT_FOUND);
+        }
 
         const updatedPassenger =
             await this.otherPassengerService.updatePassenger(dto, passenger.id);
         await this.documentService.updateAssignmentData(claim.id, [
             ...claim.passengers.map((p) => p.id),
         ]);
+
+        await this.discrepancyPersistenceService.refreshDiscrepancies(
+            claim.id,
+            passengerId,
+        );
 
         return updatedPassenger;
     }

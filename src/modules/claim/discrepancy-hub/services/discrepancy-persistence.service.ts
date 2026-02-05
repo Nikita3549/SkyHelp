@@ -28,6 +28,20 @@ export class DiscrepancyPersistenceService {
         });
     }
 
+    async refreshDiscrepancies(claimId: string, passengerId: string) {
+        if (!claimId || !passengerId) {
+            return;
+        }
+
+        await this.prisma.claimDiscrepancy.updateMany({
+            where: { claimId },
+            data: {
+                status: ClaimDiscrepancyStatus.ACTIVE,
+                passengerId: passengerId,
+            },
+        });
+    }
+
     async updateStatusByDocumentId(
         status: ClaimDiscrepancyStatus,
         documentId: string,
