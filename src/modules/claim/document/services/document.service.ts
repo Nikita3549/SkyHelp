@@ -17,7 +17,7 @@ import { IGenerateAssignmentJobData } from '../processors/interfaces/generateAss
 import { ClaimPersistenceService } from '../../../claim-persistence/services/claim-persistence.service';
 import { ClaimService } from '../../claim.service';
 import { MergeDocumentsExtensions } from '../constants/merge-documents-extensions.enum';
-import { DiscrepancyHubService } from '../../discrepancy-hub/discrepancy-hub.service';
+import { DiscrepancyHubService } from '../../discrepancy-hub/services/discrepancy-hub.service';
 
 @Injectable()
 export class DocumentService {

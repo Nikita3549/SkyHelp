@@ -1,21 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { ConfigService } from '@nestjs/config';
-import { IExtractPassportResponse } from './interfaces/extract-passport-response.interface';
+import { IExtractPassportResponse } from '../interfaces/extract-passport-response.interface';
 import {
-    ClaimDiscrepancy,
     ClaimDiscrepancyFieldName,
     Document,
     DocumentType,
 } from '@prisma/client';
-import { PrismaService } from '../../prisma/prisma.service';
-import { ClaimPersistenceService } from '../../claim-persistence/services/claim-persistence.service';
+import { ClaimPersistenceService } from '../../../claim-persistence/services/claim-persistence.service';
+import { DiscrepancyPersistenceService } from './discrepancy-persistence.service';
 
 @Injectable()
 export class DiscrepancyHubService {
     constructor(
         private readonly configService: ConfigService,
-        private readonly prisma: PrismaService,
+        private readonly discrepancyPersistenceService: DiscrepancyPersistenceService,
         private readonly claimPersistenceService: ClaimPersistenceService,
     ) {}
 
@@ -40,7 +39,7 @@ export class DiscrepancyHubService {
                     passportData?.firstName &&
                     passportData.firstName != passenger.firstName
                 ) {
-                    await this.saveDiscrepancy({
+                    await this.discrepancyPersistenceService.saveDiscrepancy({
                         fieldName: ClaimDiscrepancyFieldName.FIRST_NAME,
                         documentId: doc.id,
                         passengerId: doc.passengerId,
@@ -52,7 +51,7 @@ export class DiscrepancyHubService {
                     passportData?.lastName &&
                     passportData.lastName != passenger.lastName
                 ) {
-                    await this.saveDiscrepancy({
+                    await this.discrepancyPersistenceService.saveDiscrepancy({
                         fieldName: ClaimDiscrepancyFieldName.LAST_NAME,
                         documentId: doc.id,
                         passengerId: doc.passengerId,
@@ -62,24 +61,6 @@ export class DiscrepancyHubService {
                 }
             }),
         );
-    }
-
-    private async saveDiscrepancy(data: {
-        fieldName: ClaimDiscrepancyFieldName;
-        passengerId: string;
-        documentId: string;
-        extractedValue: string;
-        claimId: string;
-    }): Promise<ClaimDiscrepancy> {
-        return this.prisma.claimDiscrepancy.create({
-            data: {
-                fieldName: data.fieldName,
-                passengerId: data.passengerId,
-                documentId: data.documentId,
-                extractedValue: data.extractedValue,
-                claimId: data.claimId,
-            },
-        });
     }
 
     private async extractPassportData(passportBuffer: Buffer): Promise<{

@@ -5,6 +5,8 @@ model ClaimDiscrepancy {
   documentId     String                    @map("document_id")
   extractedValue String                    @map("extracted_value")
   claimId        String                    @map("claim_id")
+  status         ClaimDiscrepancyStatus    @default(ACTIVE)
+  createdAt      DateTime                  @default(now()) @map("created_at")
 
   document Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
   claim    Claim    @relation(fields: [claimId], references: [id])

@@ -1,10 +1,13 @@
 import { Module } from '@nestjs/common';
-import { DiscrepancyHubService } from './discrepancy-hub.service';
+import { DiscrepancyHubService } from './services/discrepancy-hub.service';
 import { ClaimPersistenceModule } from '../../claim-persistence/claim-persistence.module';
+import { DiscrepancyController } from './discrepancy.controller';
+import { DiscrepancyPersistenceService } from './services/discrepancy-persistence.service';
 
 @Module({
     imports: [ClaimPersistenceModule],
-    providers: [DiscrepancyHubService],
+    controllers: [DiscrepancyController],
+    providers: [DiscrepancyHubService, DiscrepancyPersistenceService],
     exports: [DiscrepancyHubService],
 })
 export class DiscrepancyHubModule {}
