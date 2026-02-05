@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Document } from '@prisma/client';
+import { ClaimDiscrepancyStatus, Document } from '@prisma/client';
 import { DocumentDbService } from './database/document-db.service';
 import { DocumentAssignmentService } from './assignment/document-assignment.service';
 import { DocumentFileService } from './file/document-file.service';
@@ -18,6 +18,7 @@ import { ClaimPersistenceService } from '../../../claim-persistence/services/cla
 import { ClaimService } from '../../claim.service';
 import { MergeDocumentsExtensions } from '../constants/merge-documents-extensions.enum';
 import { DiscrepancyHubService } from '../../discrepancy-hub/services/discrepancy-hub.service';
+import { DiscrepancyPersistenceService } from '../../discrepancy-hub/services/discrepancy-persistence.service';
 
 @Injectable()
 export class DocumentService {
@@ -31,6 +32,7 @@ export class DocumentService {
         private readonly generateAssignmentQueue: Queue,
         private readonly claimPersistenceService: ClaimPersistenceService,
         private readonly discrepancyHubService: DiscrepancyHubService,
+        private readonly discrepancyPersistenceService: DiscrepancyPersistenceService,
     ) {}
 
     // ------------------ ASSIGNMENT ------------------
@@ -104,6 +106,11 @@ export class DocumentService {
 
     // ------------------ DATABASE ------------------
     async removeDocument(documentId: string): Promise<Document> {
+        await this.discrepancyPersistenceService.updateStatusByDocumentId(
+            ClaimDiscrepancyStatus.INACTIVE,
+            documentId,
+        );
+
         return this.documentDbService.remove(documentId);
     }
 

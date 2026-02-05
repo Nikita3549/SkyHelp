@@ -8,6 +8,6 @@ import { DiscrepancyPersistenceService } from './services/discrepancy-persistenc
     imports: [ClaimPersistenceModule],
     controllers: [DiscrepancyController],
     providers: [DiscrepancyHubService, DiscrepancyPersistenceService],
-    exports: [DiscrepancyHubService],
+    exports: [DiscrepancyHubService, DiscrepancyPersistenceService],
 })
 export class DiscrepancyHubModule {}
