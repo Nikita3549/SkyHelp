@@ -176,13 +176,16 @@ export class FlightService {
                 const delayMinutes = flight?.arrival_delay
                     ? Math.floor(flight.arrival_delay / 60)
                     : 0;
+                const takeOffScheduled =
+                    flight?.scheduled_out || flight?.scheduled_off;
 
+                debugger;
                 return {
                     delayMinutes,
                     isCancelled: actualCancelled,
                     source: ClaimFlightStatusSource.FLIGHT_AWARE,
-                    exactTime: flight?.scheduled_out
-                        ? new Date(flight?.scheduled_out)
+                    exactTime: takeOffScheduled
+                        ? new Date(takeOffScheduled)
                         : undefined,
                 };
             }
