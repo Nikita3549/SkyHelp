@@ -123,7 +123,7 @@ export class FlightService {
 
             return {
                 delayMinutes: flight.delay_minutes,
-                isCancelled: false,
+                isCancelled: flight.status == 'AN',
                 exactTime: new Date(flight.local_scheduled_time),
                 source: ClaimFlightStatusSource.CHISINAU_AIRPORT,
             };
