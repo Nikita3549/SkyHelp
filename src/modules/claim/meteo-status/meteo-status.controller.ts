@@ -50,7 +50,9 @@ export class MeteoStatusController {
             claim.details.routes[0];
 
         const meteoStatus = await this.meteoStatusService.fetchMeteoStatus({
-            airportIcao: troubledRoute.DepartureAirport.icao,
+            airportIcao: dto.airportIcao
+                ? dto.airportIcao
+                : troubledRoute.DepartureAirport.icao,
             time: dto.time,
         });
 
