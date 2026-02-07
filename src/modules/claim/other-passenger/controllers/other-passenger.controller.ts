@@ -130,11 +130,6 @@ export class OtherPassengerController {
             ...claim.passengers.map((p) => p.id),
         ]);
 
-        await this.discrepancyPersistenceService.refreshDiscrepancies(
-            claim.id,
-            passengerId,
-        );
-
         return updatedPassenger;
     }
 

@@ -76,11 +76,6 @@ export class CustomerController {
             claim.customer.id,
         ]);
 
-        await this.discrepancyPersistenceService.refreshDiscrepancies(
-            claim.id,
-            claim.customer.id,
-        );
-
         return customer;
     }
 
