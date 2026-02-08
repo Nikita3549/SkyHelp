@@ -22,6 +22,8 @@ import { FONT_FAMILY_FILEPATH } from './constants/font-family-filepath';
 import { IPreparePdfResult } from './interfaces/prepare-pdf-result.interface';
 import { BasePassenger } from '../../../../claim-persistence/interfaces/base-passenger.interface';
 import { IFullClaim } from '../../../../claim-persistence/types/claim-persistence.types';
+import { SignatureRectangle } from './constants/signature-rectangle';
+import { ParentalSignatureRectangle } from './constants/parental-signature-rectangle';
 
 @Injectable()
 export class DocumentAssignmentService implements OnModuleInit {
@@ -49,6 +51,32 @@ export class DocumentAssignmentService implements OnModuleInit {
         };
     }
 
+    async extractSignature(
+        pdfBuffer: Buffer,
+        signatureRect: ISignatureRectangle,
+    ): Promise<Buffer> {
+        const sourceDoc = await PDFDocument.load(pdfBuffer);
+
+        const signatureDoc = await PDFDocument.create();
+
+        const page = signatureDoc.addPage([
+            signatureRect.width,
+            signatureRect.height,
+        ]);
+
+        const [embeddedPage] = await signatureDoc.embedPdf(sourceDoc, [
+            signatureRect.page,
+        ]);
+
+        page.drawPage(embeddedPage, {
+            x: -signatureRect.x,
+            y: -signatureRect.y,
+        });
+
+        const pdfBytes = await signatureDoc.save();
+        return Buffer.from(pdfBytes);
+    }
+
     async saveSignature(
         signature: IAssignmentSignature,
         assignmentData: IAssignmentData,
@@ -61,7 +89,6 @@ export class DocumentAssignmentService implements OnModuleInit {
         const signaturePage =
             pdfDoc.getPages()[ASSIGNMENT.REGULAR.PAGE_INDEX.SIGNATURE];
 
-        // <--- TEXTS --->
         await this.fillRegularText(
             titlePage,
             signaturePage,
@@ -69,20 +96,11 @@ export class DocumentAssignmentService implements OnModuleInit {
             fonts,
         );
 
-        // <--- SIGNATURE --->
-        const signatureRect: ISignatureRectangle = {
-            x: ASSIGNMENT.REGULAR.COORDINATES.SIGNATURE.X,
-            y: ASSIGNMENT.REGULAR.COORDINATES.SIGNATURE.Y,
-            width: ASSIGNMENT.REGULAR.COORDINATES.SIGNATURE.WIDTH,
-            height: ASSIGNMENT.REGULAR.COORDINATES.SIGNATURE.HEIGHT,
-            page: ASSIGNMENT.REGULAR.PAGE_INDEX.SIGNATURE,
-        };
-
         await this.embedSignature({
             signature,
             pdfDoc,
             signaturePage,
-            signatureRect,
+            signatureRect: SignatureRectangle,
         });
 
         const pdfBytes = await pdfDoc.save();
@@ -103,7 +121,6 @@ export class DocumentAssignmentService implements OnModuleInit {
         const signaturePage =
             pdfDoc.getPages()[ASSIGNMENT.PARENTAL.PAGE_INDEX.SIGNATURE];
 
-        // <--- TEXTS --->
         await this.fillParentalText(
             titlePage,
             signaturePage,
@@ -111,20 +128,11 @@ export class DocumentAssignmentService implements OnModuleInit {
             fonts,
         );
 
-        // <--- SIGNATURE --->
-        const signatureRect: ISignatureRectangle = {
-            x: ASSIGNMENT.PARENTAL.COORDINATES.SIGNATURE.X,
-            y: ASSIGNMENT.PARENTAL.COORDINATES.SIGNATURE.Y,
-            width: ASSIGNMENT.PARENTAL.COORDINATES.SIGNATURE.WIDTH,
-            height: ASSIGNMENT.PARENTAL.COORDINATES.SIGNATURE.HEIGHT,
-            page: ASSIGNMENT.PARENTAL.PAGE_INDEX.SIGNATURE,
-        };
-
         await this.embedSignature({
             signature,
             pdfDoc,
             signaturePage,
-            signatureRect,
+            signatureRect: ParentalSignatureRectangle,
         });
 
         const pdfBytes = await pdfDoc.save();

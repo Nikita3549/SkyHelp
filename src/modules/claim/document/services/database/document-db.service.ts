@@ -24,20 +24,24 @@ export class DocumentDbService {
         });
     }
 
-    async getByPassengerId(passengerId: string): Promise<Document[]> {
+    async getManyById(ids: string[]): Promise<Document[]> {
         return this.prisma.document.findMany({
             where: {
-                passengerId,
+                id: { in: ids },
                 deletedAt: null,
             },
         });
     }
 
-    async getMany(ids: string[]): Promise<Document[]> {
+    async getManyByClaimId(
+        claimId: string,
+        filters?: { documentType?: DocumentType },
+    ): Promise<Document[]> {
         return this.prisma.document.findMany({
             where: {
-                id: { in: ids },
+                claimId,
                 deletedAt: null,
+                type: filters?.documentType,
             },
         });
     }

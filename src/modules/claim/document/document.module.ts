@@ -27,7 +27,7 @@ import { DiscrepancyHubModule } from '../discrepancy-hub/discrepancy-hub.module'
             name: GENERATE_ASSIGNMENT_QUEUE_KEY,
         }),
         ClaimPersistenceModule,
-        DiscrepancyHubModule,
+        forwardRef(() => DiscrepancyHubModule),
     ],
     controllers: [DocumentController, PublicDocumentController],
     providers: [

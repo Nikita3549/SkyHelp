@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common';
-import { ClaimDiscrepancyStatus, Document } from '@prisma/client';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { ClaimDiscrepancyStatus, Document, DocumentType } from '@prisma/client';
 import { DocumentDbService } from './database/document-db.service';
 import { DocumentAssignmentService } from './assignment/document-assignment.service';
 import { DocumentFileService } from './file/document-file.service';
@@ -118,6 +118,13 @@ export class DocumentService {
         return this.documentDbService.get(documentId);
     }
 
+    async getDocumentsByClaimId(
+        claimId: string,
+        filters?: { documentType: DocumentType },
+    ): Promise<Document[]> {
+        return this.documentDbService.getManyByClaimId(claimId, filters);
+    }
+
     async updateDocument(
         updateData: Partial<Document>,
         documentId: string,
@@ -131,7 +138,7 @@ export class DocumentService {
     }
 
     async getDocumentByIds(ids: string[]) {
-        const documents = await this.documentDbService.getMany(ids);
+        const documents = await this.documentDbService.getManyById(ids);
 
         return ids
             .map((id) => documents.find((d) => d.id == id))
@@ -171,8 +178,24 @@ export class DocumentService {
             !!options?.isPublic,
         );
 
+        const savedPassports = savedDocuments.filter(
+            (doc) => doc.type == DocumentType.PASSPORT,
+        );
+        const savedAssignments = savedDocuments.filter(
+            (doc) => doc.type == DocumentType.ASSIGNMENT,
+        );
+
         this.discrepancyHubService.processPassportDiscrepancy(
-            savedDocuments.map((doc) => ({
+            savedPassports.map((doc) => ({
+                ...doc,
+                buffer: documentWithKeys.find(
+                    (documentWithKey) => documentWithKey.s3Key == doc.s3Key,
+                )!.buffer,
+            })),
+            claimId,
+        );
+        this.discrepancyHubService.processAssignmentDiscrepancy(
+            savedAssignments.map((doc) => ({
                 ...doc,
                 buffer: documentWithKeys.find(
                     (documentWithKey) => documentWithKey.s3Key == doc.s3Key,

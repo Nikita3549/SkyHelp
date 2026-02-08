@@ -1,0 +1,4 @@
+enum DiscrepancyType {
+  PASSENGER
+  SIGNATURE
+}

@@ -3,6 +3,7 @@ import {
     ClaimDiscrepancy,
     ClaimDiscrepancyFieldName,
     ClaimDiscrepancyStatus,
+    DiscrepancyType,
 } from '@prisma/client';
 import { PrismaService } from '../../../prisma/prisma.service';
 
@@ -11,11 +12,12 @@ export class DiscrepancyPersistenceService {
     constructor(private readonly prisma: PrismaService) {}
 
     async saveDiscrepancy(data: {
-        fieldName: ClaimDiscrepancyFieldName;
+        fieldName?: ClaimDiscrepancyFieldName;
         passengerId: string;
         documentId: string;
         extractedValue: string;
         claimId: string;
+        type: DiscrepancyType;
     }): Promise<ClaimDiscrepancy> {
         return this.prisma.claimDiscrepancy.create({
             data: {
@@ -24,20 +26,7 @@ export class DiscrepancyPersistenceService {
                 documentId: data.documentId,
                 extractedValue: data.extractedValue,
                 claimId: data.claimId,
-            },
-        });
-    }
-
-    async refreshDiscrepancies(claimId: string, passengerId: string) {
-        if (!claimId || !passengerId) {
-            return;
-        }
-
-        await this.prisma.claimDiscrepancy.updateMany({
-            where: { claimId },
-            data: {
-                status: ClaimDiscrepancyStatus.ACTIVE,
-                passengerId: passengerId,
+                type: data.type,
             },
         });
     }
