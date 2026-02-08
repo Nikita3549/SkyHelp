@@ -121,6 +121,7 @@ export class ClaimPersistenceService {
                     id: data.claimId,
                 },
             });
+            return;
         }
 
         return client.otherPassenger.update({

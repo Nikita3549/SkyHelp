@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import {
     CancellationNotice,
@@ -44,7 +44,7 @@ import axios from 'axios';
 import { Languages } from '../language/enums/languages.enums';
 
 @Injectable()
-export class ClaimService {
+export class ClaimService implements OnModuleInit {
     constructor(
         private readonly prisma: PrismaService,
         @InjectQueue(CLAIM_FOLLOWUP_QUEUE_KEY)
@@ -58,6 +58,63 @@ export class ClaimService {
         private readonly claimPersistenceService: ClaimPersistenceService,
         private readonly duplicateService: DuplicateService,
     ) {}
+
+    async onModuleInit() {
+        const claims = await this.prisma.claim.findMany({
+            where: {
+                archived: false,
+            },
+            include: {
+                state: {
+                    include: {
+                        progress: true,
+                    },
+                },
+                customer: true,
+                passengers: true,
+            },
+        });
+
+        for (let i = 0; i < claims.length; i++) {
+            const claim = claims[i];
+            const allPassengers = [claim.customer, ...claim.passengers];
+
+            const progresses = claim.state.progress.sort(
+                (a, b) => b.order - a.order,
+            );
+
+            for (let k = 0; k < progresses.length; k++) {
+                const progress = progresses[k];
+                let newStatus: ClaimStatus | undefined = Object.values(
+                    ProgressVariants,
+                ).find((prog) => prog.title == progress.title)?.status;
+
+                if (
+                    typeof progress.descriptionVariables != 'string' ||
+                    !newStatus
+                )
+                    continue;
+
+                const name = JSON.parse(progress.descriptionVariables)[0]
+                    ?.value;
+
+                for (const passenger of allPassengers) {
+                    if (
+                        `${passenger.firstName} ${passenger.lastName}` == name
+                    ) {
+                        await this.claimPersistenceService.updateStatus({
+                            claimId: claim.id,
+                            passengerId: passenger.id,
+                            newStatus,
+                        });
+                    }
+                }
+
+                try {
+                } catch (_e) {}
+            }
+        }
+    }
 
     async summarizeClientInfo(
         claimAdditionalInfo: string | null,
