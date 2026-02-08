@@ -24,15 +24,4 @@ export class StateService {
             },
         });
     }
-
-    async updateStatus(newStatus: ClaimStatus, claimStateId: string) {
-        return this.prisma.claimState.update({
-            data: {
-                status: newStatus,
-            },
-            where: {
-                id: claimStateId,
-            },
-        });
-    }
 }

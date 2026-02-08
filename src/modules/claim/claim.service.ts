@@ -228,8 +228,11 @@ export class ClaimService {
             );
 
             await this.claimPersistenceService.updateStatus(
-                ClaimStatus.CLAIM_RECEIVED,
-                claimId,
+                {
+                    newStatus: ClaimStatus.CLAIM_RECEIVED,
+                    claimId,
+                    passengerId: claim.customerId,
+                },
                 tx,
             );
         });

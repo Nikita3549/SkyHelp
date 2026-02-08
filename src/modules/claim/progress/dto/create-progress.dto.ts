@@ -8,6 +8,9 @@ import {
 import { ClaimStatus } from '@prisma/client';
 
 export class CreateProgressDto {
+    @IsString()
+    passengerId: string;
+
     @IsEnum(ClaimStatus)
     status: ClaimStatus;
 

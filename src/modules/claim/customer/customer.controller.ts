@@ -121,10 +121,11 @@ export class CustomerController {
                 }),
             );
 
-            await this.claimPersistenceService.updateStatus(
-                ClaimStatus.PAYMENT_FAILED,
-                customer.Claim[0].id,
-            );
+            await this.claimPersistenceService.updateStatus({
+                newStatus: ClaimStatus.PAYMENT_FAILED,
+                passengerId: customer.id,
+                claimId: customer.Claim[0].id,
+            });
         }
         return await this.customerService.updatePaymentStatus(
             paymentStatus,

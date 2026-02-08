@@ -1,6 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
-import { Claim, ClaimStatus, Prisma } from '@prisma/client';
+import {
+    Claim,
+    ClaimCustomer,
+    ClaimStatus,
+    OtherPassenger,
+    Prisma,
+} from '@prisma/client';
 import { BasePassenger } from '../interfaces/base-passenger.interface';
 import { ViewClaimType } from '../enums/view-claim-type.enum';
 import { ClaimIncludeProvider } from '../providers/claim-include.provider';
@@ -87,22 +93,42 @@ export class ClaimPersistenceService {
     }
 
     async updateStatus(
-        newStatus: ClaimStatus,
-        claimId: string,
+        data: {
+            newStatus: ClaimStatus;
+            claimId: string;
+            passengerId: string;
+        },
         tx?: Prisma.TransactionClient,
     ) {
         const client = tx ?? this.prisma;
 
-        return client.claim.update({
-            data: {
-                state: {
-                    update: {
-                        status: newStatus,
+        const basePassenger = await this.getBasePassenger(data.passengerId);
+
+        if (!basePassenger) {
+            return;
+        }
+
+        if (basePassenger.isCustomer) {
+            client.claim.update({
+                data: {
+                    state: {
+                        update: {
+                            status: data.newStatus,
+                        },
                     },
                 },
-            },
+                where: {
+                    id: data.claimId,
+                },
+            });
+        }
+
+        return client.otherPassenger.update({
             where: {
-                id: claimId,
+                id: data.passengerId,
+            },
+            data: {
+                claimStatus: data.newStatus,
             },
         });
     }

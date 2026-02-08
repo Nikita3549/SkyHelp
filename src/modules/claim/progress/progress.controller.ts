@@ -62,7 +62,15 @@ export class ProgressController {
         @Param('claimId') claimId: string,
         @Req() req: AuthRequest,
     ) {
-        const { status, order, description, comments, additionalData } = dto;
+        const {
+            status,
+            order,
+            description,
+            comments,
+            additionalData,
+            passengerId,
+        } = dto;
+
         const user = req.user;
 
         const claim = await this.claimPersistenceService.findOneById(claimId);
@@ -113,6 +121,7 @@ export class ProgressController {
 
         const jobData: ISendNewProgressEmailJobData = {
             progressId: progress.id,
+            passengerId,
             emailData: {
                 to: claim.customer.email,
                 title: translatedTitle,

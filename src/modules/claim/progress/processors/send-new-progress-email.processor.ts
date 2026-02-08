@@ -29,8 +29,13 @@ export class SendNewProgressEmailProcessor extends WorkerHost {
     }
 
     async process(job: Job<ISendNewProgressEmailJobData>) {
-        const { progressId, emailData, newClaimStatus, referralCode } =
-            job.data;
+        const {
+            progressId,
+            emailData,
+            newClaimStatus,
+            referralCode,
+            passengerId,
+        } = job.data;
 
         const progress = await this.progressService.getProgressById(progressId);
 
@@ -56,8 +61,11 @@ export class SendNewProgressEmailProcessor extends WorkerHost {
 
         this.prisma.$transaction(async (tx: Prisma.TransactionClient) => {
             await this.claimPersistenceService.updateStatus(
-                newClaimStatus,
-                emailData.claimId,
+                {
+                    newStatus: newClaimStatus,
+                    claimId: emailData.claimId,
+                    passengerId: passengerId || claim.customer.id,
+                },
                 tx,
             );
 

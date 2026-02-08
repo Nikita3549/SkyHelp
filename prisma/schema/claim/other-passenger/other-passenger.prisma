@@ -1,22 +1,22 @@
 model OtherPassenger {
-  id            String                 @id @default(cuid()) @map("id")
-  claimId       String                 @map("claim_id")
-  claim         Claim                  @relation(fields: [claimId], references: [id], onDelete: Cascade)
-  firstName     String                 @map("first_name")
-  lastName      String                 @map("last_name")
-  city          String
-  country       String
-  address       String
-  birthday      DateTime?
-  isSigned      Boolean                @default(false)
-  signedAt      DateTime?              @map("signed_at")
-  compensation  Int                    @default(0)
-  email         String?
-  paymentStatus PassengerPaymentStatus @default(PENDING)
-
-  isMinor         Boolean @default(false) @map("is_minor")
-  parentFirstName String? @map("parent_first_name")
-  parentLastName  String? @map("parent_last_name")
+  id              String                 @id @default(cuid()) @map("id")
+  claimId         String                 @map("claim_id")
+  claim           Claim                  @relation(fields: [claimId], references: [id], onDelete: Cascade)
+  firstName       String                 @map("first_name")
+  lastName        String                 @map("last_name")
+  city            String
+  country         String
+  address         String
+  birthday        DateTime?
+  isSigned        Boolean                @default(false)
+  signedAt        DateTime?              @map("signed_at")
+  compensation    Int                    @default(0)
+  email           String?
+  paymentStatus   PassengerPaymentStatus @default(PENDING)
+  claimStatus     ClaimStatus?           @map("claim_status")
+  isMinor         Boolean                @default(false) @map("is_minor")
+  parentFirstName String?                @map("parent_first_name")
+  parentLastName  String?                @map("parent_last_name")
 
   copiedLinks OtherPassengerCopiedLink[]
 

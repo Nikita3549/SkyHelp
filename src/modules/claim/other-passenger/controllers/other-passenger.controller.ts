@@ -92,10 +92,11 @@ export class OtherPassengerController {
                 }),
             );
 
-            await this.claimPersistenceService.updateStatus(
-                ClaimStatus.PAYMENT_FAILED,
-                claim.id,
-            );
+            await this.claimPersistenceService.updateStatus({
+                newStatus: ClaimStatus.PAYMENT_FAILED,
+                passengerId: passenger.id,
+                claimId: claim.id,
+            });
         }
 
         return await this.otherPassengerService.updatePaymentStatus(
