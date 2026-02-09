@@ -50,6 +50,16 @@ export class DocumentService {
         );
     }
 
+    async extractSignature(
+        assignment: Buffer,
+        isMinor: boolean,
+    ): Promise<Buffer> {
+        return this.documentAssignmentService.extractSignature(
+            assignment,
+            isMinor,
+        );
+    }
+
     async saveSignature(
         signature: IAssignmentSignature,
         saveSignatureData: ISaveSignatureData,
@@ -93,6 +103,10 @@ export class DocumentService {
         },
     ): Promise<Buffer> {
         return this.documentFileService.mergeFiles(documents, options);
+    }
+
+    async pdfToPng(pdf: Buffer): Promise<Buffer[]> {
+        return this.documentFileService.pdfToPngWithPoppler(pdf);
     }
 
     async getSignedUrl(
@@ -143,6 +157,28 @@ export class DocumentService {
         return ids
             .map((id) => documents.find((d) => d.id == id))
             .filter((d) => !!d);
+    }
+
+    async saveDocumentSignature(data: {
+        png: Buffer;
+        document: Document;
+    }): Promise<Document> {
+        const s3Key = generateClaimDocumentKey(
+            data.document.claimId,
+            data.document.name,
+        );
+
+        await this.S3Service.uploadFile({
+            buffer: data.png,
+            contentType: 'image/png',
+            s3Key,
+            fileName: 'signature.png',
+        });
+
+        return await this.documentDbService.saveDocumentSignature({
+            s3Key,
+            documentId: data.document.id,
+        });
     }
 
     async saveDocuments(

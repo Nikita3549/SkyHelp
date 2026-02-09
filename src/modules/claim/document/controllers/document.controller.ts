@@ -55,6 +55,37 @@ export class DocumentController {
         private readonly S3Service: S3Service,
     ) {}
 
+    @Get(':documentId/signature/signed-url')
+    @UseGuards(
+        new RoleGuard([
+            UserRole.ADMIN,
+            UserRole.LAWYER,
+            UserRole.AGENT,
+            UserRole.PARTNER,
+            UserRole.ACCOUNTANT,
+        ]),
+    )
+    async getDocumentSignature(
+        @Param('documentId') documentId: string,
+    ): Promise<{ signedUrl: string }> {
+        const document = await this.documentService.getDocument(documentId);
+
+        if (!document) {
+            throw new NotFoundException(DOCUMENT_NOT_FOUND);
+        }
+        if (!document.signatureS3Key) {
+            throw new NotFoundException('Document has no signature s3 key');
+        }
+
+        const signedUrl = await this.S3Service.getSignedUrl(
+            document.signatureS3Key,
+        );
+
+        return {
+            signedUrl,
+        };
+    }
+
     @Post('merge')
     @DocumentsUploadInterceptor()
     async mergeDocuments(

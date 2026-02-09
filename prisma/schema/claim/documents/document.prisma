@@ -1,14 +1,15 @@
 model Document {
-  id          String       @id @default(cuid()) @map("id")
-  name        String       @map("name")
-  s3Key       String       @map("s3_key")
-  path        String?      @map("path")
-  mimetype    String?      @map("mimetype")
-  type        DocumentType @default(DOCUMENT)
-  claimId     String       @map("claim_id")
-  passengerId String       @default("") @map("passenger_id")
-  claim       Claim        @relation(fields: [claimId], references: [id], onDelete: Cascade)
-  deletedAt   DateTime?    @map("deleted_at")
+  id             String       @id @default(cuid()) @map("id")
+  name           String       @map("name")
+  signatureS3Key String?      @map("signature_s3_key")
+  s3Key          String       @map("s3_key")
+  path           String?      @map("path")
+  mimetype       String?      @map("mimetype")
+  type           DocumentType @default(DOCUMENT)
+  claimId        String       @map("claim_id")
+  passengerId    String       @default("") @map("passenger_id")
+  claim          Claim        @relation(fields: [claimId], references: [id], onDelete: Cascade)
+  deletedAt      DateTime?    @map("deleted_at")
 
   claimDiscrepancies ClaimDiscrepancy[]
 

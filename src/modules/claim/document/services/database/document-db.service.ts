@@ -33,6 +33,20 @@ export class DocumentDbService {
         });
     }
 
+    async saveDocumentSignature(data: {
+        s3Key: string;
+        documentId: string;
+    }): Promise<Document> {
+        return this.prisma.document.update({
+            where: {
+                id: data.documentId,
+            },
+            data: {
+                signatureS3Key: data.s3Key,
+            },
+        });
+    }
+
     async getManyByClaimId(
         claimId: string,
         filters?: { documentType?: DocumentType },

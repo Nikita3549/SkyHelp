@@ -53,8 +53,11 @@ export class DocumentAssignmentService implements OnModuleInit {
 
     async extractSignature(
         pdfBuffer: Buffer,
-        signatureRect: ISignatureRectangle,
+        isMinor: boolean,
     ): Promise<Buffer> {
+        const signatureRect: ISignatureRectangle = isMinor
+            ? ParentalSignatureRectangle
+            : SignatureRectangle;
         const sourceDoc = await PDFDocument.load(pdfBuffer);
 
         const signatureDoc = await PDFDocument.create();

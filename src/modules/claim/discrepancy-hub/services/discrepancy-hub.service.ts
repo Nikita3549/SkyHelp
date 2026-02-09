@@ -62,18 +62,40 @@ export class DiscrepancyHubService {
                     return;
                 }
 
-                const assignmentExtractedData =
+                const assignmentSignaturePdf =
+                    await this.documentService.extractSignature(
+                        assignment.buffer,
+                        passenger.isMinor,
+                    );
+
+                const { matchScore, signaturePng: passportSignaturePng } =
                     await this.extractSignatureMatchScore({
                         passport: passport.buffer,
-                        signature: assignment.buffer,
+                        signature: assignmentSignaturePdf,
                     });
 
-                if (assignmentExtractedData?.matchScore) {
+                if (passportSignaturePng) {
+                    // Save passport signature
+                    await this.documentService.saveDocumentSignature({
+                        png: passportSignaturePng,
+                        document: passport,
+                    });
+                }
+                // Save assignment signature
+                const assignmentSignaturePng = (
+                    await this.documentService.pdfToPng(assignmentSignaturePdf)
+                )[0];
+                await this.documentService.saveDocumentSignature({
+                    png: assignmentSignaturePng,
+                    document: assignment,
+                });
+
+                if (matchScore) {
                     await this.discrepancyPersistenceService.saveDiscrepancy({
                         documentId: assignment.id,
                         passengerId: assignment.passengerId,
                         claimId: claimId,
-                        extractedValue: assignmentExtractedData.matchScore,
+                        extractedValue: matchScore,
                         type: DiscrepancyType.SIGNATURE,
                     });
                 }
@@ -133,7 +155,7 @@ export class DiscrepancyHubService {
     private async extractSignatureMatchScore(files: {
         signature: Buffer;
         passport: Buffer;
-    }): Promise<{ matchScore?: string }> {
+    }): Promise<{ matchScore?: string; signaturePng?: Buffer }> {
         try {
             const url = `${this.configService.getOrThrow('EXTRACT_DOCUMENT_DATA_API_URL')}/verify-signature`;
             const formData = new FormData();
@@ -153,8 +175,23 @@ export class DiscrepancyHubService {
                 },
             );
 
+            if (
+                !data.cropped_signatures_base64 ||
+                !data.cropped_signatures_base64[0] ||
+                !data.cropped_signatures_base64[0].includes(',')
+            ) {
+                return {
+                    matchScore: data?.match_score?.toString(),
+                };
+            }
+
+            const signaturePng = Buffer.from(
+                data.cropped_signatures_base64[0].split(',')[1],
+            );
+
             return {
                 matchScore: data?.match_score?.toString(),
+                signaturePng,
             };
         } catch (e) {
             console.error('Extract signature mismatch data error: ', e);

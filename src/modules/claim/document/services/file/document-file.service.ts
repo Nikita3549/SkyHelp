@@ -163,7 +163,7 @@ export class DocumentFileService {
         return buffer;
     }
 
-    private async pdfToPngWithPoppler(pdfBuffer: Buffer): Promise<Buffer[]> {
+    async pdfToPngWithPoppler(pdfBuffer: Buffer): Promise<Buffer[]> {
         const id = Date.now() + '-' + Math.random().toString(36).slice(2);
         const inputPath = `/tmp/${id}.pdf`;
         const outputPrefix = `/tmp/${id}`;
