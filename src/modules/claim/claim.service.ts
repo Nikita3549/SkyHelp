@@ -318,11 +318,13 @@ export class ClaimService implements OnModuleInit {
             FOUR_DAYS,
             FIVE_DAYS,
             SIX_DAYS,
-        ];
+        ].map(getNextWorkTime);
 
-        delays.forEach(async (delay) => {
+        const uniqueDelays = new Set(delays);
+
+        uniqueDelays.forEach(async (delay) => {
             await this.claimFollowupQueue.add('followUpClaim', jobData, {
-                delay: getNextWorkTime(delay),
+                delay,
                 attempts: 3,
                 backoff: { type: 'exponential', delay: 5000 },
             });
