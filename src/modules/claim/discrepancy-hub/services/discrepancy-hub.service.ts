@@ -100,7 +100,8 @@ export class DiscrepancyHubService {
 
                 if (
                     passportData?.firstName &&
-                    passportData.firstName != passenger.firstName
+                    passportData.firstName.toLowerCase() !=
+                        passenger.firstName.toLowerCase()
                 ) {
                     await this.discrepancyPersistenceService.saveDiscrepancy({
                         fieldName: ClaimDiscrepancyFieldName.FIRST_NAME,
@@ -113,7 +114,8 @@ export class DiscrepancyHubService {
                 }
                 if (
                     passportData?.lastName &&
-                    passportData.lastName != passenger.lastName
+                    passportData.lastName.toLowerCase() !=
+                        passenger.lastName.toLowerCase()
                 ) {
                     await this.discrepancyPersistenceService.saveDiscrepancy({
                         fieldName: ClaimDiscrepancyFieldName.LAST_NAME,
