@@ -185,9 +185,10 @@ export class DiscrepancyHubService {
                 };
             }
 
-            const signaturePng = Buffer.from(
-                data.cropped_signatures_base64[0].split(',')[1],
-            );
+            const base64Data = data.cropped_signatures_base64[0]
+                .split(',')[1]
+                .trim();
+            const signaturePng = Buffer.from(base64Data, 'base64');
 
             return {
                 matchScore: data?.match_score?.toString(),
