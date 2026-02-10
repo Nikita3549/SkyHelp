@@ -71,6 +71,27 @@ export class ClaimService implements OnModuleInit {
         await this.migratePassengerStatus();
 
         await this.migrateFlightStatusUtc();
+
+        await this.migrateDiscrepancies();
+    }
+
+    private async migrateDiscrepancies() {
+        const discrepancies = await this.prisma.claimDiscrepancy.findMany({
+            where: {
+                type: 'SIGNATURE',
+            },
+        });
+
+        for (const discrepancy of discrepancies) {
+            await this.prisma.claimDiscrepancy.update({
+                where: {
+                    id: discrepancy.id,
+                },
+                data: {
+                    documentIds: [discrepancy.documentId],
+                },
+            });
+        }
     }
 
     private async migrateFlightStatusUtc() {

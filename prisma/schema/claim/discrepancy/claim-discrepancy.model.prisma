@@ -3,6 +3,7 @@ model ClaimDiscrepancy {
   fieldName      ClaimDiscrepancyFieldName? @map("field_name")
   passengerId    String                     @map("passenger_id")
   documentId     String                     @map("document_id")
+  documentIds    String[]                   @map("document_ids")
   extractedValue String                     @map("extracted_value")
   claimId        String                     @map("claim_id")
   status         ClaimDiscrepancyStatus     @default(ACTIVE)

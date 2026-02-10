@@ -92,7 +92,7 @@ export class DiscrepancyHubService {
 
                 if (matchScore) {
                     await this.discrepancyPersistenceService.saveDiscrepancy({
-                        documentId: assignment.id,
+                        documentIds: [assignment.id, passport.id],
                         passengerId: assignment.passengerId,
                         claimId: claimId,
                         extractedValue: matchScore,
@@ -127,7 +127,7 @@ export class DiscrepancyHubService {
                 ) {
                     await this.discrepancyPersistenceService.saveDiscrepancy({
                         fieldName: ClaimDiscrepancyFieldName.FIRST_NAME,
-                        documentId: doc.id,
+                        documentIds: [doc.id],
                         passengerId: doc.passengerId,
                         claimId: claimId,
                         extractedValue: passportData.firstName,
@@ -141,7 +141,7 @@ export class DiscrepancyHubService {
                 ) {
                     await this.discrepancyPersistenceService.saveDiscrepancy({
                         fieldName: ClaimDiscrepancyFieldName.LAST_NAME,
-                        documentId: doc.id,
+                        documentIds: [doc.id],
                         passengerId: doc.passengerId,
                         claimId: claimId,
                         extractedValue: passportData.lastName,

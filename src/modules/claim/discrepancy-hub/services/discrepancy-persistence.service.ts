@@ -14,7 +14,7 @@ export class DiscrepancyPersistenceService {
     async saveDiscrepancy(data: {
         fieldName?: ClaimDiscrepancyFieldName;
         passengerId: string;
-        documentId: string;
+        documentIds: string[];
         extractedValue: string;
         claimId: string;
         type: DiscrepancyType;
@@ -23,7 +23,8 @@ export class DiscrepancyPersistenceService {
             data: {
                 fieldName: data.fieldName,
                 passengerId: data.passengerId,
-                documentId: data.documentId,
+                documentIds: data.documentIds,
+                documentId: data.documentIds[0], //temporary
                 extractedValue: data.extractedValue,
                 claimId: data.claimId,
                 type: data.type,
