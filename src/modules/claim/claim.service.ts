@@ -2,6 +2,7 @@ import { Injectable, OnModuleInit } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import {
     CancellationNotice,
+    ClaimFlightStatusSource,
     ClaimStatus,
     DelayCategory,
     DocumentRequestReason,
@@ -42,6 +43,10 @@ import { ICreateClaimExtraData } from './interfaces/create-claim-extra-data.inte
 import { IEnsureDocumentRequestsJobData } from './interfaces/ensure-document-requests-job-data.interface';
 import axios from 'axios';
 import { Languages } from '../language/enums/languages.enums';
+import { FlightService } from '../flight/flight.service';
+import { IFlightStatus } from '../flight/interfaces/flight-status.interface';
+import { MeteoStatusService } from './meteo-status/meteo-status.service';
+import { FlightStatusService } from './flight-status/flight-status.service';
 
 @Injectable()
 export class ClaimService implements OnModuleInit {
@@ -57,9 +62,98 @@ export class ClaimService implements OnModuleInit {
         private readonly documentRequestService: DocumentRequestService,
         private readonly claimPersistenceService: ClaimPersistenceService,
         private readonly duplicateService: DuplicateService,
+        private readonly flightService: FlightService,
+        private readonly meteoStatusService: MeteoStatusService,
+        private readonly flightStatusService: FlightStatusService,
     ) {}
 
     async onModuleInit() {
+        await this.migratePassengerStatus();
+
+        await this.migrateFlightStatusUtc();
+    }
+
+    private async migrateFlightStatusUtc() {
+        const claims = await this.prisma.claim.findMany({
+            where: {
+                archived: false,
+                flightStatuses: {
+                    some: {
+                        source: ClaimFlightStatusSource.CHISINAU_AIRPORT,
+                    },
+                },
+            },
+            include: {
+                details: {
+                    include: {
+                        airlines: true,
+                        routes: {
+                            include: {
+                                DepartureAirport: true,
+                            },
+                        },
+                    },
+                },
+            },
+        });
+
+        for (let i = 0; i < claims.length; i++) {
+            const claim = claims[i];
+
+            try {
+                const flightCode = claim.details.flightNumber.slice(2);
+
+                const airlineIata =
+                    claim.details.airlines.iata || claim.details.airlines.icao;
+                const flightDate = claim.details.date;
+
+                const updatedFlightStatus =
+                    await this.flightService.getFlightFromChisinauAirport({
+                        flightCode,
+                        airlineIata,
+                        date: flightDate,
+                    });
+
+                if (!updatedFlightStatus) {
+                    continue;
+                }
+
+                await this.prisma.claimFlightStatus.deleteMany({
+                    where: {
+                        claimId: claim.id,
+                    },
+                });
+
+                const troubledRoute =
+                    claim.details.routes.find((r) => r.troubled) ||
+                    claim.details.routes[0];
+
+                if (updatedFlightStatus?.exactTime) {
+                    const meteoStatus =
+                        await this.meteoStatusService.fetchMeteoStatus({
+                            airportIcao: troubledRoute.DepartureAirport.icao,
+                            time: updatedFlightStatus.exactTime,
+                        });
+
+                    if (meteoStatus) {
+                        await this.meteoStatusService.create(
+                            meteoStatus,
+                            claim.id,
+                        );
+                    }
+                }
+
+                await this.flightStatusService.createFlightStatus(
+                    {
+                        ...updatedFlightStatus,
+                    },
+                    claim.id,
+                );
+            } catch (_e) {}
+        }
+    }
+
+    private async migratePassengerStatus() {
         const claims = await this.prisma.claim.findMany({
             where: {
                 archived: false,
@@ -80,7 +174,7 @@ export class ClaimService implements OnModuleInit {
             const allPassengers = [claim.customer, ...claim.passengers];
 
             const progresses = claim.state.progress.sort(
-                (a, b) => b.order - a.order,
+                (a, b) => a.order - b.order,
             );
 
             for (let k = 0; k < progresses.length; k++) {
