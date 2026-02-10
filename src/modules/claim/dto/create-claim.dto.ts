@@ -15,6 +15,7 @@ import {
     AirlineReason,
     BaggageDelayCategory,
     CancellationNotice,
+    CreatedViaBoardingPassType,
     DelayCategory,
     DisruptionType,
 } from '@prisma/client';
@@ -85,8 +86,8 @@ class StateDto {
     amount: number;
 
     @IsOptional()
-    @IsBoolean()
-    scannedBoardingPass: boolean = false;
+    @IsEnum(CreatedViaBoardingPassType)
+    createdViaBoardingPass: CreatedViaBoardingPassType | null = null;
 }
 
 class CustomerDto {

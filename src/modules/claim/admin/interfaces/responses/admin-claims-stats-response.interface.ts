@@ -7,5 +7,6 @@ export interface IAdminClaimsStatsResponse {
     claimsByDay: { date: string; count: number }[];
     successByMonth: { month: string; success: string }[];
     airlines: { count: number; name: string; icao: string }[];
-    claimsViaBoardingPass: number;
+    claimsViaUploadBoardingPass: number;
+    claimsViaScanBoardingPass: number;
 }

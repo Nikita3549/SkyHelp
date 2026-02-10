@@ -1,5 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { ClaimStatus, PassengerPaymentStatus, Prisma } from '@prisma/client';
+import {
+    ClaimStatus,
+    CreatedViaBoardingPassType,
+    PassengerPaymentStatus,
+    Prisma,
+} from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { IAdminClaimsStatsResponse } from '../../claim/admin/interfaces/responses/admin-claims-stats-response.interface';
 
@@ -25,7 +30,8 @@ export class ClaimStatsService {
             paidOtherPassengersAmount,
             claimsByDay,
             successByMonth,
-            claimsViaBoardingPass,
+            claimsViaUploadBoardingPass,
+            claimsViaScanBoardingPass,
         ] = await this.prisma.$transaction([
             // total claims
             this.prisma.claim.count({
@@ -131,14 +137,27 @@ export class ClaimStatsService {
                   GROUP BY month, date_trunc('month', c."created_at")
                   ORDER BY date_trunc('month', c."created_at") DESC`,
 
-            // claims via boarding pass
+            // claims via upload boarding pass
             this.prisma.claim.count({
                 where: {
                     userId,
                     agentId,
                     archived: false,
                     state: {
-                        scannedBoardingPass: true,
+                        createdViaBoardingPass:
+                            CreatedViaBoardingPassType.UPLOAD,
+                    },
+                },
+            }),
+
+            // claims via scan boarding pass
+            this.prisma.claim.count({
+                where: {
+                    userId,
+                    agentId,
+                    archived: false,
+                    state: {
+                        createdViaBoardingPass: CreatedViaBoardingPassType.SCAN,
                     },
                 },
             }),
@@ -184,7 +203,8 @@ export class ClaimStatsService {
                 icao: s.icao,
                 count: Number(s._count._all), // <- BIGINT FIX
             })),
-            claimsViaBoardingPass,
+            claimsViaUploadBoardingPass,
+            claimsViaScanBoardingPass,
         };
     }
 }

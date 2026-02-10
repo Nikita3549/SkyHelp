@@ -1,0 +1,4 @@
+enum CreatedViaBoardingPassType {
+  SCAN
+  UPLOAD
+}

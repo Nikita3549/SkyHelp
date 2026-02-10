@@ -272,8 +272,8 @@ export class ClaimPersistenceService {
                         amount: claimData.state.amount,
                         progress: { create: defaultProgress },
                         isDuplicate: duplicatedClaims.length > 0,
-                        scannedBoardingPass:
-                            claimData.state.scannedBoardingPass,
+                        createdViaBoardingPass:
+                            claimData.state.createdViaBoardingPass,
                     },
                 },
                 customer: {
