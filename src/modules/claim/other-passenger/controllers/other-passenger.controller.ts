@@ -44,10 +44,8 @@ export class OtherPassengerController {
         private readonly notificationService: NotificationService,
         private readonly documentService: DocumentService,
         private readonly claimPersistenceService: ClaimPersistenceService,
-        private readonly discrepancyPersistenceService: DiscrepancyPersistenceService,
     ) {}
 
-    @Patch()
     @Patch(':passengerId/status')
     @UseGuards(
         new RoleGuard([
