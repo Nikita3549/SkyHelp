@@ -4218,5 +4218,6 @@
     "Meteo.windgust" : "Rüzgar tünel",
     "Meteo.temperature" : "Sıcaklık",
     "emailForm.aiRefine" :  "AI Refine",
-    "IssueDetailsCard.aiSummaryButton" : "AI"
+    "IssueDetailsCard.aiSummaryButton" : "AI",
+    "Progress.withoutNotification" : "Kaydetmek için bildirim yok"
 }   

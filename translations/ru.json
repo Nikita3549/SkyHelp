@@ -4198,5 +4198,6 @@
     "Meteo.temperature" : "Температура",
     "moldovaBankFields.helper" : "Банковский аккаунт должен быть в MDL",
     "emailForm.aiRefine" : "ИИ улучшение",
-    "IssueDetailsCard.aiSummaryButton" : "ИИ"
+    "IssueDetailsCard.aiSummaryButton" : "ИИ",
+    "Progress.withoutNotification" : "Сохранить без уведомления"
 }
