@@ -160,13 +160,13 @@ export class FlightStatusController {
         const airline =
             await this.airlinesService.getAirlineByIcao(airlineIcao);
         switch (source) {
-            // case ClaimFlightStatusSource.OAG:
-            //     newFlightStatus = await this.flightService.getFlightFromOAG(
-            //         flightCode,
-            //         airlineIcao,
-            //         flightDate,
-            //     );
-            //     break;
+            case ClaimFlightStatusSource.OAG:
+                newFlightStatus = await this.flightService.getFlightFromOAG(
+                    flightCode,
+                    airlineIcao,
+                    flightDate,
+                );
+                break;
             case ClaimFlightStatusSource.FLIGHT_STATS:
                 newFlightStatus =
                     await this.flightService.getFlightFromFlightStats(

@@ -32,22 +32,22 @@ export class AddFlightStatusProcessor extends WorkerHost {
 
         let exactTime: Date | undefined;
 
-        // const flightFromOAG = await this.flightService.getFlightFromOAG(
-        //     flightCode,
-        //     airlineIcao,
-        //     new Date(flightDate),
-        // );
-        //
-        // if (flightFromOAG) {
-        //     await this.flightStatusService.createFlightStatus(
-        //         {
-        //             isCancelled: flightFromOAG.isCancelled,
-        //             delayMinutes: flightFromOAG.delayMinutes,
-        //             source: flightFromOAG.source,
-        //         },
-        //         claimId,
-        //     );
-        // }
+        const flightFromOAG = await this.flightService.getFlightFromOAG(
+            flightCode,
+            airlineIcao,
+            new Date(flightDate),
+        );
+
+        if (flightFromOAG) {
+            await this.flightStatusService.createFlightStatus(
+                {
+                    isCancelled: flightFromOAG.isCancelled,
+                    delayMinutes: flightFromOAG.delayMinutes,
+                    source: flightFromOAG.source,
+                },
+                claimId,
+            );
+        }
 
         const flightFromFlightStats =
             await this.flightService.getFlightFromFlightStats(
