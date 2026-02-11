@@ -18,7 +18,12 @@ import {
 import { OtherPassengerService } from '../other-passenger.service';
 import { DocumentService } from '../../document/services/document.service';
 import { TokenService } from '../../../token/token.service';
-import { ClaimStatus, PassengerPaymentStatus, UserRole } from '@prisma/client';
+import {
+    ClaimStatus,
+    OtherPassenger,
+    PassengerPaymentStatus,
+    UserRole,
+} from '@prisma/client';
 import { RoleGuard } from '../../../../common/guards/role.guard';
 import { UpdatePaymentStatusDto } from '../../customer/dto/update-payment-status.dto';
 import { Languages } from '../../../language/enums/languages.enums';
@@ -27,6 +32,7 @@ import { NotificationService } from '../../../notification/services/notification
 import { PaymentRequestLetter } from '../../../notification/letters/definitions/claim/payment-request.letter';
 import { ClaimPersistenceService } from '../../../claim-persistence/services/claim-persistence.service';
 import { DiscrepancyPersistenceService } from '../../discrepancy-hub/services/discrepancy-persistence.service';
+import { UpdatePassengerStatusDto } from '../dto/update-passenger-status.dto';
 
 @Controller('claims/passengers')
 @UseGuards(JwtAuthGuard)
@@ -40,6 +46,36 @@ export class OtherPassengerController {
         private readonly claimPersistenceService: ClaimPersistenceService,
         private readonly discrepancyPersistenceService: DiscrepancyPersistenceService,
     ) {}
+
+    @Patch()
+    @Patch(':passengerId/status')
+    @UseGuards(
+        new RoleGuard([
+            UserRole.ADMIN,
+            UserRole.AGENT,
+            UserRole.LAWYER,
+            UserRole.ACCOUNTANT,
+        ]),
+    )
+    async updatePassengerStatus(
+        @Param('passengerId') passengerId: string,
+        @Body() dto: UpdatePassengerStatusDto,
+    ) {
+        const { status } = dto;
+
+        const passenger =
+            await this.otherPassengerService.getOtherPassenger(passengerId);
+
+        if (!passenger) {
+            throw new NotFoundException(PASSENGER_NOT_FOUND);
+        }
+
+        await this.claimPersistenceService.updateStatus({
+            claimId: passenger.claimId,
+            passengerId: passenger.id,
+            newStatus: status,
+        });
+    }
 
     @Patch(':passengerId/payment-status')
     @UseGuards(
