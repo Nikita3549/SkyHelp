@@ -43,13 +43,9 @@ import { ICreateClaimExtraData } from './interfaces/create-claim-extra-data.inte
 import { IEnsureDocumentRequestsJobData } from './interfaces/ensure-document-requests-job-data.interface';
 import axios from 'axios';
 import { Languages } from '../language/enums/languages.enums';
-import { FlightService } from '../flight/flight.service';
-import { isProd } from '../../common/utils/isProd';
-import { IFlightStatus } from '../flight/interfaces/flight-status.interface';
-import { FlightStatusService } from './flight-status/flight-status.service';
 
 @Injectable()
-export class ClaimService implements OnModuleInit {
+export class ClaimService {
     constructor(
         private readonly prisma: PrismaService,
         @InjectQueue(CLAIM_FOLLOWUP_QUEUE_KEY)
@@ -62,57 +58,7 @@ export class ClaimService implements OnModuleInit {
         private readonly documentRequestService: DocumentRequestService,
         private readonly claimPersistenceService: ClaimPersistenceService,
         private readonly duplicateService: DuplicateService,
-        private readonly flightService: FlightService,
-        private readonly flightStatusService: FlightStatusService,
     ) {}
-
-    async onModuleInit() {
-        if (!isProd()) {
-            return;
-        }
-
-        const claims = await this.prisma.claim.findMany({
-            where: {
-                archived: false,
-                flightStatuses: {
-                    some: {
-                        NOT: {
-                            source: ClaimFlightStatusSource.OAG,
-                        },
-                    },
-                },
-            },
-            include: {
-                details: {
-                    include: { airlines: true },
-                },
-            },
-        });
-
-        for (let i = 0; i < claims.length; i++) {
-            const claim = claims[i];
-            const flightCode = claim.details.flightNumber.slice(2);
-
-            const airlineIcao = claim.details.airlines.icao;
-            const flightDate = new Date(claim.details.date);
-
-            const newFlightStatus = await this.flightService.getFlightFromOAG(
-                flightCode,
-                airlineIcao,
-                flightDate,
-            );
-
-            console.log(`${i} of ${claims.length}`);
-            if (!newFlightStatus) {
-                continue;
-            }
-
-            await this.flightStatusService.createFlightStatus(
-                newFlightStatus,
-                claim.id,
-            );
-        }
-    }
 
     async summarizeClientInfo(
         claimAdditionalInfo: string | null,
