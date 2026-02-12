@@ -11,7 +11,8 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "strict": true,
-    "strictPropertyInitialization": false
+    "strictPropertyInitialization": false,
+    "skipLibCheck": true
   },
   "exclude": ["prisma.config.ts"],
   "include": ["src"]
