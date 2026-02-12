@@ -22,7 +22,7 @@ import {
 import { Languages } from '../../language/enums/languages.enums';
 import { isLanguage } from '../../../common/utils/isLanguage';
 import { CreateProgressDto } from './dto/create-progress.dto';
-import { CLAIM_NOT_FOUND } from '../constants';
+import { CLAIM_NOT_FOUND, PASSENGER_NOT_FOUND } from '../constants';
 import { ProgressVariants } from './constants/progresses/progressVariants';
 import { ClaimStatus, UserRole } from '@prisma/client';
 import { InjectQueue } from '@nestjs/bullmq';
@@ -77,6 +77,15 @@ export class ProgressController {
 
         if (!claim) {
             throw new NotFoundException(CLAIM_NOT_FOUND);
+        }
+
+        const basePassenger =
+            await this.claimPersistenceService.getBasePassenger(
+                dto.passengerId,
+            );
+
+        if (!basePassenger) {
+            throw new NotFoundException(PASSENGER_NOT_FOUND);
         }
 
         const customerLanguage = isLanguage(claim.customer.language)
