@@ -165,14 +165,14 @@ export class GenerateLinksController {
                 query.claimId,
                 {
                     id: passenger.id,
-                    copiedLinkType: OtherPassengerCopiedLinkType.DOCUMENT,
+                    copiedLinkType: OtherPassengerCopiedLinkType.PASSPORT,
                 },
             );
 
             await this.otherPassengerCopiedLinksService.createIfNotExist(
                 passenger.id,
                 false,
-                OtherPassengerCopiedLinkType.DOCUMENT,
+                OtherPassengerCopiedLinkType.PASSPORT,
             );
         } else if (customer) {
             jwt = await this.generateLinksService.continueJwtLink(
@@ -307,6 +307,11 @@ export class PublicGenerateLinksController {
     @Get('public/upload-documents')
     async copyUploadDocuments(@Query() query: PublicUploadDocumentsDto) {
         const { passengerId, documentTypes, claimJwt } = query;
+        const otherPassengerCopiedLinkType = documentTypes.includes(
+            DocumentType.PASSPORT,
+        )
+            ? OtherPassengerCopiedLinkType.PASSPORT
+            : OtherPassengerCopiedLinkType.DOCUMENT;
         const token = await this.tokenService.verifyJWT<{ claimId?: string }>(
             claimJwt,
         );
@@ -326,13 +331,13 @@ export class PublicGenerateLinksController {
             token.claimId,
             {
                 id: passenger.id,
-                copiedLinkType: OtherPassengerCopiedLinkType.DOCUMENT,
+                copiedLinkType: otherPassengerCopiedLinkType,
             },
         );
         await this.otherPassengerCopiedLinksService.createIfNotExist(
             passenger.id,
             true,
-            OtherPassengerCopiedLinkType.DOCUMENT,
+            otherPassengerCopiedLinkType,
         );
 
         const link = await this.generateLinksService.uploadDocuments(

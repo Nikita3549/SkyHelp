@@ -1,4 +1,5 @@
 enum OtherPassengerCopiedLinkType {
   DOCUMENT
   ASSIGNMENT
+  PASSPORT
 }
