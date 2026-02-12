@@ -109,7 +109,7 @@ export class ClaimPersistenceService {
         }
 
         if (basePassenger.isCustomer) {
-            client.claim.update({
+            await client.claim.update({
                 data: {
                     state: {
                         update: {
