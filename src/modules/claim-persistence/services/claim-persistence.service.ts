@@ -24,6 +24,10 @@ export class ClaimPersistenceService {
         private readonly claimIncludeProvider: ClaimIncludeProvider,
     ) {}
 
+    async cascadeDelete(claimId: string): Promise<void> {
+        await this.prisma.claim.delete({ where: { id: claimId } });
+    }
+
     async findOneById(
         claimId: string,
         options?: { documentsWithPath: boolean },

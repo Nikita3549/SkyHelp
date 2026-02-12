@@ -11,7 +11,7 @@ model ClaimDiscrepancy {
   type           DiscrepancyType            @default(PASSENGER)
 
   document Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
-  claim    Claim    @relation(fields: [claimId], references: [id])
+  claim    Claim    @relation(fields: [claimId], references: [id], onDelete: Cascade)
 
   @@map("claim_discrepancy")
 }

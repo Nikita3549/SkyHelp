@@ -2,7 +2,7 @@ model EmailResumeClick {
   id String @id @default(cuid()) @map("id")
 
   claimId   String?  @unique @map("claim_id")
-  claim     Claim?   @relation(fields: [claimId], references: [id])
+  claim     Claim?   @relation(fields: [claimId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now()) @map("created_at")
   isClicked Boolean  @default(false) @map("is_clicked")
 

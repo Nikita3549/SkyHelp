@@ -1,9 +1,9 @@
 model DuplicatedClaim {
   id                String @id @default(cuid()) @map("id")
   claimId           String @map("claim_id")
-  claim             Claim  @relation("ClaimOriginal", fields: [claimId], references: [id])
+  claim             Claim  @relation("ClaimOriginal", fields: [claimId], references: [id], onDelete: Cascade)
   duplicatedClaimId String @map("duplicated_claim_id")
-  duplicatedClaim   Claim  @relation("ClaimDuplicate", fields: [duplicatedClaimId], references: [id])
+  duplicatedClaim   Claim  @relation("ClaimDuplicate", fields: [duplicatedClaimId], references: [id], onDelete: Cascade)
 
   @@index([claimId])
   @@map("duplicated_claims")

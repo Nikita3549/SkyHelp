@@ -5,7 +5,7 @@ model ClaimFlightStatus {
   source       ClaimFlightStatusSource
 
   claimId String
-  claim   Claim  @relation(fields: [claimId], references: [id])
+  claim   Claim  @relation(fields: [claimId], references: [id], onDelete: Cascade)
 
   @@map("claim_flight_statuses")
 }

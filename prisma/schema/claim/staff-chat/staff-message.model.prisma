@@ -5,7 +5,7 @@ model StaffMessage {
   body    String
   claimId String   @map("claim_id")
 
-  claim    Claim @relation(fields: [claimId], references: [id])
+  claim    Claim @relation(fields: [claimId], references: [id], onDelete: Cascade)
   fromUser User  @relation(fields: [fromId], references: [id])
 
   @@map("staff_messages")

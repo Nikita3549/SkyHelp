@@ -71,6 +71,18 @@ export class AdminController {
         private readonly claimService: ClaimService,
     ) {}
 
+    @Delete(':claimId')
+    @HttpCode(HttpStatus.NO_CONTENT)
+    async deleteClaim(@Param('claimId') claimId: string): Promise<void> {
+        const claim = await this.claimPersistenceService.findOneById(claimId);
+
+        if (!claim) {
+            throw new NotFoundException(CLAIM_NOT_FOUND);
+        }
+
+        await this.claimPersistenceService.cascadeDelete(claim.id);
+    }
+
     @Post(':claimId/ai-summary')
     async generateAiSummary(
         @Param('claimId') claimId: string,

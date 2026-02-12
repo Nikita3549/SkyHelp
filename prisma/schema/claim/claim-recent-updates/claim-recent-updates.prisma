@@ -4,5 +4,5 @@ model ClaimRecentUpdates {
   status          ClaimRecentUpdatesStatus @default(UNVIEWED)
   updatedEntityId String                   @map("updated_entity_id")
   claimId         String                   @map("claim_id")
-  claim           Claim                    @relation(fields: [claimId], references: [id])
+  claim           Claim                    @relation(fields: [claimId], references: [id], onDelete: Cascade)
 }
