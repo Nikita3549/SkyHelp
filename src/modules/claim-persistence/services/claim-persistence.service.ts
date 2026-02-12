@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import {
     Claim,
@@ -16,6 +16,7 @@ import { normalizePhone } from '../../../common/utils/normalizePhone';
 import { CreateClaimDto } from '../../claim/dto/create-claim.dto';
 import { ISaveClaimInternalData } from '../interfaces/save-claim-internal-data.interface';
 import { UpdateClaimDto } from '../../claim/dto/update-claim.dto';
+import { CLAIM_NOT_FOUND } from '../../claim/constants';
 
 @Injectable()
 export class ClaimPersistenceService {
@@ -25,7 +26,37 @@ export class ClaimPersistenceService {
     ) {}
 
     async cascadeDelete(claimId: string): Promise<void> {
-        await this.prisma.claim.delete({ where: { id: claimId } });
+        const claim = await this.findOneById(claimId);
+
+        if (!claim) {
+            throw new NotFoundException(CLAIM_NOT_FOUND);
+        }
+
+        await this.prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+            await tx.claim.delete({ where: { id: claim.id } });
+
+            await tx.claimDetails.delete({
+                where: { id: claim.detailsId },
+            });
+
+            await tx.claimState.delete({
+                where: { id: claim.stateId },
+            });
+
+            await tx.claimCustomer.delete({
+                where: { id: claim.customerId },
+            });
+
+            await tx.claimIssue.delete({
+                where: { id: claim.issueId },
+            });
+
+            if (claim.paymentId) {
+                await tx.claimPayment.delete({
+                    where: { id: claim.paymentId },
+                });
+            }
+        });
     }
 
     async findOneById(
