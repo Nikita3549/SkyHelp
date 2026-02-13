@@ -30,6 +30,7 @@ export class ProgressService {
             updatedBy?: string;
             comments?: string;
             descriptionVariables: { key: string; value: string }[];
+            passengerId: string;
         },
         claimStateId: string,
         tx?: Prisma.TransactionClient,

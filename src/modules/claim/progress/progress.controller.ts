@@ -116,6 +116,7 @@ export class ProgressController {
                 order,
                 updatedBy: user.id,
                 comments,
+                passengerId: basePassenger.id,
                 descriptionVariables: additionalData
                     ? Object.keys(additionalData).map((key) => ({
                           key,

@@ -5,6 +5,7 @@ model Progress {
   comments             String?
   endAt                DateTime?      @map("end_at")
   order                Int            @default(1)
+  passengerId          String?        @map("passenger_id")
   status               ProgressStatus @default(COMPLETED) @map("status")
   claimStateId         String         @map("claim_state_id")
   claimState           ClaimState     @relation(fields: [claimStateId], references: [id], onDelete: Cascade)
