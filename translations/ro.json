@@ -4199,5 +4199,6 @@
     "moldovaBankFields.helper" : "Contul bancar trebuie sa fie in MDL",
     "emailForm.aiRefine" : "AI Imbunǎtǎțire",
     "IssueDetailsCard.aiSummaryButton" : "AI",
-    "Progress.withoutNotification" : "Salvează fără notificare"
+    "Progress.withoutNotification" : "Salvează fără notificare",
+    "ClaimsTable.actionUnarchive" : "Dezarchivează"
 }

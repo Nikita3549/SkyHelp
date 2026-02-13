@@ -4219,5 +4219,6 @@
     "Meteo.temperature" : "Sıcaklık",
     "emailForm.aiRefine" :  "AI Refine",
     "IssueDetailsCard.aiSummaryButton" : "AI",
-    "Progress.withoutNotification" : "Kaydetmek için bildirim yok"
+    "Progress.withoutNotification" : "Kaydetmek için bildirim yok",
+    "ClaimsTable.actionUnarchive" : "Arşivden çıkar"
 }   

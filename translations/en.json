@@ -4198,5 +4198,6 @@
     "moldovaBankFields.helper" : "Bank account should be in MDL",
     "emailForm.aiRefine" : "AI Refine",
     "IssueDetailsCard.aiSummaryButton" : "AI",
-    "Progress.withoutNotification" : "Save without notification"
+    "Progress.withoutNotification" : "Save without notification",
+    "ClaimsTable.actionUnarchive" : "Unarchive"
 }
