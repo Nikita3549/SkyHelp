@@ -24,6 +24,7 @@ import { DocumentService } from '../document/services/document.service';
 import {
     ClaimStatus,
     DocumentRequestStatus,
+    DocumentRequestType,
     PassengerPaymentStatus,
     UserRole,
 } from '@prisma/client';
@@ -190,13 +191,22 @@ export class PublicCustomerController {
             },
         );
 
-        if (documentRequestId) {
-            const documentRequest =
-                await this.documentRequestService.getById(documentRequestId);
+        const documentRequest = claim.documentRequests.find(
+            (req) =>
+                req.type == DocumentRequestType.ASSIGNMENT &&
+                req.passengerId == claim.customerId,
+        );
+
+        const finalDocumentRequestId = documentRequestId || documentRequest?.id;
+
+        if (finalDocumentRequestId) {
+            const documentRequest = await this.documentRequestService.getById(
+                finalDocumentRequestId,
+            );
 
             if (documentRequest) {
                 await this.documentRequestService.updateStatus(
-                    documentRequestId,
+                    finalDocumentRequestId,
                     DocumentRequestStatus.INACTIVE,
                 );
             }

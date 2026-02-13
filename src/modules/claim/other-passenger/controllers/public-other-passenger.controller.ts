@@ -21,7 +21,11 @@ import {
     INVALID_JWT,
     PASSENGER_NOT_FOUND,
 } from '../../constants';
-import { ClaimRecentUpdatesType, DocumentRequestStatus } from '@prisma/client';
+import {
+    ClaimRecentUpdatesType,
+    DocumentRequestStatus,
+    DocumentRequestType,
+} from '@prisma/client';
 import { JwtQueryDto } from '../../dto/jwt-query.dto';
 import { CreateOtherPassengersDto } from '../dto/create-other-passengers.dto';
 import { validateClaimJwt } from '../../../../common/utils/validate-claim-jwt';
@@ -95,13 +99,22 @@ export class PublicOtherPassengerController {
             return;
         }
 
-        if (documentRequestId) {
-            const documentRequest =
-                await this.documentRequestService.getById(documentRequestId);
+        const documentRequest = claim.documentRequests.find(
+            (req) =>
+                req.type == DocumentRequestType.ASSIGNMENT &&
+                req.passengerId == passenger.id,
+        );
+
+        const finalDocumentRequestId = documentRequestId || documentRequest?.id;
+
+        if (finalDocumentRequestId) {
+            const documentRequest = await this.documentRequestService.getById(
+                finalDocumentRequestId,
+            );
 
             if (documentRequest) {
                 await this.documentRequestService.updateStatus(
-                    documentRequestId,
+                    finalDocumentRequestId,
                     DocumentRequestStatus.INACTIVE,
                 );
             }
