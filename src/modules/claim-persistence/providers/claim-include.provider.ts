@@ -82,6 +82,9 @@ export class ClaimIncludeProvider {
                 include: {
                     copiedLinks: true,
                 },
+                orderBy: {
+                    firstName: 'asc',
+                },
             },
             agent: {
                 select: {
