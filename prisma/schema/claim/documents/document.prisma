@@ -10,6 +10,8 @@ model Document {
   passengerId    String       @default("") @map("passenger_id")
   claim          Claim        @relation(fields: [claimId], references: [id], onDelete: Cascade)
   deletedAt      DateTime?    @map("deleted_at")
+  updatedAt      DateTime     @default(now()) @updatedAt @map("updated_at")
+  createdAt      DateTime     @default(now()) @map("created_at")
 
   claimDiscrepancies ClaimDiscrepancy[]
 

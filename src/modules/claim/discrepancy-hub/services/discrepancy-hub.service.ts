@@ -1,8 +1,14 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import {
+    forwardRef,
+    Inject,
+    Injectable,
+    NotFoundException,
+} from '@nestjs/common';
 import axios from 'axios';
 import { ConfigService } from '@nestjs/config';
 import { IExtractPassportResponse } from '../interfaces/extract-passport-response.interface';
 import {
+    ClaimDiscrepancy,
     ClaimDiscrepancyFieldName,
     DiscrepancyType,
     Document,
@@ -13,6 +19,8 @@ import { DiscrepancyPersistenceService } from './discrepancy-persistence.service
 import { DocumentService } from '../../document/services/document.service';
 import { ExtractSignatureMatchResponse } from '../interfaces/extract-signature-match-response.interface';
 import { S3Service } from '../../../s3/s3.service';
+import { DISCREPANCY_NOT_FOUND } from '../constants';
+import { CLAIM_NOT_FOUND } from '../../constants';
 
 @Injectable()
 export class DiscrepancyHubService {
@@ -24,6 +32,81 @@ export class DiscrepancyHubService {
         private readonly documentService: DocumentService,
         private readonly S3Service: S3Service,
     ) {}
+
+    async refreshSignatureDiscrepancy(
+        claimId: string,
+        discrepancyId?: string,
+    ): Promise<ClaimDiscrepancy> {
+        const claim = await this.claimPersistenceService.findOneById(claimId);
+        if (!claim) {
+            throw new NotFoundException(CLAIM_NOT_FOUND);
+        }
+
+        const sortedDiscrepancies = claim.discrepancies.sort(
+            (a, b) => b.createdAt.getTime() - a.createdAt.getTime(),
+        );
+
+        const discrepancy = discrepancyId
+            ? await this.discrepancyPersistenceService.findOne(discrepancyId)
+            : sortedDiscrepancies.find(
+                  (dis) => dis.type == DiscrepancyType.SIGNATURE,
+              );
+
+        if (!discrepancy) {
+            throw new NotFoundException(DISCREPANCY_NOT_FOUND);
+        }
+
+        if (discrepancy.type != DiscrepancyType.SIGNATURE) {
+            return discrepancy;
+        }
+
+        const sortedDocuments = claim.documents.sort(
+            (a, b) => b.createdAt.getTime() - a.createdAt.getTime(),
+        );
+
+        const passport = sortedDocuments.find(
+            (doc) => doc.type == DocumentType.PASSPORT,
+        );
+        const assignment = sortedDocuments.find(
+            (doc) => doc.type == DocumentType.ASSIGNMENT,
+        );
+
+        if (
+            !passport ||
+            !assignment ||
+            !passport.signatureS3Key ||
+            !assignment.signatureS3Key
+        ) {
+            return discrepancy;
+        }
+
+        const { matchScore, signaturePng } =
+            await this.extractSignatureMatchScore({
+                passport: await this.S3Service.getBuffer(
+                    passport.signatureS3Key,
+                ),
+                signature: await this.S3Service.getBuffer(
+                    assignment.signatureS3Key,
+                ),
+            });
+
+        if (matchScore && signaturePng) {
+            await this.documentService.saveDocumentSignature({
+                png: signaturePng,
+                document: passport,
+            });
+
+            return this.discrepancyPersistenceService.saveDiscrepancy({
+                claimId: discrepancy.claimId,
+                extractedValue: matchScore,
+                passengerId: discrepancy.passengerId,
+                documentIds: [passport.id, assignment.id],
+                type: DiscrepancyType.SIGNATURE,
+            });
+        }
+
+        return discrepancy;
+    }
 
     async processAssignmentDiscrepancy(
         assignments: (Document & { buffer: Buffer })[],

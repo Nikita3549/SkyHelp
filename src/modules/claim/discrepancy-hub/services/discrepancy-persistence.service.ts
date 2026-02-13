@@ -6,6 +6,7 @@ import {
     DiscrepancyType,
 } from '@prisma/client';
 import { PrismaService } from '../../../prisma/prisma.service';
+import { DISCREPANCY_NOT_FOUND } from '../constants';
 
 @Injectable()
 export class DiscrepancyPersistenceService {
@@ -57,7 +58,7 @@ export class DiscrepancyPersistenceService {
         const discrepancy = await this.findOne(discrepancyId);
 
         if (!discrepancy) {
-            throw new NotFoundException('Discrepancy entity not fount');
+            throw new NotFoundException(DISCREPANCY_NOT_FOUND);
         }
 
         return this.prisma.claimDiscrepancy.update({

@@ -221,6 +221,12 @@ export class DocumentService {
             (doc) => doc.type == DocumentType.ASSIGNMENT,
         );
 
+        if (savedPassports.length != 0) {
+            await this.discrepancyHubService.refreshSignatureDiscrepancy(
+                claimId,
+            );
+        }
+
         this.discrepancyHubService.processPassportDiscrepancy(
             savedPassports.map((doc) => ({
                 ...doc,
