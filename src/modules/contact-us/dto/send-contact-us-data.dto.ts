@@ -1,4 +1,4 @@
-import { IsString } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 
 export class SendContactUsDataDto {
     @IsString()
@@ -15,4 +15,8 @@ export class SendContactUsDataDto {
 
     @IsString()
     subject: string;
+
+    @IsOptional()
+    @IsString()
+    claimId?: string;
 }

@@ -44,14 +44,15 @@ export class NotificationService {
         name: string;
         message: string;
         phone: string;
+        claimId?: string;
     }) {
-        const { email, subject, name, message, phone } = data;
+        const { email, subject, name, message, phone, claimId } = data;
 
         await this.gmailNoreplyService.sendEmail(
             this.configService.getOrThrow('GMAIL_CONTACT_US_SUBMIT_EMAIL'),
             `New Contact Form Submission from ${name}`,
             `You have received a new message via the Contact Us form.
-
+Claim Id: ${claimId || '-'}
 Name: ${name}
 Email: ${email}
 Phone: ${phone}

@@ -8,7 +8,7 @@ export class ContactUsController {
 
     @Post()
     async sendContactUsData(@Body() body: SendContactUsDataDto) {
-        const { email, subject, name, message, phone } = body;
+        const { email, subject, name, message, phone, claimId } = body;
 
         await this.notificationsService.submitContactUsForm({
             email,
@@ -16,6 +16,7 @@ export class ContactUsController {
             name,
             message,
             phone,
+            claimId,
         });
     }
 }
