@@ -38,7 +38,7 @@ export class SendNewDocumentRequestsProcessor extends WorkerHost {
             return;
         }
         const claim = await this.claimPersistenceService.findOneById(claimId);
-        if (!claim) {
+        if (!claim || claim?.archived) {
             return;
         }
 
