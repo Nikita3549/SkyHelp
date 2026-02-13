@@ -4220,5 +4220,7 @@
     "emailForm.aiRefine" :  "AI Refine",
     "IssueDetailsCard.aiSummaryButton" : "AI",
     "Progress.withoutNotification" : "Kaydetmek için bildirim yok",
-    "ClaimsTable.actionUnarchive" : "Arşivden çıkar"
+    "ClaimsTable.actionUnarchive" : "Arşivden çıkar",
+    "SignatureAlert.agreement" : "From agreement",
+    "SignatureAlert.passport" : "From passport"
 }   

@@ -4200,5 +4200,7 @@
     "emailForm.aiRefine" : "AI Imbunǎtǎțire",
     "IssueDetailsCard.aiSummaryButton" : "AI",
     "Progress.withoutNotification" : "Salvează fără notificare",
-    "ClaimsTable.actionUnarchive" : "Dezarchivează"
+    "ClaimsTable.actionUnarchive" : "Dezarchivează",
+    "SignatureAlert.agreement" : "Din acord",
+    "SignatureAlert.passport" : "Din pasaport"
 }

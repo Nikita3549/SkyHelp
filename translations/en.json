@@ -4199,5 +4199,7 @@
     "emailForm.aiRefine" : "AI Refine",
     "IssueDetailsCard.aiSummaryButton" : "AI",
     "Progress.withoutNotification" : "Save without notification",
-    "ClaimsTable.actionUnarchive" : "Unarchive"
+    "ClaimsTable.actionUnarchive" : "Unarchive",
+    "SignatureAlert.agreement" : "From agreement",
+    "SignatureAlert.passport" : "From passport"
 }

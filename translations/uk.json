@@ -4181,6 +4181,8 @@
     "emailForm.aiRefine" : "ИИ улучшения",
     "IssueDetailsCard.aiSummaryButton" : "ИИ",
     "Progress.withoutNotification" : "Зберегти без сповіщення",
-    "ClaimsTable.actionUnarchive" : "Розархівувати"
+    "ClaimsTable.actionUnarchive" : "Розархівувати",
+    "SignatureAlert.agreement" : "З угодою",
+    "SignatureAlert.passport" : "З паспортом"
 }
 
