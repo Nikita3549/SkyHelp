@@ -1,6 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
-import { OtherPassenger, PassengerPaymentStatus } from '@prisma/client';
+import {
+    ClaimStatus,
+    OtherPassenger,
+    PassengerPaymentStatus,
+} from '@prisma/client';
 import { OtherPassengerDto } from './dto/create-other-passengers.dto';
 
 @Injectable()
@@ -31,6 +35,7 @@ export class OtherPassengerService {
                         ...p,
                         claimId,
                         compensation,
+                        claimStatus: ClaimStatus.CLAIM_RECEIVED,
                     },
                 }),
             ),
