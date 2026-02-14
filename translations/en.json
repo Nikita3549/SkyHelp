@@ -4201,5 +4201,6 @@
     "Progress.withoutNotification" : "Save without notification",
     "ClaimsTable.actionUnarchive" : "Unarchive",
     "SignatureAlert.agreement" : "From agreement",
-    "SignatureAlert.passport" : "From passport"
+    "SignatureAlert.passport" : "From passport",
+    "EmailSubjectSection.claimIdPlaceholder" : "Claim # (optional)"
 }

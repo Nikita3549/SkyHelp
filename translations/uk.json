@@ -4183,6 +4183,7 @@
     "Progress.withoutNotification" : "Зберегти без сповіщення",
     "ClaimsTable.actionUnarchive" : "Розархівувати",
     "SignatureAlert.agreement" : "З угодою",
-    "SignatureAlert.passport" : "З паспортом"
+    "SignatureAlert.passport" : "З паспортом",
+    "EmailSubjectSection.claimIdPlaceholder" : "Заявка # (опціонально)"
 }
 

@@ -4202,5 +4202,6 @@
     "Progress.withoutNotification" : "Сохранить без уведомления",
     "ClaimsTable.actionUnarchive" : "Разархивировать",
     "SignatureAlert.agreement" : "Из соглашения",
-    "SignatureAlert.passport" : "Из паспорта"
+    "SignatureAlert.passport" : "Из паспорта",
+    "EmailSubjectSection.claimIdPlaceholder" : "Заявка # (опционально)"
 }

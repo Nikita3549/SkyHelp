@@ -4202,5 +4202,6 @@
     "Progress.withoutNotification" : "Salvează fără notificare",
     "ClaimsTable.actionUnarchive" : "Dezarchivează",
     "SignatureAlert.agreement" : "Din acord",
-    "SignatureAlert.passport" : "Din pasaport"
+    "SignatureAlert.passport" : "Din pasaport",
+    "EmailSubjectSection.claimIdPlaceholder" : "Cerere # (opțional)"
 }

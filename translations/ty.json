@@ -4222,5 +4222,6 @@
     "Progress.withoutNotification" : "Kaydetmek için bildirim yok",
     "ClaimsTable.actionUnarchive" : "Arşivden çıkar",
     "SignatureAlert.agreement" : "From agreement",
-    "SignatureAlert.passport" : "From passport"
+    "SignatureAlert.passport" : "From passport",
+    "EmailSubjectSection.claimIdPlaceholder" : "Claim # (optional)"
 }   
