@@ -35,6 +35,9 @@ export class ClaimSearchService {
             referralCode?: string;
             viewType?: ViewClaimType;
             withPartner?: boolean;
+            airlineIata?: string;
+            departureAirportIcao?: string;
+            arrivalAirportIcao?: string;
         },
         pageSize: number = 20,
     ): Promise<{
@@ -47,7 +50,10 @@ export class ClaimSearchService {
             userId,
             archived: searchParams?.archived,
             state: {},
-            details: { airlines: {} },
+            details: {
+                airlines: {},
+                routes: {},
+            },
             customer: {},
         };
 
@@ -66,6 +72,22 @@ export class ClaimSearchService {
         if (searchParams?.agentId) where.agentId = searchParams.agentId;
         if (searchParams?.flightNumber)
             where.details!.flightNumber = searchParams.flightNumber;
+        if (searchParams?.airlineIata)
+            where.details!.airlines!.iata = searchParams.airlineIata;
+        if (
+            searchParams?.departureAirportIcao ||
+            searchParams?.arrivalAirportIcao
+        ) {
+            where.details!.routes!.some = {
+                troubled: true,
+                DepartureAirport: {
+                    icao: searchParams?.departureAirportIcao,
+                },
+                ArrivalAirport: {
+                    icao: searchParams?.arrivalAirportIcao,
+                },
+            };
+        }
         if (searchParams?.airlineIcaos && searchParams.airlineIcaos.length > 0)
             where.details!.airlines!.icao = {
                 in: searchParams.airlineIcaos,

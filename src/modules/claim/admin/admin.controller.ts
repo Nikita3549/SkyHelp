@@ -219,6 +219,9 @@ export class AdminController {
             onlyRecentlyUpdates,
             referralCode,
             withPartner,
+            airlineIata,
+            departureAirportIcao,
+            arrivalAirportIcao,
         } = query;
 
         const requireReferralCode =
@@ -266,6 +269,9 @@ export class AdminController {
             isOrderByAssignedAt: req.user.role != UserRole.ADMIN,
             viewType,
             withPartner: withPartner == YesOrNo.YES,
+            airlineIata,
+            departureAirportIcao,
+            arrivalAirportIcao,
         });
     }
 

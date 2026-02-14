@@ -73,4 +73,16 @@ export class GetClaimsQuery {
     @IsOptional()
     @IsEnum(YesOrNo)
     withPartner?: YesOrNo;
+
+    @IsOptional()
+    @IsString()
+    airlineIata?: string;
+
+    @IsOptional()
+    @IsString()
+    departureAirportIcao?: string;
+
+    @IsOptional()
+    @IsString()
+    arrivalAirportIcao?: string;
 }
