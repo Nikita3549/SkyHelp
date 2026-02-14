@@ -21,6 +21,7 @@ import { ExtractSignatureMatchResponse } from '../interfaces/extract-signature-m
 import { S3Service } from '../../../s3/s3.service';
 import { DISCREPANCY_NOT_FOUND } from '../constants';
 import { CLAIM_NOT_FOUND } from '../../constants';
+import { RefreshDiscrepancyResponse } from '../interfaces/refresh-discrepancy-response.interface';
 
 @Injectable()
 export class DiscrepancyHubService {
@@ -36,7 +37,7 @@ export class DiscrepancyHubService {
     async refreshSignatureDiscrepancy(
         claimId: string,
         discrepancyId?: string,
-    ): Promise<ClaimDiscrepancy> {
+    ): Promise<RefreshDiscrepancyResponse> {
         const claim = await this.claimPersistenceService.findOneById(claimId);
         if (!claim) {
             throw new NotFoundException(CLAIM_NOT_FOUND);
@@ -57,7 +58,7 @@ export class DiscrepancyHubService {
         }
 
         if (discrepancy.type != DiscrepancyType.SIGNATURE) {
-            return discrepancy;
+            return { discrepancy };
         }
 
         const sortedDocuments = claim.documents.sort(
@@ -77,7 +78,7 @@ export class DiscrepancyHubService {
             !passport.signatureS3Key ||
             !assignment.signatureS3Key
         ) {
-            return discrepancy;
+            return { discrepancy };
         }
 
         const { matchScore, signaturePng } =
@@ -91,21 +92,31 @@ export class DiscrepancyHubService {
             });
 
         if (matchScore && signaturePng) {
-            await this.documentService.saveDocumentSignature({
-                png: signaturePng,
-                document: passport,
-            });
+            const updatedPassport =
+                await this.documentService.saveDocumentSignature({
+                    png: signaturePng,
+                    document: passport,
+                });
 
-            return this.discrepancyPersistenceService.saveDiscrepancy({
-                claimId: discrepancy.claimId,
-                extractedValue: matchScore,
-                passengerId: discrepancy.passengerId,
-                documentIds: [passport.id, assignment.id],
-                type: DiscrepancyType.SIGNATURE,
-            });
+            return {
+                discrepancy:
+                    await this.discrepancyPersistenceService.saveDiscrepancy({
+                        claimId: discrepancy.claimId,
+                        extractedValue: matchScore,
+                        passengerId: discrepancy.passengerId,
+                        documentIds: [passport.id, assignment.id],
+                        type: DiscrepancyType.SIGNATURE,
+                    }),
+                updatedPassportSignatureSignedUrl:
+                    await this.S3Service.getSignedUrl(
+                        updatedPassport.signatureS3Key!,
+                    ),
+            };
         }
 
-        return discrepancy;
+        return {
+            discrepancy,
+        };
     }
 
     async processAssignmentDiscrepancy(

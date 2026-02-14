@@ -3,6 +3,7 @@ import { ClaimDiscrepancy } from '@prisma/client';
 import { UpdateDiscrepancyStatusDto } from './dto/update-discrepancy-status.dto';
 import { DiscrepancyPersistenceService } from './services/discrepancy-persistence.service';
 import { DiscrepancyHubService } from './services/discrepancy-hub.service';
+import { RefreshDiscrepancyResponse } from './interfaces/refresh-discrepancy-response.interface';
 
 @Controller('claims/:claimId/discrepancies')
 export class DiscrepancyController {
@@ -15,7 +16,7 @@ export class DiscrepancyController {
     async refreshDiscrepancy(
         @Param('discrepancyId') discrepancyId: string,
         @Param('claimId') claimId: string,
-    ): Promise<ClaimDiscrepancy> {
+    ): Promise<RefreshDiscrepancyResponse> {
         return this.discrepancyHubService.refreshSignatureDiscrepancy(
             claimId,
             discrepancyId,
