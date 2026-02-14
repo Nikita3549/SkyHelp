@@ -4,6 +4,7 @@ import {
     IsInt,
     IsOptional,
     IsString,
+    Max,
     Min,
 } from 'class-validator';
 import { Type } from 'class-transformer';
@@ -23,6 +24,13 @@ export class GetClaimsQuery {
     @IsInt()
     @Min(1)
     page: number;
+
+    @Type(() => Number)
+    @IsOptional()
+    @IsInt()
+    @Min(1)
+    @Max(100)
+    pageSize: number;
 
     @IsOptional()
     @IsEnum(YesOrNo)

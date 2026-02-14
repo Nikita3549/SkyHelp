@@ -222,6 +222,7 @@ export class AdminController {
             airlineIata,
             departureAirportIcao,
             arrivalAirportIcao,
+            pageSize,
         } = query;
 
         const requireReferralCode =
@@ -241,38 +242,45 @@ export class AdminController {
                   ? ViewClaimType.ACCOUNTANT
                   : ViewClaimType.FULL;
 
-        return this.claimSearchService.getUserClaims(userId, +page, {
-            archived:
-                archived == undefined ? undefined : archived == YesOrNo.YES,
-            duplicated:
-                duplicated == undefined ? undefined : duplicated == YesOrNo.YES,
-            onlyRecentlyUpdates:
-                onlyRecentlyUpdates == undefined
-                    ? undefined
-                    : onlyRecentlyUpdates == YesOrNo.YES,
-            date: endDate &&
-                startDate && {
-                    start: startDate,
-                    end: endDate,
-                },
-            status,
-            airlineIcaos: icao?.split(','),
-            flightNumber,
-            role,
-            referralCode,
-            agentId:
-                agentId ||
-                (req.user.role == UserRole.LAWYER ||
-                req.user.role == UserRole.AGENT
-                    ? req.user.id
-                    : undefined),
-            isOrderByAssignedAt: req.user.role != UserRole.ADMIN,
-            viewType,
-            withPartner: withPartner == YesOrNo.YES,
-            airlineIata,
-            departureAirportIcao,
-            arrivalAirportIcao,
-        });
+        return this.claimSearchService.getUserClaims(
+            userId,
+            +page,
+            {
+                archived:
+                    archived == undefined ? undefined : archived == YesOrNo.YES,
+                duplicated:
+                    duplicated == undefined
+                        ? undefined
+                        : duplicated == YesOrNo.YES,
+                onlyRecentlyUpdates:
+                    onlyRecentlyUpdates == undefined
+                        ? undefined
+                        : onlyRecentlyUpdates == YesOrNo.YES,
+                date: endDate &&
+                    startDate && {
+                        start: startDate,
+                        end: endDate,
+                    },
+                status,
+                airlineIcaos: icao?.split(','),
+                flightNumber,
+                role,
+                referralCode,
+                agentId:
+                    agentId ||
+                    (req.user.role == UserRole.LAWYER ||
+                    req.user.role == UserRole.AGENT
+                        ? req.user.id
+                        : undefined),
+                isOrderByAssignedAt: req.user.role != UserRole.ADMIN,
+                viewType,
+                withPartner: withPartner == YesOrNo.YES,
+                airlineIata,
+                departureAirportIcao,
+                arrivalAirportIcao,
+            },
+            pageSize,
+        );
     }
 
     @Patch(':claimId/recent-updates')
