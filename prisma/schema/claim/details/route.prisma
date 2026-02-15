@@ -4,7 +4,7 @@ model Route {
   departureAirport String       @unique @map("departure_airport")
   troubled         Boolean      @default(false)
   detailsId        String       @map("details_id")
-  detail           ClaimDetails @relation(fields: [detailsId], references: [id])
+  detail           ClaimDetails @relation(fields: [detailsId], references: [id], onDelete: Cascade)
 
   ArrivalAirport   ArrivalAirport   @relation(fields: [arrivalAirport], references: [id])
   DepartureAirport DepartureAirport @relation(fields: [departureAirport], references: [id])

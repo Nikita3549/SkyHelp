@@ -9,7 +9,7 @@ model ClaimDetails {
   Claim        Claim[]
   routes       Route[]
 
-  airlines Airline @relation(fields: [airline], references: [id])
+  airlines Airline @relation(fields: [airline], references: [id], onDelete: Cascade)
 
   @@map("claim_details")
 }
