@@ -93,4 +93,9 @@ export class GetClaimsQuery {
     @IsOptional()
     @IsString()
     arrivalAirportIcao?: string;
+
+    @IsOptional()
+    @Type(() => Date)
+    @IsDate()
+    flightDate?: Date;
 }

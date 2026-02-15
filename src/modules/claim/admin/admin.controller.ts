@@ -223,6 +223,7 @@ export class AdminController {
             departureAirportIcao,
             arrivalAirportIcao,
             pageSize,
+            flightDate,
         } = query;
 
         const requireReferralCode =
@@ -278,6 +279,7 @@ export class AdminController {
                 airlineIata,
                 departureAirportIcao,
                 arrivalAirportIcao,
+                flightDate,
             },
             pageSize,
         );

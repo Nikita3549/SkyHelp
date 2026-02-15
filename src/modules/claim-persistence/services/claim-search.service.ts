@@ -38,6 +38,7 @@ export class ClaimSearchService {
             airlineIata?: string;
             departureAirportIcao?: string;
             arrivalAirportIcao?: string;
+            flightDate?: Date;
         },
         pageSize: number = 20,
     ): Promise<{
@@ -103,6 +104,16 @@ export class ClaimSearchService {
         if (searchParams?.onlyRecentlyUpdates)
             orderBy = { recentUpdatedAt: 'desc' };
         if (searchParams?.isOrderByAssignedAt) orderBy = { assignedAt: 'desc' };
+        if (searchParams?.flightDate) {
+            const start = new Date(searchParams.flightDate);
+            const end = new Date(start);
+            end.setDate(start.getDate() + 1);
+
+            where!.details!.date = {
+                gte: start,
+                lt: end,
+            };
+        }
 
         const include = this.claimIncludeProvider.getInclude(
             searchParams?.viewType || ViewClaimType.FULL,
