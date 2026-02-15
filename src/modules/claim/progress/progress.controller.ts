@@ -68,7 +68,7 @@ export class ProgressController {
             description,
             comments,
             additionalData,
-            passengerId,
+            passengerIds,
         } = dto;
 
         const user = req.user;
@@ -77,15 +77,6 @@ export class ProgressController {
 
         if (!claim) {
             throw new NotFoundException(CLAIM_NOT_FOUND);
-        }
-
-        const basePassenger =
-            await this.claimPersistenceService.getBasePassenger(
-                dto.passengerId,
-            );
-
-        if (!basePassenger) {
-            throw new NotFoundException(PASSENGER_NOT_FOUND);
         }
 
         const customerLanguage = isLanguage(claim.customer.language)
@@ -116,7 +107,7 @@ export class ProgressController {
                 order,
                 updatedBy: user.id,
                 comments,
-                passengerId: basePassenger.id,
+                passengerIds,
                 descriptionVariables: additionalData
                     ? Object.keys(additionalData).map((key) => ({
                           key,
@@ -131,7 +122,7 @@ export class ProgressController {
 
         const jobData: ISendNewProgressEmailJobData = {
             progressId: progress.id,
-            passengerId,
+            passengerIds,
             emailData: {
                 to: claim.customer.email,
                 title: translatedTitle,

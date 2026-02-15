@@ -35,6 +35,7 @@ export class SendNewProgressEmailProcessor extends WorkerHost {
             newClaimStatus,
             referralCode,
             passengerId,
+            passengerIds,
         } = job.data;
 
         const progress = await this.progressService.getProgressById(progressId);
@@ -60,14 +61,31 @@ export class SendNewProgressEmailProcessor extends WorkerHost {
         }
 
         this.prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-            await this.claimPersistenceService.updateStatus(
-                {
-                    newStatus: newClaimStatus,
-                    claimId: emailData.claimId,
-                    passengerId: passengerId || claim.customer.id,
-                },
-                tx,
-            );
+            if (passengerId) {
+                await this.claimPersistenceService.updateStatus(
+                    {
+                        newStatus: newClaimStatus,
+                        claimId: emailData.claimId,
+                        passengerId: passengerId || claim.customer.id,
+                    },
+                    tx,
+                );
+            } else if (passengerIds) {
+                await Promise.all(
+                    passengerIds.map(async (passengerId) => {
+                        await this.claimPersistenceService.updateStatus(
+                            {
+                                newStatus: newClaimStatus,
+                                claimId: emailData.claimId,
+                                passengerId: passengerId || claim.customer.id,
+                            },
+                            tx,
+                        );
+                    }),
+                );
+            } else {
+                throw new Error();
+            }
 
             if (
                 newClaimStatus == ClaimStatus.PAID &&

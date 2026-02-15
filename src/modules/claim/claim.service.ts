@@ -223,7 +223,7 @@ export class ClaimService {
                             claim.state.progress[0],
                         ).order + 1,
                     descriptionVariables: [],
-                    passengerId: claim.customerId,
+                    passengerIds: [claim.customerId],
                 },
                 claim.state.id,
                 tx,

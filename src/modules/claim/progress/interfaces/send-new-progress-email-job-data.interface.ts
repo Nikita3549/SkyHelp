@@ -4,7 +4,8 @@ import { Languages } from '../../../language/enums/languages.enums';
 export interface ISendNewProgressEmailJobData {
     progressId: string;
     referralCode?: string | null;
-    passengerId: string;
+    passengerId?: string; // temporary for migration from id to ids
+    passengerIds?: string[];
     emailData: {
         to: string;
         title: string;

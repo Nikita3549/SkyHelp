@@ -1,4 +1,6 @@
 import {
+    ArrayMinSize,
+    IsArray,
     IsEnum,
     IsNumber,
     IsObject,
@@ -8,8 +10,10 @@ import {
 import { ClaimStatus } from '@prisma/client';
 
 export class CreateProgressDto {
-    @IsString()
-    passengerId: string;
+    @IsArray()
+    @IsString({ each: true })
+    @ArrayMinSize(1)
+    passengerIds: string[];
 
     @IsEnum(ClaimStatus)
     status: ClaimStatus;
