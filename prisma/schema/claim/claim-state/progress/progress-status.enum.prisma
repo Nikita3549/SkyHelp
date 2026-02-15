@@ -1,4 +1,0 @@
-enum ProgressStatus {
-  COMPLETED
-  IN_PROCESS
-}

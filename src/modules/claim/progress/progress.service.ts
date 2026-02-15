@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma, Progress, ProgressStatus } from '@prisma/client';
+import { Prisma, Progress } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 
 @Injectable()
@@ -42,7 +42,6 @@ export class ProgressService {
                 ...progress,
                 claimStateId,
                 endAt: new Date(),
-                status: ProgressStatus.COMPLETED,
                 descriptionVariables: JSON.stringify(
                     progress.descriptionVariables,
                 ),
