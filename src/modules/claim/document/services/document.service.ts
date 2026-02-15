@@ -222,9 +222,9 @@ export class DocumentService {
         );
 
         if (savedPassports.length != 0) {
-            await this.discrepancyHubService.refreshSignatureDiscrepancy(
-                claimId,
-            );
+            this.discrepancyHubService
+                .refreshSignatureDiscrepancy(claimId)
+                .catch();
         }
 
         this.discrepancyHubService.processPassportDiscrepancy(
