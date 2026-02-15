@@ -4223,5 +4223,11 @@
     "ClaimsTable.actionUnarchive" : "Arşivden çıkar",
     "SignatureAlert.agreement" : "From agreement",
     "SignatureAlert.passport" : "From passport",
-    "EmailSubjectSection.claimIdPlaceholder" : "Claim # (optional)"
+    "EmailSubjectSection.claimIdPlaceholder" : "Claim ID (optional)",
+    "ContactForm.errors.nameRequired": "Adınız gereklidir",
+    "ContactForm.errors.phoneInvalid": "Please enter a valid phone number",
+    "ContactForm.errors.emailInvalid": "Geçersiz e-posta adresi",
+    "ContactForm.errors.subjectRequired": "Konu gereklidir",
+    "ContactForm.errors.messageMinLength": "Mesaj en az 10 karakter olmalıdır",
+    "ContactForm.errors.termsRequired": "Koşulları ve gizlilik politikasını kabul etmelisiniz"
 }   

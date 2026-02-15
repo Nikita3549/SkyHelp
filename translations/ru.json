@@ -4203,5 +4203,11 @@
     "ClaimsTable.actionUnarchive" : "Разархивировать",
     "SignatureAlert.agreement" : "Из соглашения",
     "SignatureAlert.passport" : "Из паспорта",
-    "EmailSubjectSection.claimIdPlaceholder" : "Заявка # (опционально)"
+    "EmailSubjectSection.claimIdPlaceholder" : "ID заявки (опционально)",
+    "ContactForm.errors.nameRequired": "Имя обязательно",
+    "ContactForm.errors.phoneInvalid": "Пожалуйста, введите действительный номер телефона",
+    "ContactForm.errors.emailInvalid": "Неверный адрес электронной почты",
+    "ContactForm.errors.subjectRequired": "Тема обязательна",
+    "ContactForm.errors.messageMinLength": "Сообщение должно быть не менее 10 символов",
+    "ContactForm.errors.termsRequired": "Вы должны согласиться с условиями и политикой конфиденциальности"
 }

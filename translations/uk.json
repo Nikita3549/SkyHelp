@@ -4184,6 +4184,12 @@
     "ClaimsTable.actionUnarchive" : "Розархівувати",
     "SignatureAlert.agreement" : "З угодою",
     "SignatureAlert.passport" : "З паспортом",
-    "EmailSubjectSection.claimIdPlaceholder" : "Заявка # (опціонально)"
+    "EmailSubjectSection.claimIdPlaceholder" : "ID заявки (опціонально)",
+    "ContactForm.errors.nameRequired": "Ім'я є обов'язковим",
+    "ContactForm.errors.phoneInvalid": "Будь ласка, введіть дійсний номер телефону",
+    "ContactForm.errors.emailInvalid": "Недійсна адреса електронної пошти",
+    "ContactForm.errors.subjectRequired": "Тема є обов'язковою",
+    "ContactForm.errors.messageMinLength": "Повідомлення повинно містити щонайменше 10 символів",
+    "ContactForm.errors.termsRequired": "Ви повинні погодитися з умовами та політикою конфіденційності"
 }
 

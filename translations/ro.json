@@ -4203,5 +4203,11 @@
     "ClaimsTable.actionUnarchive" : "Dezarchivează",
     "SignatureAlert.agreement" : "Din acord",
     "SignatureAlert.passport" : "Din pasaport",
-    "EmailSubjectSection.claimIdPlaceholder" : "Cerere # (opțional)"
+    "EmailSubjectSection.claimIdPlaceholder" : "ID cerere (opțional)",
+    "ContactForm.errors.nameRequired": "Numele este obligatoriu",
+    "ContactForm.errors.phoneInvalid": "Te rugăm să introduci un număr de telefon valid",
+    "ContactForm.errors.emailInvalid": "Adresă de email invalidă",
+    "ContactForm.errors.subjectRequired": "Subiectul este obligatoriu",
+    "ContactForm.errors.messageMinLength": "Mesajul trebuie să aibă cel puțin 10 caractere",
+    "ContactForm.errors.termsRequired": "Trebuie să accepți termenii și condițiile și politica de confidențialitate"
 }

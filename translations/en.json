@@ -4202,5 +4202,11 @@
     "ClaimsTable.actionUnarchive" : "Unarchive",
     "SignatureAlert.agreement" : "From agreement",
     "SignatureAlert.passport" : "From passport",
-    "EmailSubjectSection.claimIdPlaceholder" : "Claim # (optional)"
+    "EmailSubjectSection.claimIdPlaceholder" : "Claim ID (optional)",
+    "ContactForm.errors.nameRequired": "Name is required",
+    "ContactForm.errors.phoneInvalid": "Please enter a valid phone number",
+    "ContactForm.errors.emailInvalid": "Invalid email address",
+    "ContactForm.errors.subjectRequired": "Subject is required",
+    "ContactForm.errors.messageMinLength": "Message should be at least 10 characters",
+    "ContactForm.errors.termsRequired": "You must agree to the terms and privacy policy"
 }
