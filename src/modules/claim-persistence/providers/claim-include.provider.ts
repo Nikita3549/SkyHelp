@@ -64,6 +64,15 @@ export class ClaimIncludeProvider {
                         orderBy: {
                             order: 'asc' as const,
                         },
+                        include: {
+                            user: {
+                                select: {
+                                    name: true,
+                                    secondName: true,
+                                    role: true,
+                                },
+                            },
+                        },
                     },
                 },
             },
@@ -137,6 +146,15 @@ export class ClaimIncludeProvider {
                         orderBy: {
                             order: 'asc' as const,
                         },
+                        include: {
+                            user: {
+                                select: {
+                                    name: true,
+                                    secondName: true,
+                                    role: true,
+                                },
+                            },
+                        },
                     },
                 },
             },
@@ -197,6 +215,15 @@ export class ClaimIncludeProvider {
                     progress: {
                         orderBy: {
                             order: 'asc' as const,
+                        },
+                        include: {
+                            user: {
+                                select: {
+                                    name: true,
+                                    secondName: true,
+                                    role: true,
+                                },
+                            },
                         },
                     },
                 },

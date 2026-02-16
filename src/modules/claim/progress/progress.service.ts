@@ -11,6 +11,7 @@ export class ProgressService {
             where: {
                 id: progressId,
             },
+            include: this.getProgressFullInclude(),
         });
     }
 
@@ -19,6 +20,7 @@ export class ProgressService {
             where: {
                 id: progressId,
             },
+            include: this.getProgressFullInclude(),
         });
     }
 
@@ -46,6 +48,7 @@ export class ProgressService {
                     progress.descriptionVariables,
                 ),
             },
+            include: this.getProgressFullInclude(),
         });
     }
 
@@ -57,6 +60,7 @@ export class ProgressService {
             data: {
                 comments,
             },
+            include: this.getProgressFullInclude(),
         });
     }
 
@@ -71,5 +75,17 @@ export class ProgressService {
         });
 
         return maxValue._max.order;
+    }
+
+    private getProgressFullInclude() {
+        return {
+            user: {
+                select: {
+                    name: true,
+                    secondName: true,
+                    role: true,
+                },
+            },
+        } as const;
     }
 }
