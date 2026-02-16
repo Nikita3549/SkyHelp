@@ -7,7 +7,7 @@ import {
     Max,
     Min,
 } from 'class-validator';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import { ClaimStatus, UserRole } from '@prisma/client';
 
 export enum YesOrNo {
@@ -51,8 +51,12 @@ export class GetClaimsQuery {
     endDate?: Date;
 
     @IsOptional()
-    @IsEnum(ClaimStatus)
-    status?: ClaimStatus;
+    @Transform(({ value }) => {
+        if (!value) return undefined;
+        return value.split(',').map((v: string) => v.trim());
+    })
+    @IsEnum(ClaimStatus, { each: true })
+    status?: ClaimStatus[];
 
     @IsOptional()
     @IsString()

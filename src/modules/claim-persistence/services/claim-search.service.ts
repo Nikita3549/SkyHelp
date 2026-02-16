@@ -22,7 +22,7 @@ export class ClaimSearchService {
         searchParams?: {
             archived?: boolean;
             date?: { start: Date; end: Date };
-            status?: ClaimStatus;
+            statuses?: ClaimStatus[];
             airlineIcaos?: string[];
             flightNumber?: string;
             role?: UserRole;
@@ -69,7 +69,26 @@ export class ClaimSearchService {
         if (searchParams?.email) where.customer!.email = searchParams.email;
         if (searchParams?.onlyRecentlyUpdates)
             where.state!.hasRecentUpdate = searchParams.onlyRecentlyUpdates;
-        if (searchParams?.status) where.state!.status = searchParams.status;
+        if (searchParams?.statuses) {
+            where.OR = [
+                {
+                    state: {
+                        status: {
+                            in: searchParams.statuses,
+                        },
+                    },
+                },
+                {
+                    passengers: {
+                        some: {
+                            claimStatus: {
+                                in: searchParams.statuses,
+                            },
+                        },
+                    },
+                },
+            ];
+        }
         if (searchParams?.agentId) where.agentId = searchParams.agentId;
         if (searchParams?.flightNumber)
             where.details!.flightNumber = searchParams.flightNumber;

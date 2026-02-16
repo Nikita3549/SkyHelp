@@ -262,7 +262,7 @@ export class AdminController {
                         start: startDate,
                         end: endDate,
                     },
-                status,
+                statuses: status,
                 airlineIcaos: icao?.split(','),
                 flightNumber,
                 role,
