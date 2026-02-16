@@ -224,7 +224,7 @@ export class DocumentService {
         if (savedPassports.length != 0) {
             this.discrepancyHubService
                 .refreshSignatureDiscrepancy(claimId)
-                .catch();
+                .catch(() => {});
         }
 
         this.discrepancyHubService.processPassportDiscrepancy(
