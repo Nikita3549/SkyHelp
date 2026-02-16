@@ -2119,6 +2119,8 @@
     "FlightInfoCard.troubled": " Sorunlu",
     "FlightInfoCard.departure": " Kalkış",
     "FlightInfoCard.arrival": " Varış",
+    "FlightInfoCard.flightClaimHistory": " Uçuş Talep Geçmişi",
+    "FlightInfoCard.casesFound": " bulunan dosyalar",
     "CustomerInfoCard.customer_information": " Müşteri Bilgileri",
     "CustomerInfoCard.passengerInformation": " Yolcu Bilgileri",
     "CustomerInfoCard.name": " Adı",

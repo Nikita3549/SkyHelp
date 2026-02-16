@@ -2117,6 +2117,8 @@
     "FlightInfoCard.troubled": "cu probleme",
     "FlightInfoCard.departure": "Plecare",
     "FlightInfoCard.arrival": "Sosire",
+    "FlightInfoCard.flightClaimHistory": "Istoric cereri de despăgubire zbor",
+    "FlightInfoCard.casesFound": "cazuri găsite",
     "CustomerInfoCard.customer_information": "Informații despre client",
     "CustomerInfoCard.passengerInformation": "Informații despre pasager",
     "CustomerInfoCard.name": "Nume",

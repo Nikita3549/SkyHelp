@@ -2118,6 +2118,8 @@
     "FlightInfoCard.troubled": "проблемный",
     "FlightInfoCard.departure": "Вылет",
     "FlightInfoCard.arrival": "Прилет",
+    "FlightInfoCard.flightClaimHistory": "История претензий на рейс",
+    "FlightInfoCard.casesFound": "найденных дел",
     "CustomerInfoCard.customer_information": "Информация о клиенте",
     "CustomerInfoCard.passengerInformation": "Информация о пассажире",
     "CustomerInfoCard.name": "Имя",

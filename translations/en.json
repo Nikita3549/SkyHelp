@@ -2115,6 +2115,8 @@
     "FlightInfoCard.troubled": "troubled",
     "FlightInfoCard.departure": "Departure",
     "FlightInfoCard.arrival": "Arrival",
+    "FlightInfoCard.flightClaimHistory": "Flight Claim History",
+    "FlightInfoCard.casesFound": "cases found",
     "CustomerInfoCard.customer_information": "Customer Information",
     "CustomerInfoCard.passengerInformation": "Passenger information",
     "CustomerInfoCard.name": "Name",
