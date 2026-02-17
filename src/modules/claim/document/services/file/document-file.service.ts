@@ -53,7 +53,7 @@ export class DocumentFileService {
                 }
 
                 const scale = img.width > MAX_WIDTH ? MAX_WIDTH / img.width : 1;
-                const finalWidth = MAX_WIDTH;
+                const finalWidth = img.width * scale;
                 const finalHeight = img.height * scale;
 
                 const page = mergedPdf.addPage([finalWidth, finalHeight]);
