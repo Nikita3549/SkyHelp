@@ -106,4 +106,29 @@ export const ProgressVariants: {
         title: 'paymentFailed.title',
         descriptions: ['paymentFailed.description'],
     },
+    incompleteClaim: {
+        status: ClaimStatus.INCOMPLETE,
+        title: 'incompleteClaim.title',
+        descriptions: ['incompleteClaim.description'],
+    },
+    precourt: {
+        status: ClaimStatus.PRECOURT,
+        title: 'precourt.title',
+        descriptions: ['precourt.description'],
+    },
+    courtInProgress: {
+        status: ClaimStatus.COURT_IN_PROGRESS,
+        title: 'court-in-progress.title',
+        descriptions: ['court-in-progress.description'],
+    },
+    courtWon: {
+        status: ClaimStatus.COURT_WON,
+        title: 'court-won.title',
+        descriptions: ['court-won.description'],
+    },
+    courtLost: {
+        status: ClaimStatus.COURT_LOST,
+        title: 'court-lost.title',
+        descriptions: ['court-lost.description'],
+    },
 } as const;
