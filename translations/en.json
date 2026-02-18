@@ -4215,5 +4215,6 @@
     "ContactForm.errors.emailInvalid": "Invalid email address",
     "ContactForm.errors.subjectRequired": "Subject is required",
     "ContactForm.errors.messageMinLength": "Message should be at least 10 characters",
-    "ContactForm.errors.termsRequired": "You must agree to the terms and privacy policy"
+    "ContactForm.errors.termsRequired": "You must agree to the terms and privacy policy",
+    "ContactForm.nameMismatchWarning" : "The name does not match the name in the claim"
 }

@@ -4216,5 +4216,6 @@
     "ContactForm.errors.emailInvalid": "Неверный адрес электронной почты",
     "ContactForm.errors.subjectRequired": "Тема обязательна",
     "ContactForm.errors.messageMinLength": "Сообщение должно быть не менее 10 символов",
-    "ContactForm.errors.termsRequired": "Вы должны согласиться с условиями и политикой конфиденциальности"
+    "ContactForm.errors.termsRequired": "Вы должны согласиться с условиями и политикой конфиденциальности",
+    "ContactForm.nameMismatchWarning" : "Имя не соответствует имени в заявке"
 }

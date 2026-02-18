@@ -4236,5 +4236,6 @@
     "ContactForm.errors.emailInvalid": "Geçersiz e-posta adresi",
     "ContactForm.errors.subjectRequired": "Konu gereklidir",
     "ContactForm.errors.messageMinLength": "Mesaj en az 10 karakter olmalıdır",
-    "ContactForm.errors.termsRequired": "Koşulları ve gizlilik politikasını kabul etmelisiniz"
+    "ContactForm.errors.termsRequired": "Koşulları ve gizlilik politikasını kabul etmelisiniz",
+    "ContactForm.nameMismatchWarning" : "Adınız adında farklıdır"
 }   

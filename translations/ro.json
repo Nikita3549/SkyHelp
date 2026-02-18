@@ -4216,5 +4216,6 @@
     "ContactForm.errors.emailInvalid": "Adresă de email invalidă",
     "ContactForm.errors.subjectRequired": "Subiectul este obligatoriu",
     "ContactForm.errors.messageMinLength": "Mesajul trebuie să aibă cel puțin 10 caractere",
-    "ContactForm.errors.termsRequired": "Trebuie să accepți termenii și condițiile și politica de confidențialitate"
+    "ContactForm.errors.termsRequired": "Trebuie să accepți termenii și condițiile și politica de confidențialitate",
+    "ContactForm.nameMismatchWarning" : "Numele nu coincide cu numele din cerere"
 }

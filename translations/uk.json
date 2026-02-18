@@ -4197,6 +4197,7 @@
     "ContactForm.errors.emailInvalid": "Недійсна адреса електронної пошти",
     "ContactForm.errors.subjectRequired": "Тема є обов'язковою",
     "ContactForm.errors.messageMinLength": "Повідомлення повинно містити щонайменше 10 символів",
-    "ContactForm.errors.termsRequired": "Ви повинні погодитися з умовами та політикою конфіденційності"
+    "ContactForm.errors.termsRequired": "Ви повинні погодитися з умовами та політикою конфіденційності",
+    "ContactForm.nameMismatchWarning" : "Ім'я не збігається з іменем в заявці"
 }
 
