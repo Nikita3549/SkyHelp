@@ -102,7 +102,7 @@ services:
         deploy:
             resources:
                 limits:
-                    memory: 1500M
+                    memory: 3000M
         environment:
             - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
             - discovery.type=single-node
