@@ -16,6 +16,10 @@ export class SearchSyncService implements OnModuleInit {
     ) {}
 
     async onModuleInit() {
+        if (!isProd()) {
+            return;
+        }
+
         const { count } = await this.esClient
             .count({ index: 'airports' })
             .catch(() => ({ count: 0 }));
