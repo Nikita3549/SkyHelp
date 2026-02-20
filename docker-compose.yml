@@ -99,7 +99,12 @@ services:
         networks:
             - main
         image: docker.elastic.co/elasticsearch/elasticsearch:8.11.1
+        deploy:
+            resources:
+                limits:
+                    memory: 1500M
         environment:
+            - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
             - discovery.type=single-node
             - xpack.security.enabled=true
             - ELASTIC_PASSWORD=${ELASTICSEARCH_PASSWORD}
