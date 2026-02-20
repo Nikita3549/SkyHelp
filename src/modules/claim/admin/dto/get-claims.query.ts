@@ -34,7 +34,7 @@ export class GetClaimsQuery {
 
     @IsOptional()
     @IsEnum(YesOrNo)
-    archived: YesOrNo;
+    archived: YesOrNo = YesOrNo.NO;
 
     @IsOptional()
     @IsEnum(YesOrNo)
