@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import { Client } from '@elastic/elasticsearch';
@@ -6,13 +6,24 @@ import { ElasticSearchConfigsPath } from '../../common/constants/paths/ElasticSe
 import { ELASTIC_CLIENT_TOKEN } from './constants/elastic-client.token';
 import { isProd } from '../../common/utils/isProd';
 import { DbStaticService } from '../db-static/db-static.service';
+import { awaitWithTimeout } from '@google-cloud/pubsub/build/src/util';
 
 @Injectable()
-export class SearchSyncService {
+export class SearchSyncService implements OnModuleInit {
     constructor(
         @Inject(ELASTIC_CLIENT_TOKEN) private readonly esClient: Client,
         private readonly dbStatic: DbStaticService,
     ) {}
+
+    async onModuleInit() {
+        const { count } = await this.esClient
+            .count({ index: 'airports' })
+            .catch(() => ({ count: 0 }));
+        if (count === 0) {
+            console.log('Elasticsearch index is empty. Starting sync...');
+            this.runFullSync();
+        }
+    }
 
     async runFullSync() {
         const settings = await this.loadJson('es-settings.json');
