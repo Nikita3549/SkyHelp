@@ -204,8 +204,6 @@ export class DocumentAssignmentService implements OnModuleInit {
         passenger: BasePassenger,
         assignment: Document,
     ) {
-        await this.documentService.removeDocument(assignment.id);
-
         const assignmentData: IAssignmentData = {
             address: passenger.address,
             airlineName: claim.details.airlines.name,
@@ -235,6 +233,8 @@ export class DocumentAssignmentService implements OnModuleInit {
                       minorBirthday: passenger.birthday!,
                   },
               );
+
+        await this.documentService.removeDocument(assignment.id);
 
         await this.documentService.saveDocuments(
             [
