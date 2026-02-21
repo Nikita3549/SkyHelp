@@ -58,7 +58,10 @@ export class UserService {
     async getUserByEmail(email: string): Promise<User | null> {
         return this.prisma.user.findFirst({
             where: {
-                email,
+                email: {
+                    equals: email,
+                    mode: 'insensitive',
+                },
             },
         });
     }
