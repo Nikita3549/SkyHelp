@@ -62,7 +62,12 @@ export class ProgressService {
 
         return client.progress.create({
             data: {
-                ...data,
+                title: data.title,
+                description: data.description,
+                order: data.order,
+                updatedBy: data.updatedBy,
+                comments: data.comments,
+                passengerIds: data.passengerIds,
                 claimStateId,
                 endAt: new Date(),
                 descriptionVariables: JSON.stringify(data.descriptionVariables),
