@@ -3722,7 +3722,7 @@
     "StatusBadge.paid": "Paid",
     "StatusBadge.legalProcess": "Legal",
     "StatusBadge.closed": "Closed",
-    "StatusBadge.incompleteClaim": "Incomplete Claim",
+    "StatusBadge.incompleteClaim": "Incomplete",
     "StatusBadge.preCourt": "Pre-Court",
     "StatusBadge.courtInProgress": "Court In Progress",
     "StatusBadge.courtWon": "Court Won",
