@@ -14,4 +14,8 @@ export class StateDto {
     @IsOptional()
     @IsString()
     comments?: string;
+
+    @IsOptional()
+    @IsNumber()
+    step?: number;
 }

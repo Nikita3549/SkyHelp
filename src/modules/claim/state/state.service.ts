@@ -8,6 +8,17 @@ export class StateService {
     constructor(private readonly prisma: PrismaService) {}
 
     async updateState(dto: StateDto, claimId: string) {
+        if (dto?.step) {
+            await this.prisma.claim.update({
+                data: {
+                    step: dto.step,
+                },
+                where: {
+                    id: claimId,
+                },
+            });
+        }
+
         return this.prisma.claimState.update({
             where: {
                 id: (
