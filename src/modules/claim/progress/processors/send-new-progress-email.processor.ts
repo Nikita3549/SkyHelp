@@ -60,54 +60,22 @@ export class SendNewProgressEmailProcessor extends WorkerHost {
             return;
         }
 
-        this.prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-            if (passengerId) {
-                await this.claimPersistenceService.updateStatus(
-                    {
-                        newStatus: newClaimStatus,
-                        claimId: emailData.claimId,
-                        passengerId: passengerId || claim.customer.id,
-                    },
-                    tx,
-                );
-            } else if (passengerIds) {
-                await Promise.all(
-                    passengerIds.map(async (passengerId) => {
-                        await this.claimPersistenceService.updateStatus(
-                            {
-                                newStatus: newClaimStatus,
-                                claimId: emailData.claimId,
-                                passengerId: passengerId || claim.customer.id,
-                            },
-                            tx,
-                        );
-                    }),
-                );
-            } else {
-                throw new Error();
-            }
+        if (
+            newClaimStatus == ClaimStatus.PAID &&
+            referralCode &&
+            !(await this.referralTransactionService.getReferralTransactionByClaimId(
+                claim.id,
+            ))
+        ) {
+            const passengersCount = 1 + claim.passengers.length;
+            const amount = passengersCount * claim.state.amount * REFERRAL_RATE;
 
-            if (
-                newClaimStatus == ClaimStatus.PAID &&
-                referralCode &&
-                !(await this.referralTransactionService.getReferralTransactionByClaimId(
-                    claim.id,
-                ))
-            ) {
-                const passengersCount = 1 + claim.passengers.length;
-                const amount =
-                    passengersCount * claim.state.amount * REFERRAL_RATE;
-
-                await this.referralTransactionService.makeReferralTransaction(
-                    {
-                        claimId: emailData.claimId,
-                        referralCode,
-                        amount,
-                    },
-                    tx,
-                );
-            }
-        });
+            await this.referralTransactionService.makeReferralTransaction({
+                claimId: emailData.claimId,
+                referralCode,
+                amount,
+            });
+        }
 
         const dashboardLink =
             await this.generateLinksService.authorizedLoginLink(claim.userId);

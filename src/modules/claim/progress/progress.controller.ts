@@ -107,6 +107,7 @@ export class ProgressController {
                 order,
                 updatedBy: user.id,
                 comments,
+                claimId: claim.id,
                 passengerIds,
                 descriptionVariables: additionalData
                     ? Object.keys(additionalData).map((key) => ({
@@ -114,6 +115,7 @@ export class ProgressController {
                           value: additionalData[key],
                       }))
                     : [],
+                newStatus: progressVariant.status,
             },
             claim.stateId,
         );

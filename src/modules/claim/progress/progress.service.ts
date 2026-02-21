@@ -1,10 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma, Progress } from '@prisma/client';
+import { ClaimStatus, Prisma, Progress } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { REFERRAL_RATE } from '../../referral/referral-transaction/constants';
+import { IFullClaim } from '../../claim-persistence/types/claim-persistence.types';
+import { ClaimPersistenceService } from '../../claim-persistence/services/claim-persistence.service';
 
 @Injectable()
 export class ProgressService {
-    constructor(private readonly prisma: PrismaService) {}
+    constructor(
+        private readonly prisma: PrismaService,
+        private readonly claimPersistenceService: ClaimPersistenceService,
+    ) {}
 
     async getProgressById(progressId: string): Promise<Progress | null> {
         return this.prisma.progress.findFirst({
@@ -25,7 +31,7 @@ export class ProgressService {
     }
 
     async createProgress(
-        progress: {
+        data: {
             title: string;
             description: string;
             order: number;
@@ -33,20 +39,33 @@ export class ProgressService {
             comments?: string;
             descriptionVariables: { key: string; value: string }[];
             passengerIds: string[];
+            newStatus: ClaimStatus;
+            claimId: string;
         },
         claimStateId: string,
         tx?: Prisma.TransactionClient,
     ) {
         const client = tx ?? this.prisma;
 
+        await Promise.all(
+            data.passengerIds.map(async (passengerId) => {
+                await this.claimPersistenceService.updateStatus(
+                    {
+                        newStatus: data.newStatus,
+                        claimId: data.claimId,
+                        passengerId: passengerId,
+                    },
+                    client,
+                );
+            }),
+        );
+
         return client.progress.create({
             data: {
-                ...progress,
+                ...data,
                 claimStateId,
                 endAt: new Date(),
-                descriptionVariables: JSON.stringify(
-                    progress.descriptionVariables,
-                ),
+                descriptionVariables: JSON.stringify(data.descriptionVariables),
             },
             include: this.getProgressFullInclude(),
         });
